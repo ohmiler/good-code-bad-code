@@ -16,25 +16,37 @@ type Comment = {
 
 export function ReviewComments({ reviewId }: { reviewId: string }) {
   const [comments, setComments] = useState<Comment[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const controller = new AbortController();
 
     async function loadComments() {
+      setError(null);
       const response = await fetch("/api/reviews/" + reviewId + "/comments", {
         signal: controller.signal,
       });
+
+      if (!response.ok) {
+        setError("Could not load comments.");
+        return;
+      }
+
       setComments(await response.json());
     }
 
     loadComments().catch((error) => {
       if (error.name !== "AbortError") {
-        throw error;
+        setError("Could not load comments.");
       }
     });
 
     return () => controller.abort();
   }, [reviewId]);
+
+  if (error) {
+    return <p role="alert">{error}</p>;
+  }
 
   return comments.map((comment) => <p key={comment.id}>{comment.body}</p>);
 }`,
