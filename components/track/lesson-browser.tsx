@@ -6,20 +6,37 @@ import { LessonList } from "./lesson-list";
 import { TagFilter } from "./tag-filter";
 
 export function LessonBrowser({ lessons }: { lessons: LessonPreview[] }) {
-  const [activeTag, setActiveTag] = useState<string | null>(null);
-
   const tags = useMemo(
     () => Array.from(new Set(lessons.flatMap((lesson) => lesson.tags))).sort(),
     [lessons],
   );
+  const tagKey = tags.join("\u0000");
+  const [filter, setFilter] = useState<{
+    activeTag: string | null;
+    tagKey: string;
+  }>({
+    activeTag: null,
+    tagKey,
+  });
 
-  const visibleLessons = activeTag
-    ? lessons.filter((lesson) => lesson.tags.includes(activeTag))
+  const selectedTag =
+    filter.tagKey === tagKey &&
+    filter.activeTag &&
+    tags.includes(filter.activeTag)
+      ? filter.activeTag
+      : null;
+
+  const visibleLessons = selectedTag
+    ? lessons.filter((lesson) => lesson.tags.includes(selectedTag))
     : lessons;
 
   return (
     <section className="mt-10">
-      <TagFilter tags={tags} activeTag={activeTag} onChange={setActiveTag} />
+      <TagFilter
+        tags={tags}
+        activeTag={selectedTag}
+        onChange={(activeTag) => setFilter({ activeTag, tagKey })}
+      />
       <LessonList lessons={visibleLessons} />
     </section>
   );
