@@ -1,8 +1,11 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #070b12;
+  --foreground: #f4f7fb;
+  --muted: #9ca3af;
+  --panel: #0d1420;
+  --panel-border: rgb(255 255 255 / 0.1);
 }
 
 @theme inline {
@@ -12,15 +15,51 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--background);
 }
 
 body {
-  background: var(--background);
+  min-width: 320px;
+  background: radial-gradient(circle at top, #111827 0, #070b12 34rem);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  text-decoration: none;
+}
+
+.code-surface {
+  max-width: 100%;
+  min-width: 0;
+  overscroll-behavior-x: contain;
+  scrollbar-color: rgb(148 163 184 / 0.45) transparent;
+}
+
+.code-surface pre {
+  margin: 0;
+  min-width: max-content;
+  max-width: none;
+  background: transparent !important;
+  font-family: var(--font-geist-mono), Consolas, monospace;
+  line-height: 1.7;
+}
+
+.code-surface code {
+  font-family: inherit;
+}
+
+.code-surface .line {
+  min-height: 1.7em;
+}
+
+::selection {
+  background: rgb(16 185 129 / 0.35);
+  color: #f8fafc;
 }
