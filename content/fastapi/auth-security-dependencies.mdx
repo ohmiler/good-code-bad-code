@@ -1,0 +1,53 @@
+export const metadata = {
+  title: "Auth with security dependencies",
+  track: "fastapi",
+  order: 5,
+  summary: "Use FastAPI security dependencies so auth is declared in the route contract and OpenAPI schema.",
+  tags: ["security", "auth", "dependencies"],
+  takeaways: ["Auth should be a dependency boundary, not repeated header parsing in every route."],
+  goodCode: {
+    language: "python",
+    filename: "api/auth.py",
+    code: `from typing import Annotated
+
+from fastapi import Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+
+async def current_user(token: Annotated[str, Depends(oauth2_scheme)]):
+    user = await users.find_by_token(token)
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid credentials",
+        )
+    return user`,
+  },
+  badCode: {
+    language: "python",
+    filename: "api/reviews.py",
+    code: `from fastapi import APIRouter, Request
+
+router = APIRouter()
+
+
+@router.post("/reviews/{review_id}/approve")
+async def approve_review(review_id: int, request: Request):
+    header = request.headers.get("authorization", "")
+    token = header.replace("Bearer ", "")
+    user = await users.find_by_token(token)
+    return await reviews.approve(review_id, user.id)`,
+  },
+};
+
+## What to review
+
+The good version centralizes token extraction and invalid credential handling in a security dependency.
+
+The bad version reparses the header in the route and assumes a user exists. Auth behavior drifts route by route and docs do not show the security scheme.
+
+## Review notes
+
+FastAPI can represent security dependencies in OpenAPI. In review, prefer one trusted auth boundary that routes depend on.

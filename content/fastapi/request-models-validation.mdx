@@ -1,0 +1,55 @@
+export const metadata = {
+  title: "Request models and validation",
+  track: "fastapi",
+  order: 2,
+  summary: "Use Pydantic request models so FastAPI can parse, validate, document, and type the incoming body.",
+  tags: ["pydantic", "validation", "request body"],
+  takeaways: ["Request bodies should cross the API boundary as validated models, not raw dictionaries."],
+  goodCode: {
+    language: "python",
+    filename: "api/reviews.py",
+    code: `from fastapi import APIRouter
+from pydantic import BaseModel, Field
+
+router = APIRouter()
+
+
+class CreateReviewRequest(BaseModel):
+    title: str = Field(min_length=3, max_length=120)
+    author_id: int
+
+
+@router.post("/reviews")
+async def create_review(payload: CreateReviewRequest):
+    return {
+        "title": payload.title,
+        "author_id": payload.author_id,
+    }`,
+  },
+  badCode: {
+    language: "python",
+    filename: "api/reviews.py",
+    code: `from fastapi import APIRouter, Request
+
+router = APIRouter()
+
+
+@router.post("/reviews")
+async def create_review(request: Request):
+    payload = await request.json()
+    return {
+        "title": payload["title"],
+        "author_id": int(payload["author_id"]),
+    }`,
+  },
+};
+
+## What to review
+
+The good version lets FastAPI and Pydantic validate the shape, types, and title length before business logic runs.
+
+The bad version pulls raw JSON out of the request and converts values manually. Missing keys, invalid types, and docs drift become route-handler problems.
+
+## Review notes
+
+In FastAPI, the function signature is the API contract. If a body is important enough to accept, it is usually important enough to model.

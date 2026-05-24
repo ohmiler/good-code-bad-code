@@ -1,0 +1,58 @@
+export const metadata = {
+  title: "Testing with dependency overrides",
+  track: "fastapi",
+  order: 9,
+  summary: "Override dependencies in tests instead of calling external services or patching internals.",
+  tags: ["testing", "dependency overrides", "testclient"],
+  takeaways: ["FastAPI dependency overrides make integration-style API tests fast and focused."],
+  goodCode: {
+    language: "python",
+    filename: "tests/test_reviews.py",
+    code: `from fastapi.testclient import TestClient
+
+from app.main import app
+from app.auth import current_user
+
+
+def fake_current_user():
+    return {"id": 1, "role": "reviewer"}
+
+
+def test_approve_review():
+    app.dependency_overrides[current_user] = fake_current_user
+    client = TestClient(app)
+
+    response = client.post("/reviews/10/approve")
+
+    app.dependency_overrides = {}
+    assert response.status_code == 200`,
+  },
+  badCode: {
+    language: "python",
+    filename: "tests/test_reviews.py",
+    code: `from fastapi.testclient import TestClient
+
+from app.main import app
+
+client = TestClient(app)
+
+
+def test_approve_review():
+    response = client.post(
+        "/reviews/10/approve",
+        headers={"Authorization": "Bearer production-token"},
+    )
+
+    assert response.status_code == 200`,
+  },
+};
+
+## What to review
+
+The good version replaces the auth dependency with a test implementation and resets overrides after the assertion.
+
+The bad version depends on a production-like token and whatever auth service is behind it. Tests become slow, flaky, and hard to reason about.
+
+## Review notes
+
+FastAPI exposes `app.dependency_overrides` for tests. In review, prefer overriding dependencies over patching deep internals or calling real external services.

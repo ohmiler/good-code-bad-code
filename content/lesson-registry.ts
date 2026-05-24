@@ -305,6 +305,36 @@ import PythonDependencyInjectionTestability, {
 import PythonAsyncAwaitBoundaries, {
   metadata as pythonAsyncAwaitBoundariesMetadata,
 } from "./python/async-await-boundaries.mdx";
+import FastapiPathOperationOrder, {
+  metadata as fastapiPathOperationOrderMetadata,
+} from "./fastapi/path-operation-order.mdx";
+import FastapiRequestModelsValidation, {
+  metadata as fastapiRequestModelsValidationMetadata,
+} from "./fastapi/request-models-validation.mdx";
+import FastapiResponseModelsContracts, {
+  metadata as fastapiResponseModelsContractsMetadata,
+} from "./fastapi/response-models-contracts.mdx";
+import FastapiDependenciesBoundaries, {
+  metadata as fastapiDependenciesBoundariesMetadata,
+} from "./fastapi/dependencies-boundaries.mdx";
+import FastapiAuthSecurityDependencies, {
+  metadata as fastapiAuthSecurityDependenciesMetadata,
+} from "./fastapi/auth-security-dependencies.mdx";
+import FastapiAsyncHandlerBoundaries, {
+  metadata as fastapiAsyncHandlerBoundariesMetadata,
+} from "./fastapi/async-handler-boundaries.mdx";
+import FastapiHttpExceptionHandling, {
+  metadata as fastapiHttpExceptionHandlingMetadata,
+} from "./fastapi/http-exception-handling.mdx";
+import FastapiDatabaseSessionLifecycle, {
+  metadata as fastapiDatabaseSessionLifecycleMetadata,
+} from "./fastapi/database-session-lifecycle.mdx";
+import FastapiTestingDependencyOverrides, {
+  metadata as fastapiTestingDependencyOverridesMetadata,
+} from "./fastapi/testing-dependency-overrides.mdx";
+import FastapiAppStructureRouters, {
+  metadata as fastapiAppStructureRoutersMetadata,
+} from "./fastapi/app-structure-routers.mdx";
 
 type RawLesson = {
   slug: string;
@@ -913,6 +943,66 @@ const rawLessons: RawLesson[] = [
     source: "content/python/async-await-boundaries.mdx",
     metadata: pythonAsyncAwaitBoundariesMetadata,
     Component: PythonAsyncAwaitBoundaries,
+  },
+  {
+    slug: "path-operation-order",
+    source: "content/fastapi/path-operation-order.mdx",
+    metadata: fastapiPathOperationOrderMetadata,
+    Component: FastapiPathOperationOrder,
+  },
+  {
+    slug: "request-models-validation",
+    source: "content/fastapi/request-models-validation.mdx",
+    metadata: fastapiRequestModelsValidationMetadata,
+    Component: FastapiRequestModelsValidation,
+  },
+  {
+    slug: "response-models-contracts",
+    source: "content/fastapi/response-models-contracts.mdx",
+    metadata: fastapiResponseModelsContractsMetadata,
+    Component: FastapiResponseModelsContracts,
+  },
+  {
+    slug: "dependencies-boundaries",
+    source: "content/fastapi/dependencies-boundaries.mdx",
+    metadata: fastapiDependenciesBoundariesMetadata,
+    Component: FastapiDependenciesBoundaries,
+  },
+  {
+    slug: "auth-security-dependencies",
+    source: "content/fastapi/auth-security-dependencies.mdx",
+    metadata: fastapiAuthSecurityDependenciesMetadata,
+    Component: FastapiAuthSecurityDependencies,
+  },
+  {
+    slug: "async-handler-boundaries",
+    source: "content/fastapi/async-handler-boundaries.mdx",
+    metadata: fastapiAsyncHandlerBoundariesMetadata,
+    Component: FastapiAsyncHandlerBoundaries,
+  },
+  {
+    slug: "http-exception-handling",
+    source: "content/fastapi/http-exception-handling.mdx",
+    metadata: fastapiHttpExceptionHandlingMetadata,
+    Component: FastapiHttpExceptionHandling,
+  },
+  {
+    slug: "database-session-lifecycle",
+    source: "content/fastapi/database-session-lifecycle.mdx",
+    metadata: fastapiDatabaseSessionLifecycleMetadata,
+    Component: FastapiDatabaseSessionLifecycle,
+  },
+  {
+    slug: "testing-dependency-overrides",
+    source: "content/fastapi/testing-dependency-overrides.mdx",
+    metadata: fastapiTestingDependencyOverridesMetadata,
+    Component: FastapiTestingDependencyOverrides,
+  },
+  {
+    slug: "app-structure-routers",
+    source: "content/fastapi/app-structure-routers.mdx",
+    metadata: fastapiAppStructureRoutersMetadata,
+    Component: FastapiAppStructureRouters,
   },
 ];
 

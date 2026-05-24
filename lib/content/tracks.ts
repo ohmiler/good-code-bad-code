@@ -59,6 +59,12 @@ export const tracks = [
     description:
       "Review readable functions, data shapes, exceptions, typing, testability, and async boundaries.",
   },
+  {
+    slug: "fastapi",
+    title: "FastAPI",
+    description:
+      "Review routes, Pydantic models, dependencies, auth, async handlers, database sessions, and API tests.",
+  },
 ] as const;
 
 export type Track = (typeof tracks)[number];

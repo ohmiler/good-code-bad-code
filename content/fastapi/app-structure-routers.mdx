@@ -1,0 +1,57 @@
+export const metadata = {
+  title: "App structure and routers",
+  track: "fastapi",
+  order: 10,
+  summary: "Organize feature routers and keep app creation focused on wiring rather than route implementation.",
+  tags: ["routers", "structure", "app factory"],
+  takeaways: ["A FastAPI app should wire routers and middleware; feature behavior belongs in focused modules."],
+  goodCode: {
+    language: "python",
+    filename: "app/main.py",
+    code: `from fastapi import FastAPI
+
+from app.api import health, reviews, users
+
+
+def create_app():
+    app = FastAPI(title="Review API")
+
+    app.include_router(health.router)
+    app.include_router(users.router, prefix="/users", tags=["users"])
+    app.include_router(reviews.router, prefix="/reviews", tags=["reviews"])
+
+    return app
+
+
+app = create_app()`,
+  },
+  badCode: {
+    language: "python",
+    filename: "app/main.py",
+    code: `from fastapi import FastAPI
+
+app = FastAPI()
+
+
+@app.get("/users/{user_id}")
+async def read_user(user_id: int):
+    return await users.find(user_id)
+
+
+@app.post("/reviews/{review_id}/approve")
+async def approve_review(review_id: int):
+    review = await reviews.find(review_id)
+    await notifications.send(review.author_email)
+    return await reviews.approve(review_id)`,
+  },
+};
+
+## What to review
+
+The good version makes app creation a composition point and leaves feature routes in their own modules.
+
+The bad version turns `main.py` into a mix of app setup, route definitions, business flow, and side effects.
+
+## Review notes
+
+FastAPI makes it easy to start in one file. In review, watch for the moment where the file stops being an app entry point and becomes the whole application.

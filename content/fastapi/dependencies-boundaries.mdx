@@ -1,0 +1,53 @@
+export const metadata = {
+  title: "Dependencies as boundaries",
+  track: "fastapi",
+  order: 4,
+  summary: "Use `Depends` to share request parsing, context, and collaborators without hiding setup inside handlers.",
+  tags: ["dependencies", "depends", "boundaries"],
+  takeaways: ["FastAPI dependencies make repeated request setup explicit, reusable, and visible in OpenAPI."],
+  goodCode: {
+    language: "python",
+    filename: "api/reviews.py",
+    code: `from typing import Annotated
+
+from fastapi import APIRouter, Depends, Query
+
+router = APIRouter()
+
+
+async def pagination(
+    limit: Annotated[int, Query(le=100)] = 20,
+    offset: int = 0,
+):
+    return {"limit": limit, "offset": offset}
+
+
+@router.get("/reviews")
+async def list_reviews(page: Annotated[dict, Depends(pagination)]):
+    return await reviews.list(**page)`,
+  },
+  badCode: {
+    language: "python",
+    filename: "api/reviews.py",
+    code: `from fastapi import APIRouter, Request
+
+router = APIRouter()
+
+
+@router.get("/reviews")
+async def list_reviews(request: Request):
+    limit = int(request.query_params.get("limit", 20))
+    offset = int(request.query_params.get("offset", 0))
+    return await reviews.list(limit=limit, offset=offset)`,
+  },
+};
+
+## What to review
+
+The good version makes pagination a reusable dependency with validation and documentation.
+
+The bad version manually parses query parameters inside the route. Validation, defaults, and reuse are scattered across handlers.
+
+## Review notes
+
+Dependencies should clarify the boundary, not hide business logic. Look for repeated parsing or setup in routes and move that into a focused dependency.

@@ -1,0 +1,52 @@
+export const metadata = {
+  title: "Path operation order",
+  track: "fastapi",
+  order: 1,
+  summary: "Declare specific routes before dynamic path parameters so FastAPI matches requests as intended.",
+  tags: ["routing", "path parameters", "order"],
+  takeaways: ["FastAPI path operations are evaluated in order, so route order is behavior."],
+  goodCode: {
+    language: "python",
+    filename: "api/users.py",
+    code: `from fastapi import APIRouter
+
+router = APIRouter(prefix="/users", tags=["users"])
+
+
+@router.get("/me")
+async def read_current_user():
+    return {"user_id": "current"}
+
+
+@router.get("/{user_id}")
+async def read_user(user_id: int):
+    return {"user_id": user_id}`,
+  },
+  badCode: {
+    language: "python",
+    filename: "api/users.py",
+    code: `from fastapi import APIRouter
+
+router = APIRouter(prefix="/users", tags=["users"])
+
+
+@router.get("/{user_id}")
+async def read_user(user_id: int):
+    return {"user_id": user_id}
+
+
+@router.get("/me")
+async def read_current_user():
+    return {"user_id": "current"}`,
+  },
+};
+
+## What to review
+
+The good version declares the fixed `/me` route before the dynamic `/{user_id}` route.
+
+The bad version lets `/{user_id}` match `/me` first, so FastAPI tries to parse `"me"` as an integer and returns a validation error.
+
+## Review notes
+
+When reviewing FastAPI routing, read the file top to bottom. Specific routes, fixed words, and literal paths should usually appear before broader dynamic routes.

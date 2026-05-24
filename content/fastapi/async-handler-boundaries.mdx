@@ -1,0 +1,47 @@
+export const metadata = {
+  title: "Async handler boundaries",
+  track: "fastapi",
+  order: 6,
+  summary: "Keep async route handlers non-blocking and await asynchronous collaborators directly.",
+  tags: ["async", "await", "blocking"],
+  takeaways: ["An `async def` route should not hide blocking I/O inside the event loop."],
+  goodCode: {
+    language: "python",
+    filename: "api/reports.py",
+    code: `from fastapi import APIRouter
+
+router = APIRouter()
+
+
+@router.get("/reports/{report_id}")
+async def get_report(report_id: int):
+    report = await report_service.fetch_report(report_id)
+    audit = await audit_service.record_view(report_id)
+    return {"report": report, "audit_id": audit.id}`,
+  },
+  badCode: {
+    language: "python",
+    filename: "api/reports.py",
+    code: `import requests
+from fastapi import APIRouter
+
+router = APIRouter()
+
+
+@router.get("/reports/{report_id}")
+async def get_report(report_id: int):
+    response = requests.get(f"https://api.example.com/reports/{report_id}")
+    audit_service.record_view(report_id)
+    return response.json()`,
+  },
+};
+
+## What to review
+
+The good version awaits async collaborators so I/O yields control back to the event loop.
+
+The bad version calls a blocking HTTP client inside an async route and forgets to await the audit work.
+
+## Review notes
+
+FastAPI supports both `def` and `async def`. In review, check whether the handler and its collaborators agree about blocking versus non-blocking work.

@@ -1,0 +1,51 @@
+export const metadata = {
+  title: "Response models as contracts",
+  track: "fastapi",
+  order: 3,
+  summary: "Return response models that expose the public API shape and filter internal fields.",
+  tags: ["response model", "contracts", "serialization"],
+  takeaways: ["A response model is both documentation and a guardrail for data leaving the service."],
+  goodCode: {
+    language: "python",
+    filename: "api/reviews.py",
+    code: `from fastapi import APIRouter
+from pydantic import BaseModel
+
+router = APIRouter()
+
+
+class ReviewResponse(BaseModel):
+    id: int
+    title: str
+    status: str
+
+
+@router.get("/reviews/{review_id}", response_model=ReviewResponse)
+async def get_review(review_id: int):
+    review = await reviews.find(review_id)
+    return review`,
+  },
+  badCode: {
+    language: "python",
+    filename: "api/reviews.py",
+    code: `from fastapi import APIRouter
+
+router = APIRouter()
+
+
+@router.get("/reviews/{review_id}")
+async def get_review(review_id: int):
+    review = await reviews.find(review_id)
+    return review.__dict__`,
+  },
+};
+
+## What to review
+
+The good version declares the public response shape and lets FastAPI serialize only the fields that belong in the contract.
+
+The bad version returns object internals. Private fields, database state, or unexpected attributes can leak into the API.
+
+## Review notes
+
+When reviewing FastAPI responses, ask what the client contract is. If the answer is "whatever the object currently has," the API is too accidental.

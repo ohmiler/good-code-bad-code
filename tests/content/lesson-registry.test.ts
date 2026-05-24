@@ -19,6 +19,7 @@ const expectedLessonCounts = {
   express: 10,
   sql: 10,
   python: 10,
+  fastapi: 10,
 } as const;
 
 type RawLessonEntry = {
@@ -243,7 +244,7 @@ test("seeded lessons match expected track counts", async () => {
   const lessonsByTrack = await getTrackLessonFiles();
   const allLessonFiles = [...lessonsByTrack.values()].flat();
 
-  assert.equal(allLessonFiles.length, 100);
+  assert.equal(allLessonFiles.length, 110);
   for (const track of tracks) {
     assert.equal(
       lessonsByTrack.get(track.slug)?.length,

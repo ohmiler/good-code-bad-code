@@ -1,0 +1,51 @@
+export const metadata = {
+  title: "HTTPException handling",
+  track: "fastapi",
+  order: 7,
+  summary: "Raise `HTTPException` for expected client-facing failures instead of returning mixed success and error shapes.",
+  tags: ["errors", "http exception", "status codes"],
+  takeaways: ["Expected API failures should use explicit HTTP status codes and response shapes."],
+  goodCode: {
+    language: "python",
+    filename: "api/reviews.py",
+    code: `from fastapi import APIRouter, HTTPException, status
+
+router = APIRouter()
+
+
+@router.get("/reviews/{review_id}")
+async def get_review(review_id: int):
+    review = await reviews.find(review_id)
+    if review is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Review not found",
+        )
+    return review`,
+  },
+  badCode: {
+    language: "python",
+    filename: "api/reviews.py",
+    code: `from fastapi import APIRouter
+
+router = APIRouter()
+
+
+@router.get("/reviews/{review_id}")
+async def get_review(review_id: int):
+    review = await reviews.find(review_id)
+    if review is None:
+        return {"ok": False, "error": "Review not found"}
+    return {"ok": True, "review": review}`,
+  },
+};
+
+## What to review
+
+The good version returns a real 404 with a clear detail when the resource does not exist.
+
+The bad version returns an error envelope with a successful HTTP status. Clients, logs, and monitoring can all misread the failure.
+
+## Review notes
+
+Use exceptions for expected HTTP failures at the route boundary. Keep success responses and error responses separate enough for clients to trust status codes.

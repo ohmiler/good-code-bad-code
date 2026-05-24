@@ -1,0 +1,58 @@
+export const metadata = {
+  title: "Database session lifecycle",
+  track: "fastapi",
+  order: 8,
+  summary: "Provide database sessions through a dependency so each request gets a clear unit of work.",
+  tags: ["database", "session", "dependencies"],
+  takeaways: ["Database sessions need request-scoped ownership, cleanup, and transaction intent."],
+  goodCode: {
+    language: "python",
+    filename: "api/database.py",
+    code: `from typing import Annotated
+
+from fastapi import Depends
+from sqlmodel import Session
+
+
+def get_session():
+    with Session(engine) as session:
+        yield session
+
+
+SessionDep = Annotated[Session, Depends(get_session)]
+
+
+@router.post("/reviews")
+def create_review(payload: ReviewCreate, session: SessionDep):
+    review = Review.model_validate(payload)
+    session.add(review)
+    session.commit()
+    session.refresh(review)
+    return review`,
+  },
+  badCode: {
+    language: "python",
+    filename: "api/reviews.py",
+    code: `from sqlmodel import Session
+
+session = Session(engine)
+
+
+@router.post("/reviews")
+def create_review(payload: ReviewCreate):
+    review = Review.model_validate(payload)
+    session.add(review)
+    session.commit()
+    return review`,
+  },
+};
+
+## What to review
+
+The good version gives each request a session through a dependency and makes commit/refresh part of the route workflow.
+
+The bad version keeps a module-level session shared across requests. Cleanup, transaction boundaries, and concurrency behavior are unclear.
+
+## Review notes
+
+Database dependencies should have a visible lifecycle. In review, look for module-level sessions, hidden commits, and request handlers that cannot be tested with a replacement session.
