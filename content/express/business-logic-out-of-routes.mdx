@@ -1,0 +1,50 @@
+export const metadata = {
+  title: "Avoiding business logic in routes",
+  track: "express",
+  order: 10,
+  summary: "Keep route handlers thin by delegating business decisions to services.",
+  tags: ["architecture", "routes", "services"],
+  takeaways: ["Routes should translate HTTP to application calls, not contain the whole use case."],
+  goodCode: {
+    language: "typescript",
+    filename: "src/reviews/router.ts",
+    code: `router.post("/:id/approve", async (req, res) => {
+  const review = await reviewWorkflow.approve({
+    reviewId: req.params.id,
+    approverId: res.locals.user.id,
+  });
+
+  res.json({ data: review });
+});`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "src/reviews/router.ts",
+    code: `router.post("/:id/approve", async (req, res) => {
+  const review = await db.review.findUnique({ where: { id: req.params.id } });
+
+  if (!review || review.status !== "pending") {
+    res.status(409).json({ error: "Review cannot be approved." });
+    return;
+  }
+
+  await db.review.update({
+    where: { id: req.params.id },
+    data: { status: "approved", approvedBy: res.locals.user.id },
+  });
+  await notifications.sendApprovalEmail(review.authorId);
+
+  res.json({ ok: true });
+});`,
+  },
+};
+
+## What to review
+
+The good version keeps the route focused on HTTP input and output while the workflow owns approval rules and side effects.
+
+The bad version performs database reads, business checks, writes, notification side effects, and response formatting in one route.
+
+## Review notes
+
+In review, route handlers should be easy to scan even when the use case is complex. The bad version is review-worthy because business rules hidden inside Express handlers are harder to reuse, test, and transact safely.

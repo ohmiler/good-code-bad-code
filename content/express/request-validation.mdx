@@ -1,0 +1,63 @@
+export const metadata = {
+  title: "Request validation",
+  track: "express",
+  order: 4,
+  summary: "Validate request input at the route boundary before calling business services.",
+  tags: ["validation", "requests", "security"],
+  takeaways: ["Route handlers should pass validated values to services, not raw request bodies."],
+  goodCode: {
+    language: "typescript",
+    filename: "src/reviews/router.ts",
+    code: `import { Router } from "express";
+import { parseCreateReviewBody } from "./validation";
+
+export function createReviewsRouter(service: ReviewsService) {
+  const router = Router();
+
+  router.post("/", async (req, res) => {
+    const result = parseCreateReviewBody(req.body);
+
+    if (!result.ok) {
+      res.status(400).json({ error: result.error });
+      return;
+    }
+
+    const review = await service.createReview(result.value);
+    res.status(201).json({ data: review });
+  });
+
+  return router;
+}`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "src/reviews/router.ts",
+    code: `import { Router } from "express";
+
+export function createReviewsRouter(service: ReviewsService) {
+  const router = Router();
+
+  router.post("/", async (req, res) => {
+    const review = await service.createReview({
+      title: req.body.title,
+      reviewerIds: req.body.reviewerIds,
+      dueDate: req.body.dueDate,
+    });
+
+    res.status(201).json(review);
+  });
+
+  return router;
+}`,
+  },
+};
+
+## What to review
+
+The good version validates the body once at the route boundary and only passes trusted values into the service.
+
+The bad version copies raw body fields directly into business logic and leaves missing, malformed, or extra input to fail later.
+
+## Review notes
+
+In review, route boundaries are where untrusted input should become validated application data. The bad version is review-worthy because it spreads input assumptions across services and makes error responses inconsistent.

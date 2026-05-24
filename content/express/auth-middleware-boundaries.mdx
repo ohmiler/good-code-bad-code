@@ -1,0 +1,58 @@
+export const metadata = {
+  title: "Auth middleware boundaries",
+  track: "express",
+  order: 8,
+  summary: "Authenticate once in middleware and pass a safe user context to route handlers.",
+  tags: ["auth", "middleware", "security"],
+  takeaways: ["Routes should consume trusted auth context instead of reparsing credentials."],
+  goodCode: {
+    language: "typescript",
+    filename: "src/auth/require-user.ts",
+    code: `import type { NextFunction, Request, Response } from "express";
+
+export async function requireUser(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  const session = await sessions.findFromHeader(req.get("authorization"));
+
+  if (!session) {
+    res.status(401).json({ error: { message: "Authentication required." } });
+    return;
+  }
+
+  res.locals.user = {
+    id: session.userId,
+    role: session.role,
+  };
+  next();
+}`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "src/reviews/router.ts",
+    code: `router.post("/:id/approve", async (req, res) => {
+  const token = req.get("authorization");
+  const session = await sessions.findFromHeader(token);
+
+  if (!session || session.role !== "maintainer") {
+    res.status(403).json({ error: "Forbidden" });
+    return;
+  }
+
+  const review = await service.approveReview(req.params.id, session.userId);
+  res.json({ data: review });
+});`,
+  },
+};
+
+## What to review
+
+The good version authenticates in middleware and stores only the user context downstream routes need.
+
+The bad version reparses credentials inside the route, mixing authentication, authorization, and review approval in one handler.
+
+## Review notes
+
+In review, auth code should have a clear boundary and consistent failure response. The bad version is review-worthy because each route can drift into its own auth logic, increasing security risk and duplication.

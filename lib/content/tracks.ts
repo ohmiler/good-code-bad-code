@@ -41,6 +41,12 @@ export const tracks = [
     description:
       "Review runtime boundaries, async I/O, HTTP lifecycle, logging, and process safety.",
   },
+  {
+    slug: "express",
+    title: "Express",
+    description:
+      "Review app factories, routers, middleware order, validation, auth, and error handling.",
+  },
 ] as const;
 
 export type Track = (typeof tracks)[number];

@@ -1,0 +1,53 @@
+export const metadata = {
+  title: "Rate limiting and trust proxy",
+  track: "express",
+  order: 9,
+  summary: "Configure client IP trust deliberately before using IP-based controls.",
+  tags: ["security", "rate-limiting", "proxy"],
+  takeaways: ["Rate limiting should use a deliberate client identity, especially behind proxies."],
+  goodCode: {
+    language: "typescript",
+    filename: "src/app.ts",
+    code: `import express from "express";
+import { rateLimit } from "express-rate-limit";
+
+export function createApp() {
+  const app = express();
+
+  app.set("trust proxy", 1);
+  app.use(rateLimit({
+    windowMs: 60_000,
+    limit: 120,
+    standardHeaders: true,
+    legacyHeaders: false,
+  }));
+
+  return app;
+}`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "src/app.ts",
+    code: `import express from "express";
+import { rateLimit } from "express-rate-limit";
+
+export function createApp() {
+  const app = express();
+
+  app.set("trust proxy", true);
+  app.use(rateLimit({ windowMs: 60_000, limit: 10_000 }));
+
+  return app;
+}`,
+  },
+};
+
+## What to review
+
+The good version sets a specific proxy trust depth and applies a clear rate limit policy.
+
+The bad version trusts every proxy hop and sets a limit so high that the control is mostly decorative.
+
+## Review notes
+
+In review, security middleware needs deployment context. The bad version is review-worthy because IP-based controls depend on whether Express can trust the source address it sees.

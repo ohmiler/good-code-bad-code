@@ -98,6 +98,11 @@ export const trackThaiTranslations = {
     description:
       "ฝึกรีวิว runtime boundary, async I/O, HTTP lifecycle, logging และ process safety.",
   },
+  express: {
+    title: "Express",
+    description:
+      "ฝึกรีวิว app factory, router, middleware order, validation, auth และ error handling.",
+  },
 } as const satisfies Record<TrackSlug, TrackTranslation>;
 
 export const lessonThaiTranslations = {
@@ -939,6 +944,126 @@ export const lessonThaiTranslations = {
     ],
     reviewNotes: [
       "ตอนรีวิวให้มอง file path, shell argument, URL และ database filter เป็น boundary สำคัญ. helper สั้น ๆ อาจเป็นจุดที่ user input ข้ามเข้า operating system.",
+    ],
+  },
+  "express/app-factory-server-startup": {
+    title: "app factory กับ server startup",
+    summary: "สร้าง Express app แยกจาก process ที่เริ่ม listen port เพื่อให้ test และ compose ได้ง่าย.",
+    takeaways: ["Express app ควรถูกสร้างเพื่อทดสอบได้โดยไม่ต้องเปิด port ทันที."],
+    whatToReview: [
+      "โค้ดที่ดี export createApp เพื่อให้ test หรือ worker สร้าง app เดียวกันได้โดยไม่เริ่ม server.",
+      "โค้ดที่ควรปรับเรียก app.listen ตอน import module ทำให้ test หรือ script เปิด port โดยไม่ตั้งใจ.",
+    ],
+    reviewNotes: [
+      "ตอนรีวิวให้แยก app construction ออกจาก process startup. ถ้า import app แล้วเกิด side effect ทันที มักทำให้ shutdown, test isolation และหลาย process ใช้งานยาก.",
+    ],
+  },
+  "express/router-boundaries": {
+    title: "ขอบเขตของ router",
+    summary: "จัดกลุ่ม route ที่เกี่ยวข้องไว้ใน router เดียวและส่ง dependency เข้ามาอย่างชัดเจน.",
+    takeaways: ["router ที่ดีควรรับผิดชอบ resource เดียวและไม่ล้วง global service โดยตรง."],
+    whatToReview: [
+      "โค้ดที่ดีแยก review routes เป็น router เฉพาะและรับ service dependency ผ่าน factory.",
+      "โค้ดที่ควรปรับรวม endpoint หลาย resource ไว้ใน app.ts จน ownership และ dependency ปนกัน.",
+    ],
+    reviewNotes: [
+      "Express ทำให้เพิ่ม route ในไฟล์เดียวได้ง่ายมาก ตอนรีวิวให้ถามว่าไฟล์นี้มี resource boundary ชัดไหม หรือกำลังกลายเป็นศูนย์รวมทุก endpoint.",
+    ],
+  },
+  "express/middleware-order": {
+    title: "ลำดับ middleware",
+    summary: "เรียง middleware ให้ parsing, security, route, 404 และ error handler ทำงานตามลำดับที่ตั้งใจ.",
+    takeaways: ["ลำดับ middleware ใน Express คือ behavior ไม่ใช่แค่การจัดโค้ดให้สวย."],
+    whatToReview: [
+      "โค้ดที่ดี parse JSON ก่อน route, ใส่ auth ก่อน protected router และวาง error handler หลัง route.",
+      "โค้ดที่ควรปรับวาง error handler ก่อน route, auth หลัง router และ parser หลัง route จน pipeline ผิด.",
+    ],
+    reviewNotes: [
+      "ตอนรีวิวให้อ่าน app.use จากบนลงล่างเหมือน pipeline. ทุก middleware เปลี่ยนสิ่งที่ handler ถัดไปเห็น และบางตัวอาจทำให้ handler ถัดไปไม่ถูกเรียกเลย.",
+    ],
+  },
+  "express/request-validation": {
+    title: "validate request ที่ boundary",
+    summary: "ตรวจ input ของ request ที่ขอบ route ก่อนส่งต่อให้ business service.",
+    takeaways: ["route handler ควรส่งค่าที่ validate แล้วเข้า service ไม่ใช่ส่ง raw request body."],
+    whatToReview: [
+      "โค้ดที่ดี parse body ผ่าน validator และตอบ 400 เมื่อ input ไม่ถูกต้องก่อนเรียก service.",
+      "โค้ดที่ควรปรับคัดลอก req.body เข้า service ตรง ๆ ทำให้ missing หรือ malformed input ไปพังชั้นลึก.",
+    ],
+    reviewNotes: [
+      "route boundary คือจุดที่ untrusted input ควรถูกเปลี่ยนเป็น application data ที่เชื่อถือได้. ถ้าปล่อย raw body ผ่านไป error response และ assumption จะกระจายทั่วระบบ.",
+    ],
+  },
+  "express/async-route-error-forwarding": {
+    title: "ส่งต่อ error จาก async route",
+    summary: "ให้ async route failure เข้า Express error pipeline แทนการกลายเป็นงานที่ไม่มีคนรับผิดชอบ.",
+    takeaways: ["async route ควรถูก await โดย Express หรือ forward เข้า next อย่างชัดเจน."],
+    whatToReview: [
+      "โค้ดที่ดีใช้ async handler และ throw error เพื่อให้ central error handler จัดการ.",
+      "โค้ดที่ควรปรับเริ่ม promise chain เองโดยไม่ return หรือ catch ทำให้ failure หลุดจาก request pipeline.",
+    ],
+    reviewNotes: [
+      "Express 5 forward rejected promise จาก async handler ได้ แต่ promise chain ที่เริ่มเองยังต้อง return หรือ catch. ตอนรีวิวให้ไล่ทุก async work ว่าสุดท้ายเข้า error middleware หรือไม่.",
+    ],
+  },
+  "express/central-error-handler": {
+    title: "central error handler กลาง",
+    summary: "ใช้ error handler กลางเพื่อ map application error เป็น HTTP response ที่สม่ำเสมอ.",
+    takeaways: ["error handler กลางช่วยรวม status code, logging และ response body ให้ predictable."],
+    whatToReview: [
+      "โค้ดที่ดีมี ErrorRequestHandler ที่เช็ค headersSent, map validation error และซ่อน unexpected detail.",
+      "โค้ดที่ควรปรับ catch ซ้ำในหลาย route และตอบ status หรือ shape คนละแบบสำหรับ failure คล้ายกัน.",
+    ],
+    reviewNotes: [
+      "ถ้าเห็น catch block ซ้ำ ๆ ใน route มักแปลว่า error pipeline ยังไม่ชัด. ความไม่สม่ำเสมอทำให้ client เขียนยากและ production failure ไล่ยาก.",
+    ],
+  },
+  "express/response-shape-consistency": {
+    title: "รูปแบบ response ที่สม่ำเสมอ",
+    summary: "ตอบ success และ error ด้วย envelope ที่คาดเดาได้ในทุก route.",
+    takeaways: ["client ไม่ควรต้องมี parsing rule เฉพาะ route สำหรับ response รูปแบบพื้นฐาน."],
+    whatToReview: [
+      "โค้ดที่ดีมี helper สำหรับ ok, created และ fail เพื่อทำให้ API contract สม่ำเสมอ.",
+      "โค้ดที่ควรปรับตอบ array, object, string และ nested data shape คนละแบบใน endpoint ใกล้กัน.",
+    ],
+    reviewNotes: [
+      "ตอนรีวิวให้เทียบ response body ของ endpoint ใกล้กัน. response ที่ไม่สม่ำเสมอผลักความซับซ้อนไปให้ client, test และ documentation.",
+    ],
+  },
+  "express/auth-middleware-boundaries": {
+    title: "ขอบเขต auth middleware",
+    summary: "authenticate หนึ่งครั้งใน middleware แล้วส่ง user context ที่ปลอดภัยให้ route handler.",
+    takeaways: ["route ควรใช้ trusted auth context ไม่ใช่ parse credential ซ้ำเองทุก endpoint."],
+    whatToReview: [
+      "โค้ดที่ดีให้ requireUser อ่าน session และเก็บ user id/role ใน res.locals สำหรับ route ถัดไป.",
+      "โค้ดที่ควรปรับ parse authorization header ใน route พร้อมทำ business action ใน handler เดียว.",
+    ],
+    reviewNotes: [
+      "auth logic ควรมี boundary และ failure response ชัดเจน. ถ้าแต่ละ route เขียน auth เอง logic จะ drift ง่ายและเพิ่มความเสี่ยงด้าน security.",
+    ],
+  },
+  "express/rate-limiting-trust-proxy": {
+    title: "rate limiting และ trust proxy",
+    summary: "ตั้งค่า client IP trust อย่างตั้งใจก่อนใช้ control ที่อิง IP เช่น rate limiting.",
+    takeaways: ["rate limiting ควรอิง client identity ที่เชื่อถือได้ โดยเฉพาะเมื่ออยู่หลัง proxy."],
+    whatToReview: [
+      "โค้ดที่ดีตั้ง trust proxy แบบเจาะจงและกำหนด policy ของ rate limit ที่ชัดเจน.",
+      "โค้ดที่ควรปรับ trust proxy ทุก hop และตั้ง limit สูงจน security control แทบไม่มีผล.",
+    ],
+    reviewNotes: [
+      "security middleware ต้องผูกกับ deployment context. ตอนรีวิวให้ถามว่า Express เห็น IP จริงหรือ IP ของ proxy และ policy นี้ป้องกัน abuse ได้จริงไหม.",
+    ],
+  },
+  "express/business-logic-out-of-routes": {
+    title: "แยก business logic ออกจาก route",
+    summary: "ให้ route handler บางที่สุด โดยส่งต่อ decision และ side effect ให้ service หรือ workflow.",
+    takeaways: ["route ควรแปล HTTP เป็น application call ไม่ใช่เก็บ use case ทั้งหมดไว้ใน handler."],
+    whatToReview: [
+      "โค้ดที่ดีให้ route ส่ง reviewId และ approverId เข้า workflow ที่รับผิดชอบกฎการ approve.",
+      "โค้ดที่ควรปรับให้ route อ่าน database, เช็ค business rule, update และส่ง notification เองทั้งหมด.",
+    ],
+    reviewNotes: [
+      "route handler ควร scan ง่ายแม้ use case ซับซ้อน. business rule ที่ซ่อนใน Express handler มัก reuse ยาก test ยาก และจัด transaction ให้ถูกยาก.",
     ],
   },
 } as const satisfies Record<string, LessonThaiTranslation>;

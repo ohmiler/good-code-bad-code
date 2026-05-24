@@ -1,0 +1,57 @@
+export const metadata = {
+  title: "Response shape consistency",
+  track: "express",
+  order: 7,
+  summary: "Return predictable success and error envelopes across routes.",
+  tags: ["responses", "api", "contracts"],
+  takeaways: ["Clients should not need route-specific parsing rules for common API responses."],
+  goodCode: {
+    language: "typescript",
+    filename: "src/http/respond.ts",
+    code: `import type { Response } from "express";
+
+export function ok<T>(res: Response, data: T) {
+  return res.json({ data });
+}
+
+export function created<T>(res: Response, data: T) {
+  return res.status(201).json({ data });
+}
+
+export function fail(res: Response, status: number, message: string) {
+  return res.status(status).json({ error: { message } });
+}`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "src/reviews/router.ts",
+    code: `router.get("/", async (_req, res) => {
+  res.json(await service.listOpenReviews());
+});
+
+router.post("/", async (req, res) => {
+  res.status(201).json({ review: await service.createReview(req.body) });
+});
+
+router.get("/:id", async (req, res) => {
+  const review = await service.getReview(req.params.id);
+
+  if (!review) {
+    res.status(404).send("not found");
+    return;
+  }
+
+  res.json({ data: { review } });
+});`,
+  },
+};
+
+## What to review
+
+The good version gives routes small helpers for success and error responses, making the API contract consistent.
+
+The bad version returns arrays, objects, strings, and nested data shapes depending on the route.
+
+## Review notes
+
+In review, compare response bodies across neighboring endpoints. The bad version is review-worthy because inconsistent API envelopes push accidental complexity onto every client and test.

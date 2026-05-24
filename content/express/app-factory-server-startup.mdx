@@ -1,0 +1,47 @@
+export const metadata = {
+  title: "App factory vs server startup",
+  track: "express",
+  order: 1,
+  summary: "Create the Express app separately from the process that starts listening.",
+  tags: ["startup", "architecture", "testing"],
+  takeaways: ["An Express app should be buildable for tests without opening a port."],
+  goodCode: {
+    language: "typescript",
+    filename: "src/app.ts",
+    code: `import express from "express";
+import { createReviewsRouter } from "./reviews/router";
+
+export function createApp() {
+  const app = express();
+
+  app.use(express.json());
+  app.use("/reviews", createReviewsRouter());
+
+  return app;
+}`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "src/app.ts",
+    code: `import express from "express";
+import { createReviewsRouter } from "./reviews/router";
+
+const app = express();
+
+app.use(express.json());
+app.use("/reviews", createReviewsRouter());
+app.listen(process.env.PORT || 3000);
+
+export default app;`,
+  },
+};
+
+## What to review
+
+The good version exports an app factory, so tests and workers can create the same app without starting a server.
+
+The bad version starts listening as a module side effect. Importing the app for tests or scripts now opens a port unexpectedly.
+
+## Review notes
+
+In review, check whether the Express app can be constructed independently from `listen()`. The bad version is review-worthy because startup side effects make testing, shutdown, and multi-process usage harder than they need to be.

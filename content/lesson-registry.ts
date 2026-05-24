@@ -215,6 +215,36 @@ import NodejsStructuredLogging, {
 import NodejsInputValidationPathSafety, {
   metadata as nodejsInputValidationPathSafetyMetadata,
 } from "./nodejs/input-validation-path-safety.mdx";
+import ExpressAppFactoryServerStartup, {
+  metadata as expressAppFactoryServerStartupMetadata,
+} from "./express/app-factory-server-startup.mdx";
+import ExpressRouterBoundaries, {
+  metadata as expressRouterBoundariesMetadata,
+} from "./express/router-boundaries.mdx";
+import ExpressMiddlewareOrder, {
+  metadata as expressMiddlewareOrderMetadata,
+} from "./express/middleware-order.mdx";
+import ExpressRequestValidation, {
+  metadata as expressRequestValidationMetadata,
+} from "./express/request-validation.mdx";
+import ExpressAsyncRouteErrorForwarding, {
+  metadata as expressAsyncRouteErrorForwardingMetadata,
+} from "./express/async-route-error-forwarding.mdx";
+import ExpressCentralErrorHandler, {
+  metadata as expressCentralErrorHandlerMetadata,
+} from "./express/central-error-handler.mdx";
+import ExpressResponseShapeConsistency, {
+  metadata as expressResponseShapeConsistencyMetadata,
+} from "./express/response-shape-consistency.mdx";
+import ExpressAuthMiddlewareBoundaries, {
+  metadata as expressAuthMiddlewareBoundariesMetadata,
+} from "./express/auth-middleware-boundaries.mdx";
+import ExpressRateLimitingTrustProxy, {
+  metadata as expressRateLimitingTrustProxyMetadata,
+} from "./express/rate-limiting-trust-proxy.mdx";
+import ExpressBusinessLogicOutOfRoutes, {
+  metadata as expressBusinessLogicOutOfRoutesMetadata,
+} from "./express/business-logic-out-of-routes.mdx";
 
 type RawLesson = {
   slug: string;
@@ -643,6 +673,66 @@ const rawLessons: RawLesson[] = [
     source: "content/nodejs/input-validation-path-safety.mdx",
     metadata: nodejsInputValidationPathSafetyMetadata,
     Component: NodejsInputValidationPathSafety,
+  },
+  {
+    slug: "app-factory-server-startup",
+    source: "content/express/app-factory-server-startup.mdx",
+    metadata: expressAppFactoryServerStartupMetadata,
+    Component: ExpressAppFactoryServerStartup,
+  },
+  {
+    slug: "router-boundaries",
+    source: "content/express/router-boundaries.mdx",
+    metadata: expressRouterBoundariesMetadata,
+    Component: ExpressRouterBoundaries,
+  },
+  {
+    slug: "middleware-order",
+    source: "content/express/middleware-order.mdx",
+    metadata: expressMiddlewareOrderMetadata,
+    Component: ExpressMiddlewareOrder,
+  },
+  {
+    slug: "request-validation",
+    source: "content/express/request-validation.mdx",
+    metadata: expressRequestValidationMetadata,
+    Component: ExpressRequestValidation,
+  },
+  {
+    slug: "async-route-error-forwarding",
+    source: "content/express/async-route-error-forwarding.mdx",
+    metadata: expressAsyncRouteErrorForwardingMetadata,
+    Component: ExpressAsyncRouteErrorForwarding,
+  },
+  {
+    slug: "central-error-handler",
+    source: "content/express/central-error-handler.mdx",
+    metadata: expressCentralErrorHandlerMetadata,
+    Component: ExpressCentralErrorHandler,
+  },
+  {
+    slug: "response-shape-consistency",
+    source: "content/express/response-shape-consistency.mdx",
+    metadata: expressResponseShapeConsistencyMetadata,
+    Component: ExpressResponseShapeConsistency,
+  },
+  {
+    slug: "auth-middleware-boundaries",
+    source: "content/express/auth-middleware-boundaries.mdx",
+    metadata: expressAuthMiddlewareBoundariesMetadata,
+    Component: ExpressAuthMiddlewareBoundaries,
+  },
+  {
+    slug: "rate-limiting-trust-proxy",
+    source: "content/express/rate-limiting-trust-proxy.mdx",
+    metadata: expressRateLimitingTrustProxyMetadata,
+    Component: ExpressRateLimitingTrustProxy,
+  },
+  {
+    slug: "business-logic-out-of-routes",
+    source: "content/express/business-logic-out-of-routes.mdx",
+    metadata: expressBusinessLogicOutOfRoutesMetadata,
+    Component: ExpressBusinessLogicOutOfRoutes,
   },
 ];
 

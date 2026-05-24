@@ -1,0 +1,56 @@
+export const metadata = {
+  title: "Middleware order",
+  track: "express",
+  order: 3,
+  summary: "Order middleware so parsing, security, routes, 404s, and errors run in the intended sequence.",
+  tags: ["middleware", "routing", "errors"],
+  takeaways: ["Express middleware order is behavior, not decoration."],
+  goodCode: {
+    language: "typescript",
+    filename: "src/app.ts",
+    code: `import express from "express";
+import { requireUser } from "./auth";
+import { errorHandler, notFoundHandler } from "./errors";
+import { createReviewsRouter } from "./reviews/router";
+
+export function createApp() {
+  const app = express();
+
+  app.use(express.json());
+  app.use("/reviews", requireUser, createReviewsRouter());
+  app.use(notFoundHandler);
+  app.use(errorHandler);
+
+  return app;
+}`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "src/app.ts",
+    code: `import express from "express";
+import { requireUser } from "./auth";
+import { errorHandler } from "./errors";
+import { createReviewsRouter } from "./reviews/router";
+
+export function createApp() {
+  const app = express();
+
+  app.use(errorHandler);
+  app.use("/reviews", createReviewsRouter());
+  app.use(requireUser);
+  app.use(express.json());
+
+  return app;
+}`,
+  },
+};
+
+## What to review
+
+The good version parses JSON before routes, protects the router before handlers run, and places the 404 and error handlers after routes.
+
+The bad version registers the error handler before routes, applies auth after the router, and parses JSON too late.
+
+## Review notes
+
+In review, read Express middleware top to bottom like a pipeline. The bad version is review-worthy because every `app.use()` changes what later handlers can see and whether earlier handlers ever run.

@@ -1,0 +1,59 @@
+export const metadata = {
+  title: "Central error handler",
+  track: "express",
+  order: 6,
+  summary: "Use one Express error handler to map application errors into HTTP responses.",
+  tags: ["errors", "middleware", "responses"],
+  takeaways: ["A central error handler keeps status codes, logging, and response bodies consistent."],
+  goodCode: {
+    language: "typescript",
+    filename: "src/errors.ts",
+    code: `import type { ErrorRequestHandler } from "express";
+
+export const errorHandler: ErrorRequestHandler = (error, _req, res, next) => {
+  if (res.headersSent) {
+    next(error);
+    return;
+  }
+
+  if (error.name === "ValidationError") {
+    res.status(400).json({ error: error.message });
+    return;
+  }
+
+  console.error({ error }, "Unhandled request error");
+  res.status(500).json({ error: "Internal server error." });
+};`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "src/reviews/router.ts",
+    code: `router.post("/", async (req, res) => {
+  try {
+    const review = await service.createReview(req.body);
+    res.json(review);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Something broke");
+  }
+});
+
+router.get("/:id", async (req, res) => {
+  try {
+    res.json(await service.getReview(req.params.id));
+  } catch {
+    res.status(400).json({ message: "Bad request" });
+  }
+});`,
+  },
+};
+
+## What to review
+
+The good version centralizes error mapping, checks `headersSent`, and keeps unexpected error output generic.
+
+The bad version repeats catch blocks in routes and returns different shapes and status codes for similar failures.
+
+## Review notes
+
+In review, repeated route-level catch blocks are often a sign that the error pipeline is missing or underused. The bad version is review-worthy because inconsistency makes clients harder to write and production failures harder to diagnose.

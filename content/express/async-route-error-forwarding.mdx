@@ -1,0 +1,62 @@
+export const metadata = {
+  title: "Async route error forwarding",
+  track: "express",
+  order: 5,
+  summary: "Let async route failures reach the Express error pipeline instead of becoming unhandled work.",
+  tags: ["async", "errors", "routes"],
+  takeaways: ["Async routes should either be awaited by Express or explicitly forwarded to next."],
+  goodCode: {
+    language: "typescript",
+    filename: "src/reviews/router.ts",
+    code: `import { Router } from "express";
+import { NotFoundError } from "../errors";
+
+export function createReviewsRouter(service: ReviewsService) {
+  const router = Router();
+
+  router.get("/:id", async (req, res) => {
+    const review = await service.getReview(req.params.id);
+
+    if (!review) {
+      throw new NotFoundError("Review not found.");
+    }
+
+    res.json({ data: review });
+  });
+
+  return router;
+}`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "src/reviews/router.ts",
+    code: `import { Router } from "express";
+
+export function createReviewsRouter(service: ReviewsService) {
+  const router = Router();
+
+  router.get("/:id", (req, res) => {
+    service.getReview(req.params.id).then((review) => {
+      if (!review) {
+        res.status(404).json({ error: "Review not found." });
+        return;
+      }
+
+      res.json({ data: review });
+    });
+  });
+
+  return router;
+}`,
+  },
+};
+
+## What to review
+
+The good version uses an async handler and lets thrown errors move to the central error handler.
+
+The bad version starts promise work without returning or catching it, so service failures can become unhandled while the request remains unfinished.
+
+## Review notes
+
+In review, make sure every async route has a path to the error middleware. Express 5 forwards rejected promises from async handlers, but manually started promise chains still need to be returned or caught.

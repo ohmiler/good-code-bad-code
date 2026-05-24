@@ -1,0 +1,61 @@
+export const metadata = {
+  title: "Router boundaries",
+  track: "express",
+  order: 2,
+  summary: "Group related routes behind routers with explicit dependencies.",
+  tags: ["routing", "routers", "boundaries"],
+  takeaways: ["Routers should own one resource area and receive services instead of reaching into globals."],
+  goodCode: {
+    language: "typescript",
+    filename: "src/reviews/router.ts",
+    code: `import { Router } from "express";
+import type { ReviewsService } from "./service";
+
+export function createReviewsRouter(service: ReviewsService) {
+  const router = Router();
+
+  router.get("/", async (_req, res) => {
+    const reviews = await service.listOpenReviews();
+    res.json({ data: reviews });
+  });
+
+  router.post("/", async (req, res) => {
+    const review = await service.createReview(req.body);
+    res.status(201).json({ data: review });
+  });
+
+  return router;
+}`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "src/app.ts",
+    code: `import express from "express";
+import { reviewService, userService, billingService } from "./services";
+
+const app = express();
+
+app.get("/reviews", async (_req, res) => {
+  res.json(await reviewService.listOpenReviews());
+});
+app.post("/reviews", async (req, res) => {
+  res.json(await reviewService.createReview(req.body));
+});
+app.get("/users", async (_req, res) => {
+  res.json(await userService.listUsers());
+});
+app.post("/billing/retry", async (req, res) => {
+  res.json(await billingService.retryCharge(req.body.invoiceId));
+});`,
+  },
+};
+
+## What to review
+
+The good version keeps review routes in a focused router and receives the service dependency explicitly.
+
+The bad version piles unrelated resources into the app entry point and reaches into shared service singletons.
+
+## Review notes
+
+In review, ask whether this route file has one clear resource boundary. The bad version is review-worthy because Express makes it easy to keep adding endpoints to `app.ts` until routing, dependencies, and ownership become blurry.
