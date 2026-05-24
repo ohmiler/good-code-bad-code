@@ -1,0 +1,46 @@
+export const metadata = {
+  title: "Type hints at boundaries",
+  track: "python",
+  order: 8,
+  summary: "Add type hints where data enters or leaves a module so assumptions are visible to tools and reviewers.",
+  tags: ["typing", "boundaries", "interfaces"],
+  takeaways: ["Type hints are most valuable at module boundaries, not as decoration on obvious local variables."],
+  goodCode: {
+    language: "python",
+    filename: "review_input.py",
+    code: `from dataclasses import dataclass
+from typing import Mapping
+
+
+@dataclass(frozen=True)
+class ReviewInput:
+    title: str
+    author_id: int
+
+
+def parse_review_input(payload: Mapping[str, object]) -> ReviewInput:
+    return ReviewInput(
+        title=str(payload["title"]),
+        author_id=int(payload["author_id"]),
+    )`,
+  },
+  badCode: {
+    language: "python",
+    filename: "review_input.py",
+    code: `def parse_review_input(payload):
+    return {
+        "title": payload["title"],
+        "author_id": payload["author_id"],
+    }`,
+  },
+};
+
+## What to review
+
+The good version tells callers what kind of payload is accepted and returns a named object with typed fields.
+
+The bad version accepts and returns anything. Reviewers cannot see whether `author_id` should be a string, number, or optional value.
+
+## Review notes
+
+You do not need to type every line to get value from typing. Review the boundary first: function parameters, return values, and shared data models.

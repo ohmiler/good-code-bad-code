@@ -1,0 +1,37 @@
+export const metadata = {
+  title: "Async and await boundaries",
+  track: "python",
+  order: 10,
+  summary: "Await asynchronous work and gather independent calls intentionally so coroutines do not leak out unfinished.",
+  tags: ["async", "await", "concurrency"],
+  takeaways: ["Calling an async function creates work to await; it does not complete the work by itself."],
+  goodCode: {
+    language: "python",
+    filename: "profiles.py",
+    code: `import asyncio
+
+
+async def fetch_profiles(user_ids, api):
+    tasks = [api.fetch_profile(user_id) for user_id in user_ids]
+    return await asyncio.gather(*tasks)`,
+  },
+  badCode: {
+    language: "python",
+    filename: "profiles.py",
+    code: `async def fetch_profiles(user_ids, api):
+    profiles = []
+    for user_id in user_ids:
+        profiles.append(api.fetch_profile(user_id))
+    return profiles`,
+  },
+};
+
+## What to review
+
+The good version collects independent async calls and awaits them together.
+
+The bad version returns coroutine objects instead of profile data. The caller may see confusing values, and the intended I/O may never complete.
+
+## Review notes
+
+When reviewing async Python, trace every coroutine. It should be awaited, returned intentionally for a caller to await, or scheduled with clear ownership.

@@ -1,0 +1,49 @@
+export const metadata = {
+  title: "Exception boundaries",
+  track: "python",
+  order: 5,
+  summary: "Catch specific exceptions at the boundary and preserve the original failure with exception chaining.",
+  tags: ["exceptions", "errors", "boundaries"],
+  takeaways: ["Specific exceptions make failure modes reviewable; blanket catches hide the bug you need to see."],
+  goodCode: {
+    language: "python",
+    filename: "settings.py",
+    code: `import json
+
+
+class SettingsError(Exception):
+    pass
+
+
+def load_settings(path):
+    try:
+        with open(path, encoding="utf-8") as file:
+            return json.load(file)
+    except FileNotFoundError as error:
+        raise SettingsError(f"Settings file not found: {path}") from error
+    except json.JSONDecodeError as error:
+        raise SettingsError(f"Settings file is invalid JSON: {path}") from error`,
+  },
+  badCode: {
+    language: "python",
+    filename: "settings.py",
+    code: `import json
+
+
+def load_settings(path):
+    try:
+        return json.load(open(path))
+    except Exception:
+        return {}`,
+  },
+};
+
+## What to review
+
+The good version catches the expected file and JSON failures, then raises a domain error while preserving the original exception.
+
+The bad version catches everything and returns an empty config. Permission errors, programmer mistakes, and corrupt JSON all become silent defaults.
+
+## Review notes
+
+When reviewing `except Exception`, ask what failure is actually expected. If the caller needs a friendly error, wrap it with context instead of swallowing it.

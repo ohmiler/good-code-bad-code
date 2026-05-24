@@ -1,0 +1,36 @@
+export const metadata = {
+  title: "Truthy, falsy, and None checks",
+  track: "python",
+  order: 2,
+  summary: "Distinguish missing values from valid falsy values such as empty strings, zero, and empty collections.",
+  tags: ["none", "conditionals", "truthiness"],
+  takeaways: ["Use `is None` when absence is different from an empty value."],
+  goodCode: {
+    language: "python",
+    filename: "display_name.py",
+    code: `def display_name(user):
+    if user.nickname is None:
+        return user.full_name
+
+    return user.nickname`,
+  },
+  badCode: {
+    language: "python",
+    filename: "display_name.py",
+    code: `def display_name(user):
+    if user.nickname:
+        return user.nickname
+
+    return user.full_name`,
+  },
+};
+
+## What to review
+
+The good version treats `None` as the missing case and preserves an intentionally empty nickname.
+
+The bad version treats every falsy value as missing. Empty strings, zero, empty lists, and `False` can accidentally take the fallback path.
+
+## Review notes
+
+Truthy checks are fine when any empty value means "not usable." When the code specifically means "not provided," ask for `is None` or `is not None`.

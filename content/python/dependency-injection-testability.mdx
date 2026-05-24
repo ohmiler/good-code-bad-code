@@ -1,0 +1,42 @@
+export const metadata = {
+  title: "Dependency injection for testability",
+  track: "python",
+  order: 9,
+  summary: "Pass collaborators into functions or classes so behavior can be tested without patching global modules.",
+  tags: ["testing", "dependencies", "design"],
+  takeaways: ["Injected dependencies make side effects explicit and keep tests focused on behavior."],
+  goodCode: {
+    language: "python",
+    filename: "notifications.py",
+    code: `def notify_reviewer(review, mailer):
+    message = f"Review {review.title} is ready"
+    mailer.send(
+        to=review.reviewer_email,
+        subject="Review requested",
+        body=message,
+    )`,
+  },
+  badCode: {
+    language: "python",
+    filename: "notifications.py",
+    code: `from app.email import send_email
+
+
+def notify_reviewer(review):
+    send_email(
+        review.reviewer_email,
+        "Review requested",
+        f"Review {review.title} is ready",
+    )`,
+  },
+};
+
+## What to review
+
+The good version makes the mailer dependency explicit, so tests can pass a fake mailer and assert behavior.
+
+The bad version imports a global side-effect function directly. Tests must patch the import path correctly, and production coupling stays hidden.
+
+## Review notes
+
+Dependency injection does not have to mean a framework. In Python, passing a collaborator as an argument is often enough to make code easier to test.

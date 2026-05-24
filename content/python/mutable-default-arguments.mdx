@@ -1,0 +1,35 @@
+export const metadata = {
+  title: "Mutable default arguments",
+  track: "python",
+  order: 3,
+  summary: "Avoid shared mutable defaults by creating fresh lists, dicts, or sets inside the function.",
+  tags: ["defaults", "mutation", "state"],
+  takeaways: ["Default arguments are evaluated once, so mutable defaults can leak state between calls."],
+  goodCode: {
+    language: "python",
+    filename: "tags.py",
+    code: `def add_review_tag(tag, tags=None):
+    if tags is None:
+        tags = []
+
+    tags.append(tag)
+    return tags`,
+  },
+  badCode: {
+    language: "python",
+    filename: "tags.py",
+    code: `def add_review_tag(tag, tags=[]):
+    tags.append(tag)
+    return tags`,
+  },
+};
+
+## What to review
+
+The good version creates a new list only when the caller did not pass one.
+
+The bad version shares the same default list across calls. Tags from one request or test can appear in the next call.
+
+## Review notes
+
+Mutable defaults are a classic Python review catch. Scan function signatures for `[]`, `{}`, and `set()` defaults before reading the body.

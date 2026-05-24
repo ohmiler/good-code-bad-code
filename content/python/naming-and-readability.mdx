@@ -1,0 +1,36 @@
+export const metadata = {
+  title: "Naming and readability",
+  track: "python",
+  order: 1,
+  summary: "Use names and small functions that explain intent without forcing reviewers to decode abbreviations.",
+  tags: ["naming", "readability", "functions"],
+  takeaways: ["Readable Python starts with names that describe the domain, not the implementation shortcut."],
+  goodCode: {
+    language: "python",
+    filename: "review_score.py",
+    code: `def calculate_review_score(review):
+    comment_score = len(review.comments) * 2
+    approval_score = review.approvals * 5
+
+    return comment_score + approval_score`,
+  },
+  badCode: {
+    language: "python",
+    filename: "review_score.py",
+    code: `def calc(x):
+    a = len(x.c) * 2
+    b = x.a * 5
+
+    return a + b`,
+  },
+};
+
+## What to review
+
+The good version names the function and intermediate values after the business idea, so the scoring rule can be read without reverse engineering attributes.
+
+The bad version hides the domain behind `calc`, `x`, `a`, `b`, and short attribute names. It may work, but the reviewer has to decode it before checking correctness.
+
+## Review notes
+
+Python code often reads like prose when naming is strong. In review, ask whether a new teammate could explain the function by reading the names alone.

@@ -53,6 +53,12 @@ export const tracks = [
     description:
       "Review schemas, queries, joins, indexes, transactions, migrations, and data safety.",
   },
+  {
+    slug: "python",
+    title: "Python",
+    description:
+      "Review readable functions, data shapes, exceptions, typing, testability, and async boundaries.",
+  },
 ] as const;
 
 export type Track = (typeof tracks)[number];

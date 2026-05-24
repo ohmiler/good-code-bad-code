@@ -108,6 +108,11 @@ export const trackThaiTranslations = {
     description:
       "ฝึกรีวิว schema, query, join, index, transaction, migration และความปลอดภัยของข้อมูล.",
   },
+  python: {
+    title: "Python",
+    description:
+      "ฝึกรีวิวฟังก์ชันที่อ่านง่าย รูปทรงข้อมูล exception, typing, testability และ async boundary.",
+  },
 } as const satisfies Record<TrackSlug, TrackTranslation>;
 
 export const lessonThaiTranslations = {
@@ -1189,6 +1194,126 @@ export const lessonThaiTranslations = {
     ],
     reviewNotes: [
       "OFFSET pagination อาจพอใช้กับ admin screen เล็ก ๆ แต่ feed หรือรายการที่เปลี่ยนบ่อยควรถูกรีวิวเข้มกว่า ปกติ stable order และ cursor จะทนกว่า.",
+    ],
+  },
+  "python/naming-and-readability": {
+    title: "การตั้งชื่อและ readability",
+    summary: "ใช้ชื่อและฟังก์ชันเล็ก ๆ ที่อธิบายเจตนา โดยไม่บังคับให้คนรีวิวต้องถอดรหัสตัวย่อ.",
+    takeaways: ["Python ที่อ่านง่ายเริ่มจากชื่อที่สื่อ domain ไม่ใช่ชื่อที่สื่อแค่ทางลัดของ implementation."],
+    whatToReview: [
+      "โค้ดที่ดีตั้งชื่อฟังก์ชันและค่ากลางตามแนวคิดทางธุรกิจ ทำให้อ่านกฎการคิดคะแนนได้โดยไม่ต้องเดา attribute.",
+      "โค้ดที่ควรปรับซ่อน domain ไว้หลังชื่อสั้นอย่าง calc, x, a, b ถึงจะทำงานได้แต่ทำให้รีวิว correctness ยากขึ้น.",
+    ],
+    reviewNotes: [
+      "Python มักอ่านเหมือนประโยคได้ถ้าชื่อดี ตอนรีวิวให้ถามว่า teammate ใหม่อธิบายฟังก์ชันจากชื่ออย่างเดียวได้ไหม.",
+    ],
+  },
+  "python/truthy-falsy-none-checks": {
+    title: "truthy/falsy และการเช็ก None",
+    summary: "แยกค่าที่ไม่มีจริงออกจากค่าที่ถูกต้องแต่เป็น falsy เช่น empty string, zero หรือ empty collection.",
+    takeaways: ["ใช้ is None เมื่อ absence ต่างจาก empty value."],
+    whatToReview: [
+      "โค้ดที่ดีมอง None เป็นกรณี missing และยังเก็บ nickname ว่างที่ตั้งใจส่งมาไว้ได้.",
+      "โค้ดที่ควรปรับมองทุกค่า falsy เป็น missing ทำให้ empty string, zero, empty list หรือ False หลุดไป fallback ได้.",
+    ],
+    reviewNotes: [
+      "truthy check ใช้ได้เมื่อ empty value แปลว่าใช้ไม่ได้จริง ๆ แต่ถ้าความหมายคือ not provided ให้ขอ is None หรือ is not None ให้ชัด.",
+    ],
+  },
+  "python/mutable-default-arguments": {
+    title: "mutable default argument ที่ควรระวัง",
+    summary: "หลีกเลี่ยง default ที่เป็น list, dict หรือ set ร่วมกัน โดยสร้าง object ใหม่ในฟังก์ชันแทน.",
+    takeaways: ["default argument ใน Python ถูก evaluate ครั้งเดียว ดังนั้น mutable default อาจ leak state ข้าม call ได้."],
+    whatToReview: [
+      "โค้ดที่ดีสร้าง list ใหม่เฉพาะตอน caller ไม่ได้ส่ง tags มา.",
+      "โค้ดที่ควรปรับใช้ list default เดียวกันซ้ำทุก call ทำให้ tag จาก request หรือ test ก่อนหน้าปนเข้ามาได้.",
+    ],
+    reviewNotes: [
+      "mutable default เป็นจุดคลาสสิกของ Python review ให้ scan signature ที่มี [], {} หรือ set() ก่อนอ่าน body.",
+    ],
+  },
+  "python/list-dict-comprehensions": {
+    title: "list และ dict comprehension",
+    summary: "ใช้ comprehension กับ transformation ที่ชัด แต่กลับไปใช้ loop เมื่อ branching กลายเป็นเรื่องหลัก.",
+    takeaways: ["comprehension ควรทำให้การ filter และ map อ่านง่ายขึ้น ไม่ใช่อัด logic ให้แน่นขึ้น."],
+    whatToReview: [
+      "โค้ดที่ดีสื่อ filter หนึ่งชั้นและ transformation หนึ่งอย่างในรูปทรงที่ compact.",
+      "โค้ดที่ควรปรับกระจาย transformation ง่าย ๆ ไปอยู่ใน nested condition จนเจตนาหลักหายไป.",
+    ],
+    reviewNotes: [
+      "comprehension ดีเมื่ออ่านแล้วพูดได้ว่า filter item เหล่านี้แล้ว map ค่านี้ ถ้ามี side effect หรือ branch หลายชั้น loop ที่ตั้งชื่อดีอาจอ่านง่ายกว่า.",
+    ],
+  },
+  "python/exception-boundaries": {
+    title: "boundary ของ exception",
+    summary: "catch exception ที่เฉพาะเจาะจงตรง boundary และเก็บ failure เดิมไว้ด้วย exception chaining.",
+    takeaways: ["exception ที่ specific ทำให้ failure mode รีวิวได้ ส่วน blanket catch มักซ่อน bug ที่ควรเห็น."],
+    whatToReview: [
+      "โค้ดที่ดี catch failure ของไฟล์และ JSON ที่คาดไว้ แล้ว raise domain error พร้อม context โดยไม่ทิ้ง original exception.",
+      "โค้ดที่ควรปรับ catch ทุกอย่างแล้วคืน config ว่าง ทำให้ permission error, bug ของโปรแกรม และ JSON พังกลายเป็น default เงียบ ๆ.",
+    ],
+    reviewNotes: [
+      "เมื่อเห็น except Exception ให้ถามว่า failure ไหนที่คาดไว้จริง ๆ ถ้า caller ต้องการ error ที่อ่านง่าย ให้ wrap พร้อม context แทนการกลืน error.",
+    ],
+  },
+  "python/context-managers-files": {
+    title: "context manager สำหรับไฟล์",
+    summary: "ใช้ context manager เพื่อให้ file handle และ resource อื่น ๆ ถูกปิดแม้งานข้างในจะ fail.",
+    takeaways: ["lifetime ของ resource ควรมองเห็นได้จากรูปทรงโค้ด ไม่ใช่ซ่อนอยู่ใน manual cleanup."],
+    whatToReview: [
+      "โค้ดที่ดีใช้ with เพื่อกำหนดขอบเขตของไฟล์ ใส่ encoding และปิดไฟล์แม้การเขียน row ใด row หนึ่งจะล้ม.",
+      "โค้ดที่ควรปรับพึ่ง close() เอง ถ้าเกิด exception ใน loop file อาจค้างเปิด และ encoding จะขึ้นกับ environment.",
+    ],
+    reviewNotes: [
+      "context manager ไม่ใช่แค่ style แต่ทำให้ cleanup deterministic และทำให้คนรีวิวเห็น boundary ของ resource ownership.",
+    ],
+  },
+  "python/dataclasses-data-shapes": {
+    title: "dataclass สำหรับรูปทรงข้อมูล",
+    summary: "ใช้ dataclass กับ data shape ภายในที่คงที่ แทน dict หลวม ๆ ที่มี string key ซ้ำไปมา.",
+    takeaways: ["data shape ที่มีชื่อช่วยให้ field, default และ equality behavior รีวิวได้ง่ายขึ้น."],
+    whatToReview: [
+      "โค้ดที่ดีตั้งชื่อ shape และประกาศทุก field ชัดเจน.",
+      "โค้ดที่ควรปรับคืน dict ที่ key กำกวม ทำให้ caller ต้องจำเองว่า name และ ok หมายถึงอะไร และ typo จะเจอช้า.",
+    ],
+    reviewNotes: [
+      "dict เหมาะกับ boundary อย่าง JSON แต่ภายใน application dataclass เล็ก ๆ มักทำให้ contract รีวิวและ test ง่ายกว่า.",
+    ],
+  },
+  "python/type-hints-boundaries": {
+    title: "type hint ที่ boundary",
+    summary: "ใส่ type hint ตอนข้อมูลเข้าออก module เพื่อให้ assumption เห็นชัดทั้งกับ tool และคนรีวิว.",
+    takeaways: ["type hint มีค่าที่สุดตรง module boundary ไม่ใช่ decoration บน local variable ที่เห็นชัดอยู่แล้ว."],
+    whatToReview: [
+      "โค้ดที่ดีบอกชนิด payload ที่รับและคืน object ที่มีชื่อพร้อม field ที่ typed.",
+      "โค้ดที่ควรปรับรับและคืนอะไรก็ได้ ทำให้คนรีวิวไม่เห็นว่า author_id ควรเป็น string, number หรือ optional.",
+    ],
+    reviewNotes: [
+      "ไม่จำเป็นต้อง type ทุกบรรทัดเพื่อให้ได้ประโยชน์ ให้รีวิว boundary ก่อน: parameter, return value และ shared data model.",
+    ],
+  },
+  "python/dependency-injection-testability": {
+    title: "dependency injection เพื่อ testability",
+    summary: "ส่ง collaborator เข้า function หรือ class เพื่อให้ test behavior ได้โดยไม่ต้อง patch global module.",
+    takeaways: ["dependency ที่ inject เข้ามาทำให้ side effect ชัด และทำให้ test โฟกัสที่ behavior."],
+    whatToReview: [
+      "โค้ดที่ดีทำให้ mailer เป็น dependency ที่ชัดเจน test จึงส่ง fake mailer แล้ว assert behavior ได้.",
+      "โค้ดที่ควรปรับ import side-effect function ตรง ๆ ทำให้ test ต้อง patch import path ให้ถูก และ coupling ใน production ถูกซ่อนอยู่.",
+    ],
+    reviewNotes: [
+      "dependency injection ไม่จำเป็นต้องเป็น framework ใน Python แค่ส่ง collaborator เป็น argument ก็มักพอให้โค้ด test ง่ายขึ้น.",
+    ],
+  },
+  "python/async-await-boundaries": {
+    title: "boundary ของ async และ await",
+    summary: "await งาน async และ gather call ที่เป็นอิสระอย่างตั้งใจ เพื่อไม่ให้ coroutine หลุดออกไปแบบยังไม่เสร็จ.",
+    takeaways: ["การเรียก async function แค่สร้างงานที่ต้อง await มันไม่ได้ทำให้งานเสร็จเอง."],
+    whatToReview: [
+      "โค้ดที่ดีรวบรวม async call ที่เป็นอิสระ แล้ว await พร้อมกันอย่างชัดเจน.",
+      "โค้ดที่ควรปรับคืน coroutine object แทน profile data ทำให้ caller ได้ค่าที่งง และ I/O ที่ตั้งใจไว้อาจไม่เสร็จเลย.",
+    ],
+    reviewNotes: [
+      "เวลารีวิว async Python ให้ไล่ทุก coroutine ว่าถูก await, ถูก return อย่างตั้งใจให้ caller await หรือถูก schedule โดยมี owner ชัดเจน.",
     ],
   },
 } as const satisfies Record<string, LessonThaiTranslation>;

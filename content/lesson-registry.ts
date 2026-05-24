@@ -275,6 +275,36 @@ import SqlParameterizedQueries, {
 import SqlStablePagination, {
   metadata as sqlStablePaginationMetadata,
 } from "./sql/stable-pagination.mdx";
+import PythonNamingAndReadability, {
+  metadata as pythonNamingAndReadabilityMetadata,
+} from "./python/naming-and-readability.mdx";
+import PythonTruthyFalsyNoneChecks, {
+  metadata as pythonTruthyFalsyNoneChecksMetadata,
+} from "./python/truthy-falsy-none-checks.mdx";
+import PythonMutableDefaultArguments, {
+  metadata as pythonMutableDefaultArgumentsMetadata,
+} from "./python/mutable-default-arguments.mdx";
+import PythonListDictComprehensions, {
+  metadata as pythonListDictComprehensionsMetadata,
+} from "./python/list-dict-comprehensions.mdx";
+import PythonExceptionBoundaries, {
+  metadata as pythonExceptionBoundariesMetadata,
+} from "./python/exception-boundaries.mdx";
+import PythonContextManagersFiles, {
+  metadata as pythonContextManagersFilesMetadata,
+} from "./python/context-managers-files.mdx";
+import PythonDataclassesDataShapes, {
+  metadata as pythonDataclassesDataShapesMetadata,
+} from "./python/dataclasses-data-shapes.mdx";
+import PythonTypeHintsBoundaries, {
+  metadata as pythonTypeHintsBoundariesMetadata,
+} from "./python/type-hints-boundaries.mdx";
+import PythonDependencyInjectionTestability, {
+  metadata as pythonDependencyInjectionTestabilityMetadata,
+} from "./python/dependency-injection-testability.mdx";
+import PythonAsyncAwaitBoundaries, {
+  metadata as pythonAsyncAwaitBoundariesMetadata,
+} from "./python/async-await-boundaries.mdx";
 
 type RawLesson = {
   slug: string;
@@ -823,6 +853,66 @@ const rawLessons: RawLesson[] = [
     source: "content/sql/stable-pagination.mdx",
     metadata: sqlStablePaginationMetadata,
     Component: SqlStablePagination,
+  },
+  {
+    slug: "naming-and-readability",
+    source: "content/python/naming-and-readability.mdx",
+    metadata: pythonNamingAndReadabilityMetadata,
+    Component: PythonNamingAndReadability,
+  },
+  {
+    slug: "truthy-falsy-none-checks",
+    source: "content/python/truthy-falsy-none-checks.mdx",
+    metadata: pythonTruthyFalsyNoneChecksMetadata,
+    Component: PythonTruthyFalsyNoneChecks,
+  },
+  {
+    slug: "mutable-default-arguments",
+    source: "content/python/mutable-default-arguments.mdx",
+    metadata: pythonMutableDefaultArgumentsMetadata,
+    Component: PythonMutableDefaultArguments,
+  },
+  {
+    slug: "list-dict-comprehensions",
+    source: "content/python/list-dict-comprehensions.mdx",
+    metadata: pythonListDictComprehensionsMetadata,
+    Component: PythonListDictComprehensions,
+  },
+  {
+    slug: "exception-boundaries",
+    source: "content/python/exception-boundaries.mdx",
+    metadata: pythonExceptionBoundariesMetadata,
+    Component: PythonExceptionBoundaries,
+  },
+  {
+    slug: "context-managers-files",
+    source: "content/python/context-managers-files.mdx",
+    metadata: pythonContextManagersFilesMetadata,
+    Component: PythonContextManagersFiles,
+  },
+  {
+    slug: "dataclasses-data-shapes",
+    source: "content/python/dataclasses-data-shapes.mdx",
+    metadata: pythonDataclassesDataShapesMetadata,
+    Component: PythonDataclassesDataShapes,
+  },
+  {
+    slug: "type-hints-boundaries",
+    source: "content/python/type-hints-boundaries.mdx",
+    metadata: pythonTypeHintsBoundariesMetadata,
+    Component: PythonTypeHintsBoundaries,
+  },
+  {
+    slug: "dependency-injection-testability",
+    source: "content/python/dependency-injection-testability.mdx",
+    metadata: pythonDependencyInjectionTestabilityMetadata,
+    Component: PythonDependencyInjectionTestability,
+  },
+  {
+    slug: "async-await-boundaries",
+    source: "content/python/async-await-boundaries.mdx",
+    metadata: pythonAsyncAwaitBoundariesMetadata,
+    Component: PythonAsyncAwaitBoundaries,
   },
 ];
 

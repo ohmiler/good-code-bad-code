@@ -1,0 +1,39 @@
+export const metadata = {
+  title: "List and dict comprehensions",
+  track: "python",
+  order: 4,
+  summary: "Use comprehensions for clear transformations, but switch to loops when branching becomes the main story.",
+  tags: ["comprehensions", "collections", "readability"],
+  takeaways: ["A comprehension should make simple filtering and mapping easier to read, not denser to parse."],
+  goodCode: {
+    language: "python",
+    filename: "reviewers.py",
+    code: `def active_reviewer_emails(users):
+    return [
+        user.email.lower()
+        for user in users
+        if user.is_active and user.email
+    ]`,
+  },
+  badCode: {
+    language: "python",
+    filename: "reviewers.py",
+    code: `def active_reviewer_emails(users):
+    emails = []
+    for user in users:
+        if user.is_active:
+            if user.email:
+                emails.append(user.email.lower())
+    return emails`,
+  },
+};
+
+## What to review
+
+The good version expresses one filter and one transformation in a compact shape.
+
+The bad version spreads a simple collection transformation across nested conditionals, making the main intent harder to see.
+
+## Review notes
+
+Comprehensions are best when the reader can say "filter these items and map this value." If there are multiple side effects or branches, a named loop may be clearer.

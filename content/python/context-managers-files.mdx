@@ -1,0 +1,35 @@
+export const metadata = {
+  title: "Context managers for files",
+  track: "python",
+  order: 6,
+  summary: "Use context managers so file handles and other resources close even when work fails.",
+  tags: ["files", "context managers", "resources"],
+  takeaways: ["Resource lifetime should be visible in the code shape, not hidden in manual cleanup."],
+  goodCode: {
+    language: "python",
+    filename: "export_reviews.py",
+    code: `def write_review_export(path, rows):
+    with open(path, "w", encoding="utf-8") as file:
+        for row in rows:
+            file.write(f"{row.id},{row.status}\\n")`,
+  },
+  badCode: {
+    language: "python",
+    filename: "export_reviews.py",
+    code: `def write_review_export(path, rows):
+    file = open(path, "w")
+    for row in rows:
+        file.write(f"{row.id},{row.status}\\n")
+    file.close()`,
+  },
+};
+
+## What to review
+
+The good version scopes the file lifetime with `with`, includes an encoding, and closes the file even if writing a row fails.
+
+The bad version relies on manual `close()`. An exception in the loop can leave the file open, and the default encoding depends on the environment.
+
+## Review notes
+
+Context managers are not just style. They make cleanup deterministic and give reviewers a visible boundary for resource ownership.

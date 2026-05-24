@@ -18,6 +18,7 @@ const expectedLessonCounts = {
   nodejs: 10,
   express: 10,
   sql: 10,
+  python: 10,
 } as const;
 
 type RawLessonEntry = {
@@ -242,7 +243,7 @@ test("seeded lessons match expected track counts", async () => {
   const lessonsByTrack = await getTrackLessonFiles();
   const allLessonFiles = [...lessonsByTrack.values()].flat();
 
-  assert.equal(allLessonFiles.length, 90);
+  assert.equal(allLessonFiles.length, 100);
   for (const track of tracks) {
     assert.equal(
       lessonsByTrack.get(track.slug)?.length,

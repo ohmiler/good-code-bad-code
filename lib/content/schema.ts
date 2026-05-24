@@ -7,7 +7,8 @@ export type CodeLanguage =
   | "javascript"
   | "typescript"
   | "tsx"
-  | "sql";
+  | "sql"
+  | "python";
 
 export type CodeSample = {
   language: CodeLanguage;
@@ -38,6 +39,7 @@ const codeLanguages = new Set<CodeLanguage>([
   "typescript",
   "tsx",
   "sql",
+  "python",
 ]);
 
 function isRecord(value: unknown): value is Record<string, unknown> {
