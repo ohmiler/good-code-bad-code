@@ -1,0 +1,56 @@
+export const metadata = {
+  title: "Custom properties as design tokens",
+  track: "css",
+  order: 9,
+  summary: "Use custom properties to name shared design decisions instead of repeating magic values.",
+  tags: ["design tokens", "custom properties", "maintainability"],
+  takeaways: ["Name reusable color, spacing, radius, and component accents with custom properties."],
+  goodCode: {
+    language: "css",
+    filename: "notice.css",
+    code: `:root {
+  --color-surface: #ffffff;
+  --color-border: #d8dee8;
+  --space-4: 1rem;
+  --radius-sm: 0.375rem;
+}
+
+.notice {
+  --notice-accent: #2563eb;
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-left: 4px solid var(--notice-accent);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+}
+
+.notice--warning {
+  --notice-accent: #b45309;
+}`,
+  },
+  badCode: {
+    language: "css",
+    filename: "notice.css",
+    code: `.notice {
+  padding: 16px;
+  border: 1px solid #d8dee8;
+  border-left: 4px solid #2563eb;
+  border-radius: 6px;
+  background: #ffffff;
+}
+
+.notice--warning {
+  border-left-color: #b45309;
+}`,
+  },
+};
+
+## What to review
+
+The good version gives shared design values names and lets the warning variant change only the accent token it owns.
+
+The bad version works visually, but every repeated value becomes a search-and-replace dependency when the design system changes.
+
+## Review notes
+
+In review, look for values that appear in multiple components or represent product decisions. Magic numbers are harder to discuss than named tokens because the intent is hidden in raw values.

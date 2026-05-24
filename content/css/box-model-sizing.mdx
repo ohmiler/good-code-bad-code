@@ -1,0 +1,52 @@
+export const metadata = {
+  title: "Box model sizing",
+  track: "css",
+  order: 1,
+  summary: "Make element dimensions predictable when padding and borders are part of the component.",
+  tags: ["box model", "layout", "sizing"],
+  takeaways: ["Prefer border-box sizing so declared component width includes padding and borders."],
+  goodCode: {
+    language: "css",
+    filename: "pricing-card.css",
+    code: `*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.pricing-card {
+  width: min(100%, 24rem);
+  padding: 1.5rem;
+  border: 1px solid #d8dee8;
+}
+
+.pricing-card__media {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}`,
+  },
+  badCode: {
+    language: "css",
+    filename: "pricing-card.css",
+    code: `.pricing-card {
+  width: 24rem;
+  padding: 24px;
+  border: 1px solid #d8dee8;
+}
+
+.pricing-card__media {
+  width: 24rem;
+}`,
+  },
+};
+
+## What to review
+
+The good version makes the declared card width include its padding and border, so the component can shrink inside narrower containers without surprise overflow.
+
+The bad version looks simple, but its rendered width is wider than `24rem` after padding and border are added, and the media element repeats the fixed size instead of adapting to the card.
+
+## Review notes
+
+In review, treat sizing as a contract. When the code says a component is `24rem` wide, the surrounding layout should not need to mentally add padding and border to know the real footprint.

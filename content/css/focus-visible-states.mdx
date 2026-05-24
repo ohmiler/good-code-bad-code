@@ -1,0 +1,56 @@
+export const metadata = {
+  title: "State selectors and focus-visible",
+  track: "css",
+  order: 7,
+  summary: "Style hover, active, selected, and keyboard focus states as separate reviewable behavior.",
+  tags: ["accessibility", "states", "focus"],
+  takeaways: ["Use :focus-visible for keyboard focus and avoid removing outlines without a visible replacement."],
+  goodCode: {
+    language: "css",
+    filename: "tabs.css",
+    code: `.tab-button {
+  color: #334155;
+  border-bottom: 2px solid transparent;
+}
+
+.tab-button:hover {
+  color: #0f172a;
+}
+
+.tab-button:focus-visible {
+  outline: 3px solid #f59e0b;
+  outline-offset: 3px;
+}
+
+.tab-button[aria-selected="true"] {
+  color: #1d4ed8;
+  border-bottom-color: currentColor;
+}`,
+  },
+  badCode: {
+    language: "css",
+    filename: "tabs.css",
+    code: `.tab-button {
+  outline: none;
+}
+
+.tab-button:hover,
+.tab-button:focus {
+  color: #1d4ed8;
+}
+
+.tab-button.active {
+  border-bottom: 2px solid #1d4ed8;
+}`,
+  },
+};
+
+## What to review
+
+The good version keeps mouse hover, keyboard focus, and selected state distinct, so each user interaction has a visible and meaningful style.
+
+The bad version removes the native outline and blends focus with hover, making keyboard navigation harder to detect and tying selected state to a visual-only class.
+
+## Review notes
+
+In review, do not accept `outline: none` unless the replacement focus style is obvious in the same change. Focus styling is interaction behavior, not optional polish.

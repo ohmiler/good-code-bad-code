@@ -1,0 +1,44 @@
+export const metadata = {
+  title: "Grid layout tracks",
+  track: "css",
+  order: 4,
+  summary: "Use grid tracks to describe responsive columns instead of hand-balancing fixed widths.",
+  tags: ["layout", "grid", "responsive"],
+  takeaways: ["Let grid define track rules with minmax and gaps instead of distributing width through floats or nth-child margins."],
+  goodCode: {
+    language: "css",
+    filename: "dashboard-grid.css",
+    code: `.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 1rem;
+}
+
+.dashboard-card {
+  min-width: 0;
+}`,
+  },
+  badCode: {
+    language: "css",
+    filename: "dashboard-grid.css",
+    code: `.dashboard-card {
+  float: left;
+  width: 33.333%;
+  margin-right: 24px;
+}
+
+.dashboard-card:nth-child(3n) {
+  margin-right: 0;
+}`,
+  },
+};
+
+## What to review
+
+The good version describes the layout rule once: cards should create as many columns as fit, each with a sensible minimum width.
+
+The bad version tries to simulate columns with floats, percentages, and positional exceptions, so adding a gap or changing the column count becomes a fragile rewrite.
+
+## Review notes
+
+In review, look for layout code that encodes row math manually. Modern CSS can often express the rule directly, which leaves less hidden arithmetic for future reviewers to recalculate.

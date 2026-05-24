@@ -1,0 +1,46 @@
+export const metadata = {
+  title: "Cascade and specificity",
+  track: "css",
+  order: 2,
+  summary: "Keep selectors scoped and low-specificity so styles are easy to override intentionally.",
+  tags: ["cascade", "specificity", "selectors"],
+  takeaways: ["Prefer component classes and modifiers over deep selectors, IDs, and repeated !important fixes."],
+  goodCode: {
+    language: "css",
+    filename: "profile-card.css",
+    code: `.profile-card {
+  color: #172033;
+  background: #ffffff;
+  border: 1px solid #d8dee8;
+}
+
+.profile-card--featured {
+  border-color: #2563eb;
+}
+
+.profile-card__title {
+  color: #0f172a;
+}`,
+  },
+  badCode: {
+    language: "css",
+    filename: "profile-card.css",
+    code: `#app main .profile-card.featured div h2.title {
+  color: #0f172a !important;
+}
+
+#app main .profile-card div h2.title {
+  color: #475569;
+}`,
+  },
+};
+
+## What to review
+
+The good version uses explicit component classes and a modifier, so a reviewer can see which rule owns each state without tracing through the whole page.
+
+The bad version depends on page structure, ID specificity, and `!important`, which makes future overrides harder and ties a reusable card to one DOM shape.
+
+## Review notes
+
+In review, ask whether the selector communicates ownership or just wins the specificity fight. A selector can be technically correct while still making the next change unnecessarily brittle.

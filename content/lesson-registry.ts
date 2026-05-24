@@ -35,15 +35,36 @@ import HtmlTablesTabularData, {
 import HtmlAriaRestraint, {
   metadata as htmlAriaRestraintMetadata,
 } from "./html/aria-restraint.mdx";
+import CssBoxModelSizing, {
+  metadata as cssBoxModelSizingMetadata,
+} from "./css/box-model-sizing.mdx";
+import CssCascadeSpecificity, {
+  metadata as cssCascadeSpecificityMetadata,
+} from "./css/cascade-specificity.mdx";
 import CssFlexLayoutBoundaries, {
   metadata as cssFlexLayoutBoundariesMetadata,
 } from "./css/flex-layout-boundaries.mdx";
-import CssColorContrastStates, {
-  metadata as cssColorContrastStatesMetadata,
-} from "./css/color-contrast-states.mdx";
+import CssGridLayoutTracks, {
+  metadata as cssGridLayoutTracksMetadata,
+} from "./css/grid-layout-tracks.mdx";
 import CssResponsiveUnits, {
   metadata as cssResponsiveUnitsMetadata,
 } from "./css/responsive-units.mdx";
+import CssColorContrastStates, {
+  metadata as cssColorContrastStatesMetadata,
+} from "./css/color-contrast-states.mdx";
+import CssFocusVisibleStates, {
+  metadata as cssFocusVisibleStatesMetadata,
+} from "./css/focus-visible-states.mdx";
+import CssLogicalProperties, {
+  metadata as cssLogicalPropertiesMetadata,
+} from "./css/logical-properties.mdx";
+import CssCustomPropertiesTokens, {
+  metadata as cssCustomPropertiesTokensMetadata,
+} from "./css/custom-properties-tokens.mdx";
+import CssReducedMotion, {
+  metadata as cssReducedMotionMetadata,
+} from "./css/reduced-motion.mdx";
 import JsGuardClauses, {
   metadata as jsGuardClausesMetadata,
 } from "./javascript/guard-clauses.mdx";
@@ -141,10 +162,34 @@ const rawLessons: RawLesson[] = [
     Component: HtmlAriaRestraint,
   },
   {
+    slug: "box-model-sizing",
+    source: "content/css/box-model-sizing.mdx",
+    metadata: cssBoxModelSizingMetadata,
+    Component: CssBoxModelSizing,
+  },
+  {
+    slug: "cascade-specificity",
+    source: "content/css/cascade-specificity.mdx",
+    metadata: cssCascadeSpecificityMetadata,
+    Component: CssCascadeSpecificity,
+  },
+  {
     slug: "flex-layout-boundaries",
     source: "content/css/flex-layout-boundaries.mdx",
     metadata: cssFlexLayoutBoundariesMetadata,
     Component: CssFlexLayoutBoundaries,
+  },
+  {
+    slug: "grid-layout-tracks",
+    source: "content/css/grid-layout-tracks.mdx",
+    metadata: cssGridLayoutTracksMetadata,
+    Component: CssGridLayoutTracks,
+  },
+  {
+    slug: "responsive-units",
+    source: "content/css/responsive-units.mdx",
+    metadata: cssResponsiveUnitsMetadata,
+    Component: CssResponsiveUnits,
   },
   {
     slug: "color-contrast-states",
@@ -153,10 +198,28 @@ const rawLessons: RawLesson[] = [
     Component: CssColorContrastStates,
   },
   {
-    slug: "responsive-units",
-    source: "content/css/responsive-units.mdx",
-    metadata: cssResponsiveUnitsMetadata,
-    Component: CssResponsiveUnits,
+    slug: "focus-visible-states",
+    source: "content/css/focus-visible-states.mdx",
+    metadata: cssFocusVisibleStatesMetadata,
+    Component: CssFocusVisibleStates,
+  },
+  {
+    slug: "logical-properties",
+    source: "content/css/logical-properties.mdx",
+    metadata: cssLogicalPropertiesMetadata,
+    Component: CssLogicalProperties,
+  },
+  {
+    slug: "custom-properties-tokens",
+    source: "content/css/custom-properties-tokens.mdx",
+    metadata: cssCustomPropertiesTokensMetadata,
+    Component: CssCustomPropertiesTokens,
+  },
+  {
+    slug: "reduced-motion",
+    source: "content/css/reduced-motion.mdx",
+    metadata: cssReducedMotionMetadata,
+    Component: CssReducedMotion,
   },
   {
     slug: "guard-clauses",

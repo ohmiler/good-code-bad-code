@@ -1,0 +1,53 @@
+export const metadata = {
+  title: "Motion and reduced motion",
+  track: "css",
+  order: 10,
+  summary: "Make motion purposeful and respect users who request less animation.",
+  tags: ["accessibility", "motion", "preferences"],
+  takeaways: ["Pair animated UI with a prefers-reduced-motion path that keeps the state change clear."],
+  goodCode: {
+    language: "css",
+    filename: "drawer.css",
+    code: `.drawer {
+  transform: translateX(100%);
+  transition: transform 180ms ease;
+}
+
+.drawer[data-open="true"] {
+  transform: translateX(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drawer {
+    transition-duration: 1ms;
+  }
+}`,
+  },
+  badCode: {
+    language: "css",
+    filename: "drawer.css",
+    code: `.drawer {
+  animation: slide-in 600ms cubic-bezier(.2, .8, .2, 1) both;
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}`,
+  },
+};
+
+## What to review
+
+The good version keeps the state change readable while shortening the transition for users who prefer reduced motion.
+
+The bad version forces the same animation on every user and hides the open state inside an animation that cannot easily respond to user preferences.
+
+## Review notes
+
+In review, ask what the motion communicates and what happens when motion is reduced. Useful animation should clarify state, not become the only way a state change makes sense.
