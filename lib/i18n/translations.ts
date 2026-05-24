@@ -5,6 +5,10 @@ export type LessonThaiTranslation = {
   title: string;
   summary: string;
   takeaways: readonly string[];
+  codeComments?: {
+    goodCode?: readonly string[];
+    badCode?: readonly string[];
+  };
   whatToReview: readonly string[];
   reviewNotes: readonly string[];
 };
@@ -1597,6 +1601,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "git/status-before-work": {
+    codeComments: {
+      goodCode: ["เช็ก branch และ change ในเครื่องก่อนเริ่มแก้"],
+      badCode: ["pull ก่อนอาจซ่อนว่า base เปลี่ยนไปแล้ว"],
+    },
     title: "เช็ก status ก่อนเริ่มงาน",
     summary: "เริ่มทุกงานด้วยการดู branch, working tree และ upstream state เพื่อไม่ให้แก้บนฐานที่ผิด.",
     takeaways: ["workflow Git ที่ดีควรทำให้ branch และ uncommitted changes เห็นชัดก่อนเริ่มแก้ไฟล์."],
@@ -1609,6 +1617,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "git/interactive-staging-hunks": {
+    codeComments: {
+      goodCode: ["ดูก่อน แล้ว stage เฉพาะ hunk ที่เกี่ยวข้อง"],
+      badCode: ["คำสั่งนี้ stage งานไม่เกี่ยว ไฟล์ generated และ debug change ได้"],
+    },
     title: "stage hunk แบบตั้งใจ",
     summary: "stage เฉพาะส่วนที่เกี่ยวข้อง เพื่อให้แต่ละ commit มีเฉพาะ change ที่ควรอยู่ด้วยกัน.",
     takeaways: ["commit ที่รีวิวง่ายมาจาก staging ที่รีวิวง่าย ไม่ใช่จากการ add ทุกไฟล์ตามนิสัย."],
@@ -1621,6 +1633,13 @@ export const lessonThaiTranslations = {
     ],
   },
   "git/atomic-commits-messages": {
+    codeComments: {
+      goodCode: [
+        "หนึ่ง commit ควรอธิบายหนึ่ง behavior change",
+        "แยก commit test ช่วยให้รีวิว intent ได้ง่าย",
+      ],
+      badCode: ["reviewer จะไม่รู้ว่า commit นี้เป็นเจ้าของ concern ไหน"],
+    },
     title: "atomic commit และข้อความ commit",
     summary: "ทำ commit ให้เล็กพอสำหรับรีวิว และเขียน message ที่บอกเหตุผลของ change ไม่ใช่แค่บอกว่าแก้อะไร.",
     takeaways: ["commit หนึ่งก้อนควรมีเหตุผลเดียวที่ชัด และอ่าน message แล้วพอเข้าใจ intent ได้ก่อนเปิด diff.",
@@ -1634,6 +1653,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "git/branch-naming-upstream": {
+    codeComments: {
+      goodCode: ["ชื่อ topic branch บอกทีมว่างานนี้เกี่ยวกับอะไร"],
+      badCode: ["commit ตรงบน main ทำให้ความผิดพลาดมีต้นทุนสูงขึ้น"],
+    },
     title: "ชื่อ branch และ upstream",
     summary: "สร้าง topic branch ที่ชื่อชัด และตั้ง upstream เพื่อให้ push/pull ครั้งต่อไปไปยัง remote branch ที่ถูกต้อง.",
     takeaways: ["branch ควรบอกทีมได้ว่างานนี้เป็นงานประเภทไหน และ sync กับ remote branch ใดโดย default."],
@@ -1646,6 +1669,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "git/fetch-pull-rebase-sync": {
+    codeComments: {
+      goodCode: ["fetch ทำให้เห็น upstream changes ก่อนรวมงาน"],
+      badCode: ["pull โดยไม่ดู upstream ทำให้การรวมงานเกิดแบบไม่ชัด"],
+    },
     title: "sync ด้วย fetch, pull และ rebase",
     summary: "fetch ก่อนรวมงานจาก upstream แล้วเลือก merge หรือ rebase อย่างตั้งใจตามชนิดของ branch.",
     takeaways: ["คำสั่ง sync ควรทำให้เห็น upstream changes ก่อนจะ merge หรือ rewrite local history."],
@@ -1658,6 +1685,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "git/reviewing-diffs-before-push": {
+    codeComments: {
+      goodCode: ["เช็กทั้งเนื้อหาไฟล์และ commit ที่กำลังออกจาก branch"],
+      badCode: ["ถ้ารีวิวจริงครั้งแรกเกิดหลัง push ก็สายเกินไป"],
+    },
     title: "รีวิว diff ก่อน push",
     summary: "ตรวจ unstaged, staged และ committed changes ก่อน push เพื่อกันไฟล์หลุด debug code และ change ที่ไม่ได้ตั้งใจ.",
     takeaways: ["push ควรเกิดหลัง local review pass ไม่ใช่เป็นครั้งแรกที่ใครเห็น final diff."],
@@ -1670,6 +1701,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "git/conflict-resolution-without-overwriting": {
+    codeComments: {
+      goodCode: ["อ่านไฟล์ที่ conflict ก่อนเลือกวิธีแก้"],
+      badCode: ["เลือกฝั่งเดียวทั้ง repo อาจลบ intent ในเครื่องได้"],
+    },
     title: "แก้ conflict โดยไม่ทับงานคนอื่น",
     summary: "แก้ conflict ด้วยการเข้าใจทั้งสองฝั่ง แล้ว stage เฉพาะไฟล์ที่แก้แล้ว แทนการเลือก ours หรือ theirs แบบครอบจักรวาล.",
     takeaways: ["conflict คือจังหวะ review design การเลือกข้างแบบไม่อ่านอาจลบ intent ของคนอื่นได้."],
@@ -1682,6 +1717,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "git/revert-vs-reset": {
+    codeComments: {
+      goodCode: ["revert รักษา shared history พร้อม undo behavior"],
+      badCode: ["reset main ที่แชร์แล้วคือการ rewrite history ของทุกคน"],
+    },
     title: "เลือก revert หรือ reset ให้ถูก",
     summary: "ใช้ revert กับ history ที่แชร์แล้ว และเก็บ reset ไว้สำหรับ cleanup ในเครื่องก่อน commit ถูก push.",
     takeaways: ["คำสั่งแก้ history ต้องขึ้นกับว่า commit นั้นถูกแชร์กับคนอื่นแล้วหรือยัง."],
@@ -1694,6 +1733,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "git/gitignore-and-secret-safety": {
+    codeComments: {
+      goodCode: ["กัน local secret และ generated output ไม่ให้ถูก stage"],
+      badCode: ["add ทุกอย่างอาจ publish secret หรือ state ของเครื่องได้"],
+    },
     title: ".gitignore และความปลอดภัยของ secret",
     summary: "กัน generated file และ secret ออกจาก version control และรีบเอา secret ที่ tracked แล้วออกจาก index.",
     takeaways: ["repo ควรทำให้การ commit secret หรือ build artifact โดยไม่ตั้งใจเกิดยาก และตรวจจับได้ง่าย."],
@@ -1706,6 +1749,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "git/tags-and-release-points": {
+    codeComments: {
+      goodCode: ["verify commit ที่แน่นอนก่อนสร้าง release tag"],
+      badCode: ["tag กว้างและ push หลาย tag อาจ publish จุด release ผิดได้"],
+    },
     title: "tag และจุด release",
     summary: "สร้าง annotated tag สำหรับ release point หลัง verify commit ที่ต้องการ ship ให้ชัดเจน.",
     takeaways: ["release tag ควรชี้ไปที่ commit ที่ verify แล้ว และมีความหมายตาม version ที่ชัด.",

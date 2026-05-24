@@ -40,6 +40,66 @@ a {
   text-decoration: none;
 }
 
+.brand-wordmark {
+  display: inline;
+  letter-spacing: 0;
+}
+
+.brand-wordmark--header {
+  white-space: nowrap;
+}
+
+.brand-wordmark--hero {
+  text-wrap: balance;
+}
+
+.brand-word {
+  display: inline-block;
+}
+
+.brand-word--good {
+  color: #7df7a4;
+  text-shadow:
+    0 0 0.45rem rgb(34 197 94 / 0.9),
+    0 0 1.5rem rgb(16 185 129 / 0.62),
+    0 0 3rem rgb(16 185 129 / 0.34);
+}
+
+.brand-word--bad {
+  color: #ff7a8a;
+  text-shadow:
+    0 0 0.45rem rgb(244 63 94 / 0.9),
+    0 0 1.55rem rgb(225 29 72 / 0.62),
+    0 0 3rem rgb(225 29 72 / 0.34);
+}
+
+.brand-word--code {
+  color: #f8fafc;
+  text-shadow: 0 0 1.2rem rgb(148 163 184 / 0.28);
+}
+
+.brand-link .brand-word {
+  transition:
+    color 160ms ease,
+    text-shadow 160ms ease;
+}
+
+.brand-link:hover .brand-word--good,
+.brand-link:focus-visible .brand-word--good {
+  color: #a7f3d0;
+  text-shadow:
+    0 0 0.6rem rgb(34 197 94 / 1),
+    0 0 2rem rgb(16 185 129 / 0.7);
+}
+
+.brand-link:hover .brand-word--bad,
+.brand-link:focus-visible .brand-word--bad {
+  color: #fecdd3;
+  text-shadow:
+    0 0 0.6rem rgb(244 63 94 / 1),
+    0 0 2rem rgb(225 29 72 / 0.7);
+}
+
 .code-surface {
   max-width: 100%;
   min-width: 0;

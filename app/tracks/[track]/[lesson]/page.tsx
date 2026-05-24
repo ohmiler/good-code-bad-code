@@ -44,9 +44,9 @@ export default async function LessonPage({
 
   if (!track || !lesson) notFound();
 
-  const highlightedLesson = await highlightLesson(lesson);
   const lessonNavigation = getLessonNavigation(track.slug, lesson.slug);
   const lessonTranslation = getLessonThaiTranslation(track.slug, lesson.slug);
+  const highlightedLesson = await highlightLesson(lesson, lessonTranslation);
   const LessonNotes = highlightedLesson.Component;
 
   if (!lessonNavigation || !lessonTranslation) notFound();

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BrandWordmark } from "./brand-wordmark";
 import { LanguageToggle } from "./language/language-toggle";
 import { HeaderTagline } from "./language/localized-ui";
 
@@ -8,9 +9,9 @@ export function SiteHeader() {
       <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-5">
         <Link
           href="/"
-          className="min-w-0 truncate font-semibold tracking-tight text-zinc-50"
+          className="brand-link min-w-0 overflow-hidden text-zinc-50"
         >
-          Good Code Bad Code
+          <BrandWordmark variant="header" />
         </Link>
         <div className="flex shrink-0 items-center gap-3">
           <div className="hidden text-right text-sm text-zinc-400 sm:block">

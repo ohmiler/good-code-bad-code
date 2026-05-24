@@ -8,7 +8,8 @@ export const metadata = {
   goodCode: {
     language: "bash",
     filename: "undo-shared-change.sh",
-    code: `git fetch origin
+    code: `# Revert preserves shared history while undoing behavior.
+git fetch origin
 git switch main
 git pull --ff-only
 git revert 4f3a2b1
@@ -17,7 +18,8 @@ git push`,
   badCode: {
     language: "bash",
     filename: "undo-shared-change.sh",
-    code: `git switch main
+    code: `# Resetting shared main rewrites history for everyone else.
+git switch main
 git reset --hard HEAD~1
 git push --force`,
   },

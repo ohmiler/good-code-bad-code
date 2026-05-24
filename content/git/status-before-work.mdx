@@ -8,7 +8,8 @@ export const metadata = {
   goodCode: {
     language: "bash",
     filename: "review-start.sh",
-    code: `git status --short --branch
+    code: `# Confirm branch and local changes before editing.
+git status --short --branch
 git fetch origin
 git status --short --branch
 git diff --stat`,
@@ -16,7 +17,8 @@ git diff --stat`,
   badCode: {
     language: "bash",
     filename: "review-start.sh",
-    code: `git pull
+    code: `# Pulling first can hide which base changed under you.
+git pull
 code src/app.ts
 git add .
 git commit -m "updates"`,

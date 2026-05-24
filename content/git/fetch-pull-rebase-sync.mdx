@@ -8,7 +8,8 @@ export const metadata = {
   goodCode: {
     language: "bash",
     filename: "sync-feature.sh",
-    code: `git fetch origin
+    code: `# Fetch makes upstream changes visible before integration.
+git fetch origin
 git log --oneline --decorate --max-count=5 HEAD..origin/main
 git rebase origin/main
 npm test`,
@@ -16,7 +17,8 @@ npm test`,
   badCode: {
     language: "bash",
     filename: "sync-feature.sh",
-    code: `git pull
+    code: `# Pulling without inspecting upstream makes the integration implicit.
+git pull
 git push --force
 git status`,
   },

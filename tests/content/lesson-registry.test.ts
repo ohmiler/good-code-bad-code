@@ -4,6 +4,7 @@ import path from "node:path";
 import { test } from "node:test";
 import ts from "typescript";
 import { tracks } from "../../lib/content/tracks";
+import { lessonThaiTranslations } from "../../lib/i18n/translations";
 
 const contentRoot = path.join(process.cwd(), "content");
 const registryPath = path.join(contentRoot, "lesson-registry.ts");
@@ -78,6 +79,27 @@ function readStringProperty(
   );
 
   return property.initializer.text.replaceAll("\\", "/");
+}
+
+function readTextLiteralProperty(
+  objectLiteral: ts.ObjectLiteralExpression,
+  propertyName: string,
+): string {
+  const property = objectLiteral.properties.find(
+    (item): item is ts.PropertyAssignment =>
+      ts.isPropertyAssignment(item) &&
+      ts.isIdentifier(item.name) &&
+      item.name.text === propertyName,
+  );
+
+  assert.ok(property, `object literal is missing ${propertyName}`);
+  assert.ok(
+    ts.isStringLiteral(property.initializer) ||
+      ts.isNoSubstitutionTemplateLiteral(property.initializer),
+    `${propertyName} must be a string or template literal`,
+  );
+
+  return property.initializer.text;
 }
 
 async function readRegisteredLessons(): Promise<RawLessonEntry[]> {
@@ -236,6 +258,58 @@ async function readMdxMetadataOrder(contentPath: string): Promise<number> {
   return Number(property.initializer.text);
 }
 
+async function readMdxMetadataCodeSample(
+  contentPath: string,
+  sampleName: "goodCode" | "badCode",
+): Promise<string> {
+  const mdxSource = await readFile(contentPath, "utf8");
+  const metadataObject = extractObjectLiteral(
+    mdxSource,
+    "export const metadata",
+  );
+  const sourceFile = ts.createSourceFile(
+    contentPath,
+    `const metadata = ${metadataObject};`,
+    ts.ScriptTarget.Latest,
+    true,
+    ts.ScriptKind.TS,
+  );
+  const statement = sourceFile.statements[0];
+
+  assert.ok(
+    ts.isVariableStatement(statement),
+    `${contentPath} metadata must parse as a variable statement`,
+  );
+
+  const initializer = statement.declarationList.declarations[0]?.initializer;
+  assert.ok(
+    initializer && ts.isObjectLiteralExpression(initializer),
+    `${contentPath} metadata must be an object literal`,
+  );
+
+  const sampleProperty = initializer.properties.find(
+    (item): item is ts.PropertyAssignment =>
+      ts.isPropertyAssignment(item) &&
+      ts.isIdentifier(item.name) &&
+      item.name.text === sampleName,
+  );
+
+  assert.ok(sampleProperty, `${contentPath} metadata is missing ${sampleName}`);
+  assert.ok(
+    ts.isObjectLiteralExpression(sampleProperty.initializer),
+    `${contentPath} ${sampleName} must be an object literal`,
+  );
+
+  return readTextLiteralProperty(sampleProperty.initializer, "code");
+}
+
+function countBashCommentLines(code: string): number {
+  return code
+    .split("\n")
+    .filter((line) => line.trim().startsWith("# "))
+    .length;
+}
+
 test("test:content runs the registry content coverage test", async () => {
   const packageJson = JSON.parse(await readFile("package.json", "utf8")) as {
     scripts?: Record<string, string>;
@@ -245,6 +319,8 @@ test("test:content runs the registry content coverage test", async () => {
 
   assert.match(testContentScript, /schema\.test\.ts/);
   assert.match(testContentScript, /lesson-registry\.test\.ts/);
+  assert.match(testContentScript, /code-comments\.test\.ts/);
+  assert.match(testContentScript, /brand-wordmark\.test\.ts/);
   assert.match(testContentScript, /track-icons\.test\.ts/);
 });
 
@@ -290,6 +366,49 @@ test("every seeded MDX lesson compiles", async () => {
   for (const contentPath of [...lessonsByTrack.values()].flat()) {
     const source = await readFile(contentPath, "utf8");
     await compile(source, { jsx: true });
+  }
+});
+
+test("Git command samples include concise review comments", async () => {
+  const lessonsByTrack = await getTrackLessonFiles();
+  const gitLessons = lessonsByTrack.get("git") ?? [];
+
+  assert.equal(gitLessons.length, expectedLessonCounts.git);
+
+  for (const contentPath of gitLessons) {
+    for (const sampleName of ["goodCode", "badCode"] as const) {
+      const code = await readMdxMetadataCodeSample(contentPath, sampleName);
+      const commentCount = countBashCommentLines(code);
+
+      assert.ok(commentCount >= 1, `${contentPath} ${sampleName}`);
+      assert.ok(commentCount <= 3, `${contentPath} ${sampleName}`);
+    }
+  }
+});
+
+test("Git command comments have matching Thai translations", async () => {
+  const lessonsByTrack = await getTrackLessonFiles();
+  const gitLessons = lessonsByTrack.get("git") ?? [];
+
+  assert.equal(gitLessons.length, expectedLessonCounts.git);
+
+  for (const contentPath of gitLessons) {
+    const slug = slugFromContentPath(contentPath);
+    const translation = lessonThaiTranslations[`git/${slug}`];
+
+    assert.ok(translation.codeComments, `git/${slug} missing codeComments`);
+
+    for (const sampleName of ["goodCode", "badCode"] as const) {
+      const code = await readMdxMetadataCodeSample(contentPath, sampleName);
+      const commentCount = countBashCommentLines(code);
+      const translatedComments = translation.codeComments[sampleName] ?? [];
+
+      assert.equal(translatedComments.length, commentCount, `git/${slug}`);
+      for (const [index, comment] of translatedComments.entries()) {
+        assert.match(comment, /[\u0e00-\u0e7f]/, `git/${slug}.${sampleName}[${index}]`);
+        assert.ok(comment.trim().length >= 8, `git/${slug}.${sampleName}[${index}]`);
+      }
+    }
   }
 });
 

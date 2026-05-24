@@ -8,7 +8,8 @@ export const metadata = {
   goodCode: {
     language: "bash",
     filename: "pre-push-review.sh",
-    code: `git diff --check
+    code: `# Check both file content and the commits about to leave the branch.
+git diff --check
 git diff
 git diff --staged
 git log --oneline origin/main..HEAD
@@ -17,7 +18,8 @@ git push`,
   badCode: {
     language: "bash",
     filename: "pre-push-review.sh",
-    code: `git add .
+    code: `# The first real review happens after the push, which is too late.
+git add .
 git commit -m "final"
 git push`,
   },

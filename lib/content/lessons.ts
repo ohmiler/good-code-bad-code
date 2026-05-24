@@ -2,6 +2,8 @@ import "server-only";
 
 import { codeToHtml } from "shiki";
 import { lessonSources } from "@/content/lesson-registry";
+import type { LessonThaiTranslation } from "@/lib/i18n/translations";
+import { replaceCodeCommentLines } from "./code-comments";
 import { getTrack, tracks, type TrackSlug } from "./tracks";
 import type { CodeSample, LessonRecord } from "./schema";
 import { buildLessonNavigation } from "./navigation";
@@ -14,6 +16,7 @@ export type LessonPreview = Pick<
 
 export type HighlightedCodeSample = CodeSample & {
   html: string;
+  translatedHtml?: string;
 };
 
 export type HighlightedLesson = LessonRecord & {
@@ -80,24 +83,42 @@ export function getLessonStaticParams() {
   }));
 }
 
-async function highlightCode(sample: CodeSample): Promise<HighlightedCodeSample> {
-  const html = await codeToHtml(sample.code, {
-    lang: sample.language,
-    theme: "github-dark",
-  });
+async function highlightCode(
+  sample: CodeSample,
+  translatedComments?: readonly string[],
+): Promise<HighlightedCodeSample> {
+  const translatedCode =
+    translatedComments && translatedComments.length > 0
+      ? replaceCodeCommentLines(sample.code, translatedComments)
+      : undefined;
+
+  const [html, translatedHtml] = await Promise.all([
+    codeToHtml(sample.code, {
+      lang: sample.language,
+      theme: "github-dark",
+    }),
+    translatedCode
+      ? codeToHtml(translatedCode, {
+          lang: sample.language,
+          theme: "github-dark",
+        })
+      : Promise.resolve(undefined),
+  ]);
 
   return {
     ...sample,
     html,
+    translatedHtml,
   };
 }
 
 export async function highlightLesson(
   lesson: LessonRecord,
+  translation?: LessonThaiTranslation,
 ): Promise<HighlightedLesson> {
   const [goodCode, badCode] = await Promise.all([
-    highlightCode(lesson.goodCode),
-    highlightCode(lesson.badCode),
+    highlightCode(lesson.goodCode, translation?.codeComments?.goodCode),
+    highlightCode(lesson.badCode, translation?.codeComments?.badCode),
   ]);
 
   return {

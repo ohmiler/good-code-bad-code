@@ -8,14 +8,16 @@ export const metadata = {
   goodCode: {
     language: "bash",
     filename: "branch-start.sh",
-    code: `git switch -c feature/git-track-lessons
+    code: `# Topic branch name tells teammates what this work is about.
+git switch -c feature/git-track-lessons
 git push -u origin feature/git-track-lessons
 git status --short --branch`,
   },
   badCode: {
     language: "bash",
     filename: "branch-start.sh",
-    code: `git switch main
+    code: `# Committing directly on main raises the cost of mistakes.
+git switch main
 git commit -am "changes"
 git push origin HEAD`,
   },

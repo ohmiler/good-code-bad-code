@@ -8,7 +8,8 @@ export const metadata = {
   goodCode: {
     language: "bash",
     filename: "release-tag.sh",
-    code: `git status --short --branch
+    code: `# Verify the exact commit before creating the release tag.
+git status --short --branch
 npm test
 git log --oneline --max-count=1
 git tag -a v1.4.0 -m "Release v1.4.0"
@@ -17,7 +18,8 @@ git push origin v1.4.0`,
   badCode: {
     language: "bash",
     filename: "release-tag.sh",
-    code: `git tag latest
+    code: `# Vague tags and bulk pushes can publish accidental release points.
+git tag latest
 git push --tags`,
   },
 };

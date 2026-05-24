@@ -8,7 +8,8 @@ export const metadata = {
   goodCode: {
     language: "bash",
     filename: "stage-review.sh",
-    code: `git diff
+    code: `# Inspect first, then stage only related hunks.
+git diff
 git add -p src/review.ts
 git diff --staged
 git commit -m "fix review navigation labels"`,
@@ -16,7 +17,8 @@ git commit -m "fix review navigation labels"`,
   badCode: {
     language: "bash",
     filename: "stage-review.sh",
-    code: `git add .
+    code: `# This stages unrelated edits, generated files, and debug changes.
+git add .
 git commit -m "fix stuff"
 git push`,
   },
