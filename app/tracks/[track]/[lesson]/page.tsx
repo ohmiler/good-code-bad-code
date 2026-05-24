@@ -2,10 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CodeComparison } from "@/components/lesson/code-comparison";
+import { LessonPager } from "@/components/lesson/lesson-pager";
 import { ReviewNotes } from "@/components/lesson/review-notes";
 import { TakeawayList } from "@/components/lesson/takeaway-list";
 import {
   getLesson,
+  getLessonNavigation,
   getLessonStaticParams,
   highlightLesson,
 } from "@/lib/content/lessons";
@@ -42,7 +44,10 @@ export default async function LessonPage({
   if (!track || !lesson) notFound();
 
   const highlightedLesson = await highlightLesson(lesson);
+  const lessonNavigation = getLessonNavigation(track.slug, lesson.slug);
   const LessonNotes = highlightedLesson.Component;
+
+  if (!lessonNavigation) notFound();
 
   return (
     <main className="mx-auto w-full max-w-6xl px-5 py-12 sm:py-16">
@@ -80,6 +85,7 @@ export default async function LessonPage({
         <LessonNotes />
       </ReviewNotes>
       <TakeawayList takeaways={highlightedLesson.takeaways} />
+      <LessonPager navigation={lessonNavigation} />
     </main>
   );
 }

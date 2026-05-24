@@ -4,6 +4,8 @@ import { codeToHtml } from "shiki";
 import { lessonSources } from "@/content/lesson-registry";
 import { getTrack, tracks, type TrackSlug } from "./tracks";
 import type { CodeSample, LessonRecord } from "./schema";
+import { buildLessonNavigation } from "./navigation";
+import type { LessonNavigation } from "./navigation";
 
 export type LessonPreview = Pick<
   LessonRecord,
@@ -51,6 +53,13 @@ export function getLesson(track: string, slug: string): LessonRecord | undefined
   return sortedLessons.find(
     (lesson) => lesson.track === track && lesson.slug === slug,
   );
+}
+
+export function getLessonNavigation(
+  track: TrackSlug,
+  slug: string,
+): LessonNavigation | undefined {
+  return buildLessonNavigation(sortedLessons, track, slug);
 }
 
 export function getTrackStaticParams() {
