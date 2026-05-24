@@ -1,9 +1,8 @@
 declare module "*.mdx" {
-  import type { ComponentType } from "react";
+  import type { Element, MDXProps } from "mdx/types";
   import type { LessonMetadata } from "@/lib/content/schema";
 
   export const metadata: LessonMetadata;
 
-  const MDXComponent: ComponentType;
-  export default MDXComponent;
+  export default function MDXContent(props: MDXProps): Element;
 }
