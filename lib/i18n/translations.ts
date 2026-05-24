@@ -118,6 +118,11 @@ export const trackThaiTranslations = {
     description:
       "ฝึกรีวิว route, Pydantic model, dependency, auth, async handler, database session และ API test.",
   },
+  django: {
+    title: "Django",
+    description:
+      "ฝึกรีวิว URL pattern, model, QuerySet, form, view, CSRF, settings, transaction และ test ของ Django.",
+  },
 } as const satisfies Record<TrackSlug, TrackTranslation>;
 
 export const lessonThaiTranslations = {
@@ -1439,6 +1444,126 @@ export const lessonThaiTranslations = {
     ],
     reviewNotes: [
       "FastAPI เริ่มในไฟล์เดียวได้ง่ายมาก ตอนรีวิวให้จับจังหวะที่ไฟล์นั้นไม่ใช่ app entry point แล้ว แต่กลายเป็นทั้ง application.",
+    ],
+  },
+  "django/url-pattern-order": {
+    title: "ลำดับของ URL pattern",
+    summary: "วาง URL ที่เฉพาะเจาะจงไว้ก่อน dynamic pattern ที่กว้างกว่า เพื่อให้ Django ส่ง request ไป view ที่ตั้งใจ.",
+    takeaways: ["Django ไล่ตรวจ URL pattern ตามลำดับ ดังนั้นลำดับ route คือ behavior จริงของระบบ."],
+    whatToReview: [
+      "โค้ดที่ดีให้ route settings ที่เป็นคำตายตัว match ก่อน route profile ที่รับ slug กว้างกว่า.",
+      "โค้ดที่ควรปรับทำให้ settings ถูกมองเป็น username ได้ ทำให้ view ทำงานด้วยสมมติฐานผิดและอ่าน route table ยากขึ้น.",
+    ],
+    reviewNotes: [
+      "เวลารีวิว URLconf ให้อ่านจากบนลงล่าง route ที่เฉพาะเจาะจง คำสงวน หรือ action สำคัญควรมาก่อน dynamic pattern ที่กว้างกว่า.",
+    ],
+  },
+  "django/models-fields-constraints": {
+    title: "field และ constraint ของ model",
+    summary: "ใช้ field, relationship และ database constraint ให้ชัด เพื่อให้ model ปกป้องกฎสำคัญของ domain ได้จริง.",
+    takeaways: ["Django model ควรบอก invariant ของธุรกิจ ไม่ใช่เป็นแค่กล่องเก็บ column แบบหลวม ๆ."],
+    whatToReview: [
+      "โค้ดที่ดีเลือก field type ตรงกับข้อมูล ใช้ ForeignKey จริง และใส่ unique/check constraint สำหรับกฎที่ต้องจริงเสมอ.",
+      "โค้ดที่ควรปรับเก็บข้อมูลสำคัญเป็น text หรือ raw id แบบ optional เกือบทั้งหมด ทำให้กฎกระจายไปอยู่ใน application code.",
+    ],
+    reviewNotes: [
+      "ตอนรีวิว model ให้ถามว่าฐานข้อมูลควรช่วยกันอะไรได้บ้าง ถ้ากฎนั้นห้ามผิด ควรมี field, relationship หรือ constraint ที่มองเห็นได้.",
+    ],
+  },
+  "django/querysets-lazy-evaluation": {
+    title: "QuerySet และ lazy evaluation",
+    summary: "ประกอบ QuerySet ก่อน evaluate และโหลด relationship อย่างตั้งใจ เพื่อลด hidden N+1 query.",
+    takeaways: ["QuerySet เป็น lazy object ต้องรีวิวว่ามันถูกสร้าง slice และ evaluate ตรงไหน."],
+    whatToReview: [
+      "โค้ดที่ดี compose query ให้ครบ เลือก select_related/prefetch_related แล้วค่อย evaluate ตอนสร้างข้อมูลสำหรับแสดงผล.",
+      "โค้ดที่ควรปรับดูสั้นแต่ซ่อน query เพิ่มใน loop ผ่านการเรียก author และ comments ของแต่ละ review.",
+    ],
+    reviewNotes: [
+      "เวลาอ่าน ORM code ให้ตาม lifecycle ของ QuerySet ตั้งแต่ filter, order, slice, relationship loading จนถึงจุด evaluate เพราะ query plan สำคัญกว่าจำนวนบรรทัด.",
+    ],
+  },
+  "django/model-manager-boundaries": {
+    title: "model manager เป็น boundary",
+    summary: "ย้ายกฎ query ที่ใช้ซ้ำไปไว้ใน QuerySet หรือ manager method เพื่อไม่ให้ view repeat filter สำคัญ.",
+    takeaways: ["filter ที่ซ้ำหลายจุดคือสัญญาณว่าควรมีกฎ query ที่มีชื่อเรียกชัดเจน."],
+    whatToReview: [
+      "โค้ดที่ดีตั้งชื่อ visible_to และ with_author ให้ view ขอ query ตามภาษาของ domain ได้ตรง ๆ.",
+      "โค้ดที่ควรปรับคัดลอก filter published/deleted ไปหลาย view เมื่อ rule เปลี่ยนจะมีบางทาง drift ได้ง่าย.",
+    ],
+    reviewNotes: [
+      "manager และ custom QuerySet เป็นที่ดีสำหรับคำศัพท์ของระบบ เช่น visible, published, archived หรือ owned by user.",
+    ],
+  },
+  "django/forms-and-validation": {
+    title: "form และ validation",
+    summary: "ใช้ Form หรือ ModelForm เพื่อตรวจ request data ก่อนสร้างหรือแก้ไข model instance.",
+    takeaways: ["request data ควรถูก validate และกลายเป็น cleaned data ก่อนแตะฐานข้อมูล."],
+    whatToReview: [
+      "โค้ดที่ดีรวม validation ไว้ใน form ใช้ form.is_valid และเก็บ invalid submission ไว้ใน flow ที่มองเห็นได้.",
+      "โค้ดที่ควรปรับอ่าน request.POST ตรง ๆ ทำให้ required field, trimming, error message และ domain validation หายไปจาก boundary.",
+    ],
+    reviewNotes: [
+      "ใน Django form คือส่วนหนึ่งของ request boundary ตอนรีวิวให้ดูว่า invalid input ถูกออกแบบเป็น path ปกติ ไม่ใช่ปล่อยให้พังทีหลัง.",
+    ],
+  },
+  "django/class-based-view-responsibilities": {
+    title: "ความรับผิดชอบของ class-based view",
+    summary: "ให้ class-based view โฟกัส HTTP orchestration และย้าย query หรือ side effect หนัก ๆ ไปหลัง method ที่มีชื่อชัด.",
+    takeaways: ["class-based view ควรทำให้ request flow ชัดขึ้น ไม่ใช่กลายเป็นที่รวมทุก concern."],
+    whatToReview: [
+      "โค้ดที่ดีใช้ generic view สำหรับ list workflow และ override แค่ get_queryset ที่มีเหตุผลชัดเจน.",
+      "โค้ดที่ควรปรับรวม query, report และการส่ง email ไว้ใน GET handler ทำให้ชื่อ class ซ่อนความซับซ้อนจริง.",
+    ],
+    reviewNotes: [
+      "CBV อ่านง่ายเมื่อแต่ละ override มีเหตุผลเดียว ถ้า get หรือ post อ่านเหมือน service object ควรแยก behavior ออกไปตั้งชื่อ.",
+    ],
+  },
+  "django/csrf-and-unsafe-methods": {
+    title: "CSRF กับ unsafe method",
+    summary: "ปกป้อง request ที่เปลี่ยน state ด้วย CSRF flow ของ Django แทนการ exempt view เพื่อความสะดวก.",
+    takeaways: ["method ที่เปลี่ยน state เช่น POST ควรเก็บ CSRF protection ไว้ เว้นแต่มี API boundary ที่ตั้งใจจริง."],
+    whatToReview: [
+      "โค้ดที่ดี require POST, require login และปล่อยให้ CSRF middleware ทำงานกับ action สำคัญ.",
+      "โค้ดที่ควรปรับปิด CSRF และไม่ตรวจ ownership ทำให้ action สำคัญถูกเรียกจากที่ที่ระบบไม่ได้ตั้งใจได้ง่าย.",
+    ],
+    reviewNotes: [
+      "เมื่อเห็น csrf_exempt ให้ชะลอและถามเหตุผล อาจถูกต้องสำหรับ signed webhook แต่ไม่ควรเป็น quick fix ให้ form ที่พัง.",
+    ],
+  },
+  "django/settings-environments": {
+    title: "settings ตาม environment",
+    summary: "โหลด secret และ setting ที่เปลี่ยนตาม environment จาก environment variable แทนการ hard-code พฤติกรรม production.",
+    takeaways: ["Django settings คือ operational code จึงต้องรีวิวด้วยมุม security และ deployment."],
+    whatToReview: [
+      "โค้ดที่ดีทำให้ secret, DEBUG, allowed host และ CSRF origin ชัดตาม environment และ fail fast เมื่อค่าจำเป็นหาย.",
+      "โค้ดที่ควรปรับฝังค่า permissive ไว้ใน source ทำให้ reviewer แยกไม่ออกว่าเป็น local-only หรือ production config.",
+    ],
+    reviewNotes: [
+      "ตอนรีวิว settings ให้เช็ก SECRET_KEY, DEBUG, ALLOWED_HOSTS, CSRF origin, database URL, email backend และค่าที่ต่างกันระหว่าง local/staging/production.",
+    ],
+  },
+  "django/transactions-and-side-effects": {
+    title: "transaction และ side effect",
+    summary: "รวม database write ที่เกี่ยวข้องไว้ใน atomic transaction และให้ external side effect ทำหลัง commit สำเร็จ.",
+    takeaways: ["database change และ notification ภายนอกต้องมีข้อตกลงเรื่องลำดับการเกิดที่ชัดเจน."],
+    whatToReview: [
+      "โค้ดที่ดี lock row, บันทึก review กับ audit log ใน transaction เดียว และส่ง email หลัง commit ด้วย on_commit.",
+      "โค้ดที่ควรปรับส่ง email ก่อนเขียน audit log ถ้า write สุดท้าย fail โลกภายนอกจะถูกบอกว่าเปลี่ยนสำเร็จไปแล้ว.",
+    ],
+    reviewNotes: [
+      "รีวิว workflow หลายขั้นด้วยคำถามว่าถ้าพังกลางทางจะเกิดอะไร ถ้า user, email, queue, cache และ database ต้องเห็นตรงกัน transaction boundary ต้องชัด.",
+    ],
+  },
+  "django/tests-client-and-fixtures": {
+    title: "test client และ fixture",
+    summary: "ใช้ Django test client พร้อมข้อมูลทดสอบที่สมจริง และ assert ทั้ง status, template และการเปลี่ยน database.",
+    takeaways: ["view test ที่ดีพิสูจน์พฤติกรรมของ request ไม่ใช่แค่มีข้อความบางคำปรากฏบนหน้า."],
+    whatToReview: [
+      "โค้ดที่ดีสร้าง data เอง login user ส่ง method ที่ตั้งใจ และ refresh model เพื่อตรวจ state หลัง request.",
+      "โค้ดที่ควรปรับพึ่ง magic ID ใช้ GET เปลี่ยน state และ assert แค่ข้อความ ทำให้ workflow จริงพังแต่ test ยังผ่านได้.",
+    ],
+    reviewNotes: [
+      "Django test client มีค่ามากเมื่อ test เล่า behavior จากภายนอก ให้ชอบ setup, request และ observable assertion มากกว่าเช็ก implementation detail ลึก ๆ.",
     ],
   },
 } as const satisfies Record<string, LessonThaiTranslation>;

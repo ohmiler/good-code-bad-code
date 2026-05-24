@@ -1,0 +1,41 @@
+export const metadata = {
+  title: "Settings by environment",
+  track: "django",
+  order: 8,
+  summary: "Load sensitive and environment-specific settings from the environment instead of hard-coding production behavior.",
+  tags: ["settings", "security", "deployment"],
+  takeaways: ["Django settings are operational code; review them with security and deployment in mind."],
+  goodCode: {
+    language: "python",
+    filename: "config/settings.py",
+    code: `import os
+
+SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
+DEBUG = os.environ.get("DJANGO_DEBUG") == "1"
+ALLOWED_HOSTS = os.environ["DJANGO_ALLOWED_HOSTS"].split(",")
+
+CSRF_TRUSTED_ORIGINS = [
+    origin
+    for origin in os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",")
+    if origin
+]`,
+  },
+  badCode: {
+    language: "python",
+    filename: "config/settings.py",
+    code: `SECRET_KEY = "dev-secret"
+DEBUG = True
+ALLOWED_HOSTS = ["*"]
+CSRF_TRUSTED_ORIGINS = ["https://*"]`,
+  },
+};
+
+## What to review
+
+The good version makes secrets and host rules explicit per environment. Production can fail fast when required values are missing.
+
+The bad version ships permissive defaults. A reviewer cannot tell whether it is local-only code or production configuration waiting to leak.
+
+## Review notes
+
+Settings review is security review. Check `SECRET_KEY`, `DEBUG`, `ALLOWED_HOSTS`, CSRF origins, database URLs, email backends, and anything that changes between local, staging, and production.

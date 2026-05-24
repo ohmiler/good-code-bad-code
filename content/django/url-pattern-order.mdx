@@ -1,0 +1,46 @@
+export const metadata = {
+  title: "URL pattern order",
+  track: "django",
+  order: 1,
+  summary: "Put specific URL patterns before broad dynamic patterns so Django routes requests to the intended view.",
+  tags: ["urls", "routing", "order"],
+  takeaways: ["Django checks URL patterns in order, so route order is application behavior."],
+  goodCode: {
+    language: "python",
+    filename: "reviews/urls.py",
+    code: `from django.urls import path
+
+from . import views
+
+app_name = "reviews"
+
+urlpatterns = [
+    path("settings/", views.review_settings, name="settings"),
+    path("<slug:username>/", views.reviewer_profile, name="profile"),
+]`,
+  },
+  badCode: {
+    language: "python",
+    filename: "reviews/urls.py",
+    code: `from django.urls import path
+
+from . import views
+
+app_name = "reviews"
+
+urlpatterns = [
+    path("<slug:username>/", views.reviewer_profile, name="profile"),
+    path("settings/", views.review_settings, name="settings"),
+]`,
+  },
+};
+
+## What to review
+
+The good version makes the fixed settings route win before the broad profile route can capture the same path segment.
+
+The bad version makes `settings/` look like a username. The view might run with the wrong assumptions, and the route table becomes harder to scan.
+
+## Review notes
+
+When reviewing Django URLconfs, read them from top to bottom. Specific routes, reserved words, and admin-like actions should usually appear before catch-all dynamic patterns.

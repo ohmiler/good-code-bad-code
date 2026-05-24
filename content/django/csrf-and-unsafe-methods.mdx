@@ -1,0 +1,50 @@
+export const metadata = {
+  title: "CSRF and unsafe methods",
+  track: "django",
+  order: 7,
+  summary: "Protect state-changing requests with Django's CSRF flow instead of exempting views for convenience.",
+  tags: ["csrf", "security", "forms"],
+  takeaways: ["Unsafe methods such as POST should keep CSRF protection unless there is a deliberate API boundary."],
+  goodCode: {
+    language: "python",
+    filename: "reviews/views.py",
+    code: `from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect
+from django.views.decorators.http import require_POST
+
+from .models import Review
+
+
+@require_POST
+@login_required
+def publish_review(request, pk):
+    review = get_object_or_404(Review, pk=pk, author=request.user)
+    review.publish()
+    return redirect("reviews:detail", pk=review.pk)`,
+  },
+  badCode: {
+    language: "python",
+    filename: "reviews/views.py",
+    code: `from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
+from .models import Review
+
+
+@csrf_exempt
+def publish_review(request, pk):
+    review = Review.objects.get(pk=pk)
+    review.publish()
+    return JsonResponse({"ok": True})`,
+  },
+};
+
+## What to review
+
+The good version requires POST, requires a logged-in user, and leaves CSRF middleware active for the state-changing action.
+
+The bad version disables CSRF and skips ownership checks. It makes a sensitive action easy to call from places the app did not intend.
+
+## Review notes
+
+When you see `csrf_exempt`, slow down. It might be valid for a signed webhook or separate API auth boundary, but it should never be a quick fix for a broken form.

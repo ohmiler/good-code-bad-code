@@ -1,0 +1,58 @@
+export const metadata = {
+  title: "QuerySets and lazy evaluation",
+  track: "django",
+  order: 3,
+  summary: "Compose QuerySets before evaluation and load relationships intentionally to avoid hidden N+1 queries.",
+  tags: ["querysets", "orm", "performance"],
+  takeaways: ["QuerySets are lazy; review where they are built, sliced, and finally evaluated."],
+  goodCode: {
+    language: "python",
+    filename: "reviews/selectors.py",
+    code: `def recent_reviews():
+    return (
+        Review.objects.filter(status=Review.Status.PUBLISHED)
+        .select_related("author")
+        .prefetch_related("comments")
+        .order_by("-published_at")[:20]
+    )
+
+
+def review_cards():
+    return [
+        {
+            "title": review.title,
+            "author": review.author.username,
+            "comment_count": len(review.comments.all()),
+        }
+        for review in recent_reviews()
+    ]`,
+  },
+  badCode: {
+    language: "python",
+    filename: "reviews/selectors.py",
+    code: `def review_cards():
+    rows = []
+    reviews = Review.objects.filter(status="published").order_by("-published_at")[:20]
+
+    for review in reviews:
+        rows.append(
+            {
+                "title": review.title,
+                "author": review.author.username,
+                "comment_count": review.comments.count(),
+            }
+        )
+
+    return rows`,
+  },
+};
+
+## What to review
+
+The good version composes the query, selects the related author, prefetches comments, and evaluates at the edge where cards are built.
+
+The bad version looks small but can trigger extra queries for every review. The performance cost is hidden inside attribute access.
+
+## Review notes
+
+When reading Django ORM code, trace the QuerySet lifecycle: filtering, ordering, slicing, relationship loading, and evaluation. The query plan is often more important than the line count.

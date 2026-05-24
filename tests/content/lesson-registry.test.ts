@@ -20,6 +20,7 @@ const expectedLessonCounts = {
   sql: 10,
   python: 10,
   fastapi: 10,
+  django: 10,
 } as const;
 
 type RawLessonEntry = {
@@ -244,7 +245,7 @@ test("seeded lessons match expected track counts", async () => {
   const lessonsByTrack = await getTrackLessonFiles();
   const allLessonFiles = [...lessonsByTrack.values()].flat();
 
-  assert.equal(allLessonFiles.length, 110);
+  assert.equal(allLessonFiles.length, 120);
   for (const track of tracks) {
     assert.equal(
       lessonsByTrack.get(track.slug)?.length,

@@ -1,0 +1,58 @@
+export const metadata = {
+  title: "Test client and fixtures",
+  track: "django",
+  order: 10,
+  summary: "Use Django's test client with realistic data setup and assertions that cover status, template, and database changes.",
+  tags: ["tests", "client", "fixtures"],
+  takeaways: ["A useful Django view test proves the request behavior, not just that some text appeared."],
+  goodCode: {
+    language: "python",
+    filename: "reviews/tests/test_views.py",
+    code: `from django.contrib.auth import get_user_model
+from django.test import TestCase
+from django.urls import reverse
+
+from reviews.models import Review
+
+
+class PublishReviewTests(TestCase):
+    def test_author_can_publish_own_review(self):
+        user = get_user_model().objects.create_user(
+            username="mira",
+            password="secret",
+        )
+        review = Review.objects.create(title="Draft", author=user)
+        self.client.force_login(user)
+
+        response = self.client.post(
+            reverse("reviews:publish", args=[review.pk]),
+            follow=True,
+        )
+
+        review.refresh_from_db()
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(review.is_published)
+        self.assertTemplateUsed(response, "reviews/detail.html")`,
+  },
+  badCode: {
+    language: "python",
+    filename: "reviews/tests/test_views.py",
+    code: `from django.test import TestCase
+
+
+class PublishReviewTests(TestCase):
+    def test_publish_review(self):
+        response = self.client.get("/reviews/1/publish/")
+        self.assertContains(response, "Review published")`,
+  },
+};
+
+## What to review
+
+The good version creates the data it needs, logs in the user, sends the intended method, and checks the database state after the request.
+
+The bad version depends on a magic ID, uses GET for a state change, and only checks text. It can pass while the real workflow is broken.
+
+## Review notes
+
+Django's test client is most valuable when tests describe behavior from the outside. Prefer setup, request, and observable assertions over testing only implementation details.

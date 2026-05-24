@@ -1,0 +1,68 @@
+export const metadata = {
+  title: "Forms and validation",
+  track: "django",
+  order: 5,
+  summary: "Use forms or ModelForms to validate request data before creating or updating model instances.",
+  tags: ["forms", "validation", "views"],
+  takeaways: ["Request data should become cleaned data before it changes the database."],
+  goodCode: {
+    language: "python",
+    filename: "reviews/views.py",
+    code: `from django import forms
+from django.shortcuts import redirect, render
+
+from .models import Review
+
+
+class ReviewForm(forms.ModelForm):
+    class Meta:
+        model = Review
+        fields = ["title", "body"]
+
+    def clean_title(self):
+        title = self.cleaned_data["title"].strip()
+        if "draft" in title.lower():
+            raise forms.ValidationError("Use a final review title.")
+        return title
+
+
+def create_review(request):
+    form = ReviewForm(request.POST or None)
+    if request.method == "POST" and form.is_valid():
+        review = form.save(commit=False)
+        review.author = request.user
+        review.save()
+        return redirect("reviews:detail", pk=review.pk)
+
+    return render(request, "reviews/form.html", {"form": form})`,
+  },
+  badCode: {
+    language: "python",
+    filename: "reviews/views.py",
+    code: `from django.shortcuts import redirect, render
+
+from .models import Review
+
+
+def create_review(request):
+    if request.method == "POST":
+        review = Review.objects.create(
+            title=request.POST["title"],
+            body=request.POST["body"],
+            author=request.user,
+        )
+        return redirect("reviews:detail", pk=review.pk)
+
+    return render(request, "reviews/form.html")`,
+  },
+};
+
+## What to review
+
+The good version centralizes validation in a form, uses cleaned data through `form.save()`, and keeps invalid submissions on the form page.
+
+The bad version trusts `request.POST` directly. Required fields, trimming, error messages, and domain validation are missing from the boundary.
+
+## Review notes
+
+In Django, forms are part of the request boundary. Review whether the view handles invalid input as a first-class path, not as an exception that happens later.

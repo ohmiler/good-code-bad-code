@@ -1,0 +1,59 @@
+export const metadata = {
+  title: "Transactions and side effects",
+  track: "django",
+  order: 9,
+  summary: "Wrap related database writes in atomic transactions and run external side effects after commit.",
+  tags: ["transactions", "atomic", "side effects"],
+  takeaways: ["Database changes and external notifications need an explicit ordering contract."],
+  goodCode: {
+    language: "python",
+    filename: "reviews/services.py",
+    code: `from django.db import transaction
+
+
+def approve_review(review_id, moderator):
+    with transaction.atomic():
+        review = Review.objects.select_for_update().get(pk=review_id)
+        review.approve(moderator=moderator)
+        review.save(update_fields=["status", "approved_by", "approved_at"])
+
+        AuditLog.objects.create(
+            actor=moderator,
+            action="review.approved",
+            review=review,
+        )
+
+        transaction.on_commit(
+            lambda: send_review_approved_email(review.pk)
+        )
+
+    return review`,
+  },
+  badCode: {
+    language: "python",
+    filename: "reviews/services.py",
+    code: `def approve_review(review_id, moderator):
+    review = Review.objects.get(pk=review_id)
+    review.approve(moderator=moderator)
+    review.save()
+
+    send_review_approved_email(review.pk)
+
+    AuditLog.objects.create(
+        actor=moderator,
+        action="review.approved",
+        review=review,
+    )
+    return review`,
+  },
+};
+
+## What to review
+
+The good version locks the row, saves the review and audit log atomically, and sends email only after the database commit succeeds.
+
+The bad version can send an email before the audit row is written. If the final write fails, the outside world has already been told the change happened.
+
+## Review notes
+
+Review multi-step workflows by asking what happens halfway through. If a user, email, queue, cache, and database must agree, transaction boundaries should be visible.

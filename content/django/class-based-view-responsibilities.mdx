@@ -1,0 +1,57 @@
+export const metadata = {
+  title: "Class-based view responsibilities",
+  track: "django",
+  order: 6,
+  summary: "Keep class-based views focused on HTTP orchestration and move query or side-effect-heavy work behind named methods.",
+  tags: ["views", "cbv", "responsibility"],
+  takeaways: ["A class-based view should clarify the request flow, not become a dumping ground for every concern."],
+  goodCode: {
+    language: "python",
+    filename: "reviews/views.py",
+    code: `from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import ListView
+
+from .models import Review
+
+
+class ReviewListView(LoginRequiredMixin, ListView):
+    model = Review
+    template_name = "reviews/list.html"
+    context_object_name = "reviews"
+    paginate_by = 20
+
+    def get_queryset(self):
+        return Review.objects.visible_to(self.request.user).with_author()`,
+  },
+  badCode: {
+    language: "python",
+    filename: "reviews/views.py",
+    code: `from django.views import View
+from django.shortcuts import render
+
+
+class ReviewDashboardView(View):
+    def get(self, request):
+        reviews = Review.objects.all()
+        for review in reviews:
+            if review.needs_digest:
+                send_digest_email(review.author)
+
+        stats = expensive_report(reviews)
+        return render(
+            request,
+            "reviews/dashboard.html",
+            {"reviews": reviews, "stats": stats},
+        )`,
+  },
+};
+
+## What to review
+
+The good version uses the generic view for the list workflow and keeps the customization to the QuerySet.
+
+The bad version puts querying, reporting, and email side effects inside a GET handler. The class name hides more than it explains.
+
+## Review notes
+
+Class-based views are easiest to review when each override has a clear reason. If `get()` or `post()` reads like a service object, move the behavior behind a named function.

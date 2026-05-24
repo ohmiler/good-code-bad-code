@@ -65,6 +65,12 @@ export const tracks = [
     description:
       "Review routes, Pydantic models, dependencies, auth, async handlers, database sessions, and API tests.",
   },
+  {
+    slug: "django",
+    title: "Django",
+    description:
+      "Review URL patterns, models, QuerySets, forms, views, CSRF, settings, transactions, and tests.",
+  },
 ] as const;
 
 export type Track = (typeof tracks)[number];

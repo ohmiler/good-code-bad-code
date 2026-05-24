@@ -335,6 +335,36 @@ import FastapiTestingDependencyOverrides, {
 import FastapiAppStructureRouters, {
   metadata as fastapiAppStructureRoutersMetadata,
 } from "./fastapi/app-structure-routers.mdx";
+import DjangoUrlPatternOrder, {
+  metadata as djangoUrlPatternOrderMetadata,
+} from "./django/url-pattern-order.mdx";
+import DjangoModelsFieldsConstraints, {
+  metadata as djangoModelsFieldsConstraintsMetadata,
+} from "./django/models-fields-constraints.mdx";
+import DjangoQuerysetsLazyEvaluation, {
+  metadata as djangoQuerysetsLazyEvaluationMetadata,
+} from "./django/querysets-lazy-evaluation.mdx";
+import DjangoModelManagerBoundaries, {
+  metadata as djangoModelManagerBoundariesMetadata,
+} from "./django/model-manager-boundaries.mdx";
+import DjangoFormsAndValidation, {
+  metadata as djangoFormsAndValidationMetadata,
+} from "./django/forms-and-validation.mdx";
+import DjangoClassBasedViewResponsibilities, {
+  metadata as djangoClassBasedViewResponsibilitiesMetadata,
+} from "./django/class-based-view-responsibilities.mdx";
+import DjangoCsrfAndUnsafeMethods, {
+  metadata as djangoCsrfAndUnsafeMethodsMetadata,
+} from "./django/csrf-and-unsafe-methods.mdx";
+import DjangoSettingsEnvironments, {
+  metadata as djangoSettingsEnvironmentsMetadata,
+} from "./django/settings-environments.mdx";
+import DjangoTransactionsAndSideEffects, {
+  metadata as djangoTransactionsAndSideEffectsMetadata,
+} from "./django/transactions-and-side-effects.mdx";
+import DjangoTestsClientAndFixtures, {
+  metadata as djangoTestsClientAndFixturesMetadata,
+} from "./django/tests-client-and-fixtures.mdx";
 
 type RawLesson = {
   slug: string;
@@ -1003,6 +1033,66 @@ const rawLessons: RawLesson[] = [
     source: "content/fastapi/app-structure-routers.mdx",
     metadata: fastapiAppStructureRoutersMetadata,
     Component: FastapiAppStructureRouters,
+  },
+  {
+    slug: "url-pattern-order",
+    source: "content/django/url-pattern-order.mdx",
+    metadata: djangoUrlPatternOrderMetadata,
+    Component: DjangoUrlPatternOrder,
+  },
+  {
+    slug: "models-fields-constraints",
+    source: "content/django/models-fields-constraints.mdx",
+    metadata: djangoModelsFieldsConstraintsMetadata,
+    Component: DjangoModelsFieldsConstraints,
+  },
+  {
+    slug: "querysets-lazy-evaluation",
+    source: "content/django/querysets-lazy-evaluation.mdx",
+    metadata: djangoQuerysetsLazyEvaluationMetadata,
+    Component: DjangoQuerysetsLazyEvaluation,
+  },
+  {
+    slug: "model-manager-boundaries",
+    source: "content/django/model-manager-boundaries.mdx",
+    metadata: djangoModelManagerBoundariesMetadata,
+    Component: DjangoModelManagerBoundaries,
+  },
+  {
+    slug: "forms-and-validation",
+    source: "content/django/forms-and-validation.mdx",
+    metadata: djangoFormsAndValidationMetadata,
+    Component: DjangoFormsAndValidation,
+  },
+  {
+    slug: "class-based-view-responsibilities",
+    source: "content/django/class-based-view-responsibilities.mdx",
+    metadata: djangoClassBasedViewResponsibilitiesMetadata,
+    Component: DjangoClassBasedViewResponsibilities,
+  },
+  {
+    slug: "csrf-and-unsafe-methods",
+    source: "content/django/csrf-and-unsafe-methods.mdx",
+    metadata: djangoCsrfAndUnsafeMethodsMetadata,
+    Component: DjangoCsrfAndUnsafeMethods,
+  },
+  {
+    slug: "settings-environments",
+    source: "content/django/settings-environments.mdx",
+    metadata: djangoSettingsEnvironmentsMetadata,
+    Component: DjangoSettingsEnvironments,
+  },
+  {
+    slug: "transactions-and-side-effects",
+    source: "content/django/transactions-and-side-effects.mdx",
+    metadata: djangoTransactionsAndSideEffectsMetadata,
+    Component: DjangoTransactionsAndSideEffects,
+  },
+  {
+    slug: "tests-client-and-fixtures",
+    source: "content/django/tests-client-and-fixtures.mdx",
+    metadata: djangoTestsClientAndFixturesMetadata,
+    Component: DjangoTestsClientAndFixtures,
   },
 ];
 

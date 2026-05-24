@@ -1,0 +1,61 @@
+export const metadata = {
+  title: "Model manager boundaries",
+  track: "django",
+  order: 4,
+  summary: "Put common query rules in QuerySet or manager methods so views do not repeat domain filters.",
+  tags: ["models", "managers", "querysets"],
+  takeaways: ["Repeated filters are a sign that a query rule needs a named boundary."],
+  goodCode: {
+    language: "python",
+    filename: "reviews/models.py",
+    code: `from django.db import models
+
+
+class ReviewQuerySet(models.QuerySet):
+    def visible_to(self, user):
+        base = self.filter(deleted_at__isnull=True)
+        if user.is_staff:
+            return base
+        return base.filter(status=Review.Status.PUBLISHED)
+
+    def with_author(self):
+        return self.select_related("author")
+
+
+class Review(models.Model):
+    objects = ReviewQuerySet.as_manager()
+
+
+def review_list(request):
+    reviews = Review.objects.visible_to(request.user).with_author()
+    return render(request, "reviews/list.html", {"reviews": reviews})`,
+  },
+  badCode: {
+    language: "python",
+    filename: "reviews/views.py",
+    code: `def review_list(request):
+    reviews = Review.objects.filter(
+        deleted_at__isnull=True,
+        status="published",
+    ).select_related("author")
+    return render(request, "reviews/list.html", {"reviews": reviews})
+
+
+def review_feed(request):
+    reviews = Review.objects.filter(
+        deleted_at__isnull=True,
+        status="published",
+    ).order_by("-published_at")
+    return render(request, "reviews/feed.html", {"reviews": reviews})`,
+  },
+};
+
+## What to review
+
+The good version names the visibility rule once and lets views ask for the query they need.
+
+The bad version repeats filters in multiple views. When the visibility rule changes, one path can easily drift.
+
+## Review notes
+
+Managers and custom QuerySets are not just convenience. They are a good place to capture vocabulary such as visible, published, archived, or owned by this user.
