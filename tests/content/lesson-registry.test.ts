@@ -15,6 +15,7 @@ const expectedLessonCounts = {
   typescript: 10,
   react: 10,
   nextjs: 10,
+  nodejs: 10,
 } as const;
 
 type RawLessonEntry = {
@@ -239,7 +240,7 @@ test("seeded lessons match expected track counts", async () => {
   const lessonsByTrack = await getTrackLessonFiles();
   const allLessonFiles = [...lessonsByTrack.values()].flat();
 
-  assert.equal(allLessonFiles.length, 60);
+  assert.equal(allLessonFiles.length, 70);
   for (const track of tracks) {
     assert.equal(
       lessonsByTrack.get(track.slug)?.length,

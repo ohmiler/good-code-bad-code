@@ -1,0 +1,44 @@
+export const metadata = {
+  title: "Async filesystem without blocking",
+  track: "nodejs",
+  order: 2,
+  summary: "Use async filesystem APIs in request paths so one slow disk read does not block the event loop.",
+  tags: ["filesystem", "async", "performance"],
+  takeaways: ["Avoid synchronous filesystem calls inside HTTP handlers and other hot paths."],
+  goodCode: {
+    language: "typescript",
+    filename: "src/routes/config.ts",
+    code: `import { readFile } from "node:fs/promises";
+import type { ServerResponse } from "node:http";
+
+export async function sendPublicConfig(response: ServerResponse) {
+  const file = await readFile("public-config.json", "utf8");
+
+  response.setHeader("content-type", "application/json");
+  response.end(file);
+}`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "src/routes/config.ts",
+    code: `import { readFileSync } from "node:fs";
+import type { ServerResponse } from "node:http";
+
+export function sendPublicConfig(response: ServerResponse) {
+  const file = readFileSync("public-config.json", "utf8");
+
+  response.setHeader("content-type", "application/json");
+  response.end(file);
+}`,
+  },
+};
+
+## What to review
+
+The good version awaits an async file read and lets the event loop continue handling other work while the disk is busy.
+
+The bad version uses `readFileSync` in a request path, blocking every other request in the process until the read finishes.
+
+## Review notes
+
+In review, synchronous filesystem APIs are usually acceptable during startup or build tooling, but suspicious in request handlers. The bad version is review-worthy because it can pass local testing while causing latency spikes under concurrent traffic.

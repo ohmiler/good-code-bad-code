@@ -1,0 +1,52 @@
+export const metadata = {
+  title: "Streams for large payloads",
+  track: "nodejs",
+  order: 6,
+  summary: "Stream large files or responses instead of loading everything into memory.",
+  tags: ["streams", "memory", "http"],
+  takeaways: ["For large payloads, prefer pipeline-based streaming with error handling."],
+  goodCode: {
+    language: "typescript",
+    filename: "src/routes/download.ts",
+    code: `import { createReadStream } from "node:fs";
+import { pipeline } from "node:stream/promises";
+import type { ServerResponse } from "node:http";
+
+export async function sendExport(filePath: string, response: ServerResponse) {
+  response.setHeader("content-type", "text/csv");
+
+  try {
+    await pipeline(createReadStream(filePath), response);
+  } catch (error) {
+    console.error({ error, filePath }, "Export stream failed");
+    if (!response.headersSent) {
+      response.statusCode = 500;
+      response.end("Could not stream export.");
+    }
+  }
+}`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "src/routes/download.ts",
+    code: `import { readFile } from "node:fs/promises";
+import type { ServerResponse } from "node:http";
+
+export async function sendExport(filePath: string, response: ServerResponse) {
+  const file = await readFile(filePath);
+
+  response.setHeader("content-type", "text/csv");
+  response.end(file);
+}`,
+  },
+};
+
+## What to review
+
+The good version streams the file through `pipeline`, which manages backpressure and surfaces stream failures.
+
+The bad version reads the entire file into memory before sending it, which can pressure memory or crash the process for large exports.
+
+## Review notes
+
+In review, ask how large the payload can become and whether multiple users can request it at once. The bad version is review-worthy because memory usage grows with payload size and concurrency.

@@ -1,0 +1,50 @@
+export const metadata = {
+  title: "Module side effects and startup code",
+  track: "nodejs",
+  order: 5,
+  summary: "Avoid starting timers, connections, or jobs when a module is merely imported.",
+  tags: ["modules", "side-effects", "startup"],
+  takeaways: ["Side effects should live behind explicit start functions or entry points."],
+  goodCode: {
+    language: "typescript",
+    filename: "src/jobs/cleanup.ts",
+    code: `type CleanupJob = {
+  stop: () => void;
+};
+
+export function startCleanupJob(runCleanup: () => Promise<void>): CleanupJob {
+  const interval = setInterval(() => {
+    runCleanup().catch((error) => {
+      console.error({ error }, "Cleanup job failed");
+    });
+  }, 60_000);
+
+  return {
+    stop: () => clearInterval(interval),
+  };
+}`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "src/jobs/cleanup.ts",
+    code: `import { deleteExpiredSessions } from "../sessions";
+
+setInterval(() => {
+  deleteExpiredSessions();
+}, 60_000);
+
+export function cleanupNow() {
+  return deleteExpiredSessions();
+}`,
+  },
+};
+
+## What to review
+
+The good version makes startup explicit and returns a handle that can stop the background job.
+
+The bad version starts a timer at import time, so tests or scripts that only need `cleanupNow` also start an ongoing background loop.
+
+## Review notes
+
+In review, scan module top levels for timers, connections, subscriptions, and network calls. The bad version is review-worthy because implicit startup makes lifecycle control and test isolation much harder.

@@ -185,6 +185,36 @@ import NextjsMetadataPerRoute, {
 import NextjsRouteHandlersApiBoundaries, {
   metadata as nextjsRouteHandlersApiBoundariesMetadata,
 } from "./nextjs/route-handlers-api-boundaries.mdx";
+import NodejsRuntimeBoundariesEntryPoints, {
+  metadata as nodejsRuntimeBoundariesEntryPointsMetadata,
+} from "./nodejs/runtime-boundaries-entry-points.mdx";
+import NodejsAsyncFilesystemWithoutBlocking, {
+  metadata as nodejsAsyncFilesystemWithoutBlockingMetadata,
+} from "./nodejs/async-filesystem-without-blocking.mdx";
+import NodejsAsyncErrorHandling, {
+  metadata as nodejsAsyncErrorHandlingMetadata,
+} from "./nodejs/async-failure-boundaries.mdx";
+import NodejsEnvironmentConfiguration, {
+  metadata as nodejsEnvironmentConfigurationMetadata,
+} from "./nodejs/environment-configuration.mdx";
+import NodejsModuleSideEffectsStartup, {
+  metadata as nodejsModuleSideEffectsStartupMetadata,
+} from "./nodejs/module-side-effects-startup.mdx";
+import NodejsStreamsLargePayloads, {
+  metadata as nodejsStreamsLargePayloadsMetadata,
+} from "./nodejs/streams-large-payloads.mdx";
+import NodejsHttpRequestLifecycle, {
+  metadata as nodejsHttpRequestLifecycleMetadata,
+} from "./nodejs/http-request-lifecycle.mdx";
+import NodejsGracefulShutdownSignals, {
+  metadata as nodejsGracefulShutdownSignalsMetadata,
+} from "./nodejs/graceful-shutdown-signals.mdx";
+import NodejsStructuredLogging, {
+  metadata as nodejsStructuredLoggingMetadata,
+} from "./nodejs/structured-logging.mdx";
+import NodejsInputValidationPathSafety, {
+  metadata as nodejsInputValidationPathSafetyMetadata,
+} from "./nodejs/input-validation-path-safety.mdx";
 
 type RawLesson = {
   slug: string;
@@ -553,6 +583,66 @@ const rawLessons: RawLesson[] = [
     source: "content/nextjs/route-handlers-api-boundaries.mdx",
     metadata: nextjsRouteHandlersApiBoundariesMetadata,
     Component: NextjsRouteHandlersApiBoundaries,
+  },
+  {
+    slug: "runtime-boundaries-entry-points",
+    source: "content/nodejs/runtime-boundaries-entry-points.mdx",
+    metadata: nodejsRuntimeBoundariesEntryPointsMetadata,
+    Component: NodejsRuntimeBoundariesEntryPoints,
+  },
+  {
+    slug: "async-filesystem-without-blocking",
+    source: "content/nodejs/async-filesystem-without-blocking.mdx",
+    metadata: nodejsAsyncFilesystemWithoutBlockingMetadata,
+    Component: NodejsAsyncFilesystemWithoutBlocking,
+  },
+  {
+    slug: "async-failure-boundaries",
+    source: "content/nodejs/async-failure-boundaries.mdx",
+    metadata: nodejsAsyncErrorHandlingMetadata,
+    Component: NodejsAsyncErrorHandling,
+  },
+  {
+    slug: "environment-configuration",
+    source: "content/nodejs/environment-configuration.mdx",
+    metadata: nodejsEnvironmentConfigurationMetadata,
+    Component: NodejsEnvironmentConfiguration,
+  },
+  {
+    slug: "module-side-effects-startup",
+    source: "content/nodejs/module-side-effects-startup.mdx",
+    metadata: nodejsModuleSideEffectsStartupMetadata,
+    Component: NodejsModuleSideEffectsStartup,
+  },
+  {
+    slug: "streams-large-payloads",
+    source: "content/nodejs/streams-large-payloads.mdx",
+    metadata: nodejsStreamsLargePayloadsMetadata,
+    Component: NodejsStreamsLargePayloads,
+  },
+  {
+    slug: "http-request-lifecycle",
+    source: "content/nodejs/http-request-lifecycle.mdx",
+    metadata: nodejsHttpRequestLifecycleMetadata,
+    Component: NodejsHttpRequestLifecycle,
+  },
+  {
+    slug: "graceful-shutdown-signals",
+    source: "content/nodejs/graceful-shutdown-signals.mdx",
+    metadata: nodejsGracefulShutdownSignalsMetadata,
+    Component: NodejsGracefulShutdownSignals,
+  },
+  {
+    slug: "structured-logging",
+    source: "content/nodejs/structured-logging.mdx",
+    metadata: nodejsStructuredLoggingMetadata,
+    Component: NodejsStructuredLogging,
+  },
+  {
+    slug: "input-validation-path-safety",
+    source: "content/nodejs/input-validation-path-safety.mdx",
+    metadata: nodejsInputValidationPathSafetyMetadata,
+    Component: NodejsInputValidationPathSafety,
   },
 ];
 

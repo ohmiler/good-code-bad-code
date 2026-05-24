@@ -1,0 +1,51 @@
+export const metadata = {
+  title: "Environment variables and configuration",
+  track: "nodejs",
+  order: 4,
+  summary: "Read and validate environment configuration once at startup.",
+  tags: ["configuration", "environment", "startup"],
+  takeaways: ["Config should fail fast with clear messages instead of scattering process.env reads."],
+  goodCode: {
+    language: "typescript",
+    filename: "src/config.ts",
+    code: `type AppConfig = {
+  port: number;
+  databaseUrl: string;
+};
+
+export function readConfig(env: NodeJS.ProcessEnv): AppConfig {
+  const databaseUrl = env.DATABASE_URL;
+  const port = Number(env.PORT ?? "3000");
+
+  if (!databaseUrl) {
+    throw new Error("DATABASE_URL is required.");
+  }
+
+  if (!Number.isInteger(port) || port < 1) {
+    throw new Error("PORT must be a positive integer.");
+  }
+
+  return { databaseUrl, port };
+}`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "src/db.ts",
+    code: `export function connectDatabase() {
+  return connect({
+    url: process.env.DATABASE_URL || "postgres://localhost/dev",
+    poolSize: Number(process.env.POOL_SIZE || "not-a-number"),
+  });
+}`,
+  },
+};
+
+## What to review
+
+The good version turns environment variables into a typed config object and fails during startup if required values are missing.
+
+The bad version reads `process.env` deep inside infrastructure code, silently falls back to a local database, and accepts invalid numeric config.
+
+## Review notes
+
+In review, look for scattered `process.env` reads and defaults that could point production at the wrong service. The bad version is review-worthy because configuration bugs should fail loudly before the app starts serving traffic.

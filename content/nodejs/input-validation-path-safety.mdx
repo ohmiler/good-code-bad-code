@@ -1,0 +1,48 @@
+export const metadata = {
+  title: "Input validation and path safety",
+  track: "nodejs",
+  order: 10,
+  summary: "Validate user input before using it in filesystem paths or other sensitive operations.",
+  tags: ["validation", "security", "filesystem"],
+  takeaways: ["Resolve user-controlled paths against an allowed root and reject traversal attempts."],
+  goodCode: {
+    language: "typescript",
+    filename: "src/files.ts",
+    code: `import path from "node:path";
+
+const uploadRoot = path.resolve("uploads");
+
+export function resolveUploadPath(fileName: string) {
+  if (!/^[a-z0-9._-]+$/i.test(fileName)) {
+    throw new Error("Invalid file name.");
+  }
+
+  const targetPath = path.resolve(uploadRoot, fileName);
+
+  if (!targetPath.startsWith(uploadRoot + path.sep)) {
+    throw new Error("Path escapes upload directory.");
+  }
+
+  return targetPath;
+}`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "src/files.ts",
+    code: `import path from "node:path";
+
+export function resolveUploadPath(fileName: string) {
+  return path.join("uploads", fileName);
+}`,
+  },
+};
+
+## What to review
+
+The good version validates the filename, resolves it against a known root, and rejects paths that escape the upload directory.
+
+The bad version joins user input directly into a filesystem path, allowing traversal input to point outside the intended folder.
+
+## Review notes
+
+In review, treat file paths, shell arguments, URLs, and database filters as sensitive boundaries. The bad version is review-worthy because a short helper can become the place where user input crosses into the operating system.

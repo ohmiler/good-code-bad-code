@@ -1,0 +1,45 @@
+export const metadata = {
+  title: "Runtime boundaries and entry points",
+  track: "nodejs",
+  order: 1,
+  summary: "Keep process startup separate from reusable application wiring.",
+  tags: ["runtime", "startup", "architecture"],
+  takeaways: ["A Node module should be importable without starting the process or opening sockets."],
+  goodCode: {
+    language: "typescript",
+    filename: "src/server.ts",
+    code: `import { createApp } from "./app";
+import { readConfig } from "./config";
+
+const config = readConfig(process.env);
+const app = createApp({ logger: console });
+
+const server = app.listen(config.port, () => {
+  console.info("Server listening on port " + config.port);
+});
+
+export { server };`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "src/app.ts",
+    code: `import http from "node:http";
+import { handleRequest } from "./handler";
+
+const server = http.createServer(handleRequest);
+
+server.listen(process.env.PORT || 3000);
+
+export default server;`,
+  },
+};
+
+## What to review
+
+The good version keeps startup in one entry point and lets the app wiring be imported without immediately listening on a port.
+
+The bad version starts the server as a side effect of importing `app.ts`, which makes tests, scripts, and workers unexpectedly open sockets.
+
+## Review notes
+
+In review, ask what happens when this module is imported by a test or another process. The bad version is review-worthy because startup side effects make the runtime harder to compose and harder to shut down cleanly.

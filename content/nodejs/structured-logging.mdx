@@ -1,0 +1,42 @@
+export const metadata = {
+  title: "Structured logging",
+  track: "nodejs",
+  order: 9,
+  summary: "Log machine-readable events with request context and without sensitive data.",
+  tags: ["logging", "observability", "security"],
+  takeaways: ["Logs should help correlate behavior without leaking secrets or personal data."],
+  goodCode: {
+    language: "typescript",
+    filename: "src/logging.ts",
+    code: `type LogEvent = {
+  level: "info" | "error";
+  message: string;
+  requestId: string;
+  durationMs?: number;
+};
+
+export function logEvent(event: LogEvent) {
+  console.log(JSON.stringify({
+    time: new Date().toISOString(),
+    ...event,
+  }));
+}`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "src/login.ts",
+    code: `export function logLoginAttempt(email: string, password: string) {
+  console.log("Login failed for " + email + " with password " + password);
+}`,
+  },
+};
+
+## What to review
+
+The good version emits structured JSON with stable fields that log systems can search and aggregate.
+
+The bad version logs a free-form string and includes a password, turning logs into a security incident.
+
+## Review notes
+
+In review, look for correlation IDs, event names, levels, and sensitive fields. The bad version is review-worthy because logs are production data and should be useful without becoming a place where secrets are copied.

@@ -1,0 +1,73 @@
+export const metadata = {
+  title: "HTTP request lifecycle",
+  track: "nodejs",
+  order: 7,
+  summary: "Handle method checks, body limits, and response exits in a predictable order.",
+  tags: ["http", "requests", "validation"],
+  takeaways: ["A request handler should validate early, read bounded input, and return after sending a response."],
+  goodCode: {
+    language: "typescript",
+    filename: "src/routes/webhook.ts",
+    code: `import type { IncomingMessage, ServerResponse } from "node:http";
+
+async function readBody(request: IncomingMessage, limitBytes: number) {
+  let body = "";
+
+  for await (const chunk of request) {
+    body += chunk;
+    if (Buffer.byteLength(body) > limitBytes) {
+      throw new Error("Body too large.");
+    }
+  }
+
+  return body;
+}
+
+export async function handleWebhook(
+  request: IncomingMessage,
+  response: ServerResponse,
+) {
+  if (request.method !== "POST") {
+    response.statusCode = 405;
+    response.end("Method not allowed.");
+    return;
+  }
+
+  const body = await readBody(request, 64_000);
+  response.end("Received " + body.length + " bytes.");
+}`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "src/routes/webhook.ts",
+    code: `import type { IncomingMessage, ServerResponse } from "node:http";
+
+export async function handleWebhook(
+  request: IncomingMessage,
+  response: ServerResponse,
+) {
+  let body = "";
+
+  for await (const chunk of request) {
+    body += chunk;
+  }
+
+  if (request.method !== "POST") {
+    response.statusCode = 405;
+    response.end("Method not allowed.");
+  }
+
+  response.end("Received " + body.length + " bytes.");
+}`,
+  },
+};
+
+## What to review
+
+The good version rejects unsupported methods before reading the body, enforces a body limit, and returns after sending an error.
+
+The bad version reads unlimited input before checking the method and can attempt to write a second response after a 405.
+
+## Review notes
+
+In review, trace the request from entry to response. The bad version is review-worthy because lifecycle bugs often appear only on invalid methods, large payloads, or clients that disconnect mid-request.

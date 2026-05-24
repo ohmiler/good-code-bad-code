@@ -35,6 +35,12 @@ export const tracks = [
     description:
       "Review App Router structure, server boundaries, data fetching, and route APIs.",
   },
+  {
+    slug: "nodejs",
+    title: "Node.js",
+    description:
+      "Review runtime boundaries, async I/O, HTTP lifecycle, logging, and process safety.",
+  },
 ] as const;
 
 export type Track = (typeof tracks)[number];

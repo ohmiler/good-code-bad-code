@@ -1,0 +1,53 @@
+export const metadata = {
+  title: "Graceful shutdown and process signals",
+  track: "nodejs",
+  order: 8,
+  summary: "Stop accepting work and close resources when the process receives shutdown signals.",
+  tags: ["process", "shutdown", "signals"],
+  takeaways: ["A production Node process should drain HTTP and dependency connections before exit."],
+  goodCode: {
+    language: "typescript",
+    filename: "src/shutdown.ts",
+    code: `import type { Server } from "node:http";
+
+export function installShutdown(server: Server, closeDatabase: () => Promise<void>) {
+  async function shutdown(signal: string) {
+    console.info("Received " + signal + ", shutting down");
+
+    server.close(async () => {
+      await closeDatabase();
+      process.exit(0);
+    });
+
+    setTimeout(() => {
+      console.error("Shutdown timed out");
+      process.exit(1);
+    }, 10_000).unref();
+  }
+
+  process.once("SIGTERM", () => shutdown("SIGTERM"));
+  process.once("SIGINT", () => shutdown("SIGINT"));
+}`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "src/server.ts",
+    code: `process.on("SIGTERM", () => {
+  process.exit(0);
+});
+
+process.on("SIGINT", () => {
+  process.exit(0);
+});`,
+  },
+};
+
+## What to review
+
+The good version stops accepting new HTTP work, closes dependencies, and keeps a timeout in case shutdown hangs.
+
+The bad version exits immediately, which can drop in-flight requests and leave external work half-complete.
+
+## Review notes
+
+In review, ask what happens during deploys, container restarts, and local Ctrl+C. The bad version is review-worthy because process signal handling is part of production correctness, not just operational polish.

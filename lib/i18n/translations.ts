@@ -93,6 +93,11 @@ export const trackThaiTranslations = {
     description:
       "ฝึกรีวิว App Router, server boundary, data fetching, caching และ route API.",
   },
+  nodejs: {
+    title: "Node.js",
+    description:
+      "ฝึกรีวิว runtime boundary, async I/O, HTTP lifecycle, logging และ process safety.",
+  },
 } as const satisfies Record<TrackSlug, TrackTranslation>;
 
 export const lessonThaiTranslations = {
@@ -814,6 +819,126 @@ export const lessonThaiTranslations = {
     ],
     reviewNotes: [
       "ตอนรีวิวให้ถามว่าไฟล์นี้กำลัง serve UI หรือ HTTP data. page และ route handler เป็น primitive คนละแบบและไม่ควรอยู่ระดับ route เดียวกัน.",
+    ],
+  },
+  "nodejs/runtime-boundaries-entry-points": {
+    title: "ขอบเขต runtime และ entry point",
+    summary: "แยก process startup ออกจาก application wiring ที่ควร import ไปใช้ซ้ำได้.",
+    takeaways: ["module ของ Node.js ควรถูก import ได้โดยไม่เริ่ม process หรือเปิด socket ทันที."],
+    whatToReview: [
+      "โค้ดที่ดีให้ server entry point เป็นคนอ่าน config สร้าง app และ listen port อย่างชัดเจน.",
+      "โค้ดที่ควรปรับเริ่ม server ตอน import module ทำให้ test หรือ script เปิด socket โดยไม่ตั้งใจ.",
+    ],
+    reviewNotes: [
+      "ตอนรีวิวให้ถามว่าเกิดอะไรขึ้นเมื่อไฟล์นี้ถูก import จาก test, worker หรือ script อื่น. side effect ตอน startup ทำให้ compose และ shutdown ยากขึ้นมาก.",
+    ],
+  },
+  "nodejs/async-filesystem-without-blocking": {
+    title: "filesystem async ไม่ block event loop",
+    summary: "ใช้ filesystem API แบบ async ใน request path เพื่อไม่ให้ disk read หนึ่งครั้ง block request อื่น.",
+    takeaways: ["หลีกเลี่ยง filesystem sync call ใน HTTP handler หรือ hot path อื่น ๆ."],
+    whatToReview: [
+      "โค้ดที่ดีใช้ readFile จาก fs/promises เพื่อปล่อย event loop ระหว่างรอ disk.",
+      "โค้ดที่ควรปรับใช้ readFileSync ใน request handler ทำให้ process หยุดรับงานอื่นจนอ่านไฟล์เสร็จ.",
+    ],
+    reviewNotes: [
+      "sync filesystem API อาจโอเคตอน startup หรือ build tooling แต่ควรสงสัยเมื่ออยู่ใน request handler. bug นี้มักไม่ชัดในเครื่อง local แต่กระทบ latency เมื่อมี traffic พร้อมกัน.",
+    ],
+  },
+  "nodejs/async-failure-boundaries": {
+    title: "จัดการ error ใน async code",
+    summary: "จัดการ rejected promise ที่ boundary ซึ่งยังตอบ response ที่มีประโยชน์ให้ client ได้.",
+    takeaways: ["request path แบบ async ควรมี failure path ชัดเจนและส่ง response เพียงครั้งเดียว."],
+    whatToReview: [
+      "โค้ดที่ดี catch error ที่ HTTP boundary, log context และส่ง 500 ที่อ่านเข้าใจได้.",
+      "โค้ดที่ควรปรับสร้าง promise แล้วไม่จัดการ rejection ทำให้ client ค้างหรือเกิด unhandled rejection.",
+    ],
+    reviewNotes: [
+      "ตอนรีวิวให้ไล่ทุก promise ใน request code ว่าถ้า reject แล้วใครรับผิดชอบ. happy path ที่ดูสะอาดอาจซ่อน failure behavior ที่ไม่ถูกนิยามไว้เลย.",
+    ],
+  },
+  "nodejs/environment-configuration": {
+    title: "environment variable และ config",
+    summary: "อ่านและ validate environment configuration ครั้งเดียวตอน startup.",
+    takeaways: ["config ควร fail fast พร้อมข้อความชัดเจน ไม่ควรกระจาย process.env ไปทั่ว codebase."],
+    whatToReview: [
+      "โค้ดที่ดีแปลง env เป็น typed config object และตรวจ required value ก่อน app เริ่มรับ traffic.",
+      "โค้ดที่ควรปรับอ่าน process.env ลึกใน infrastructure code พร้อม fallback ที่อาจชี้ production ไปผิดที่.",
+    ],
+    reviewNotes: [
+      "เวลาเห็น process.env กระจายหลายไฟล์ ให้ดึงกลับมาคิดเรื่อง config boundary. configuration bug ควรล้มตั้งแต่เริ่มระบบ ไม่ใช่ล้มตอนผู้ใช้ส่ง request แล้ว.",
+    ],
+  },
+  "nodejs/module-side-effects-startup": {
+    title: "module side effect และ startup code",
+    summary: "อย่าเริ่ม timer, connection หรือ background job เพียงเพราะมีคน import module.",
+    takeaways: ["side effect ควรอยู่หลัง explicit start function หรือ entry point ที่ควบคุม lifecycle ได้."],
+    whatToReview: [
+      "โค้ดที่ดีมี startCleanupJob ที่เริ่มงานชัดเจนและคืน stop handle สำหรับ shutdown หรือ test.",
+      "โค้ดที่ควรปรับเริ่ม setInterval ที่ top level ทำให้ import เพื่อใช้ function เดียวก็เริ่ม background loop.",
+    ],
+    reviewNotes: [
+      "ตอนรีวิว top-level code ให้มองหา timer, connection, subscription และ network call. implicit startup ทำให้ test isolation และ lifecycle control เปราะมาก.",
+    ],
+  },
+  "nodejs/streams-large-payloads": {
+    title: "stream สำหรับ payload ขนาดใหญ่",
+    summary: "ส่งไฟล์หรือ response ขนาดใหญ่ด้วย stream แทนการโหลดทั้งหมดเข้า memory.",
+    takeaways: ["payload ใหญ่ควรใช้ pipeline-based streaming พร้อม error handling."],
+    whatToReview: [
+      "โค้ดที่ดีใช้ createReadStream กับ pipeline เพื่อรองรับ backpressure และจัดการ stream failure.",
+      "โค้ดที่ควรปรับ readFile ทั้งไฟล์ก่อนส่ง response ทำให้ memory เพิ่มตามขนาดไฟล์และจำนวนผู้ใช้.",
+    ],
+    reviewNotes: [
+      "ตอนรีวิว download หรือ export ให้ถามว่าข้อมูลใหญ่ได้แค่ไหนและมี concurrent request ได้กี่ชุด. การโหลดทั้งไฟล์เข้า memory อาจดีใน demo แต่เสี่ยงใน production.",
+    ],
+  },
+  "nodejs/http-request-lifecycle": {
+    title: "lifecycle ของ HTTP request",
+    summary: "ตรวจ method, จำกัด body และ return หลังส่ง response ตามลำดับที่คาดเดาได้.",
+    takeaways: ["handler ที่ดีควร validate ก่อน อ่าน input แบบมี limit และไม่เขียน response ซ้ำ."],
+    whatToReview: [
+      "โค้ดที่ดีปฏิเสธ method ที่ไม่รองรับก่อนอ่าน body และจำกัดขนาด input.",
+      "โค้ดที่ควรปรับอ่าน body ไม่จำกัดก่อนเช็ค method และยังอาจ response ซ้ำหลังส่ง 405.",
+    ],
+    reviewNotes: [
+      "ตอนรีวิวให้ไล่ request ตั้งแต่ entry จนจบ response. lifecycle bug มักโผล่กับ invalid method, body ใหญ่ หรือ client ที่ disconnect กลางทาง.",
+    ],
+  },
+  "nodejs/graceful-shutdown-signals": {
+    title: "graceful shutdown และ process signal",
+    summary: "หยุดรับงานใหม่และปิด resource เมื่อ process ได้รับสัญญาณ shutdown.",
+    takeaways: ["Node process ใน production ควร drain HTTP และ dependency connection ก่อน exit."],
+    whatToReview: [
+      "โค้ดที่ดีใช้ server.close ปิด database และมี timeout กัน shutdown ค้าง.",
+      "โค้ดที่ควรปรับ process.exit ทันทีเมื่อได้ SIGTERM หรือ SIGINT ทำให้ request ที่กำลังทำงานหลุดได้.",
+    ],
+    reviewNotes: [
+      "ตอนรีวิวให้คิดถึง deploy, container restart และ Ctrl+C ตอน local. signal handling เป็นความถูกต้องของ production ไม่ใช่แค่งาน operation สวย ๆ.",
+    ],
+  },
+  "nodejs/structured-logging": {
+    title: "structured logging ที่เป็นระบบ",
+    summary: "log เป็น event ที่ machine อ่านได้ มี context ของ request และไม่ใส่ข้อมูลลับ.",
+    takeaways: ["log ควรช่วย correlate behavior โดยไม่รั่ว secret หรือข้อมูลส่วนตัว."],
+    whatToReview: [
+      "โค้ดที่ดี log JSON ด้วย field ที่คงที่ เช่น level, message, requestId และ durationMs.",
+      "โค้ดที่ควรปรับ log string อิสระและใส่ password ลง log ซึ่งกลายเป็นความเสี่ยงด้าน security.",
+    ],
+    reviewNotes: [
+      "ตอนรีวิว log ให้ดู correlation id, event name, level และ sensitive field. log เป็น production data จึงต้องค้นหาได้และต้องไม่กลายเป็นที่เก็บ secret.",
+    ],
+  },
+  "nodejs/input-validation-path-safety": {
+    title: "validate input และ path safety",
+    summary: "validate user input ก่อนนำไปใช้กับ filesystem path หรือ operation ที่ sensitive.",
+    takeaways: ["path ที่มาจากผู้ใช้ควรถูก resolve เทียบกับ root ที่อนุญาตและปฏิเสธ traversal."],
+    whatToReview: [
+      "โค้ดที่ดี validate filename, resolve เทียบ upload root และป้องกัน path ที่หลุดออกนอก directory.",
+      "โค้ดที่ควรปรับ join user input เข้ากับ path ตรง ๆ ทำให้ traversal input ชี้ไปไฟล์นอกพื้นที่ที่ตั้งใจได้.",
+    ],
+    reviewNotes: [
+      "ตอนรีวิวให้มอง file path, shell argument, URL และ database filter เป็น boundary สำคัญ. helper สั้น ๆ อาจเป็นจุดที่ user input ข้ามเข้า operating system.",
     ],
   },
 } as const satisfies Record<string, LessonThaiTranslation>;

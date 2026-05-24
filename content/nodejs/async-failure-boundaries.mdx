@@ -1,0 +1,50 @@
+export const metadata = {
+  title: "Async failure boundaries",
+  track: "nodejs",
+  order: 3,
+  summary: "Handle rejected promises at the boundary where you can return a useful response.",
+  tags: ["errors", "async", "http"],
+  takeaways: ["Every async request path should have a clear failure path and one response."],
+  goodCode: {
+    language: "typescript",
+    filename: "src/routes/reports.ts",
+    code: `import type { ServerResponse } from "node:http";
+import { createReport } from "../services/reports";
+
+export async function sendReport(response: ServerResponse) {
+  try {
+    const report = await createReport();
+
+    response.setHeader("content-type", "application/json");
+    response.end(JSON.stringify({ report }));
+  } catch (error) {
+    console.error({ error }, "Could not create report");
+    response.statusCode = 500;
+    response.end(JSON.stringify({ error: "Could not create report." }));
+  }
+}`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "src/routes/reports.ts",
+    code: `import type { ServerResponse } from "node:http";
+import { createReport } from "../services/reports";
+
+export function sendReport(response: ServerResponse) {
+  createReport().then((report) => {
+    response.setHeader("content-type", "application/json");
+    response.end(JSON.stringify({ report }));
+  });
+}`,
+  },
+};
+
+## What to review
+
+The good version catches async failures at the HTTP boundary, logs context, and returns a single error response.
+
+The bad version never handles a rejected promise, so the process can emit an unhandled rejection while the client waits or disconnects.
+
+## Review notes
+
+In review, follow every promise created in request code to see where rejection is handled. The bad version is review-worthy because successful paths look clean while failure behavior is undefined.
