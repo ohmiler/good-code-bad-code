@@ -10,7 +10,17 @@ export function replaceCodeCommentLines(
       const trimmedStart = line.trimStart();
 
       if (!trimmedStart.startsWith("# ")) {
-        return line;
+        if (
+          !trimmedStart.startsWith("<!-- ") ||
+          !trimmedStart.endsWith(" -->")
+        ) {
+          if (
+            !trimmedStart.startsWith("/* ") ||
+            !trimmedStart.endsWith(" */")
+          ) {
+            return line;
+          }
+        }
       }
 
       const translatedComment = translatedComments[commentIndex];
@@ -22,7 +32,15 @@ export function replaceCodeCommentLines(
 
       const indentation = line.slice(0, line.length - trimmedStart.length);
 
-      return `${indentation}# ${translatedComment}`;
+      if (trimmedStart.startsWith("# ")) {
+        return `${indentation}# ${translatedComment}`;
+      }
+
+      if (trimmedStart.startsWith("/* ")) {
+        return `${indentation}/* ${translatedComment} */`;
+      }
+
+      return `${indentation}<!-- ${translatedComment} -->`;
     })
     .join("\n");
 }

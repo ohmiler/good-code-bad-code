@@ -9,6 +9,7 @@ export const metadata = {
     language: "html",
     filename: "password-field.html",
     code: `<label for="password">Password</label>
+<!-- aria-describedby connects both guidance and error text to the field. -->
 <input
   id="password"
   name="password"
@@ -23,6 +24,7 @@ export const metadata = {
     language: "html",
     filename: "password-field.html",
     code: `<label>Password</label>
+<!-- Nearby text is visual only unless it is programmatically connected. -->
 <input name="password" type="password" />
 <p class="help">Use at least 12 characters.</p>
 <p class="error">Too short.</p>`,

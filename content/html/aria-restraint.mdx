@@ -9,6 +9,7 @@ export const metadata = {
     language: "html",
     filename: "dialog-actions.html",
     code: `<button type="button">
+  <!-- Native buttons provide the role before ARIA adds only the missing label. -->
   Save changes
 </button>
 <button type="button" aria-label="Close dialog">
@@ -19,6 +20,7 @@ export const metadata = {
     language: "html",
     filename: "dialog-actions.html",
     code: `<div role="button" aria-checked="true" aria-label="Submit">
+  <!-- ARIA roles and states conflict with the element behavior here. -->
   Save changes
 </div>
 <span role="img" aria-label="Close dialog">x</span>`,

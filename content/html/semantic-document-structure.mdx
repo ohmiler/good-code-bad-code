@@ -9,6 +9,7 @@ export const metadata = {
     language: "html",
     filename: "article.html",
     code: `<main>
+  <!-- main and article expose the page outline before CSS runs. -->
   <article aria-labelledby="article-title">
     <h1 id="article-title">Reviewing pull requests</h1>
     <p>Small reviews are easier to reason about.</p>
@@ -19,6 +20,7 @@ export const metadata = {
     language: "html",
     filename: "article.html",
     code: `<div>
+  <!-- Generic divs hide the content structure from the document outline. -->
   <div>
     <b>Reviewing pull requests</b>
     <div>Small reviews are easier to reason about.</div>

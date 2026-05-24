@@ -9,6 +9,7 @@ export const metadata = {
     language: "css",
     filename: "notice.css",
     code: `:root {
+  /* Named tokens make shared design decisions reviewable. */
   --color-surface: #ffffff;
   --color-border: #d8dee8;
   --space-4: 1rem;
@@ -32,6 +33,7 @@ export const metadata = {
     language: "css",
     filename: "notice.css",
     code: `.notice {
+  /* Repeated raw values hide which decisions are shared tokens. */
   padding: 16px;
   border: 1px solid #d8dee8;
   border-left: 4px solid #2563eb;

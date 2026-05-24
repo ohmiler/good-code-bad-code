@@ -9,6 +9,7 @@ export const metadata = {
     language: "html",
     filename: "nav.html",
     code: `<nav aria-label="Primary">
+  <!-- Real anchors preserve browser navigation behavior. -->
   <ul>
     <li><a href="/roadmaps/html">HTML roadmap</a></li>
     <li><a href="/review-examples">Review examples</a></li>
@@ -19,6 +20,7 @@ export const metadata = {
     language: "html",
     filename: "nav.html",
     code: `<div class="nav">
+  <!-- Click handlers and vague labels break basic link expectations. -->
   <span onclick="go('/roadmaps/html')">Click here</span>
   <a href="#">More</a>
 </div>`,

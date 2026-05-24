@@ -161,6 +161,10 @@ export const trackThaiTranslations = {
 
 export const lessonThaiTranslations = {
   "html/document-language-metadata": {
+    codeComments: {
+      goodCode: ["metadata ของเอกสารช่วยให้ browser และ assistive tech ใช้ค่าเริ่มต้นที่ถูกต้อง"],
+      badCode: ["ไม่มี language และ viewport ทำให้ default สำคัญถูกเดาเอง"],
+    },
     title: "ภาษาและ metadata ของเอกสาร",
     summary: "ประกาศข้อมูลพื้นฐานของหน้า เช่น ภาษา charset viewport และ title ให้ชัดตั้งแต่ต้น.",
     takeaways: ["ทุกหน้าควรเริ่มจาก lang, charset, viewport และ title ที่สื่อความหมาย."],
@@ -173,6 +177,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "html/semantic-document-structure": {
+    codeComments: {
+      goodCode: ["main และ article ทำให้เห็น outline ของหน้าก่อน CSS ทำงาน"],
+      badCode: ["div ทั่วไปซ่อนโครงสร้างเนื้อหาจาก document outline"],
+    },
     title: "โครงสร้างเอกสารแบบมีความหมาย",
     summary: "ใช้ landmark และ heading เพื่อให้โครงสร้างหน้าอ่านเข้าใจง่าย.",
     takeaways: ["เลือกแท็กที่สื่อความหมายก่อนใช้ div ครอบทุกอย่าง."],
@@ -185,6 +193,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "html/heading-hierarchy": {
+    codeComments: {
+      goodCode: ["ระดับ heading ไล่ตาม outline ของหน้าอย่างเป็นลำดับ"],
+      badCode: ["ระดับ heading ถูกใช้เพื่อหน้าตาแทนโครงสร้าง"],
+    },
     title: "ลำดับ heading",
     summary: "ใช้ heading เพื่อบอกโครงสร้างเอกสาร ไม่ใช่เลือกตามขนาดตัวอักษรที่อยากได้.",
     takeaways: ["ระดับ heading ควรเรียงตามโครงเรื่อง ไม่ใช่ใช้แทน class สำหรับขนาดฟอนต์."],
@@ -197,6 +209,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "html/links-and-navigation": {
+    codeComments: {
+      goodCode: ["anchor จริงรักษาพฤติกรรม navigation พื้นฐานของ browser"],
+      badCode: ["click handler และ label กว้าง ๆ ทำลาย expectation ของ link"],
+    },
     title: "ลิงก์และ navigation",
     summary: "ใช้ลิงก์จริงพร้อมชื่อที่ชัดเมื่อพาผู้ใช้ไปที่อื่น แทน element ทั่วไปที่คลิกได้.",
     takeaways: ["ถ้าการกระทำนั้นพาไปที่อื่น ให้เริ่มจาก anchor ที่มี href และข้อความลิงก์ที่เข้าใจได้."],
@@ -209,6 +225,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "html/images-alt-text": {
+    codeComments: {
+      goodCode: ["alt text อธิบายความหมาย ส่วนรูปตกแต่งควรเงียบ"],
+      badCode: ["ชื่อไฟล์และคำอธิบายของตกแต่งเพิ่ม noise ให้ screen reader"],
+    },
     title: "รูปภาพและ alt text",
     summary: "เขียน alt text ให้รูปที่มีความหมาย และซ่อนรูปตกแต่งจาก assistive technology.",
     takeaways: ["alt text ควรอธิบายหน้าที่ของรูปในบริบทนั้น ไม่ใช่ทวนชื่อไฟล์."],
@@ -221,6 +241,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "html/accessible-form-labels": {
+    codeComments: {
+      goodCode: ["label และ help text เชื่อมกับ input ด้วย id ที่ชัดเจน"],
+      badCode: ["placeholder ไม่ใช่ label ที่คงอยู่ตลอดสำหรับ field"],
+    },
     title: "label ของฟอร์มที่เข้าถึงได้",
     summary: "ผูก label กับ input ให้ชัดเจน แทนการพึ่ง placeholder อย่างเดียว.",
     takeaways: ["input สำคัญควรมี label จริง ไม่ใช่ hint ที่หายไปตอนพิมพ์."],
@@ -233,6 +257,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "html/form-help-errors": {
+    codeComments: {
+      goodCode: ["aria-describedby เชื่อมทั้งคำแนะนำและ error text กับ field"],
+      badCode: ["ข้อความที่อยู่ใกล้กันเป็นแค่ visual ถ้าไม่ได้เชื่อมด้วยโปรแกรม"],
+    },
     title: "คำแนะนำและ error ของฟอร์ม",
     summary: "เชื่อม help text และ error text เข้ากับ field เพื่อให้ feedback ถูกอ่านพร้อม control.",
     takeaways: ["ใช้ aria-describedby และ aria-invalid เพื่อผูกคำแนะนำและสถานะผิดพลาดกับ input."],
@@ -245,6 +273,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "html/interactive-elements": {
+    codeComments: {
+      goodCode: ["button แท้มี keyboard และ focus behavior มาให้แล้ว"],
+      badCode: ["div ที่ click ได้ต้องสร้าง behavior ของ button เองทั้งหมด"],
+    },
     title: "element สำหรับ interaction",
     summary: "ใช้ element ที่เกิดมาเพื่อกด เช่น button แทน div ที่ใส่ onClick เอง.",
     takeaways: ["ถ้าเป็น action ให้เริ่มจาก button หรือ element native ที่เหมาะสม."],
@@ -257,6 +289,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "html/tables-tabular-data": {
+    codeComments: {
+      goodCode: ["caption และ scope รักษาความสัมพันธ์ระหว่าง header กับ cell"],
+      badCode: ["CSS ทำให้ div ดูเหมือนตารางได้ แต่สร้าง table semantics ไม่ได้"],
+    },
     title: "table สำหรับข้อมูลแบบตาราง",
     summary: "ใช้ markup ของ table เมื่อข้อมูลเป็นแถวและคอลัมน์ เพื่อรักษาความสัมพันธ์ระหว่างหัวข้อกับค่า.",
     takeaways: ["ถ้าเนื้อหาเป็นข้อมูลแบบ row/column ให้ใช้ table, caption, th และ scope ก่อนสร้างด้วย div."],
@@ -269,6 +305,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "html/aria-restraint": {
+    codeComments: {
+      goodCode: ["button แท้ให้ role อยู่แล้ว ARIA แค่เติม label ที่ขาด"],
+      badCode: ["role และ state ของ ARIA ขัดกับ behavior ของ element ตรงนี้"],
+    },
     title: "ใช้ ARIA อย่างพอดี",
     summary: "เริ่มจาก HTML native ก่อน แล้วใช้ ARIA เฉพาะเมื่อช่วยอธิบายพฤติกรรมที่ HTML บอกเองไม่ได้.",
     takeaways: ["เลือก semantic HTML ก่อนเสมอ ARIA ควรช่วยทำให้ชัด ไม่ใช่ซ่อม element ที่เลือกผิด."],
@@ -281,6 +321,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "css/flex-layout-boundaries": {
+    codeComments: {
+      goodCode: ["container เป็นเจ้าของ spacing ส่วน status เป็นข้อยกเว้นเรื่อง alignment"],
+      badCode: ["child selector ทำให้ item ทุกตัวรับ layout rule โดยไม่ชัดเจน"],
+    },
     title: "ขอบเขตของ flex layout",
     summary: "กำหนด layout ใน container ให้ชัด แทนการกระจาย margin ไปทั่วลูก.",
     takeaways: ["ให้ container คุม spacing ด้วย gap มากกว่าผลักลูกทีละตัว."],
@@ -293,6 +337,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "css/color-contrast-states": {
+    codeComments: {
+      goodCode: ["สีพื้นฐานและสีของ state ยังรักษา contrast ให้อ่านได้"],
+      badCode: ["state ที่ contrast ต่ำทำให้รับรู้หรืออ่านได้ยาก"],
+    },
     title: "contrast และ state ของสี",
     summary: "ทำ hover/focus ให้เห็นชัดและมี contrast พอ ไม่พึ่งสีจางอย่างเดียว.",
     takeaways: ["state สำคัญต้องเห็นชัดทั้งด้วย contrast และ focus style."],
@@ -305,6 +353,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "css/responsive-units": {
+    codeComments: {
+      goodCode: ["ค่าที่มีขอบเขตช่วย scale ตาม component โดยยังอ่านง่าย"],
+      badCode: ["ขนาดตัวอักษรตาม viewport อาจอ่านยากนอกขนาดจอนี้"],
+    },
     title: "หน่วย responsive ที่อ่านง่าย",
     summary: "ใช้ clamp และ spacing ที่ยืดหยุ่น แทนการผูกขนาดตัวอักษรกับ viewport ตรง ๆ.",
     takeaways: ["อย่าให้ body text โตหรือเล็กตาม viewport จนอ่านยาก."],
@@ -317,6 +369,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "css/box-model-sizing": {
+    codeComments: {
+      goodCode: ["border-box ทำให้ขนาดที่ประกาศรวม padding และ border อย่างตรงไปตรงมา"],
+      badCode: ["width ไม่รวม padding กับ border ทำให้พื้นที่จริงกว้างกว่าที่เห็นในโค้ด"],
+    },
     title: "ขนาดกล่องและ box model",
     summary: "ทำให้ width, padding และ border คาดเดาได้ ด้วย box-sizing และขนาดที่ไม่ดัน layout ล้น.",
     takeaways: ["ตั้ง box-sizing: border-box เพื่อให้ขนาด component ไม่ล้นเพราะ padding หรือ border."],
@@ -329,6 +385,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "css/cascade-specificity": {
+    codeComments: {
+      goodCode: ["class ของ component ที่ specificity ต่ำทำให้เห็น ownership ชัด"],
+      badCode: ["selector นี้ชนะด้วยแรง specificity แทนที่จะบอก intent ของ component"],
+    },
     title: "cascade และ specificity",
     summary: "เลือก selector ให้เฉพาะเท่าที่จำเป็น เพื่อให้ override ได้ตั้งใจและดูแลต่อได้ง่าย.",
     takeaways: ["เริ่มจาก class ที่มีขอบเขตชัด แล้วใช้ modifier แทน selector ยาวหรือ !important."],
@@ -341,6 +401,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "css/grid-layout-tracks": {
+    codeComments: {
+      goodCode: ["grid อธิบายกฎ column responsive ไว้จุดเดียว"],
+      badCode: ["float และ nth-child margin ฝังการคำนวณแถวที่เปราะบาง"],
+    },
     title: "grid tracks ที่ยืดหยุ่น",
     summary: "ใช้ CSS Grid อธิบายคอลัมน์ responsive แทนการคำนวณความกว้างและ margin เอง.",
     takeaways: ["ให้ grid จัด track ด้วย minmax และ gap แทน float, percentage และ nth-child ที่เปราะบาง."],
@@ -353,6 +417,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "css/focus-visible-states": {
+    codeComments: {
+      goodCode: ["hover focus และ selected state มีสัญญาณภาพแยกกัน"],
+      badCode: ["ลบ outline โดยไม่มีตัวแทนทำให้ผู้ใช้ keyboard ไม่เห็นตำแหน่ง"],
+    },
     title: "state selector และ focus-visible",
     summary: "แยก hover, active, selected และ keyboard focus ให้เป็นพฤติกรรมที่รีวิวได้ชัด.",
     takeaways: ["ใช้ :focus-visible สำหรับ keyboard focus และอย่าลบ outline ถ้ายังไม่มี style ทดแทนที่เห็นชัด."],
@@ -365,6 +433,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "css/logical-properties": {
+    codeComments: {
+      goodCode: ["logical properties สื่อ spacing และ edge ตาม flow ของภาษา"],
+      badCode: ["ค่า left/right แบบ physical ทำให้รองรับ writing direction ยากขึ้น"],
+    },
     title: "logical properties สำหรับหลายภาษา",
     summary: "ใช้ spacing และ border ตามแกน block/inline เมื่อ style ควรปรับตามทิศทางภาษา.",
     takeaways: ["เลือก inline และ block properties เมื่อเจตนาจริงไม่ใช่ซ้าย ขวา บน หรือล่างแบบตายตัว."],
@@ -377,6 +449,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "css/custom-properties-tokens": {
+    codeComments: {
+      goodCode: ["token ที่ตั้งชื่อทำให้ design decision ที่ใช้ร่วมกันรีวิวได้"],
+      badCode: ["ค่าดิบที่ซ้ำกันซ่อนว่า decision ไหนควรเป็น shared token"],
+    },
     title: "custom properties เป็น design tokens",
     summary: "ตั้งชื่อค่า design ที่ใช้ซ้ำด้วย custom properties แทนการกระจาย magic values.",
     takeaways: ["ตั้งชื่อสี spacing radius และ accent ที่ใช้ซ้ำ เพื่อให้เปลี่ยนระบบดีไซน์ได้ง่ายขึ้น."],
@@ -389,6 +465,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "css/reduced-motion": {
+    codeComments: {
+      goodCode: ["motion ที่ผูกกับ state สามารถย่อให้ผู้ใช้ reduced motion ได้"],
+      badCode: ["animation รันกับทุกคนและไม่มีทางลด motion ตาม preference"],
+    },
     title: "motion และ reduced motion",
     summary: "ทำ animation ให้มีเหตุผล และเคารพผู้ใช้ที่ตั้งค่าให้ลดการเคลื่อนไหว.",
     takeaways: ["ทุก UI ที่เคลื่อนไหวควรมี prefers-reduced-motion path ที่ยังสื่อ state ได้ชัด."],

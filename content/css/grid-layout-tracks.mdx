@@ -9,6 +9,7 @@ export const metadata = {
     language: "css",
     filename: "dashboard-grid.css",
     code: `.dashboard-grid {
+  /* Grid describes the responsive column rule in one place. */
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
   gap: 1rem;
@@ -22,6 +23,7 @@ export const metadata = {
     language: "css",
     filename: "dashboard-grid.css",
     code: `.dashboard-card {
+  /* Floats and nth-child margins encode fragile row math manually. */
   float: left;
   width: 33.333%;
   margin-right: 24px;

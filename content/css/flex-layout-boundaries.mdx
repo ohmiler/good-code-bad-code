@@ -9,6 +9,7 @@ export const metadata = {
     language: "css",
     filename: "review-toolbar.css",
     code: `.review-toolbar {
+  /* The container owns spacing; the status item owns its alignment exception. */
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -23,6 +24,7 @@ export const metadata = {
     language: "css",
     filename: "review-toolbar.css",
     code: `.review-toolbar {
+  /* Child selectors make every toolbar item inherit layout rules implicitly. */
   display: flex;
 }
 

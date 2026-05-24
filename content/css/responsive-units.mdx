@@ -9,6 +9,7 @@ export const metadata = {
     language: "css",
     filename: "lesson-card.css",
     code: `.lesson-card {
+  /* Bounded values scale with the component without losing readability. */
   container-type: inline-size;
   padding: clamp(1rem, 2cqi, 1.5rem);
   max-width: 42rem;
@@ -28,6 +29,7 @@ export const metadata = {
     language: "css",
     filename: "lesson-card.css",
     code: `body {
+  /* Viewport text size can become unreadable outside this exact screen width. */
   font-size: 1.2vw;
 }
 

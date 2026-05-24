@@ -9,6 +9,7 @@ export const metadata = {
     language: "html",
     filename: "metrics-table.html",
     code: `<table>
+  <!-- Caption and scopes preserve header-cell relationships. -->
   <caption>Pull request review times</caption>
   <thead>
     <tr>
@@ -28,6 +29,7 @@ export const metadata = {
     language: "html",
     filename: "metrics-table.html",
     code: `<div class="table">
+  <!-- CSS can make divs look tabular but cannot create table semantics. -->
   <div class="row header">
     <div>Team</div>
     <div>Median time</div>

@@ -9,6 +9,7 @@ export const metadata = {
     language: "css",
     filename: "profile-card.css",
     code: `.profile-card {
+  /* Low-specificity component classes keep ownership easy to review. */
   color: #172033;
   background: #ffffff;
   border: 1px solid #d8dee8;
@@ -26,6 +27,7 @@ export const metadata = {
     language: "css",
     filename: "profile-card.css",
     code: `#app main .profile-card.featured div h2.title {
+  /* This selector wins by force instead of describing component intent. */
   color: #0f172a !important;
 }
 

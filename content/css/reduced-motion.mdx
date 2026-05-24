@@ -9,6 +9,7 @@ export const metadata = {
     language: "css",
     filename: "drawer.css",
     code: `.drawer {
+  /* State-driven motion can be shortened for reduced-motion users. */
   transform: translateX(100%);
   transition: transform 180ms ease;
 }
@@ -27,6 +28,7 @@ export const metadata = {
     language: "css",
     filename: "drawer.css",
     code: `.drawer {
+  /* The animation runs for everyone and does not expose a reduced path. */
   animation: slide-in 600ms cubic-bezier(.2, .8, .2, 1) both;
 }
 

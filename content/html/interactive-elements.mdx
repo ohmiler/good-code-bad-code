@@ -9,6 +9,7 @@ export const metadata = {
     language: "html",
     filename: "toolbar.html",
     code: `<button type="button" aria-pressed="false">
+  <!-- Native buttons bring keyboard and focus behavior with them. -->
   Save draft
 </button>`,
   },
@@ -16,6 +17,7 @@ export const metadata = {
     language: "html",
     filename: "toolbar.html",
     code: `<div class="button" onclick="saveDraft()">
+  <!-- A clickable div must recreate button behavior by hand. -->
   Save draft
 </div>`,
   },

@@ -303,11 +303,24 @@ async function readMdxMetadataCodeSample(
   return readTextLiteralProperty(sampleProperty.initializer, "code");
 }
 
-function countBashCommentLines(code: string): number {
-  return code
-    .split("\n")
-    .filter((line) => line.trim().startsWith("# "))
-    .length;
+function countReviewCommentLines(code: string, track: string): number {
+  return code.split("\n").filter((line) => {
+    const trimmedLine = line.trim();
+
+    if (track === "git") {
+      return trimmedLine.startsWith("# ");
+    }
+
+    if (track === "html") {
+      return trimmedLine.startsWith("<!-- ") && trimmedLine.endsWith(" -->");
+    }
+
+    if (track === "css") {
+      return trimmedLine.startsWith("/* ") && trimmedLine.endsWith(" */");
+    }
+
+    return false;
+  }).length;
 }
 
 test("test:content runs the registry content coverage test", async () => {
@@ -378,7 +391,7 @@ test("Git command samples include concise review comments", async () => {
   for (const contentPath of gitLessons) {
     for (const sampleName of ["goodCode", "badCode"] as const) {
       const code = await readMdxMetadataCodeSample(contentPath, sampleName);
-      const commentCount = countBashCommentLines(code);
+      const commentCount = countReviewCommentLines(code, "git");
 
       assert.ok(commentCount >= 1, `${contentPath} ${sampleName}`);
       assert.ok(commentCount <= 3, `${contentPath} ${sampleName}`);
@@ -400,13 +413,99 @@ test("Git command comments have matching Thai translations", async () => {
 
     for (const sampleName of ["goodCode", "badCode"] as const) {
       const code = await readMdxMetadataCodeSample(contentPath, sampleName);
-      const commentCount = countBashCommentLines(code);
+      const commentCount = countReviewCommentLines(code, "git");
       const translatedComments = translation.codeComments[sampleName] ?? [];
 
       assert.equal(translatedComments.length, commentCount, `git/${slug}`);
       for (const [index, comment] of translatedComments.entries()) {
         assert.match(comment, /[\u0e00-\u0e7f]/, `git/${slug}.${sampleName}[${index}]`);
         assert.ok(comment.trim().length >= 8, `git/${slug}.${sampleName}[${index}]`);
+      }
+    }
+  }
+});
+
+test("HTML samples include concise review comments", async () => {
+  const lessonsByTrack = await getTrackLessonFiles();
+  const htmlLessons = lessonsByTrack.get("html") ?? [];
+
+  assert.equal(htmlLessons.length, expectedLessonCounts.html);
+
+  for (const contentPath of htmlLessons) {
+    for (const sampleName of ["goodCode", "badCode"] as const) {
+      const code = await readMdxMetadataCodeSample(contentPath, sampleName);
+      const commentCount = countReviewCommentLines(code, "html");
+
+      assert.ok(commentCount >= 1, `${contentPath} ${sampleName}`);
+      assert.ok(commentCount <= 3, `${contentPath} ${sampleName}`);
+    }
+  }
+});
+
+test("HTML comments have matching Thai translations", async () => {
+  const lessonsByTrack = await getTrackLessonFiles();
+  const htmlLessons = lessonsByTrack.get("html") ?? [];
+
+  assert.equal(htmlLessons.length, expectedLessonCounts.html);
+
+  for (const contentPath of htmlLessons) {
+    const slug = slugFromContentPath(contentPath);
+    const translation = lessonThaiTranslations[`html/${slug}`];
+
+    assert.ok(translation.codeComments, `html/${slug} missing codeComments`);
+
+    for (const sampleName of ["goodCode", "badCode"] as const) {
+      const code = await readMdxMetadataCodeSample(contentPath, sampleName);
+      const commentCount = countReviewCommentLines(code, "html");
+      const translatedComments = translation.codeComments[sampleName] ?? [];
+
+      assert.equal(translatedComments.length, commentCount, `html/${slug}`);
+      for (const [index, comment] of translatedComments.entries()) {
+        assert.match(comment, /[\u0e00-\u0e7f]/, `html/${slug}.${sampleName}[${index}]`);
+        assert.ok(comment.trim().length >= 8, `html/${slug}.${sampleName}[${index}]`);
+      }
+    }
+  }
+});
+
+test("CSS samples include concise review comments", async () => {
+  const lessonsByTrack = await getTrackLessonFiles();
+  const cssLessons = lessonsByTrack.get("css") ?? [];
+
+  assert.equal(cssLessons.length, expectedLessonCounts.css);
+
+  for (const contentPath of cssLessons) {
+    for (const sampleName of ["goodCode", "badCode"] as const) {
+      const code = await readMdxMetadataCodeSample(contentPath, sampleName);
+      const commentCount = countReviewCommentLines(code, "css");
+
+      assert.ok(commentCount >= 1, `${contentPath} ${sampleName}`);
+      assert.ok(commentCount <= 3, `${contentPath} ${sampleName}`);
+    }
+  }
+});
+
+test("CSS comments have matching Thai translations", async () => {
+  const lessonsByTrack = await getTrackLessonFiles();
+  const cssLessons = lessonsByTrack.get("css") ?? [];
+
+  assert.equal(cssLessons.length, expectedLessonCounts.css);
+
+  for (const contentPath of cssLessons) {
+    const slug = slugFromContentPath(contentPath);
+    const translation = lessonThaiTranslations[`css/${slug}`];
+
+    assert.ok(translation.codeComments, `css/${slug} missing codeComments`);
+
+    for (const sampleName of ["goodCode", "badCode"] as const) {
+      const code = await readMdxMetadataCodeSample(contentPath, sampleName);
+      const commentCount = countReviewCommentLines(code, "css");
+      const translatedComments = translation.codeComments[sampleName] ?? [];
+
+      assert.equal(translatedComments.length, commentCount, `css/${slug}`);
+      for (const [index, comment] of translatedComments.entries()) {
+        assert.match(comment, /[\u0e00-\u0e7f]/, `css/${slug}.${sampleName}[${index}]`);
+        assert.ok(comment.trim().length >= 8, `css/${slug}.${sampleName}[${index}]`);
       }
     }
   }

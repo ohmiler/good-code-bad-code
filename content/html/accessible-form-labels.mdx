@@ -9,6 +9,7 @@ export const metadata = {
     language: "html",
     filename: "signup-form.html",
     code: `<form>
+  <!-- The label and help text stay connected to the input by id. -->
   <label for="email">Email address</label>
   <input id="email" name="email" type="email" autocomplete="email" aria-describedby="email-help" />
   <p id="email-help">Use the address where you want review updates.</p>
@@ -18,6 +19,7 @@ export const metadata = {
     language: "html",
     filename: "signup-form.html",
     code: `<form>
+  <!-- Placeholder text is not a durable label for the field. -->
   <input name="email" type="email" placeholder="Email address" />
   <p>Use the address where you want review updates.</p>
 </form>`,
