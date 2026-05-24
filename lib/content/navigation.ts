@@ -4,6 +4,7 @@ export type LessonNavigationItem = {
   slug: string;
   title: string;
   track: TrackSlug;
+  order: number;
 };
 
 export type LessonNavigation = {
@@ -22,6 +23,7 @@ function toNavigationItem(lesson: LessonNavigationItem | undefined) {
     slug: lesson.slug,
     title: lesson.title,
     track: lesson.track,
+    order: lesson.order,
   };
 }
 

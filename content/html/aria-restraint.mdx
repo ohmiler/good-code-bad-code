@@ -1,0 +1,36 @@
+export const metadata = {
+  title: "ARIA restraint",
+  track: "html",
+  order: 10,
+  summary: "Use native HTML first and add ARIA only when it describes behavior that HTML cannot express.",
+  tags: ["aria", "accessibility", "semantics"],
+  takeaways: ["Prefer native semantics; ARIA should clarify, not paper over the wrong element."],
+  goodCode: {
+    language: "html",
+    filename: "dialog-actions.html",
+    code: `<button type="button">
+  Save changes
+</button>
+<button type="button" aria-label="Close dialog">
+  x
+</button>`,
+  },
+  badCode: {
+    language: "html",
+    filename: "dialog-actions.html",
+    code: `<div role="button" aria-checked="true" aria-label="Submit">
+  Save changes
+</div>
+<span role="img" aria-label="Close dialog">x</span>`,
+  },
+};
+
+## What to review
+
+The good version starts with native controls and uses ARIA only where the visible icon needs a clearer accessible name.
+
+The bad version adds roles and states that do not match the elements or behavior, which can make the interface more confusing than plain HTML.
+
+## Review notes
+
+ARIA is powerful, but it is not a shortcut around semantics. In review, first ask whether a native element already provides the role, keyboard behavior, and state you need.

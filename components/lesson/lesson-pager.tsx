@@ -26,6 +26,7 @@ function PagerTarget({
     language,
   );
   const labelText = label === "Previous" ? copy.previous : copy.next;
+  const lessonNumber = item.order.toString().padStart(2, "0");
 
   return (
     <Link
@@ -34,7 +35,7 @@ function PagerTarget({
       className="group min-w-0 rounded-lg border border-white/10 bg-white/[0.03] p-4 transition hover:border-emerald-300/50 hover:bg-white/[0.06] focus:outline-none focus:ring-2 focus:ring-emerald-300"
     >
       <span className="text-xs font-semibold uppercase tracking-[0.16em] text-zinc-500 transition group-hover:text-emerald-200">
-        {labelText}
+        {labelText} - {copy.lessonProgress} {lessonNumber}
       </span>
       <span className="mt-2 block text-base font-semibold text-zinc-100">
         {text.title}

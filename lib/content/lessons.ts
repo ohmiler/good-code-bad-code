@@ -9,7 +9,7 @@ import type { LessonNavigation } from "./navigation";
 
 export type LessonPreview = Pick<
   LessonRecord,
-  "slug" | "title" | "track" | "summary" | "tags"
+  "slug" | "title" | "track" | "order" | "summary" | "tags"
 >;
 
 export type HighlightedCodeSample = CodeSample & {
@@ -21,9 +21,15 @@ export type HighlightedLesson = LessonRecord & {
   badCode: HighlightedCodeSample;
 };
 
-const sortedLessons = [...lessonSources].sort((a, b) =>
-  a.title.localeCompare(b.title),
-);
+const sortedLessons = [...lessonSources].sort((a, b) => {
+  const trackComparison = a.track.localeCompare(b.track);
+
+  if (trackComparison !== 0) {
+    return trackComparison;
+  }
+
+  return a.order - b.order;
+});
 
 export function getAllTracks() {
   return tracks.map((track) => ({
@@ -36,10 +42,11 @@ export function getAllTracks() {
 export function getLessonsByTrack(track: TrackSlug): LessonPreview[] {
   return sortedLessons
     .filter((lesson) => lesson.track === track)
-    .map(({ slug, title, track, summary, tags }) => ({
+    .map(({ slug, title, track, order, summary, tags }) => ({
       slug,
       title,
       track,
+      order,
       summary,
       tags,
     }));

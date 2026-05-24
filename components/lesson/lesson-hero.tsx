@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useLanguage } from "@/components/language/language-provider";
 import type { TrackSlug } from "@/lib/content/tracks";
-import { getLessonText, getTrackText } from "@/lib/i18n/translations";
+import { getLessonText, getTrackText, uiCopy } from "@/lib/i18n/translations";
 
 type LessonHeroProps = {
   track: {
@@ -14,14 +14,20 @@ type LessonHeroProps = {
   lesson: {
     slug: string;
     track: TrackSlug;
+    order: number;
     title: string;
     summary: string;
     tags: string[];
   };
 };
 
+function formatLessonNumber(order: number) {
+  return order.toString().padStart(2, "0");
+}
+
 export function LessonHero({ track, lesson }: LessonHeroProps) {
   const { language } = useLanguage();
+  const copy = uiCopy[language];
   const trackText = getTrackText(track, language);
   const lessonText = getLessonText(lesson, language);
 
@@ -33,7 +39,10 @@ export function LessonHero({ track, lesson }: LessonHeroProps) {
       >
         {trackText.title}
       </Link>
-      <h1 className="mt-4 max-w-4xl text-4xl font-semibold tracking-tight text-zinc-50 sm:text-6xl">
+      <p className="mt-5 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">
+        {copy.lessonProgress} {formatLessonNumber(lesson.order)}
+      </p>
+      <h1 className="mt-3 max-w-4xl text-4xl font-semibold tracking-tight text-zinc-50 sm:text-6xl">
         {lessonText.title}
       </h1>
       <p className="mt-5 max-w-3xl text-lg leading-8 text-zinc-400">

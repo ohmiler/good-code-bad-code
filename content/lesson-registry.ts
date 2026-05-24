@@ -8,12 +8,33 @@ import {
 import HtmlSemanticStructure, {
   metadata as htmlSemanticStructureMetadata,
 } from "./html/semantic-document-structure.mdx";
+import HtmlDocumentLanguageMetadata, {
+  metadata as htmlDocumentLanguageMetadata,
+} from "./html/document-language-metadata.mdx";
+import HtmlHeadingHierarchy, {
+  metadata as htmlHeadingHierarchyMetadata,
+} from "./html/heading-hierarchy.mdx";
+import HtmlLinksAndNavigation, {
+  metadata as htmlLinksAndNavigationMetadata,
+} from "./html/links-and-navigation.mdx";
+import HtmlImagesAltText, {
+  metadata as htmlImagesAltTextMetadata,
+} from "./html/images-alt-text.mdx";
 import HtmlAccessibleFormLabels, {
   metadata as htmlAccessibleFormLabelsMetadata,
 } from "./html/accessible-form-labels.mdx";
+import HtmlFormHelpErrors, {
+  metadata as htmlFormHelpErrorsMetadata,
+} from "./html/form-help-errors.mdx";
 import HtmlInteractiveElements, {
   metadata as htmlInteractiveElementsMetadata,
 } from "./html/interactive-elements.mdx";
+import HtmlTablesTabularData, {
+  metadata as htmlTablesTabularDataMetadata,
+} from "./html/tables-tabular-data.mdx";
+import HtmlAriaRestraint, {
+  metadata as htmlAriaRestraintMetadata,
+} from "./html/aria-restraint.mdx";
 import CssFlexLayoutBoundaries, {
   metadata as cssFlexLayoutBoundariesMetadata,
 } from "./css/flex-layout-boundaries.mdx";
@@ -60,10 +81,34 @@ type RawLesson = {
 
 const rawLessons: RawLesson[] = [
   {
+    slug: "document-language-metadata",
+    source: "content/html/document-language-metadata.mdx",
+    metadata: htmlDocumentLanguageMetadata,
+    Component: HtmlDocumentLanguageMetadata,
+  },
+  {
     slug: "semantic-document-structure",
     source: "content/html/semantic-document-structure.mdx",
     metadata: htmlSemanticStructureMetadata,
     Component: HtmlSemanticStructure,
+  },
+  {
+    slug: "heading-hierarchy",
+    source: "content/html/heading-hierarchy.mdx",
+    metadata: htmlHeadingHierarchyMetadata,
+    Component: HtmlHeadingHierarchy,
+  },
+  {
+    slug: "links-and-navigation",
+    source: "content/html/links-and-navigation.mdx",
+    metadata: htmlLinksAndNavigationMetadata,
+    Component: HtmlLinksAndNavigation,
+  },
+  {
+    slug: "images-alt-text",
+    source: "content/html/images-alt-text.mdx",
+    metadata: htmlImagesAltTextMetadata,
+    Component: HtmlImagesAltText,
   },
   {
     slug: "accessible-form-labels",
@@ -72,10 +117,28 @@ const rawLessons: RawLesson[] = [
     Component: HtmlAccessibleFormLabels,
   },
   {
+    slug: "form-help-errors",
+    source: "content/html/form-help-errors.mdx",
+    metadata: htmlFormHelpErrorsMetadata,
+    Component: HtmlFormHelpErrors,
+  },
+  {
     slug: "interactive-elements",
     source: "content/html/interactive-elements.mdx",
     metadata: htmlInteractiveElementsMetadata,
     Component: HtmlInteractiveElements,
+  },
+  {
+    slug: "tables-tabular-data",
+    source: "content/html/tables-tabular-data.mdx",
+    metadata: htmlTablesTabularDataMetadata,
+    Component: HtmlTablesTabularData,
+  },
+  {
+    slug: "aria-restraint",
+    source: "content/html/aria-restraint.mdx",
+    metadata: htmlAriaRestraintMetadata,
+    Component: HtmlAriaRestraint,
   },
   {
     slug: "flex-layout-boundaries",

@@ -1,0 +1,51 @@
+export const metadata = {
+  title: "Tables for tabular data",
+  track: "html",
+  order: 9,
+  summary: "Use table markup for data grids so headers and cells keep their relationships.",
+  tags: ["tables", "semantics", "data"],
+  takeaways: ["When content is rows and columns of data, prefer table, caption, th, and scope."],
+  goodCode: {
+    language: "html",
+    filename: "metrics-table.html",
+    code: `<table>
+  <caption>Pull request review times</caption>
+  <thead>
+    <tr>
+      <th scope="col">Team</th>
+      <th scope="col">Median time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">Frontend</th>
+      <td>1.2 days</td>
+    </tr>
+  </tbody>
+</table>`,
+  },
+  badCode: {
+    language: "html",
+    filename: "metrics-table.html",
+    code: `<div class="table">
+  <div class="row header">
+    <div>Team</div>
+    <div>Median time</div>
+  </div>
+  <div class="row">
+    <div>Frontend</div>
+    <div>1.2 days</div>
+  </div>
+</div>`,
+  },
+};
+
+## What to review
+
+The good version preserves the relationship between headers and values, and gives the table a caption that explains the data.
+
+The bad version may look like a table, but the data relationships only exist in CSS and visual position.
+
+## Review notes
+
+Ask whether users can understand a cell without seeing the layout. If the answer depends on visual columns alone, real table semantics are probably needed.

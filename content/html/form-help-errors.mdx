@@ -1,0 +1,40 @@
+export const metadata = {
+  title: "Form help text and errors",
+  track: "html",
+  order: 7,
+  summary: "Connect help and error text to the field so validation feedback is announced with the control.",
+  tags: ["forms", "accessibility", "errors"],
+  takeaways: ["Use aria-describedby and aria-invalid to keep field guidance tied to the input."],
+  goodCode: {
+    language: "html",
+    filename: "password-field.html",
+    code: `<label for="password">Password</label>
+<input
+  id="password"
+  name="password"
+  type="password"
+  aria-describedby="password-help password-error"
+  aria-invalid="true"
+/>
+<p id="password-help">Use at least 12 characters.</p>
+<p id="password-error">Password is too short.</p>`,
+  },
+  badCode: {
+    language: "html",
+    filename: "password-field.html",
+    code: `<label>Password</label>
+<input name="password" type="password" />
+<p class="help">Use at least 12 characters.</p>
+<p class="error">Too short.</p>`,
+  },
+};
+
+## What to review
+
+The good version ties guidance and the current error to the input, and marks the field invalid when validation fails.
+
+The bad version places text near the field visually, but the input has no durable relationship to the help or error message.
+
+## Review notes
+
+In form review, proximity is not enough. Check whether the field, help text, and error state are connected in the accessibility tree, not just whether they appear close together on screen.

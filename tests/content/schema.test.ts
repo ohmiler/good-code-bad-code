@@ -5,6 +5,7 @@ import { validateLessonMetadata } from "../../lib/content/schema";
 const validMetadata = {
   title: "Semantic document structure",
   track: "html",
+  order: 2,
   summary: "Use document landmarks to make page structure readable.",
   tags: ["semantics", "accessibility"],
   takeaways: ["Prefer meaningful landmarks over anonymous wrappers."],
@@ -38,6 +39,22 @@ test("validateLessonMetadata rejects unknown tracks", () => {
         "content/vue/component-state.mdx",
       ),
     /unknown track "vue"/,
+  );
+});
+
+test("validateLessonMetadata rejects missing lesson order", () => {
+  const metadataWithoutOrder: Partial<typeof validMetadata> = {
+    ...validMetadata,
+  };
+  delete metadataWithoutOrder.order;
+
+  assert.throws(
+    () =>
+      validateLessonMetadata(
+        metadataWithoutOrder,
+        "content/html/semantic-document-structure.mdx",
+      ),
+    /order must be a positive integer/,
   );
 });
 

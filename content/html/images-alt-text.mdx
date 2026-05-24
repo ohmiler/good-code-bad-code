@@ -1,0 +1,36 @@
+export const metadata = {
+  title: "Images and alternative text",
+  track: "html",
+  order: 5,
+  summary: "Write alt text for meaningful images and hide decorative images from assistive technology.",
+  tags: ["images", "accessibility", "content"],
+  takeaways: ["Alt text should explain the image purpose in context, not repeat the file name."],
+  goodCode: {
+    language: "html",
+    filename: "article-card.html",
+    code: `<article>
+  <img src="/charts/review-time.png" alt="Review time dropped from 3 days to 1 day" />
+  <img src="/decorations/divider.svg" alt="" />
+  <h2>Faster pull request reviews</h2>
+</article>`,
+  },
+  badCode: {
+    language: "html",
+    filename: "article-card.html",
+    code: `<article>
+  <img src="/charts/review-time.png" alt="review-time.png" />
+  <img src="/decorations/divider.svg" alt="blue squiggle divider" />
+  <h2>Faster pull request reviews</h2>
+</article>`,
+  },
+};
+
+## What to review
+
+The good version describes the meaningful chart by its message and gives the decorative divider an empty alt attribute.
+
+The bad version exposes file names and decorative noise, so assistive technology announces details that do not help the reader.
+
+## Review notes
+
+Review the image purpose, not only whether an `alt` attribute exists. Useful alt text changes with context; the same image may need a different description depending on what the surrounding content already says.

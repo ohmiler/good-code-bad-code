@@ -1,0 +1,45 @@
+export const metadata = {
+  title: "Document language and metadata",
+  track: "html",
+  order: 1,
+  summary: "Declare the document basics so browsers, search, and assistive technology start with the right context.",
+  tags: ["metadata", "accessibility", "document"],
+  takeaways: ["Start every page with language, charset, viewport, and a useful title."],
+  goodCode: {
+    language: "html",
+    filename: "document.html",
+    code: `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Code review checklist</title>
+  </head>
+  <body>
+    <main>...</main>
+  </body>
+</html>`,
+  },
+  badCode: {
+    language: "html",
+    filename: "document.html",
+    code: `<html>
+  <head>
+    <title>Untitled</title>
+  </head>
+  <body>
+    <div>Code review checklist</div>
+  </body>
+</html>`,
+  },
+};
+
+## What to review
+
+The good version gives the browser the page language, character encoding, viewport behavior, and a specific document title before rendering the body.
+
+The bad version leaves important document defaults implicit, which can cause wrong pronunciation, weak browser behavior, and unclear page identity.
+
+## Review notes
+
+When reviewing HTML, start at the top of the document. A page can have clean body markup and still be hard to use if the document shell does not describe language, encoding, viewport, and title clearly.

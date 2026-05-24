@@ -91,6 +91,18 @@ export const trackThaiTranslations = {
 } as const satisfies Record<TrackSlug, TrackTranslation>;
 
 export const lessonThaiTranslations = {
+  "html/document-language-metadata": {
+    title: "ภาษาและ metadata ของเอกสาร",
+    summary: "ประกาศข้อมูลพื้นฐานของหน้า เช่น ภาษา charset viewport และ title ให้ชัดตั้งแต่ต้น.",
+    takeaways: ["ทุกหน้าควรเริ่มจาก lang, charset, viewport และ title ที่สื่อความหมาย."],
+    whatToReview: [
+      "โค้ดที่ดีบอกภาษา การเข้ารหัส ขนาด viewport และชื่อหน้าให้ browser เข้าใจตั้งแต่ก่อน render body.",
+      "โค้ดที่ควรปรับปล่อยค่าเริ่มต้นสำคัญไว้ให้ browser เดา ทำให้การอ่านออกเสียงและตัวตนของหน้าคลาดเคลื่อนได้.",
+    ],
+    reviewNotes: [
+      "เวลารีวิว HTML ให้เริ่มจากหัวเอกสารก่อนเสมอ เพราะ body ที่เขียนดีอาจยังใช้งานยากได้ถ้า lang, charset, viewport หรือ title ไม่ชัด.",
+    ],
+  },
   "html/semantic-document-structure": {
     title: "โครงสร้างเอกสารแบบมีความหมาย",
     summary: "ใช้ landmark และ heading เพื่อให้โครงสร้างหน้าอ่านเข้าใจง่าย.",
@@ -101,6 +113,42 @@ export const lessonThaiTranslations = {
     ],
     reviewNotes: [
       "เวลารีวิว ให้ถามว่า browser, คนอ่านโค้ด และ assistive technology เข้าใจหน้าได้ไหมโดยไม่ต้องดู style. Semantic HTML คือสัญญาของ interface ไม่ใช่แค่เรื่องความสวย.",
+    ],
+  },
+  "html/heading-hierarchy": {
+    title: "ลำดับ heading",
+    summary: "ใช้ heading เพื่อบอกโครงสร้างเอกสาร ไม่ใช่เลือกตามขนาดตัวอักษรที่อยากได้.",
+    takeaways: ["ระดับ heading ควรเรียงตามโครงเรื่อง ไม่ใช่ใช้แทน class สำหรับขนาดฟอนต์."],
+    whatToReview: [
+      "โค้ดที่ดีทำให้ outline ของหน้าอ่านตามลำดับได้ ตั้งแต่ชื่อหน้า ไปส่วนหลัก แล้วค่อยลงรายละเอียด.",
+      "โค้ดที่ควรปรับกระโดดระดับ heading เพราะใช้ heading เพื่อคุมหน้าตา ทำให้คนอ่านและเครื่องมือเข้าใจโครงสร้างยาก.",
+    ],
+    reviewNotes: [
+      "ให้ลองอ่านเฉพาะ heading แล้วถามว่ายังเข้าใจหน้าไหม ถ้าไม่เข้าใจ แปลว่า heading อาจกำลังรับหน้าที่ style แทน information architecture.",
+    ],
+  },
+  "html/links-and-navigation": {
+    title: "ลิงก์และ navigation",
+    summary: "ใช้ลิงก์จริงพร้อมชื่อที่ชัดเมื่อพาผู้ใช้ไปที่อื่น แทน element ทั่วไปที่คลิกได้.",
+    takeaways: ["ถ้าการกระทำนั้นพาไปที่อื่น ให้เริ่มจาก anchor ที่มี href และข้อความลิงก์ที่เข้าใจได้."],
+    whatToReview: [
+      "โค้ดที่ดีใช้ anchor สำหรับการนำทาง และตั้งชื่อปลายทางให้รู้ว่าคลิกแล้วไปไหน.",
+      "โค้ดที่ควรปรับซ่อน navigation ไว้หลัง JavaScript หรือข้อความกำกวม เช่น click here ทำให้ใช้งานพื้นฐานของ browser ได้แย่ลง.",
+    ],
+    reviewNotes: [
+      "ตอนรีวิวให้ถามว่าลิงก์ยังเปิดแท็บใหม่ คัดลอก URL โฟกัสด้วย keyboard และอ่านชื่อแล้วเข้าใจปลายทางได้ไหม ถ้าไม่ได้ควรกลับไปใช้ anchor ที่ชัดเจน.",
+    ],
+  },
+  "html/images-alt-text": {
+    title: "รูปภาพและ alt text",
+    summary: "เขียน alt text ให้รูปที่มีความหมาย และซ่อนรูปตกแต่งจาก assistive technology.",
+    takeaways: ["alt text ควรอธิบายหน้าที่ของรูปในบริบทนั้น ไม่ใช่ทวนชื่อไฟล์."],
+    whatToReview: [
+      "โค้ดที่ดีอธิบายรูปที่มีสาระตามข้อความที่รูปต้องการสื่อ และให้ alt ว่างกับรูปตกแต่ง.",
+      "โค้ดที่ควรปรับใช้ชื่อไฟล์หรือรายละเอียดตกแต่งเป็น alt ทำให้ผู้อ่านได้ข้อมูลที่ไม่ช่วยตัดสินใจ.",
+    ],
+    reviewNotes: [
+      "อย่ารีวิวแค่ว่ามี alt หรือไม่มี ให้ดูว่ารูปนั้นมีหน้าที่อะไรในบริบทนี้ เพราะรูปเดียวกันอาจต้องใช้คำอธิบายต่างกันในแต่ละหน้า.",
     ],
   },
   "html/accessible-form-labels": {
@@ -115,6 +163,18 @@ export const lessonThaiTranslations = {
       "ตอนรีวิวฟอร์ม ให้เช็กว่าถ้าลบ placeholder ออก ผู้ใช้ยังรู้ไหมว่าต้องกรอกอะไร. label ที่ดีช่วยทั้ง accessibility, การทดสอบ และการ maintain ฟอร์มระยะยาว.",
     ],
   },
+  "html/form-help-errors": {
+    title: "คำแนะนำและ error ของฟอร์ม",
+    summary: "เชื่อม help text และ error text เข้ากับ field เพื่อให้ feedback ถูกอ่านพร้อม control.",
+    takeaways: ["ใช้ aria-describedby และ aria-invalid เพื่อผูกคำแนะนำและสถานะผิดพลาดกับ input."],
+    whatToReview: [
+      "โค้ดที่ดีทำให้ input รู้ว่าข้อความช่วยเหลือและ error ไหนเกี่ยวข้องกับมัน และบอกสถานะ invalid ชัดเจน.",
+      "โค้ดที่ควรปรับวางข้อความใกล้ input แค่ทางสายตา แต่ไม่มีความสัมพันธ์ที่ทนทานใน accessibility tree.",
+    ],
+    reviewNotes: [
+      "ในการรีวิวฟอร์ม ความใกล้บนหน้าจอไม่พอ ให้เช็กว่า field, help text และ error state ถูกเชื่อมกันจริง ไม่ใช่แค่ดูเหมือนอยู่ด้วยกัน.",
+    ],
+  },
   "html/interactive-elements": {
     title: "element สำหรับ interaction",
     summary: "ใช้ element ที่เกิดมาเพื่อกด เช่น button แทน div ที่ใส่ onClick เอง.",
@@ -125,6 +185,30 @@ export const lessonThaiTranslations = {
     ],
     reviewNotes: [
       "เวลาเห็น div ที่คลิกได้ ให้ถามว่าทำไมไม่ใช้ button. ถ้าไม่มีเหตุผลชัดเจน การใช้ native element มักปลอดภัยและอ่านง่ายกว่า.",
+    ],
+  },
+  "html/tables-tabular-data": {
+    title: "table สำหรับข้อมูลแบบตาราง",
+    summary: "ใช้ markup ของ table เมื่อข้อมูลเป็นแถวและคอลัมน์ เพื่อรักษาความสัมพันธ์ระหว่างหัวข้อกับค่า.",
+    takeaways: ["ถ้าเนื้อหาเป็นข้อมูลแบบ row/column ให้ใช้ table, caption, th และ scope ก่อนสร้างด้วย div."],
+    whatToReview: [
+      "โค้ดที่ดีเก็บความสัมพันธ์ระหว่าง header และ cell ไว้ใน HTML พร้อม caption ที่บอกว่าตารางนี้คืออะไร.",
+      "โค้ดที่ควรปรับทำให้ div ดูเหมือนตาราง แต่ความสัมพันธ์ของข้อมูลอยู่แค่ใน CSS และตำแหน่งบนจอ.",
+    ],
+    reviewNotes: [
+      "ให้ถามว่าผู้ใช้เข้าใจ cell หนึ่งช่องได้ไหมถ้าไม่ได้เห็น layout ถ้าต้องพึ่งตำแหน่งคอลัมน์อย่างเดียว ควรใช้ semantic table.",
+    ],
+  },
+  "html/aria-restraint": {
+    title: "ใช้ ARIA อย่างพอดี",
+    summary: "เริ่มจาก HTML native ก่อน แล้วใช้ ARIA เฉพาะเมื่อช่วยอธิบายพฤติกรรมที่ HTML บอกเองไม่ได้.",
+    takeaways: ["เลือก semantic HTML ก่อนเสมอ ARIA ควรช่วยทำให้ชัด ไม่ใช่ซ่อม element ที่เลือกผิด."],
+    whatToReview: [
+      "โค้ดที่ดีใช้ element native ที่มี role และ keyboard behavior มาให้ แล้วเติม ARIA เฉพาะจุดที่จำเป็นจริง.",
+      "โค้ดที่ควรปรับใส่ role หรือ state ที่ไม่ตรงกับพฤติกรรมจริง ทำให้ assistive technology รับข้อมูลผิด.",
+    ],
+    reviewNotes: [
+      "ARIA มีพลังมากแต่ไม่ใช่ทางลัดแทน semantic HTML เวลารีวิวให้ถามก่อนว่า element native ทำสิ่งนี้ให้เราอยู่แล้วหรือยัง.",
     ],
   },
   "css/flex-layout-boundaries": {

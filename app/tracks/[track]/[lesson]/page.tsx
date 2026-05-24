@@ -58,6 +58,7 @@ export default async function LessonPage({
         lesson={{
           slug: highlightedLesson.slug,
           track: highlightedLesson.track,
+          order: highlightedLesson.order,
           title: highlightedLesson.title,
           summary: highlightedLesson.summary,
           tags: highlightedLesson.tags,

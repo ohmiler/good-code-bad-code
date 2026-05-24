@@ -1,0 +1,36 @@
+export const metadata = {
+  title: "Links and navigation",
+  track: "html",
+  order: 4,
+  summary: "Use real links with clear names for navigation instead of clickable generic elements.",
+  tags: ["links", "navigation", "accessibility"],
+  takeaways: ["If it takes the user somewhere, make it an anchor with a meaningful destination and label."],
+  goodCode: {
+    language: "html",
+    filename: "nav.html",
+    code: `<nav aria-label="Primary">
+  <ul>
+    <li><a href="/roadmaps/html">HTML roadmap</a></li>
+    <li><a href="/review-examples">Review examples</a></li>
+  </ul>
+</nav>`,
+  },
+  badCode: {
+    language: "html",
+    filename: "nav.html",
+    code: `<div class="nav">
+  <span onclick="go('/roadmaps/html')">Click here</span>
+  <a href="#">More</a>
+</div>`,
+  },
+};
+
+## What to review
+
+The good version uses anchors for navigation, gives each destination a clear name, and wraps the group in a named navigation landmark.
+
+The bad version hides navigation behind JavaScript and vague labels, making the links harder to open, copy, search, and understand.
+
+## Review notes
+
+During review, ask whether every navigation item still works with browser defaults: open in a new tab, copy link, keyboard focus, and readable link text. If those basics break, the markup is fighting the web platform.

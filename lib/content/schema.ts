@@ -12,6 +12,7 @@ export type CodeSample = {
 export type LessonMetadata = {
   title: string;
   track: TrackSlug;
+  order: number;
   summary: string;
   tags: string[];
   takeaways: string[];
@@ -65,6 +66,18 @@ function readStringArray(
   return value;
 }
 
+function readPositiveInteger(
+  record: Record<string, unknown>,
+  key: string,
+  source: string,
+): number {
+  const value = record[key];
+  if (typeof value !== "number" || !Number.isInteger(value) || value < 1) {
+    throw new Error(`${source}: ${key} must be a positive integer`);
+  }
+  return value;
+}
+
 function readCodeSample(
   record: Record<string, unknown>,
   key: "goodCode" | "badCode",
@@ -103,6 +116,7 @@ export function validateLessonMetadata(
   return {
     title: readString(metadata, "title", source),
     track,
+    order: readPositiveInteger(metadata, "order", source),
     summary: readString(metadata, "summary", source),
     tags: readStringArray(metadata, "tags", source),
     takeaways: readStringArray(metadata, "takeaways", source),

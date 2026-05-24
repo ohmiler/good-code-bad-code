@@ -8,6 +8,13 @@ import { tracks } from "../../lib/content/tracks";
 const contentRoot = path.join(process.cwd(), "content");
 const registryPath = path.join(contentRoot, "lesson-registry.ts");
 const trackSlugs = new Set<string>(tracks.map((track) => track.slug));
+const expectedLessonCounts = {
+  html: 10,
+  css: 3,
+  javascript: 3,
+  typescript: 3,
+  react: 3,
+} as const;
 
 type RawLessonEntry = {
   slug: string;
@@ -174,6 +181,48 @@ async function readMdxMetadataTrack(contentPath: string): Promise<string> {
   return readStringProperty(initializer, "track");
 }
 
+async function readMdxMetadataOrder(contentPath: string): Promise<number> {
+  const mdxSource = await readFile(contentPath, "utf8");
+  const metadataObject = extractObjectLiteral(
+    mdxSource,
+    "export const metadata",
+  );
+  const sourceFile = ts.createSourceFile(
+    contentPath,
+    `const metadata = ${metadataObject};`,
+    ts.ScriptTarget.Latest,
+    true,
+    ts.ScriptKind.TS,
+  );
+  const statement = sourceFile.statements[0];
+
+  assert.ok(
+    ts.isVariableStatement(statement),
+    `${contentPath} metadata must parse as a variable statement`,
+  );
+
+  const initializer = statement.declarationList.declarations[0]?.initializer;
+  assert.ok(
+    initializer && ts.isObjectLiteralExpression(initializer),
+    `${contentPath} metadata must be an object literal`,
+  );
+
+  const property = initializer.properties.find(
+    (item): item is ts.PropertyAssignment =>
+      ts.isPropertyAssignment(item) &&
+      ts.isIdentifier(item.name) &&
+      item.name.text === "order",
+  );
+
+  assert.ok(property, `${contentPath} metadata is missing order`);
+  assert.ok(
+    ts.isNumericLiteral(property.initializer),
+    `${contentPath} order must be a number literal`,
+  );
+
+  return Number(property.initializer.text);
+}
+
 test("test:content runs the registry content coverage test", async () => {
   const packageJson = JSON.parse(await readFile("package.json", "utf8")) as {
     scripts?: Record<string, string>;
@@ -185,13 +234,38 @@ test("test:content runs the registry content coverage test", async () => {
   assert.match(testContentScript, /lesson-registry\.test\.ts/);
 });
 
-test("seeded lessons have three MDX files per track", async () => {
+test("seeded lessons match expected track counts", async () => {
   const lessonsByTrack = await getTrackLessonFiles();
   const allLessonFiles = [...lessonsByTrack.values()].flat();
 
-  assert.equal(allLessonFiles.length, 15);
+  assert.equal(allLessonFiles.length, 22);
   for (const track of tracks) {
-    assert.equal(lessonsByTrack.get(track.slug)?.length, 3, track.slug);
+    assert.equal(
+      lessonsByTrack.get(track.slug)?.length,
+      expectedLessonCounts[track.slug],
+      track.slug,
+    );
+  }
+});
+
+test("lesson metadata order is contiguous per track", async () => {
+  const lessonsByTrack = await getTrackLessonFiles();
+
+  for (const track of tracks) {
+    const orders = await Promise.all(
+      (lessonsByTrack.get(track.slug) ?? []).map((contentPath) =>
+        readMdxMetadataOrder(contentPath),
+      ),
+    );
+
+    assert.deepEqual(
+      orders.sort((a, b) => a - b),
+      Array.from(
+        { length: expectedLessonCounts[track.slug] },
+        (_item, index) => index + 1,
+      ),
+      track.slug,
+    );
   }
 });
 

@@ -1,0 +1,40 @@
+export const metadata = {
+  title: "Heading hierarchy",
+  track: "html",
+  order: 3,
+  summary: "Use headings to describe document structure instead of choosing heading levels for visual size.",
+  tags: ["headings", "semantics", "structure"],
+  takeaways: ["Heading levels should outline the content in order, not act as font-size shortcuts."],
+  goodCode: {
+    language: "html",
+    filename: "settings.html",
+    code: `<main>
+  <h1>Account settings</h1>
+  <section>
+    <h2>Profile</h2>
+    <h3>Public name</h3>
+  </section>
+</main>`,
+  },
+  badCode: {
+    language: "html",
+    filename: "settings.html",
+    code: `<main>
+  <h3>Account settings</h3>
+  <section>
+    <h1>Profile</h1>
+    <h4>Public name</h4>
+  </section>
+</main>`,
+  },
+};
+
+## What to review
+
+The good version creates a predictable outline: page title, section, then subsection.
+
+The bad version jumps between heading levels because the markup is trying to control appearance instead of structure.
+
+## Review notes
+
+Ask whether a reader can skim only headings and understand the page. If the answer is no, the heading hierarchy is probably carrying style decisions instead of information architecture.

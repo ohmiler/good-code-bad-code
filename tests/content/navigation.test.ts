@@ -7,21 +7,25 @@ const lessons = [
     slug: "accessible-form-labels",
     title: "Accessible form labels",
     track: "html",
+    order: 1,
   },
   {
     slug: "interactive-elements",
     title: "Interactive elements",
     track: "html",
+    order: 2,
   },
   {
     slug: "semantic-document-structure",
     title: "Semantic document structure",
     track: "html",
+    order: 3,
   },
   {
     slug: "color-contrast-states",
     title: "Color contrast states",
     track: "css",
+    order: 1,
   },
 ] as const;
 
@@ -33,11 +37,13 @@ test("buildLessonNavigation returns previous and next lessons in the same track"
       slug: "accessible-form-labels",
       title: "Accessible form labels",
       track: "html",
+      order: 1,
     },
     next: {
       slug: "semantic-document-structure",
       title: "Semantic document structure",
       track: "html",
+      order: 3,
     },
   });
 });
@@ -53,6 +59,7 @@ test("buildLessonNavigation omits unavailable neighbors at track boundaries", ()
         slug: "interactive-elements",
         title: "Interactive elements",
         track: "html",
+        order: 2,
       },
     },
   );
@@ -66,6 +73,7 @@ test("buildLessonNavigation omits unavailable neighbors at track boundaries", ()
         slug: "interactive-elements",
         title: "Interactive elements",
         track: "html",
+        order: 2,
       },
       next: undefined,
     },
@@ -87,6 +95,7 @@ test("buildLessonNavigation returns serializable navigation items", () => {
     slug: "interactive-elements",
     title: "Interactive elements",
     track: "html",
+    order: 2,
   });
   assert.equal("Component" in (navigation?.next ?? {}), false);
 });
