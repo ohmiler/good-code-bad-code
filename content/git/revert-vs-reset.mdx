@@ -1,0 +1,34 @@
+export const metadata = {
+  title: "Revert vs reset",
+  track: "git",
+  order: 8,
+  summary: "Use revert for shared history and reserve reset for local cleanup before commits leave your machine.",
+  tags: ["revert", "reset", "history"],
+  takeaways: ["History commands should match whether the commits are already shared with other people."],
+  goodCode: {
+    language: "bash",
+    filename: "undo-shared-change.sh",
+    code: `git fetch origin
+git switch main
+git pull --ff-only
+git revert 4f3a2b1
+git push`,
+  },
+  badCode: {
+    language: "bash",
+    filename: "undo-shared-change.sh",
+    code: `git switch main
+git reset --hard HEAD~1
+git push --force`,
+  },
+};
+
+## What to review
+
+The good version creates a new commit that undoes a shared change, preserving history that teammates may already have.
+
+The bad version rewrites shared history on `main`, forcing everyone else to reconcile their local repositories.
+
+## Review notes
+
+The first review question for undo commands is simple: has this commit been pushed? If yes, prefer `revert` unless the team has explicitly agreed to rewrite history.

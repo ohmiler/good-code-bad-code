@@ -1,0 +1,36 @@
+export const metadata = {
+  title: "Conflict resolution without overwriting",
+  track: "git",
+  order: 7,
+  summary: "Resolve conflicts by understanding both sides, then stage only the corrected files instead of blindly taking one version.",
+  tags: ["conflicts", "merge", "rebase"],
+  takeaways: ["A conflict is a design review moment; choosing ours or theirs blindly can delete another person's intent."],
+  goodCode: {
+    language: "bash",
+    filename: "resolve-conflict.sh",
+    code: `git status
+git diff --merge src/lesson.ts
+code src/lesson.ts
+npm test
+git add src/lesson.ts
+git rebase --continue`,
+  },
+  badCode: {
+    language: "bash",
+    filename: "resolve-conflict.sh",
+    code: `git checkout --theirs .
+git add .
+git rebase --continue
+git push --force`,
+  },
+};
+
+## What to review
+
+The good version identifies conflicted files, compares both sides, edits the resolved file, runs tests, and stages only the resolution.
+
+The bad version takes the other side for every file and force-pushes, which can silently discard local work or domain decisions.
+
+## Review notes
+
+Conflict resolution should preserve intent from both branches. If the command sequence never opens the conflicted file, it is probably too mechanical.

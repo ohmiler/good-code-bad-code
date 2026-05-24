@@ -123,6 +123,11 @@ export const trackThaiTranslations = {
     description:
       "ฝึกรีวิว null, Optional, immutable data, value object, exception, resource cleanup, generic, stream, concurrency, record และ service boundary.",
   },
+  git: {
+    title: "Git",
+    description:
+      "ฝึกรีวิว status, staging, commit, branch, sync workflow, diff, conflict, history safety, .gitignore และ release tag.",
+  },
   fastapi: {
     title: "FastAPI",
     description:
@@ -1589,6 +1594,128 @@ export const lessonThaiTranslations = {
     ],
     reviewNotes: [
       "เวลารีวิว architecture ให้ trace หนึ่ง user action ผ่าน package ถ้า controller ตัดสินใจทุกอย่าง ควรแยก responsibility ก่อนเพิ่ม feature ใหม่.",
+    ],
+  },
+  "git/status-before-work": {
+    title: "เช็ก status ก่อนเริ่มงาน",
+    summary: "เริ่มทุกงานด้วยการดู branch, working tree และ upstream state เพื่อไม่ให้แก้บนฐานที่ผิด.",
+    takeaways: ["workflow Git ที่ดีควรทำให้ branch และ uncommitted changes เห็นชัดก่อนเริ่มแก้ไฟล์."],
+    whatToReview: [
+      "โค้ดที่ดีเช็ก branch, working tree, remote state และ diff summary ก่อนตัดสินใจทำงานต่อ.",
+      "โค้ดที่ควรปรับ pull ก่อนทันทีแล้วเริ่มแก้และ commit ทุกอย่าง โดยไม่รู้ว่าอยู่ branch ไหนหรือมีอะไรเปลี่ยนบ้าง.",
+    ],
+    reviewNotes: [
+      "เวลารีวิว Git workflow ให้เริ่มจาก observability ถ้าคนทำงานตอบไม่ได้ว่าอยู่ branch ไหนและ tree สะอาดไหม คำสั่งถัดไปจะเสี่ยงขึ้นมาก.",
+    ],
+  },
+  "git/interactive-staging-hunks": {
+    title: "stage hunk แบบตั้งใจ",
+    summary: "stage เฉพาะส่วนที่เกี่ยวข้อง เพื่อให้แต่ละ commit มีเฉพาะ change ที่ควรอยู่ด้วยกัน.",
+    takeaways: ["commit ที่รีวิวง่ายมาจาก staging ที่รีวิวง่าย ไม่ใช่จากการ add ทุกไฟล์ตามนิสัย."],
+    whatToReview: [
+      "โค้ดที่ดีดู unstaged diff, stage เฉพาะ hunk ที่เกี่ยวข้อง แล้วดู staged diff ก่อน commit.",
+      "โค้ดที่ควรปรับ add ทุกอย่างและใช้ message กว้าง ๆ ทำให้ reviewer ไม่เห็น intent ของ change.",
+    ],
+    reviewNotes: [
+      "git add -p ช่วยมากเมื่อมี formatting, debug และ feature work ปนกันในเครื่อง เพราะช่วยให้ commit เล่าเรื่องเดียว.",
+    ],
+  },
+  "git/atomic-commits-messages": {
+    title: "atomic commit และข้อความ commit",
+    summary: "ทำ commit ให้เล็กพอสำหรับรีวิว และเขียน message ที่บอกเหตุผลของ change ไม่ใช่แค่บอกว่าแก้อะไร.",
+    takeaways: ["commit หนึ่งก้อนควรมีเหตุผลเดียวที่ชัด และอ่าน message แล้วพอเข้าใจ intent ได้ก่อนเปิด diff.",
+    ],
+    whatToReview: [
+      "โค้ดที่ดีแยก UI behavior กับ test coverage และตั้งชื่อ commit ให้เห็นเหตุผลของแต่ละก้อน.",
+      "โค้ดที่ควรปรับรวมทุกอย่างใน commit เดียว ทำให้ review, revert หรือ cherry-pick เฉพาะส่วนยากขึ้น.",
+    ],
+    reviewNotes: [
+      "atomic ไม่ได้แปลว่าต้องเล็กที่สุด แต่แปลว่า commit นั้นมีเหตุผลเดียวและสามารถ review หรือ revert เป็นหน่วยเดียวได้.",
+    ],
+  },
+  "git/branch-naming-upstream": {
+    title: "ชื่อ branch และ upstream",
+    summary: "สร้าง topic branch ที่ชื่อชัด และตั้ง upstream เพื่อให้ push/pull ครั้งต่อไปไปยัง remote branch ที่ถูกต้อง.",
+    takeaways: ["branch ควรบอกทีมได้ว่างานนี้เป็นงานประเภทไหน และ sync กับ remote branch ใดโดย default."],
+    whatToReview: [
+      "โค้ดที่ดีสร้าง topic branch, publish พร้อม upstream tracking และเช็ก branch state อีกครั้ง.",
+      "โค้ดที่ควรปรับ commit บน main และ push HEAD แบบไม่ชัดเจน ทำให้ accidental push จับยาก.",
+    ],
+    reviewNotes: [
+      "ชื่อ branch คือเอกสารแบบเบา ๆ ควรช่วยบอกว่าเป็น feature, fix, chore, spike หรือ release change.",
+    ],
+  },
+  "git/fetch-pull-rebase-sync": {
+    title: "sync ด้วย fetch, pull และ rebase",
+    summary: "fetch ก่อนรวมงานจาก upstream แล้วเลือก merge หรือ rebase อย่างตั้งใจตามชนิดของ branch.",
+    takeaways: ["คำสั่ง sync ควรทำให้เห็น upstream changes ก่อนจะ merge หรือ rewrite local history."],
+    whatToReview: [
+      "โค้ดที่ดี fetch ก่อน, ดู commit ที่อยู่บน upstream, rebase feature branch อย่างตั้งใจ แล้วรัน test หลัง sync.",
+      "โค้ดที่ควรปรับใช้ pull โดยไม่รู้ behavior แล้ว force push โดยไม่ตรวจว่ามีอะไรเปลี่ยนจาก upstream.",
+    ],
+    reviewNotes: [
+      "git fetch คือขั้นตอนดูข้อมูลที่ค่อนข้างปลอดภัย ให้ถามว่า workflow ทำให้ upstream changes เห็นก่อนเปลี่ยน history หรือไม่.",
+    ],
+  },
+  "git/reviewing-diffs-before-push": {
+    title: "รีวิว diff ก่อน push",
+    summary: "ตรวจ unstaged, staged และ committed changes ก่อน push เพื่อกันไฟล์หลุด debug code และ change ที่ไม่ได้ตั้งใจ.",
+    takeaways: ["push ควรเกิดหลัง local review pass ไม่ใช่เป็นครั้งแรกที่ใครเห็น final diff."],
+    whatToReview: [
+      "โค้ดที่ดีเช็ก whitespace, ดู diff ทั้ง unstaged และ staged และดู commit ที่กำลังจะออกจาก branch.",
+      "โค้ดที่ควรปรับ add, commit, push ทันทีโดยไม่มี local review pass.",
+    ],
+    reviewNotes: [
+      "ก่อน push ควรตอบได้ว่าอะไรจะออกจาก branch คำตอบควรมาจาก diff และ log ไม่ใช่จากความจำ.",
+    ],
+  },
+  "git/conflict-resolution-without-overwriting": {
+    title: "แก้ conflict โดยไม่ทับงานคนอื่น",
+    summary: "แก้ conflict ด้วยการเข้าใจทั้งสองฝั่ง แล้ว stage เฉพาะไฟล์ที่แก้แล้ว แทนการเลือก ours หรือ theirs แบบครอบจักรวาล.",
+    takeaways: ["conflict คือจังหวะ review design การเลือกข้างแบบไม่อ่านอาจลบ intent ของคนอื่นได้."],
+    whatToReview: [
+      "โค้ดที่ดีดู conflicted files, เทียบทั้งสองฝั่ง, เปิดแก้ไฟล์, รัน test และ stage เฉพาะ resolution.",
+      "โค้ดที่ควรปรับเลือก theirs ทั้ง repo แล้ว force push ทำให้ลบ local work หรือ domain decision ได้เงียบ ๆ.",
+    ],
+    reviewNotes: [
+      "conflict resolution ควรรักษา intent ของทั้งสอง branch ถ้า workflow ไม่เคยเปิดไฟล์ที่ conflict เลย มัก mechanical เกินไป.",
+    ],
+  },
+  "git/revert-vs-reset": {
+    title: "เลือก revert หรือ reset ให้ถูก",
+    summary: "ใช้ revert กับ history ที่แชร์แล้ว และเก็บ reset ไว้สำหรับ cleanup ในเครื่องก่อน commit ถูก push.",
+    takeaways: ["คำสั่งแก้ history ต้องขึ้นกับว่า commit นั้นถูกแชร์กับคนอื่นแล้วหรือยัง."],
+    whatToReview: [
+      "โค้ดที่ดีสร้าง commit ใหม่เพื่อ undo change ที่แชร์แล้ว จึงรักษา history ที่ teammate อาจมีอยู่.",
+      "โค้ดที่ควรปรับ reset --hard บน main แล้ว force push ทำให้ทุกคนต้องจัดการ history ที่ถูก rewrite.",
+    ],
+    reviewNotes: [
+      "คำถามแรกของ undo command คือ commit นี้ push แล้วหรือยัง ถ้า push แล้วให้เริ่มจาก revert เว้นแต่ทีมตกลงกันชัดว่าจะ rewrite history.",
+    ],
+  },
+  "git/gitignore-and-secret-safety": {
+    title: ".gitignore และความปลอดภัยของ secret",
+    summary: "กัน generated file และ secret ออกจาก version control และรีบเอา secret ที่ tracked แล้วออกจาก index.",
+    takeaways: ["repo ควรทำให้การ commit secret หรือ build artifact โดยไม่ตั้งใจเกิดยาก และตรวจจับได้ง่าย."],
+    whatToReview: [
+      "โค้ดที่ดี ignore local secret file และ remove secret ที่ tracked แล้วออกจาก index ก่อน commit.",
+      "โค้ดที่ควรปรับ add ทุกไฟล์ ทำให้ credential, generated artifact, editor file หรือ local env หลุดได้.",
+    ],
+    reviewNotes: [
+      ".gitignore คือการป้องกัน ไม่ใช่การแก้หลังเหตุเกิด ถ้า secret ถูก commit แล้ว การลบใน commit ถัดไปอาจไม่พอและอาจต้อง rotate key.",
+    ],
+  },
+  "git/tags-and-release-points": {
+    title: "tag และจุด release",
+    summary: "สร้าง annotated tag สำหรับ release point หลัง verify commit ที่ต้องการ ship ให้ชัดเจน.",
+    takeaways: ["release tag ควรชี้ไปที่ commit ที่ verify แล้ว และมีความหมายตาม version ที่ชัด.",
+    ],
+    whatToReview: [
+      "โค้ดที่ดีเช็ก working tree, รัน test, ดู commit ล่าสุด, สร้าง annotated version tag และ push เฉพาะ tag นั้น.",
+      "โค้ดที่ควรปรับใช้ชื่อ tag กว้าง ๆ และ push ทุก tag ในเครื่อง ซึ่งอาจ publish tag ที่ยังไม่พร้อม.",
+    ],
+    reviewNotes: [
+      "tag เป็นส่วนหนึ่งของ release contract ให้รีวิว commit ที่ชี้ไป, ชื่อ tag และคำสั่ง push ว่าส่งเฉพาะ release ที่ตั้งใจจริง.",
     ],
   },
   "fastapi/path-operation-order": {

@@ -1,0 +1,34 @@
+export const metadata = {
+  title: "Status before work",
+  track: "git",
+  order: 1,
+  summary: "Start every change by checking branch, cleanliness, and upstream state so you do not build on the wrong base.",
+  tags: ["status", "workflow", "safety"],
+  takeaways: ["A good Git workflow begins by making the current branch and uncommitted changes visible before editing files."],
+  goodCode: {
+    language: "bash",
+    filename: "review-start.sh",
+    code: `git status --short --branch
+git fetch origin
+git status --short --branch
+git diff --stat`,
+  },
+  badCode: {
+    language: "bash",
+    filename: "review-start.sh",
+    code: `git pull
+code src/app.ts
+git add .
+git commit -m "updates"`,
+  },
+};
+
+## What to review
+
+The good version checks the current branch, working tree, remote state, and visible diff before making a decision.
+
+The bad version pulls first, starts editing, and commits everything without proving which branch it is on or what changed.
+
+## Review notes
+
+When reviewing Git workflow, start with observability. If a developer cannot say what branch they are on and whether the tree is clean, later Git commands become harder to trust.

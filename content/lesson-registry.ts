@@ -365,6 +365,36 @@ import JavaRecordsAndDtoBoundaries, {
 import JavaPackageServiceBoundaries, {
   metadata as javaPackageServiceBoundariesMetadata,
 } from "./java/package-service-boundaries.mdx";
+import GitStatusBeforeWork, {
+  metadata as gitStatusBeforeWorkMetadata,
+} from "./git/status-before-work.mdx";
+import GitInteractiveStagingHunks, {
+  metadata as gitInteractiveStagingHunksMetadata,
+} from "./git/interactive-staging-hunks.mdx";
+import GitAtomicCommitsMessages, {
+  metadata as gitAtomicCommitsMessagesMetadata,
+} from "./git/atomic-commits-messages.mdx";
+import GitBranchNamingUpstream, {
+  metadata as gitBranchNamingUpstreamMetadata,
+} from "./git/branch-naming-upstream.mdx";
+import GitFetchPullRebaseSync, {
+  metadata as gitFetchPullRebaseSyncMetadata,
+} from "./git/fetch-pull-rebase-sync.mdx";
+import GitReviewingDiffsBeforePush, {
+  metadata as gitReviewingDiffsBeforePushMetadata,
+} from "./git/reviewing-diffs-before-push.mdx";
+import GitConflictResolutionWithoutOverwriting, {
+  metadata as gitConflictResolutionWithoutOverwritingMetadata,
+} from "./git/conflict-resolution-without-overwriting.mdx";
+import GitRevertVsReset, {
+  metadata as gitRevertVsResetMetadata,
+} from "./git/revert-vs-reset.mdx";
+import GitGitignoreAndSecretSafety, {
+  metadata as gitGitignoreAndSecretSafetyMetadata,
+} from "./git/gitignore-and-secret-safety.mdx";
+import GitTagsAndReleasePoints, {
+  metadata as gitTagsAndReleasePointsMetadata,
+} from "./git/tags-and-release-points.mdx";
 import FastapiPathOperationOrder, {
   metadata as fastapiPathOperationOrderMetadata,
 } from "./fastapi/path-operation-order.mdx";
@@ -1243,6 +1273,66 @@ const rawLessons: RawLesson[] = [
     source: "content/java/package-service-boundaries.mdx",
     metadata: javaPackageServiceBoundariesMetadata,
     Component: JavaPackageServiceBoundaries,
+  },
+  {
+    slug: "status-before-work",
+    source: "content/git/status-before-work.mdx",
+    metadata: gitStatusBeforeWorkMetadata,
+    Component: GitStatusBeforeWork,
+  },
+  {
+    slug: "interactive-staging-hunks",
+    source: "content/git/interactive-staging-hunks.mdx",
+    metadata: gitInteractiveStagingHunksMetadata,
+    Component: GitInteractiveStagingHunks,
+  },
+  {
+    slug: "atomic-commits-messages",
+    source: "content/git/atomic-commits-messages.mdx",
+    metadata: gitAtomicCommitsMessagesMetadata,
+    Component: GitAtomicCommitsMessages,
+  },
+  {
+    slug: "branch-naming-upstream",
+    source: "content/git/branch-naming-upstream.mdx",
+    metadata: gitBranchNamingUpstreamMetadata,
+    Component: GitBranchNamingUpstream,
+  },
+  {
+    slug: "fetch-pull-rebase-sync",
+    source: "content/git/fetch-pull-rebase-sync.mdx",
+    metadata: gitFetchPullRebaseSyncMetadata,
+    Component: GitFetchPullRebaseSync,
+  },
+  {
+    slug: "reviewing-diffs-before-push",
+    source: "content/git/reviewing-diffs-before-push.mdx",
+    metadata: gitReviewingDiffsBeforePushMetadata,
+    Component: GitReviewingDiffsBeforePush,
+  },
+  {
+    slug: "conflict-resolution-without-overwriting",
+    source: "content/git/conflict-resolution-without-overwriting.mdx",
+    metadata: gitConflictResolutionWithoutOverwritingMetadata,
+    Component: GitConflictResolutionWithoutOverwriting,
+  },
+  {
+    slug: "revert-vs-reset",
+    source: "content/git/revert-vs-reset.mdx",
+    metadata: gitRevertVsResetMetadata,
+    Component: GitRevertVsReset,
+  },
+  {
+    slug: "gitignore-and-secret-safety",
+    source: "content/git/gitignore-and-secret-safety.mdx",
+    metadata: gitGitignoreAndSecretSafetyMetadata,
+    Component: GitGitignoreAndSecretSafety,
+  },
+  {
+    slug: "tags-and-release-points",
+    source: "content/git/tags-and-release-points.mdx",
+    metadata: gitTagsAndReleasePointsMetadata,
+    Component: GitTagsAndReleasePoints,
   },
   {
     slug: "path-operation-order",

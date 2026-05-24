@@ -1,0 +1,33 @@
+export const metadata = {
+  title: "Fetch, pull, and rebase sync",
+  track: "git",
+  order: 5,
+  summary: "Fetch before integrating upstream work, then choose merge or rebase intentionally for the branch you are on.",
+  tags: ["fetch", "pull", "rebase"],
+  takeaways: ["Sync commands should show what changed upstream before they rewrite or merge local history."],
+  goodCode: {
+    language: "bash",
+    filename: "sync-feature.sh",
+    code: `git fetch origin
+git log --oneline --decorate --max-count=5 HEAD..origin/main
+git rebase origin/main
+npm test`,
+  },
+  badCode: {
+    language: "bash",
+    filename: "sync-feature.sh",
+    code: `git pull
+git push --force
+git status`,
+  },
+};
+
+## What to review
+
+The good version fetches first, inspects upstream commits, rebases the feature branch intentionally, and runs tests after integration.
+
+The bad version lets `pull` decide the integration behavior and follows with a force push without checking what changed.
+
+## Review notes
+
+`git fetch` is the safe observation step. In review, ask whether the command sequence makes upstream changes visible before it changes local history.

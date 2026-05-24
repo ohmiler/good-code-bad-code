@@ -1,0 +1,34 @@
+export const metadata = {
+  title: "Reviewing diffs before push",
+  track: "git",
+  order: 6,
+  summary: "Inspect unstaged, staged, and committed changes before pushing so accidental files and debug edits do not leave your machine.",
+  tags: ["diff", "push", "review"],
+  takeaways: ["A push should come after a local review pass, not be the first time anyone sees the final diff."],
+  goodCode: {
+    language: "bash",
+    filename: "pre-push-review.sh",
+    code: `git diff --check
+git diff
+git diff --staged
+git log --oneline origin/main..HEAD
+git push`,
+  },
+  badCode: {
+    language: "bash",
+    filename: "pre-push-review.sh",
+    code: `git add .
+git commit -m "final"
+git push`,
+  },
+};
+
+## What to review
+
+The good version checks whitespace issues, reviews both unstaged and staged changes, and confirms which commits are about to be pushed.
+
+The bad version sends the final state upstream without a local review pass.
+
+## Review notes
+
+Before pushing, reviewers should be able to ask "what exactly leaves this branch?" The answer should come from `diff` and `log`, not memory.

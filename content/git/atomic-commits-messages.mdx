@@ -1,0 +1,34 @@
+export const metadata = {
+  title: "Atomic commits and messages",
+  track: "git",
+  order: 3,
+  summary: "Keep commits small enough to review and give each one a message that explains the user-facing or maintenance reason.",
+  tags: ["commits", "messages", "history"],
+  takeaways: ["A commit should describe one coherent change and make the reason visible without reading the whole diff first."],
+  goodCode: {
+    language: "bash",
+    filename: "commit-plan.sh",
+    code: `git add components/lesson/lesson-pager.tsx
+git commit -m "improve lesson navigation controls"
+
+git add tests/content/navigation.test.ts
+git commit -m "cover lesson navigation boundaries"`,
+  },
+  badCode: {
+    language: "bash",
+    filename: "commit-plan.sh",
+    code: `git add .
+git commit -m "work"
+git push`,
+  },
+};
+
+## What to review
+
+The good version separates UI behavior from test coverage and gives each commit a message that explains the change.
+
+The bad version creates a grab-bag commit. Reviewers have to understand unrelated edits at once, and reverting one part becomes riskier.
+
+## Review notes
+
+Atomic does not mean tiny for its own sake. It means the commit has one reason to exist and can be reviewed, reverted, or cherry-picked as a unit.

@@ -1,0 +1,33 @@
+export const metadata = {
+  title: "Interactive staging hunks",
+  track: "git",
+  order: 2,
+  summary: "Stage changes deliberately so each commit contains only the hunks that belong together.",
+  tags: ["staging", "patches", "commits"],
+  takeaways: ["Reviewable commits come from reviewable staging, not from adding every file by habit."],
+  goodCode: {
+    language: "bash",
+    filename: "stage-review.sh",
+    code: `git diff
+git add -p src/review.ts
+git diff --staged
+git commit -m "fix review navigation labels"`,
+  },
+  badCode: {
+    language: "bash",
+    filename: "stage-review.sh",
+    code: `git add .
+git commit -m "fix stuff"
+git push`,
+  },
+};
+
+## What to review
+
+The good version inspects the unstaged diff, stages only relevant hunks, then reviews the staged diff before committing.
+
+The bad version adds unrelated files and gives reviewers no signal about the intent of the change.
+
+## Review notes
+
+`git add -p` is especially useful when formatting, debugging, and feature work are mixed locally. It helps the commit tell one story.

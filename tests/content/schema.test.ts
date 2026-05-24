@@ -128,6 +128,28 @@ test("validateLessonMetadata accepts Java code samples", () => {
   );
 });
 
+test("validateLessonMetadata accepts Bash code samples for Git lessons", () => {
+  const gitMetadata = {
+    ...validMetadata,
+    track: "git",
+    goodCode: {
+      language: "bash",
+      filename: "review-workflow.sh",
+      code: "git status --short\\ngit diff --staged",
+    },
+    badCode: {
+      language: "bash",
+      filename: "review-workflow.sh",
+      code: "git add .\\ngit commit -m update",
+    },
+  };
+
+  assert.deepEqual(
+    validateLessonMetadata(gitMetadata, "content/git/reviewing-diffs.mdx"),
+    gitMetadata,
+  );
+});
+
 test("validateLessonMetadata rejects unknown tracks", () => {
   assert.throws(
     () =>

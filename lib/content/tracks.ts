@@ -72,6 +72,12 @@ export const tracks = [
       "Review null boundaries, immutability, value objects, exceptions, resources, generics, streams, concurrency, records, and service boundaries.",
   },
   {
+    slug: "git",
+    title: "Git",
+    description:
+      "Review status checks, staging, commits, branches, sync workflows, diffs, conflicts, history safety, ignores, and release tags.",
+  },
+  {
     slug: "fastapi",
     title: "FastAPI",
     description:

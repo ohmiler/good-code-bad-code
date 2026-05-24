@@ -1,0 +1,33 @@
+export const metadata = {
+  title: "Tags and release points",
+  track: "git",
+  order: 10,
+  summary: "Create intentional annotated tags for release points after verifying the exact commit that should ship.",
+  tags: ["tags", "release", "versioning"],
+  takeaways: ["A release tag should point to a verified commit and carry a clear versioned meaning."],
+  goodCode: {
+    language: "bash",
+    filename: "release-tag.sh",
+    code: `git status --short --branch
+npm test
+git log --oneline --max-count=1
+git tag -a v1.4.0 -m "Release v1.4.0"
+git push origin v1.4.0`,
+  },
+  badCode: {
+    language: "bash",
+    filename: "release-tag.sh",
+    code: `git tag latest
+git push --tags`,
+  },
+};
+
+## What to review
+
+The good version verifies the working tree, runs tests, checks the exact commit, creates an annotated version tag, and pushes only that tag.
+
+The bad version creates a vague moving name and pushes every local tag, including tags that may not be ready to publish.
+
+## Review notes
+
+Tags are part of the release contract. Review the commit they point at, the tag name, and whether the push command publishes only the intended release.

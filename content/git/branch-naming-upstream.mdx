@@ -1,0 +1,32 @@
+export const metadata = {
+  title: "Branch naming and upstream",
+  track: "git",
+  order: 4,
+  summary: "Create topic branches with clear names and set upstream tracking so future pushes and pulls target the right remote branch.",
+  tags: ["branches", "upstream", "collaboration"],
+  takeaways: ["A branch should tell the team what kind of work it contains and where it syncs by default."],
+  goodCode: {
+    language: "bash",
+    filename: "branch-start.sh",
+    code: `git switch -c feature/git-track-lessons
+git push -u origin feature/git-track-lessons
+git status --short --branch`,
+  },
+  badCode: {
+    language: "bash",
+    filename: "branch-start.sh",
+    code: `git switch main
+git commit -am "changes"
+git push origin HEAD`,
+  },
+};
+
+## What to review
+
+The good version creates a named topic branch, publishes it with upstream tracking, and checks the branch state.
+
+The bad version commits on `main` and pushes `HEAD` without a clear target. That makes accidental pushes harder to spot in review.
+
+## Review notes
+
+Branch names are lightweight documentation. They should help a reviewer understand whether the work is a feature, fix, chore, spike, or release change.

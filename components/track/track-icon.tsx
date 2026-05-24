@@ -128,6 +128,15 @@ const iconShapes = {
       <path d="M5 21h14" />
     </>
   ),
+  "git-branch": (
+    <>
+      <circle cx="6" cy="6" r="2" />
+      <circle cx="18" cy="6" r="2" />
+      <circle cx="18" cy="18" r="2" />
+      <path d="M8 6h4a6 6 0 0 1 6 6v4" />
+      <path d="M6 8v10" />
+    </>
+  ),
   zap: (
     <path d="M13 2 4 14h7l-1 8 10-13h-7l1-7Z" />
   ),

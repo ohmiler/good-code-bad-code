@@ -13,6 +13,7 @@ export const trackIconKeys = {
   python: "terminal",
   php: "file-code",
   java: "coffee",
+  git: "git-branch",
   fastapi: "zap",
   django: "layers",
   go: "gauge",
