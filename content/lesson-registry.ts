@@ -95,15 +95,36 @@ import JsModuleBoundariesGlobals, {
 import JsDatesTimeZones, {
   metadata as jsDatesTimeZonesMetadata,
 } from "./javascript/dates-time-zones.mdx";
-import TsDiscriminatedUnions, {
-  metadata as tsDiscriminatedUnionsMetadata,
-} from "./typescript/discriminated-unions.mdx";
+import TsTypeInferenceBoundaries, {
+  metadata as tsTypeInferenceBoundariesMetadata,
+} from "./typescript/type-inference-boundaries.mdx";
 import TsNarrowingUnknown, {
   metadata as tsNarrowingUnknownMetadata,
 } from "./typescript/narrowing-unknown.mdx";
+import TsUnsafeAssertions, {
+  metadata as tsUnsafeAssertionsMetadata,
+} from "./typescript/unsafe-assertions.mdx";
+import TsDiscriminatedUnions, {
+  metadata as tsDiscriminatedUnionsMetadata,
+} from "./typescript/discriminated-unions.mdx";
+import TsExhaustiveNeverChecks, {
+  metadata as tsExhaustiveNeverChecksMetadata,
+} from "./typescript/exhaustive-never-checks.mdx";
 import TsPreciseFunctionTypes, {
   metadata as tsPreciseFunctionTypesMetadata,
 } from "./typescript/precise-function-types.mdx";
+import TsOptionalVsNullable, {
+  metadata as tsOptionalVsNullableMetadata,
+} from "./typescript/optional-vs-nullable.mdx";
+import TsGenericConstraints, {
+  metadata as tsGenericConstraintsMetadata,
+} from "./typescript/generic-constraints.mdx";
+import TsUtilityTypesApiBoundaries, {
+  metadata as tsUtilityTypesApiBoundariesMetadata,
+} from "./typescript/utility-types-api-boundaries.mdx";
+import TsTypeOnlyImportsModuleBoundaries, {
+  metadata as tsTypeOnlyImportsModuleBoundariesMetadata,
+} from "./typescript/type-only-imports-module-boundaries.mdx";
 import ReactPropsComponentBoundaries, {
   metadata as reactPropsComponentBoundariesMetadata,
 } from "./react/props-component-boundaries.mdx";
@@ -303,10 +324,10 @@ const rawLessons: RawLesson[] = [
     Component: JsDatesTimeZones,
   },
   {
-    slug: "discriminated-unions",
-    source: "content/typescript/discriminated-unions.mdx",
-    metadata: tsDiscriminatedUnionsMetadata,
-    Component: TsDiscriminatedUnions,
+    slug: "type-inference-boundaries",
+    source: "content/typescript/type-inference-boundaries.mdx",
+    metadata: tsTypeInferenceBoundariesMetadata,
+    Component: TsTypeInferenceBoundaries,
   },
   {
     slug: "narrowing-unknown",
@@ -315,10 +336,52 @@ const rawLessons: RawLesson[] = [
     Component: TsNarrowingUnknown,
   },
   {
+    slug: "unsafe-assertions",
+    source: "content/typescript/unsafe-assertions.mdx",
+    metadata: tsUnsafeAssertionsMetadata,
+    Component: TsUnsafeAssertions,
+  },
+  {
+    slug: "discriminated-unions",
+    source: "content/typescript/discriminated-unions.mdx",
+    metadata: tsDiscriminatedUnionsMetadata,
+    Component: TsDiscriminatedUnions,
+  },
+  {
+    slug: "exhaustive-never-checks",
+    source: "content/typescript/exhaustive-never-checks.mdx",
+    metadata: tsExhaustiveNeverChecksMetadata,
+    Component: TsExhaustiveNeverChecks,
+  },
+  {
     slug: "precise-function-types",
     source: "content/typescript/precise-function-types.mdx",
     metadata: tsPreciseFunctionTypesMetadata,
     Component: TsPreciseFunctionTypes,
+  },
+  {
+    slug: "optional-vs-nullable",
+    source: "content/typescript/optional-vs-nullable.mdx",
+    metadata: tsOptionalVsNullableMetadata,
+    Component: TsOptionalVsNullable,
+  },
+  {
+    slug: "generic-constraints",
+    source: "content/typescript/generic-constraints.mdx",
+    metadata: tsGenericConstraintsMetadata,
+    Component: TsGenericConstraints,
+  },
+  {
+    slug: "utility-types-api-boundaries",
+    source: "content/typescript/utility-types-api-boundaries.mdx",
+    metadata: tsUtilityTypesApiBoundariesMetadata,
+    Component: TsUtilityTypesApiBoundaries,
+  },
+  {
+    slug: "type-only-imports-module-boundaries",
+    source: "content/typescript/type-only-imports-module-boundaries.mdx",
+    metadata: tsTypeOnlyImportsModuleBoundariesMetadata,
+    Component: TsTypeOnlyImportsModuleBoundaries,
   },
   {
     slug: "props-component-boundaries",

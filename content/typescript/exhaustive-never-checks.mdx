@@ -1,0 +1,61 @@
+export const metadata = {
+  title: "Exhaustive checks with never",
+  track: "typescript",
+  order: 5,
+  summary: "Make every union case handled so new states fail loudly during development.",
+  tags: ["unions", "exhaustive", "never"],
+  takeaways: ["Use a `never` assignment in the final branch to make missing union cases a type error."],
+  goodCode: {
+    language: "typescript",
+    filename: "review-state.ts",
+    code: `type ReviewState =
+  | { status: "draft" }
+  | { status: "open"; reviewerCount: number }
+  | { status: "merged"; mergedBy: string };
+
+function renderReviewState(state: ReviewState) {
+  switch (state.status) {
+    case "draft":
+      return "Draft";
+    case "open":
+      return "Open for " + state.reviewerCount + " reviewers";
+    case "merged":
+      return "Merged by " + state.mergedBy;
+    default: {
+      const neverState: never = state;
+      return neverState;
+    }
+  }
+}`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "review-state.ts",
+    code: `type ReviewState =
+  | { status: "draft" }
+  | { status: "open"; reviewerCount: number }
+  | { status: "merged"; mergedBy: string };
+
+function renderReviewState(state: ReviewState) {
+  if (state.status === "draft") {
+    return "Draft";
+  }
+
+  if (state.status === "open") {
+    return "Open for " + state.reviewerCount + " reviewers";
+  }
+
+  return "Unknown state";
+}`,
+  },
+};
+
+## What to review
+
+The good version makes the final branch impossible when all union cases are handled, so adding a new state creates a compile-time reminder.
+
+The bad version hides missing cases behind a generic fallback, which can make new product states render as unknown instead of asking the developer to handle them.
+
+## Review notes
+
+In review, default branches over discriminated unions can be too forgiving. If every case is known, exhaustive checking gives future changes a useful tripwire.

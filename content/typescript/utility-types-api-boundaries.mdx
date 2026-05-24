@@ -1,0 +1,54 @@
+export const metadata = {
+  title: "Utility types at API boundaries",
+  track: "typescript",
+  order: 9,
+  summary: "Derive focused request and view types from domain types without exposing everything.",
+  tags: ["utility-types", "api-design", "boundaries"],
+  takeaways: ["Use Pick, Omit, Partial, and Readonly to express boundary-specific contracts from existing domain types."],
+  goodCode: {
+    language: "typescript",
+    filename: "review-api.ts",
+    code: `type PullRequest = {
+  id: string;
+  title: string;
+  authorId: string;
+  mergedAt: string | null;
+  internalScore: number;
+};
+
+type PullRequestListItem = Pick<PullRequest, "id" | "title" | "authorId">;
+
+function serializePullRequest(item: PullRequest): PullRequestListItem {
+  return {
+    id: item.id,
+    title: item.title,
+    authorId: item.authorId,
+  };
+}`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "review-api.ts",
+    code: `type PullRequest = {
+  id: string;
+  title: string;
+  authorId: string;
+  mergedAt: string | null;
+  internalScore: number;
+};
+
+function serializePullRequest(item: PullRequest): PullRequest {
+  return item;
+}`,
+  },
+};
+
+## What to review
+
+The good version exposes only the fields the list API needs while keeping the response type tied to the domain model.
+
+The bad version returns the full domain object, including internal fields that a boundary should not promise to external callers.
+
+## Review notes
+
+In review, utility types are useful when they make a boundary smaller and clearer. They should express a product contract, not just make a complex type shorter.

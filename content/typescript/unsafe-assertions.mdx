@@ -1,0 +1,57 @@
+export const metadata = {
+  title: "Avoiding unsafe assertions",
+  track: "typescript",
+  order: 3,
+  summary: "Prefer checks that prove a value's shape over assertions that silence the compiler.",
+  tags: ["assertions", "safety", "runtime-data"],
+  takeaways: ["Treat `as` as a last resort at trusted boundaries, not a way to skip validation."],
+  goodCode: {
+    language: "typescript",
+    filename: "session.ts",
+    code: `type Session = {
+  userId: string;
+  expiresAt: string;
+};
+
+function isSession(value: unknown): value is Session {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "userId" in value &&
+    typeof value.userId === "string" &&
+    "expiresAt" in value &&
+    typeof value.expiresAt === "string"
+  );
+}
+
+export function readSession(value: unknown): Session | undefined {
+  if (!isSession(value)) {
+    return undefined;
+  }
+
+  return value;
+}`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "session.ts",
+    code: `type Session = {
+  userId: string;
+  expiresAt: string;
+};
+
+export function readSession(value: unknown): Session {
+  return value as Session;
+}`,
+  },
+};
+
+## What to review
+
+The good version earns trust by checking the runtime shape before returning typed application data.
+
+The bad version tells TypeScript to accept the value as a `Session` without proving anything, so invalid data can move through the app as if it were safe.
+
+## Review notes
+
+In review, assertions are worth a second look whenever the value came from JSON, storage, network, URL params, or third-party code. The closer the assertion is to untrusted data, the more evidence it needs.

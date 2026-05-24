@@ -1,0 +1,46 @@
+export const metadata = {
+  title: "Optional properties vs nullable values",
+  track: "typescript",
+  order: 7,
+  summary: "Use optional and nullable fields to describe different kinds of absence.",
+  tags: ["optional", "nullable", "data-modeling"],
+  takeaways: ["Use `?` when a property may be omitted and `null` when the property is present but intentionally empty."],
+  goodCode: {
+    language: "typescript",
+    filename: "profile.ts",
+    code: `type ProfileDraft = {
+  displayName?: string;
+  avatarUrl: string | null;
+};
+
+function renderAvatar(profile: ProfileDraft) {
+  if (profile.avatarUrl === null) {
+    return "Use default avatar";
+  }
+
+  return profile.avatarUrl;
+}`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "profile.ts",
+    code: `type ProfileDraft = {
+  displayName?: string | null;
+  avatarUrl?: string | null;
+};
+
+function renderAvatar(profile: ProfileDraft) {
+  return profile.avatarUrl || "Use default avatar";
+}`,
+  },
+};
+
+## What to review
+
+The good version separates an omitted draft field from a present field that explicitly has no avatar.
+
+The bad version allows both `undefined` and `null` everywhere, so callers cannot tell whether data was missing, intentionally cleared, or simply not loaded yet.
+
+## Review notes
+
+In review, absence is part of the domain model. Optional and nullable mean different things, and mixing them casually makes every consumer repeat the same guessing game.

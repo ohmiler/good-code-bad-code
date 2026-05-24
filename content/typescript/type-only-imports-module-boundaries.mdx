@@ -1,0 +1,38 @@
+export const metadata = {
+  title: "Type-only imports and module boundaries",
+  track: "typescript",
+  order: 10,
+  summary: "Separate type dependencies from runtime dependencies so modules stay lightweight.",
+  tags: ["imports", "modules", "boundaries"],
+  takeaways: ["Use `import type` when a module only needs a type and keep runtime imports for values that execute."],
+  goodCode: {
+    language: "typescript",
+    filename: "review-card.ts",
+    code: `import type { PullRequest } from "./pull-request";
+import { formatAuthorName } from "./authors";
+
+export function getReviewCardTitle(pullRequest: PullRequest) {
+  return pullRequest.title + " by " + formatAuthorName(pullRequest.authorId);
+}`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "review-card.ts",
+    code: `import { PullRequest } from "./pull-request";
+import { formatAuthorName } from "./authors";
+
+export function getReviewCardTitle(pullRequest: PullRequest) {
+  return pullRequest.title + " by " + formatAuthorName(pullRequest.authorId);
+}`,
+  },
+};
+
+## What to review
+
+The good version makes it clear that `PullRequest` is only a type dependency while `formatAuthorName` is a runtime value dependency.
+
+The bad version imports a type like a runtime value, which can blur module boundaries and create unnecessary runtime coupling depending on compiler settings.
+
+## Review notes
+
+In review, imports tell a dependency story. `import type` helps separate compile-time shape from runtime behavior, which makes module boundaries easier to reason about.

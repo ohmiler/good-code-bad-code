@@ -1,0 +1,40 @@
+export const metadata = {
+  title: "Generic constraints",
+  track: "typescript",
+  order: 8,
+  summary: "Constrain generics to the fields the function actually needs.",
+  tags: ["generics", "constraints", "api-design"],
+  takeaways: ["Use `extends` to keep generic functions flexible without losing the properties they rely on."],
+  goodCode: {
+    language: "typescript",
+    filename: "sort-by-updated.ts",
+    code: `type HasUpdatedAt = {
+  updatedAt: string;
+};
+
+function sortByUpdatedAt<T extends HasUpdatedAt>(items: T[]): T[] {
+  return [...items].sort((left, right) =>
+    right.updatedAt.localeCompare(left.updatedAt),
+  );
+}`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "sort-by-updated.ts",
+    code: `function sortByUpdatedAt<T>(items: T[]): T[] {
+  return [...items].sort((left, right) =>
+    (right as any).updatedAt.localeCompare((left as any).updatedAt),
+  );
+}`,
+  },
+};
+
+## What to review
+
+The good version stays generic while making the required `updatedAt` property part of the type contract.
+
+The bad version accepts any item type and then escapes through `any` inside the implementation, so invalid calls compile and fail later.
+
+## Review notes
+
+In review, a generic that immediately casts to `any` is usually missing a constraint. The type parameter should describe what can vary and what the function still requires.

@@ -1,0 +1,49 @@
+export const metadata = {
+  title: "Type inference and explicit boundaries",
+  track: "typescript",
+  order: 1,
+  summary: "Let TypeScript infer local values, but type the boundaries other code depends on.",
+  tags: ["inference", "boundaries", "api-design"],
+  takeaways: ["Annotate function inputs, return contracts, and exported APIs while letting local implementation details infer naturally."],
+  goodCode: {
+    language: "typescript",
+    filename: "review-summary.ts",
+    code: `type ReviewSummaryInput = {
+  title: string;
+  commentCount: number;
+  state: "open" | "closed";
+};
+
+export function createReviewSummary(input: ReviewSummaryInput) {
+  const label = input.title + " (" + input.commentCount + ")";
+
+  return {
+    label,
+    isClosed: input.state === "closed",
+  };
+}`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "review-summary.ts",
+    code: `export function createReviewSummary(input: any) {
+  const label: string = input.title + " (" + input.comments.length + ")";
+  const isClosed: boolean = input.closed;
+
+  return {
+    label,
+    isClosed,
+  };
+}`,
+  },
+};
+
+## What to review
+
+The good version types the input boundary and lets the local `label` and returned object infer from real values.
+
+The bad version annotates local variables while leaving the public input as `any`, so reviewers still cannot trust the shape that matters most.
+
+## Review notes
+
+In review, look for annotations in the wrong place. Types are most valuable where code crosses a boundary: exported functions, API adapters, callback contracts, and data that comes from outside the module.
