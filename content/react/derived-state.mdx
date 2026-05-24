@@ -1,0 +1,53 @@
+export const metadata = {
+  title: "Derived state",
+  track: "react",
+  summary: "Compute values from current props and state instead of syncing duplicates.",
+  tags: ["state", "rendering", "effects"],
+  takeaways: ["Prefer render-time derived values when state can be calculated from existing data."],
+  goodCode: {
+    language: "tsx",
+    filename: "ReviewerList.tsx",
+    code: `type Reviewer = {
+  id: string;
+  name: string;
+  approved: boolean;
+};
+
+export function ReviewerList({ reviewers }: { reviewers: Reviewer[] }) {
+  const approvedCount = reviewers.filter((reviewer) => reviewer.approved).length;
+
+  return <p>{approvedCount} of {reviewers.length} reviewers approved.</p>;
+}`,
+  },
+  badCode: {
+    language: "tsx",
+    filename: "ReviewerList.tsx",
+    code: `import { useEffect, useState } from "react";
+
+type Reviewer = {
+  id: string;
+  name: string;
+  approved: boolean;
+};
+
+export function ReviewerList({ reviewers }: { reviewers: Reviewer[] }) {
+  const [approvedCount, setApprovedCount] = useState(0);
+
+  useEffect(() => {
+    setApprovedCount(reviewers.filter((reviewer) => reviewer.approved).length);
+  }, [reviewers]);
+
+  return <p>{approvedCount} of {reviewers.length} reviewers approved.</p>;
+}`,
+  },
+};
+
+## What to review
+
+The good version derives the count from the current `reviewers` prop during render, so there is only one source of truth.
+
+The bad version stores a duplicate count and then uses an effect to keep it synchronized with props.
+
+## Review notes
+
+In review, ask whether the value needs to survive independently or can be recomputed from current inputs. The bad version is review-worthy because duplicated state renders fine but creates timing, synchronization, and missing-dependency risks for data React already has.

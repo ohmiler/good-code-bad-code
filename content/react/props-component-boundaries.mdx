@@ -1,0 +1,55 @@
+export const metadata = {
+  title: "Props component boundaries",
+  track: "react",
+  summary: "Keep presentational components focused by passing the data they need explicitly.",
+  tags: ["components", "props", "boundaries"],
+  takeaways: ["Prefer explicit props for presentational components over hidden app-state reach-ins."],
+  goodCode: {
+    language: "tsx",
+    filename: "ReviewSummary.tsx",
+    code: `type ReviewSummaryProps = {
+  title: string;
+  reviewerName: string;
+  status: "approved" | "changes-requested";
+};
+
+export function ReviewSummary({
+  title,
+  reviewerName,
+  status,
+}: ReviewSummaryProps) {
+  return (
+    <section>
+      <h2>{title}</h2>
+      <p>{reviewerName} marked this review as {status}.</p>
+    </section>
+  );
+}`,
+  },
+  badCode: {
+    language: "tsx",
+    filename: "ReviewSummary.tsx",
+    code: `import { useAppState } from "./app-state";
+
+export function ReviewSummary() {
+  const { currentProject, activeReview, viewer } = useAppState();
+
+  return (
+    <section>
+      <h2>{currentProject.name}: {activeReview.title}</h2>
+      <p>{viewer.name} marked this review as {activeReview.status}.</p>
+    </section>
+  );
+}`,
+  },
+};
+
+## What to review
+
+The good version makes the component boundary obvious: the component receives the display values it needs and renders them.
+
+The bad version reaches into broad application state, which couples a reusable summary to unrelated project, review, and viewer concerns.
+
+## Review notes
+
+In review, ask whether a component can be understood, tested, and reused from its props alone. The bad version is review-worthy because it renders correctly in one app context while hiding dependencies that make the component harder to move or reason about.

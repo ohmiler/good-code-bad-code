@@ -1,0 +1,37 @@
+export const metadata = {
+  title: "Semantic document structure",
+  track: "html",
+  summary: "Use landmarks and headings to make the page structure understandable.",
+  tags: ["semantics", "accessibility", "structure"],
+  takeaways: ["Prefer meaningful landmarks over anonymous wrappers."],
+  goodCode: {
+    language: "html",
+    filename: "article.html",
+    code: `<main>
+  <article aria-labelledby="article-title">
+    <h1 id="article-title">Reviewing pull requests</h1>
+    <p>Small reviews are easier to reason about.</p>
+  </article>
+</main>`,
+  },
+  badCode: {
+    language: "html",
+    filename: "article.html",
+    code: `<div>
+  <div>
+    <b>Reviewing pull requests</b>
+    <div>Small reviews are easier to reason about.</div>
+  </div>
+</div>`,
+  },
+};
+
+## What to review
+
+The good version exposes the page structure through native landmarks and a real heading.
+
+The bad version may look acceptable, but it hides meaning behind generic containers.
+
+## Review notes
+
+In review, ask whether another developer or assistive technology can understand the page outline without reading CSS. Semantic HTML is not decoration; it is part of the interface contract.

@@ -1,0 +1,50 @@
+export const metadata = {
+  title: "Responsive units",
+  track: "css",
+  summary: "Use responsive ranges that respect readable text and container context.",
+  tags: ["responsive", "typography", "spacing"],
+  takeaways: ["Use bounded responsive values so scaling cannot make text too small or too large."],
+  goodCode: {
+    language: "css",
+    filename: "lesson-card.css",
+    code: `.lesson-card {
+  padding: clamp(1rem, 2cqi, 1.5rem);
+  max-width: 42rem;
+}
+
+.lesson-card__title {
+  font-size: clamp(1.25rem, 1rem + 1vw, 2rem);
+  line-height: 1.2;
+}
+
+.lesson-card__body {
+  font-size: 1rem;
+  line-height: 1.6;
+}`,
+  },
+  badCode: {
+    language: "css",
+    filename: "lesson-card.css",
+    code: `body {
+  font-size: 1.2vw;
+}
+
+.lesson-card {
+  padding: 4vw;
+}
+
+.lesson-card__title {
+  font-size: 4vw;
+}`,
+  },
+};
+
+## What to review
+
+The good version uses `clamp()` to set responsive bounds and keeps body text at a readable base size.
+
+The bad version renders responsively, but viewport-scaled body text can become tiny on narrow layouts or oversized on wide screens regardless of the content container.
+
+## Review notes
+
+In review, ask whether the unit responds to the thing that actually constrains the component. The bad version is review-worthy even when it renders because viewport units can make local content readability depend on a global screen dimension.

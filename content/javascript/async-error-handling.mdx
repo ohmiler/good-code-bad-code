@@ -1,0 +1,45 @@
+export const metadata = {
+  title: "Async error handling",
+  track: "javascript",
+  summary: "Handle failed requests and unsuccessful response statuses before parsing data.",
+  tags: ["async", "fetch", "errors"],
+  takeaways: ["Check both network failures and response status before trusting fetched data."],
+  goodCode: {
+    language: "javascript",
+    filename: "load-profile.js",
+    code: `async function loadProfile(userId) {
+  try {
+    const response = await fetch("/api/users/" + userId);
+
+    if (!response.ok) {
+      return { ok: false, error: "Profile request failed." };
+    }
+
+    const profile = await response.json();
+    return { ok: true, profile };
+  } catch {
+    return { ok: false, error: "Network error while loading profile." };
+  }
+}`,
+  },
+  badCode: {
+    language: "javascript",
+    filename: "load-profile.js",
+    code: `async function loadProfile(userId) {
+  const response = await fetch("/api/users/" + userId);
+  const profile = await response.json();
+
+  return { ok: true, profile };
+}`,
+  },
+};
+
+## What to review
+
+The good version separates transport failures from unsuccessful HTTP responses and only parses JSON after the response is acceptable.
+
+The bad version is concise, but it assumes every request succeeds and every response body can be parsed as JSON.
+
+## Review notes
+
+In review, ask what the caller receives for offline users, server errors, and non-JSON error pages. The bad version is review-worthy because it works on the happy path while pushing important failure behavior into unhandled exceptions.

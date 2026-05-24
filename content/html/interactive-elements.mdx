@@ -1,0 +1,31 @@
+export const metadata = {
+  title: "Interactive elements",
+  track: "html",
+  summary: "Use native controls for actions so interaction behavior comes with the element.",
+  tags: ["semantics", "accessibility", "interaction"],
+  takeaways: ["Reach for a native button when the user is triggering an action."],
+  goodCode: {
+    language: "html",
+    filename: "toolbar.html",
+    code: `<button type="button" aria-pressed="false">
+  Save draft
+</button>`,
+  },
+  badCode: {
+    language: "html",
+    filename: "toolbar.html",
+    code: `<div class="button" onclick="saveDraft()">
+  Save draft
+</div>`,
+  },
+};
+
+## What to review
+
+The good version uses a native `button`, which already participates in keyboard interaction, focus order, and accessibility APIs.
+
+The bad version may be styled to look identical, but the generic `div` has to recreate expected button behavior by hand.
+
+## Review notes
+
+In review, ask whether the element's semantics match the user's action. A clickable `div` is review-worthy even when the click handler works because it quietly shifts keyboard, focus, disabled, and pressed-state responsibilities into custom code.

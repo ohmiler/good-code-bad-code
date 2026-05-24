@@ -1,0 +1,49 @@
+export const metadata = {
+  title: "Discriminated unions",
+  track: "typescript",
+  summary: "Model related states with a discriminant so callers can narrow safely.",
+  tags: ["unions", "state", "narrowing"],
+  takeaways: ["Use discriminated unions to make invalid states harder to express."],
+  goodCode: {
+    language: "typescript",
+    filename: "result.ts",
+    code: `type SaveResult =
+  | { status: "saved"; id: string }
+  | { status: "failed"; message: string };
+
+function renderSaveResult(result: SaveResult) {
+  if (result.status === "saved") {
+    return "Saved draft " + result.id;
+  }
+
+  return "Could not save: " + result.message;
+}`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "result.ts",
+    code: `type SaveResult = {
+  saved?: boolean;
+  id?: string;
+  message?: string;
+};
+
+function renderSaveResult(result: SaveResult) {
+  if (result.saved) {
+    return "Saved draft " + result.id;
+  }
+
+  return "Could not save: " + result.message;
+}`,
+  },
+};
+
+## What to review
+
+The good version ties each shape to a clear `status`, so TypeScript can narrow the available fields in each branch.
+
+The bad version leaves optional fields to be guessed together, allowing states like `saved: true` without an `id` or a failure without a message.
+
+## Review notes
+
+In review, look for booleans and optional fields that are acting as a hidden protocol. The bad version is review-worthy because it asks every caller to remember combinations that the type system could make impossible.

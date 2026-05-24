@@ -1,0 +1,49 @@
+export const metadata = {
+  title: "Color contrast states",
+  track: "css",
+  summary: "Define interactive states that remain visible and readable.",
+  tags: ["accessibility", "states", "contrast"],
+  takeaways: ["Pair state changes with contrast and focus treatment that users can perceive."],
+  goodCode: {
+    language: "css",
+    filename: "primary-action.css",
+    code: `.primary-action {
+  color: #ffffff;
+  background: #174ea6;
+  border: 2px solid #174ea6;
+}
+
+.primary-action:hover {
+  background: #0b3478;
+}
+
+.primary-action:focus-visible {
+  outline: 3px solid #f9ab00;
+  outline-offset: 2px;
+}`,
+  },
+  badCode: {
+    language: "css",
+    filename: "primary-action.css",
+    code: `.primary-action {
+  color: #7b8794;
+  background: #eef2f7;
+  border: 1px solid #d8dee8;
+}
+
+.primary-action:hover,
+.primary-action:focus {
+  color: #9aa4b2;
+}`,
+  },
+};
+
+## What to review
+
+The good version specifies hover and keyboard focus states that preserve readable foreground and background contrast while making focus highly visible.
+
+The bad version renders a recognizable button, but the state change is low contrast and color-only, so it can be hard to detect or read.
+
+## Review notes
+
+In review, treat visual states as behavior, not decoration. The bad version is review-worthy even when it renders because a user may technically see a state change without having enough contrast or non-color signal to understand it.

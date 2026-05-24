@@ -1,0 +1,74 @@
+export const metadata = {
+  title: "Effect dependencies",
+  track: "react",
+  summary: "List every effect dependency and clean up async work when inputs change.",
+  tags: ["effects", "async", "state"],
+  takeaways: ["Complete dependency arrays make effects follow the data they read."],
+  goodCode: {
+    language: "tsx",
+    filename: "ReviewComments.tsx",
+    code: `import { useEffect, useState } from "react";
+
+type Comment = {
+  id: string;
+  body: string;
+};
+
+export function ReviewComments({ reviewId }: { reviewId: string }) {
+  const [comments, setComments] = useState<Comment[]>([]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadComments() {
+      const response = await fetch("/api/reviews/" + reviewId + "/comments", {
+        signal: controller.signal,
+      });
+      setComments(await response.json());
+    }
+
+    loadComments().catch((error) => {
+      if (error.name !== "AbortError") {
+        throw error;
+      }
+    });
+
+    return () => controller.abort();
+  }, [reviewId]);
+
+  return comments.map((comment) => <p key={comment.id}>{comment.body}</p>);
+}`,
+  },
+  badCode: {
+    language: "tsx",
+    filename: "ReviewComments.tsx",
+    code: `import { useEffect, useState } from "react";
+
+type Comment = {
+  id: string;
+  body: string;
+};
+
+export function ReviewComments({ reviewId }: { reviewId: string }) {
+  const [comments, setComments] = useState<Comment[]>([]);
+
+  useEffect(() => {
+    fetch("/api/reviews/" + reviewId + "/comments")
+      .then((response) => response.json())
+      .then(setComments);
+  }, []);
+
+  return comments.map((comment) => <p key={comment.id}>{comment.body}</p>);
+}`,
+  },
+};
+
+## What to review
+
+The good version lists `reviewId` as a dependency and aborts in-flight work when the component unmounts or the review changes.
+
+The bad version captures the initial `reviewId` forever, so it can display stale comments when the prop changes.
+
+## Review notes
+
+In review, compare every value read inside an effect with the dependency array. The bad version is review-worthy because it may pass casual testing on the first render while failing as soon as navigation reuses the component for another review.

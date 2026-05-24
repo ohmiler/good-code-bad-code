@@ -1,0 +1,34 @@
+export const metadata = {
+  title: "Accessible form labels",
+  track: "html",
+  summary: "Connect form controls to durable labels instead of relying on placeholder hints.",
+  tags: ["forms", "accessibility", "labels"],
+  takeaways: ["Use a real label so the input keeps its name before, during, and after editing."],
+  goodCode: {
+    language: "html",
+    filename: "signup-form.html",
+    code: `<form>
+  <label for="email">Email address</label>
+  <input id="email" name="email" type="email" autocomplete="email" />
+  <p id="email-help">Use the address where you want review updates.</p>
+</form>`,
+  },
+  badCode: {
+    language: "html",
+    filename: "signup-form.html",
+    code: `<form>
+  <input name="email" type="email" placeholder="Email address" />
+  <p>Use the address where you want review updates.</p>
+</form>`,
+  },
+};
+
+## What to review
+
+The good version gives the email field a persistent accessible name by pairing the `label` and `input` with matching identifiers.
+
+The bad version depends on placeholder text, which disappears as soon as someone types and does not provide the same durable relationship as a label.
+
+## Review notes
+
+In review, check whether every control can be identified without relying on visual position or temporary hint text. Placeholder-only fields can render neatly, but they make the form harder to review, translate, autofill, and use with assistive technology.

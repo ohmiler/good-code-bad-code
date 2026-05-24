@@ -1,0 +1,46 @@
+export const metadata = {
+  title: "Flex layout boundaries",
+  track: "css",
+  summary: "Keep flex spacing and alignment local to the component that owns the layout.",
+  tags: ["layout", "flexbox", "spacing"],
+  takeaways: ["Prefer local flex gaps over selectors that push margins onto every child."],
+  goodCode: {
+    language: "css",
+    filename: "review-toolbar.css",
+    code: `.review-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.review-toolbar__status {
+  margin-right: auto;
+}`,
+  },
+  badCode: {
+    language: "css",
+    filename: "review-toolbar.css",
+    code: `.review-toolbar {
+  display: flex;
+}
+
+.review-toolbar > * {
+  margin-left: 12px;
+}
+
+.review-toolbar > :first-child {
+  margin-left: 0;
+}`,
+  },
+};
+
+## What to review
+
+The good version makes spacing a property of the flex container and keeps the one alignment exception attached to the item that needs it.
+
+The bad version renders a row, but it spreads layout behavior across global child selectors that become fragile when children reorder, wrap, or include nested components.
+
+## Review notes
+
+In review, look for selectors that make every child pay for a layout decision. The bad version is worth calling out even when it looks fine because the next button, conditional badge, or wrapped line inherits spacing rules it did not explicitly ask for.

@@ -1,0 +1,52 @@
+export const metadata = {
+  title: "Narrowing unknown",
+  track: "typescript",
+  summary: "Check unknown values before using them as trusted application data.",
+  tags: ["unknown", "narrowing", "runtime-data"],
+  takeaways: ["Narrow unknown input to make invalid states harder to express after validation."],
+  goodCode: {
+    language: "typescript",
+    filename: "parse-settings.ts",
+    code: `type Settings = {
+  theme: "light" | "dark";
+};
+
+function isSettings(value: unknown): value is Settings {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "theme" in value &&
+    (value.theme === "light" || value.theme === "dark")
+  );
+}
+
+function readSettings(value: unknown): Settings {
+  if (!isSettings(value)) {
+    return { theme: "light" };
+  }
+
+  return value;
+}`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "parse-settings.ts",
+    code: `type Settings = {
+  theme: "light" | "dark";
+};
+
+function readSettings(value: unknown): Settings {
+  return value as any as Settings;
+}`,
+  },
+};
+
+## What to review
+
+The good version treats incoming data as unknown until a small runtime check proves it has the expected shape.
+
+The bad version tells TypeScript to trust the value without earning that trust, so invalid data can travel through the app as if it were safe.
+
+## Review notes
+
+In review, ask where the boundary between untrusted data and typed data is enforced. Casting through `any` is review-worthy because it removes the compiler's ability to make invalid states harder to express.

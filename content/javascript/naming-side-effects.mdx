@@ -1,0 +1,39 @@
+export const metadata = {
+  title: "Naming side effects",
+  track: "javascript",
+  summary: "Name functions so callers can see when data will be mutated.",
+  tags: ["naming", "mutation", "side-effects"],
+  takeaways: ["Make mutation visible in the function name or return a new value instead."],
+  goodCode: {
+    language: "javascript",
+    filename: "reviewers.js",
+    code: `function addReviewerInPlace(reviewers, reviewer) {
+  reviewers.push(reviewer);
+  return reviewers;
+}
+
+const reviewers = ["Ada"];
+addReviewerInPlace(reviewers, "Lin");`,
+  },
+  badCode: {
+    language: "javascript",
+    filename: "reviewers.js",
+    code: `function withReviewer(reviewers, reviewer) {
+  reviewers.push(reviewer);
+  return reviewers;
+}
+
+const reviewers = ["Ada"];
+const nextReviewers = withReviewer(reviewers, "Lin");`,
+  },
+};
+
+## What to review
+
+The good version makes the in-place mutation explicit, so the caller knows the original array changes.
+
+The bad version sounds like it returns a new collection, but it mutates the array it receives and can surprise callers that keep using the original reference.
+
+## Review notes
+
+In review, compare the function name with its side effects. Harmless-sounding mutation is review-worthy because future callers may make reasonable assumptions from the name and accidentally share changed state across features.

@@ -1,0 +1,35 @@
+export const metadata = {
+  title: "Precise function types",
+  track: "typescript",
+  summary: "Describe callbacks with the arguments and return value the caller actually supports.",
+  tags: ["functions", "callbacks", "api-design"],
+  takeaways: ["Use precise function signatures to make invalid calls harder to express."],
+  goodCode: {
+    language: "typescript",
+    filename: "review-actions.ts",
+    code: `type ReviewAction = "approve" | "request-changes";
+type ReviewHandler = (action: ReviewAction, comment: string) => void;
+
+function submitReview(handleReview: ReviewHandler) {
+  handleReview("approve", "Ready to merge.");
+}`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "review-actions.ts",
+    code: `function submitReview(handleReview: Function) {
+  handleReview("approve");
+  handleReview("delete-branch", 42, true);
+}`,
+  },
+};
+
+## What to review
+
+The good version documents exactly which actions and arguments the callback accepts.
+
+The bad version accepts any callable value, so TypeScript cannot help reviewers spot missing arguments, unsupported actions, or unexpected return contracts.
+
+## Review notes
+
+In review, treat `Function` as a sign that the API boundary is underspecified. The bad version is review-worthy because broad callback types make invalid calls easier to express and harder to catch before runtime.
