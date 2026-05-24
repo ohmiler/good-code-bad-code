@@ -1,0 +1,70 @@
+export const metadata = {
+  title: "Small client component islands",
+  track: "nextjs",
+  order: 4,
+  summary: "Place client-only behavior in the smallest component that needs it.",
+  tags: ["client-components", "bundle-size", "interactivity"],
+  takeaways: ["A tiny client island keeps static UI and server data out of the browser bundle."],
+  goodCode: {
+    language: "tsx",
+    filename: "app/layout.tsx",
+    code: `import { SearchBox } from "./search-box";
+import { SiteLogo } from "./site-logo";
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <body>
+        <header>
+          <SiteLogo />
+          <SearchBox />
+        </header>
+        {children}
+      </body>
+    </html>
+  );
+}`,
+  },
+  badCode: {
+    language: "tsx",
+    filename: "app/layout.tsx",
+    code: `"use client";
+
+import { useState } from "react";
+import { SiteLogo } from "./site-logo";
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [query, setQuery] = useState("");
+
+  return (
+    <html lang="en">
+      <body>
+        <header>
+          <SiteLogo />
+          <input value={query} onChange={(event) => setQuery(event.target.value)} />
+        </header>
+        {children}
+      </body>
+    </html>
+  );
+}`,
+  },
+};
+
+## What to review
+
+The good version keeps the root layout server-rendered and imports a small Client Component for the search interaction.
+
+The bad version marks the root layout as a Client Component just to hold input state, making static shell and imported children part of the client graph.
+
+## Review notes
+
+In review, search for browser-only hooks in large files. The bad version is review-worthy because it solves a small interaction by moving a large boundary, increasing hydration work and bundle size.

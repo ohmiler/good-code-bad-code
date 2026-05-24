@@ -1,0 +1,60 @@
+export const metadata = {
+  title: "Loading and error boundaries",
+  track: "nextjs",
+  order: 7,
+  summary: "Give dynamic routes immediate loading UI and route-level recovery.",
+  tags: ["loading", "errors", "streaming"],
+  takeaways: ["Use loading and error files to keep navigation responsive and failures contained."],
+  goodCode: {
+    language: "tsx",
+    filename: "app/dashboard/reviews/error.tsx",
+    code: `"use client";
+
+import { useEffect } from "react";
+
+export default function ReviewsError({
+  error,
+  unstable_retry,
+}: {
+  error: Error & { digest?: string };
+  unstable_retry: () => void;
+}) {
+  useEffect(() => {
+    console.error(error);
+  }, [error]);
+
+  return (
+    <section role="alert">
+      <h2>Reviews could not load.</h2>
+      <button type="button" onClick={() => unstable_retry()}>
+        Try again
+      </button>
+    </section>
+  );
+}`,
+  },
+  badCode: {
+    language: "tsx",
+    filename: "app/dashboard/reviews/page.tsx",
+    code: `import { getReviews } from "@/lib/reviews";
+
+export default async function ReviewsPage() {
+  try {
+    const reviews = await getReviews();
+    return reviews.map((review) => <p key={review.id}>{review.title}</p>);
+  } catch {
+    return <p>Something went wrong.</p>;
+  }
+}`,
+  },
+};
+
+## What to review
+
+The good version uses a route-level `error.tsx` Client Component so unexpected render failures are contained and retryable.
+
+The bad version catches every exception inside the page, hiding failures from the route boundary and leaving navigation without a meaningful loading strategy.
+
+## Review notes
+
+In review, look for dynamic routes without `loading.tsx` or recoverable error boundaries. The bad version is review-worthy because it turns unexpected failures into silent UI states and gives users no clear recovery path.

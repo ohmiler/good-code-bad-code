@@ -155,6 +155,36 @@ import ReactMemoizationWhenItHelps, {
 import ReactCompositionOverPropFlags, {
   metadata as reactCompositionOverPropFlagsMetadata,
 } from "./react/composition-over-prop-flags.mdx";
+import NextjsAppRouterFileConventions, {
+  metadata as nextjsAppRouterFileConventionsMetadata,
+} from "./nextjs/app-router-file-conventions.mdx";
+import NextjsLayoutPageBoundaries, {
+  metadata as nextjsLayoutPageBoundariesMetadata,
+} from "./nextjs/layout-page-boundaries.mdx";
+import NextjsServerClientComponents, {
+  metadata as nextjsServerClientComponentsMetadata,
+} from "./nextjs/server-client-components.mdx";
+import NextjsSmallClientIslands, {
+  metadata as nextjsSmallClientIslandsMetadata,
+} from "./nextjs/small-client-islands.mdx";
+import NextjsServerSideDataFetching, {
+  metadata as nextjsServerSideDataFetchingMetadata,
+} from "./nextjs/server-side-data-fetching.mdx";
+import NextjsParallelDataFetching, {
+  metadata as nextjsParallelDataFetchingMetadata,
+} from "./nextjs/parallel-data-fetching.mdx";
+import NextjsLoadingErrorBoundaries, {
+  metadata as nextjsLoadingErrorBoundariesMetadata,
+} from "./nextjs/loading-error-boundaries.mdx";
+import NextjsCachingRevalidationIntent, {
+  metadata as nextjsCachingRevalidationIntentMetadata,
+} from "./nextjs/caching-revalidation-intent.mdx";
+import NextjsMetadataPerRoute, {
+  metadata as nextjsMetadataPerRouteMetadata,
+} from "./nextjs/metadata-per-route.mdx";
+import NextjsRouteHandlersApiBoundaries, {
+  metadata as nextjsRouteHandlersApiBoundariesMetadata,
+} from "./nextjs/route-handlers-api-boundaries.mdx";
 
 type RawLesson = {
   slug: string;
@@ -463,6 +493,66 @@ const rawLessons: RawLesson[] = [
     source: "content/react/composition-over-prop-flags.mdx",
     metadata: reactCompositionOverPropFlagsMetadata,
     Component: ReactCompositionOverPropFlags,
+  },
+  {
+    slug: "app-router-file-conventions",
+    source: "content/nextjs/app-router-file-conventions.mdx",
+    metadata: nextjsAppRouterFileConventionsMetadata,
+    Component: NextjsAppRouterFileConventions,
+  },
+  {
+    slug: "layout-page-boundaries",
+    source: "content/nextjs/layout-page-boundaries.mdx",
+    metadata: nextjsLayoutPageBoundariesMetadata,
+    Component: NextjsLayoutPageBoundaries,
+  },
+  {
+    slug: "server-client-components",
+    source: "content/nextjs/server-client-components.mdx",
+    metadata: nextjsServerClientComponentsMetadata,
+    Component: NextjsServerClientComponents,
+  },
+  {
+    slug: "small-client-islands",
+    source: "content/nextjs/small-client-islands.mdx",
+    metadata: nextjsSmallClientIslandsMetadata,
+    Component: NextjsSmallClientIslands,
+  },
+  {
+    slug: "server-side-data-fetching",
+    source: "content/nextjs/server-side-data-fetching.mdx",
+    metadata: nextjsServerSideDataFetchingMetadata,
+    Component: NextjsServerSideDataFetching,
+  },
+  {
+    slug: "parallel-data-fetching",
+    source: "content/nextjs/parallel-data-fetching.mdx",
+    metadata: nextjsParallelDataFetchingMetadata,
+    Component: NextjsParallelDataFetching,
+  },
+  {
+    slug: "loading-error-boundaries",
+    source: "content/nextjs/loading-error-boundaries.mdx",
+    metadata: nextjsLoadingErrorBoundariesMetadata,
+    Component: NextjsLoadingErrorBoundaries,
+  },
+  {
+    slug: "caching-revalidation-intent",
+    source: "content/nextjs/caching-revalidation-intent.mdx",
+    metadata: nextjsCachingRevalidationIntentMetadata,
+    Component: NextjsCachingRevalidationIntent,
+  },
+  {
+    slug: "metadata-per-route",
+    source: "content/nextjs/metadata-per-route.mdx",
+    metadata: nextjsMetadataPerRouteMetadata,
+    Component: NextjsMetadataPerRoute,
+  },
+  {
+    slug: "route-handlers-api-boundaries",
+    source: "content/nextjs/route-handlers-api-boundaries.mdx",
+    metadata: nextjsRouteHandlersApiBoundariesMetadata,
+    Component: NextjsRouteHandlersApiBoundaries,
   },
 ];
 

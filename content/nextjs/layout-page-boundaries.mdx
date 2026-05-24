@@ -1,0 +1,59 @@
+export const metadata = {
+  title: "Layout and page boundaries",
+  track: "nextjs",
+  order: 2,
+  summary: "Keep shared chrome in layouts and route-specific data in pages.",
+  tags: ["layouts", "pages", "routing"],
+  takeaways: ["Layouts should hold persistent UI while pages own the leaf route content."],
+  goodCode: {
+    language: "tsx",
+    filename: "app/dashboard/layout.tsx",
+    code: `import Link from "next/link";
+
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <section>
+      <nav aria-label="Dashboard">
+        <Link href="/dashboard">Overview</Link>
+        <Link href="/dashboard/reviews">Reviews</Link>
+      </nav>
+      <main>{children}</main>
+    </section>
+  );
+}`,
+  },
+  badCode: {
+    language: "tsx",
+    filename: "app/dashboard/layout.tsx",
+    code: `import { getLatestReviews } from "@/lib/reviews";
+
+export default async function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const reviews = await getLatestReviews();
+
+  return (
+    <section>
+      <aside>{reviews.length} reviews need attention</aside>
+      <main>{children}</main>
+    </section>
+  );
+}`,
+  },
+};
+
+## What to review
+
+The good version uses the layout for persistent navigation and places route-specific content in the child page.
+
+The bad version fetches leaf-page data inside the layout, so every child route can be blocked by data it may not need.
+
+## Review notes
+
+In review, ask whether a layout dependency is truly shared by all child routes. The bad version is review-worthy because layouts persist across navigation, so putting page-specific work there can make unrelated pages slower and harder to stream.

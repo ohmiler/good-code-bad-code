@@ -1,0 +1,65 @@
+export const metadata = {
+  title: "Server-side data fetching",
+  track: "nextjs",
+  order: 5,
+  summary: "Fetch route data on the server when the page needs it before rendering.",
+  tags: ["data-fetching", "server-components", "not-found"],
+  takeaways: ["Server Components can fetch data close to the source without exposing secrets to the client."],
+  goodCode: {
+    language: "tsx",
+    filename: "app/articles/[slug]/page.tsx",
+    code: `import { notFound } from "next/navigation";
+import { getArticleBySlug } from "@/lib/articles";
+
+export default async function ArticlePage({
+  params,
+}: PageProps<"/articles/[slug]">) {
+  const { slug } = await params;
+  const article = await getArticleBySlug(slug);
+
+  if (!article) {
+    notFound();
+  }
+
+  return (
+    <article>
+      <h1>{article.title}</h1>
+      <p>{article.excerpt}</p>
+    </article>
+  );
+}`,
+  },
+  badCode: {
+    language: "tsx",
+    filename: "app/articles/[slug]/article-client.tsx",
+    code: `"use client";
+
+import { useEffect, useState } from "react";
+
+export function ArticleClient({ slug }: { slug: string }) {
+  const [article, setArticle] = useState(null);
+
+  useEffect(() => {
+    fetch("/api/articles/" + slug)
+      .then((response) => response.json())
+      .then(setArticle);
+  }, [slug]);
+
+  if (!article) {
+    return <p>Loading article...</p>;
+  }
+
+  return <h1>{article.title}</h1>;
+}`,
+  },
+};
+
+## What to review
+
+The good version fetches the article before rendering the page and uses `notFound()` for a missing slug.
+
+The bad version delays essential page data until after client hydration and adds an API hop for data the server route can already read.
+
+## Review notes
+
+In review, separate data needed for the first meaningful render from data that is truly client-only. The bad version is review-worthy because it creates slower loading, weaker SEO, and duplicate API surface without a real browser requirement.

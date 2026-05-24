@@ -1,0 +1,57 @@
+export const metadata = {
+  title: "Route handlers as API boundaries",
+  track: "nextjs",
+  order: 10,
+  summary: "Use route handlers for HTTP APIs and keep them separate from page UI.",
+  tags: ["route-handlers", "api", "boundaries"],
+  takeaways: ["Route handlers should validate requests and return explicit HTTP responses."],
+  goodCode: {
+    language: "typescript",
+    filename: "app/api/reviews/[id]/route.ts",
+    code: `import { NextResponse } from "next/server";
+import { getReview } from "@/lib/reviews";
+
+export async function GET(
+  _request: Request,
+  context: RouteContext<"/api/reviews/[id]">,
+) {
+  const { id } = await context.params;
+  const review = await getReview(id);
+
+  if (!review) {
+    return NextResponse.json(
+      { error: "Review not found." },
+      { status: 404 },
+    );
+  }
+
+  return NextResponse.json({ review });
+}`,
+  },
+  badCode: {
+    language: "tsx",
+    filename: "app/reviews/[id]/page.tsx",
+    code: `import { getReview } from "@/lib/reviews";
+
+export async function GET() {
+  const review = await getReview("current");
+  return Response.json(review);
+}
+
+export default async function ReviewPage() {
+  const review = await getReview("current");
+
+  return <h1>{review.title}</h1>;
+}`,
+  },
+};
+
+## What to review
+
+The good version keeps the HTTP API in a `route.ts` file and returns explicit JSON with a 404 when the record is missing.
+
+The bad version mixes a route handler and page UI at the same segment, which conflicts with App Router route resolution and blurs the API boundary.
+
+## Review notes
+
+In review, verify whether the code is serving UI or HTTP data. The bad version is review-worthy because pages and route handlers are different routing primitives and should not be colocated at the same route segment.

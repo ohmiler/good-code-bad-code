@@ -1,0 +1,62 @@
+export const metadata = {
+  title: "Parallel data fetching",
+  track: "nextjs",
+  order: 6,
+  summary: "Start independent data requests before awaiting them to avoid waterfalls.",
+  tags: ["data-fetching", "performance", "async"],
+  takeaways: ["Independent server requests should be initiated together, then awaited together."],
+  goodCode: {
+    language: "tsx",
+    filename: "app/projects/[projectId]/page.tsx",
+    code: `import { getProject, getReviewSummary } from "@/lib/projects";
+
+export default async function ProjectPage({
+  params,
+}: PageProps<"/projects/[projectId]">) {
+  const { projectId } = await params;
+  const projectPromise = getProject(projectId);
+  const summaryPromise = getReviewSummary(projectId);
+  const [project, summary] = await Promise.all([
+    projectPromise,
+    summaryPromise,
+  ]);
+
+  return (
+    <section>
+      <h1>{project.name}</h1>
+      <p>{summary.openCount} open reviews</p>
+    </section>
+  );
+}`,
+  },
+  badCode: {
+    language: "tsx",
+    filename: "app/projects/[projectId]/page.tsx",
+    code: `import { getProject, getReviewSummary } from "@/lib/projects";
+
+export default async function ProjectPage({
+  params,
+}: PageProps<"/projects/[projectId]">) {
+  const { projectId } = await params;
+  const project = await getProject(projectId);
+  const summary = await getReviewSummary(projectId);
+
+  return (
+    <section>
+      <h1>{project.name}</h1>
+      <p>{summary.openCount} open reviews</p>
+    </section>
+  );
+}`,
+  },
+};
+
+## What to review
+
+The good version starts both independent requests before waiting, so the route waits for the slower request rather than the sum of both.
+
+The bad version awaits each request in sequence even though the second request does not depend on the first result.
+
+## Review notes
+
+In review, trace whether an `await` depends on a previous result. The bad version is review-worthy because server rendering makes waterfalls easy to write and hard to notice without looking at request timing.

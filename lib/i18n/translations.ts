@@ -88,6 +88,11 @@ export const trackThaiTranslations = {
     description:
       "ฝึกรีวิวขอบเขต component, state, effect และการ render ที่คาดเดาได้.",
   },
+  nextjs: {
+    title: "Next.js",
+    description:
+      "ฝึกรีวิว App Router, server boundary, data fetching, caching และ route API.",
+  },
 } as const satisfies Record<TrackSlug, TrackTranslation>;
 
 export const lessonThaiTranslations = {
@@ -689,6 +694,126 @@ export const lessonThaiTranslations = {
     ],
     reviewNotes: [
       "ถ้าทุก requirement ใหม่ทำให้ component เพิ่ม flag อีกตัว ให้ลองมองหา composition. API แบบ slot ช่วยให้ caller สร้าง UI ที่ต้องการโดยไม่บังคับ component ให้รู้ทุก variant.",
+    ],
+  },
+  "nextjs/app-router-file-conventions": {
+    title: "โครงไฟล์ App Router",
+    summary: "ใช้ folder และ special file ของ App Router ให้ route ตรงกับ convention ของ Next.js.",
+    takeaways: ["route ที่ดีควรให้โครง folder เป็นตัวบอก URL และ dynamic segment."],
+    whatToReview: [
+      "โค้ดที่ดีใช้ `app/projects/[projectId]/page.tsx` และอ่าน params จาก route props ที่ Next.js ส่งให้.",
+      "โค้ดที่ควรปรับตั้งชื่อไฟล์เองและแยก URL ด้วย browser API ทำให้เสีย routing feature ของ framework.",
+    ],
+    reviewNotes: [
+      "ตอนรีวิว Next.js ให้เริ่มจากโครงไฟล์ก่อน. ถ้า route ไม่ตรง App Router convention มักจะเสีย typing, static params และ behavior ที่ Next.js เตรียมไว้.",
+    ],
+  },
+  "nextjs/layout-page-boundaries": {
+    title: "ขอบเขต layout กับ page",
+    summary: "ให้ layout เก็บ UI ที่ใช้ร่วมกัน ส่วน page รับผิดชอบข้อมูลและเนื้อหาของ route ปลายทาง.",
+    takeaways: ["layout ควรเป็น shared shell ไม่ใช่ที่รวม data fetching ของทุกหน้า."],
+    whatToReview: [
+      "โค้ดที่ดีวาง navigation ที่อยู่ร่วมทุก child route ใน layout และปล่อยให้ children render page เฉพาะทาง.",
+      "โค้ดที่ควรปรับ fetch ข้อมูลเฉพาะหน้าลงใน layout ทำให้ child route ที่ไม่เกี่ยวข้องต้องรอไปด้วย.",
+    ],
+    reviewNotes: [
+      "เวลาเห็น layout fetch ข้อมูล ให้ถามว่าทุกหน้าลูกต้องใช้จริงไหม. layout อยู่ค้างระหว่าง navigation จึงควรเก็บเฉพาะ UI หรือข้อมูลที่ shared จริง.",
+    ],
+  },
+  "nextjs/server-client-components": {
+    title: "Server และ Client Component",
+    summary: "ใช้ Server Component กับข้อมูลและ secret ส่วน Client Component ใช้เฉพาะจุดที่ต้องมี interaction.",
+    takeaways: ["อย่าใส่ `use client` ให้ทั้ง route เพียงเพราะ child component หนึ่งต้องมี state."],
+    whatToReview: [
+      "โค้ดที่ดี fetch review ใน Server Component แล้วส่งข้อมูลที่ต้อง interactive ให้ Client Component เล็ก ๆ.",
+      "โค้ดที่ควรปรับย้ายทั้ง page ไป client ทำให้ fetch หลัง hydration และเสียประโยชน์จาก server rendering.",
+    ],
+    reviewNotes: [
+      "ตอนรีวิวให้ระวัง `use client` ที่อยู่สูงเกินไป. directive นี้ทำให้ imports ใน module graph กลายเป็น client bundle จึงควรวางที่ขอบเขตเล็กที่สุด.",
+    ],
+  },
+  "nextjs/small-client-islands": {
+    title: "client island ขนาดเล็ก",
+    summary: "แยก behavior ที่ต้องใช้ browser ไว้ใน component เล็กที่สุด เพื่อรักษา server shell ให้เบา.",
+    takeaways: ["client island เล็กช่วยลด JavaScript และ hydration ที่ไม่จำเป็น."],
+    whatToReview: [
+      "โค้ดที่ดีให้ root layout เป็น Server Component และ import SearchBox ที่เป็น client เฉพาะจุด.",
+      "โค้ดที่ควรปรับทำให้ root layout เป็น client เพียงเพื่อเก็บ state ของ input เดียว.",
+    ],
+    reviewNotes: [
+      "ถ้า hook อย่าง useState หรือ useEffect โผล่ในไฟล์ใหญ่ ให้ถามว่าสามารถแยกเป็น client island ได้ไหม. วิธีนี้ช่วยให้ static UI ไม่ถูกลากเข้าบราวเซอร์.",
+    ],
+  },
+  "nextjs/server-side-data-fetching": {
+    title: "fetch ข้อมูลฝั่ง server",
+    summary: "ดึงข้อมูลที่จำเป็นต่อหน้าใน Server Component เพื่อ render หน้าด้วยข้อมูลพร้อมใช้.",
+    takeaways: ["ข้อมูลที่จำเป็นต่อ first render มักควรถูก fetch ใน server route ไม่ใช่หลัง hydration."],
+    whatToReview: [
+      "โค้ดที่ดี await params ตามรูปแบบ Next.js แล้ว fetch article ฝั่ง server พร้อมใช้ notFound เมื่อไม่พบข้อมูล.",
+      "โค้ดที่ควรปรับ fetch ข้อมูลหลักของหน้าผ่าน client effect ทำให้ผู้ใช้และ crawler เห็น loading ก่อนเสมอ.",
+    ],
+    reviewNotes: [
+      "ตอนรีวิวให้แยกข้อมูลที่จำเป็นต่อหน้าออกจากข้อมูล client-only. การเพิ่ม API hop โดยไม่จำเป็นมักทำให้ช้าลงและเพิ่ม boundary ให้ดูแล.",
+    ],
+  },
+  "nextjs/parallel-data-fetching": {
+    title: "fetch ข้อมูลแบบ parallel",
+    summary: "เริ่ม request ที่ไม่ขึ้นต่อกันพร้อมกัน แล้วค่อย await พร้อมกันเพื่อลด waterfall.",
+    takeaways: ["ถ้า request ไม่พึ่งผลลัพธ์กัน ให้เริ่มก่อน await ด้วย Promise.all."],
+    whatToReview: [
+      "โค้ดที่ดีเริ่ม projectPromise และ summaryPromise ก่อน แล้ว await พร้อมกัน.",
+      "โค้ดที่ควรปรับ await request แรกจบก่อนเริ่ม request ที่สอง ทั้งที่ข้อมูลไม่พึ่งกัน.",
+    ],
+    reviewNotes: [
+      "เวลารีวิว async server component ให้ไล่ dependency ของแต่ละ await. waterfall ใน server rendering มักดูเรียบง่ายแต่ทำให้ route ช้าตามผลรวมของทุก request.",
+    ],
+  },
+  "nextjs/loading-error-boundaries": {
+    title: "loading และ error boundary",
+    summary: "ใช้ loading และ error file เพื่อให้ dynamic route มี feedback ทันทีและกู้คืนจาก error ได้.",
+    takeaways: ["route ที่ดีควรมี loading UI และ error boundary ตามจุดที่ failure กระทบผู้ใช้."],
+    whatToReview: [
+      "โค้ดที่ดีใช้ `error.tsx` เป็น Client Component ที่แสดง fallback และปุ่ม retry.",
+      "โค้ดที่ควรปรับ catch error ทุกอย่างใน page ทำให้ boundary จับไม่ได้และผู้ใช้ไม่มีทาง retry ชัดเจน.",
+    ],
+    reviewNotes: [
+      "ตอนรีวิว route ที่ fetch ข้อมูลช้า ให้มองหา loading state และ error boundary. การ return ข้อความกว้าง ๆ จาก catch มักซ่อน bug และทำให้ observability แย่ลง.",
+    ],
+  },
+  "nextjs/caching-revalidation-intent": {
+    title: "เจตนา caching และ revalidation",
+    summary: "ระบุให้ชัดว่าข้อมูลควรสดทุก request หรือ cache ได้ พร้อมอายุและ tag ที่ใช้ revalidate.",
+    takeaways: ["อย่าพึ่ง assumption ว่า fetch จะ cache ให้เอง ถ้าต้อง cache ให้ประกาศเจตนาไว้ในโค้ด."],
+    whatToReview: [
+      "โค้ดที่ดีใช้ `use cache`, cacheLife และ cacheTag เพื่อบอกว่าบทความเผยแพร่ cache ได้เป็นชั่วโมง.",
+      "โค้ดที่ควรปรับ fetch จาก CMS โดยไม่มี policy ทำให้ freshness และ performance คลุมเครือ.",
+    ],
+    reviewNotes: [
+      "ใน Next.js รุ่นนี้ fetch ไม่ได้ cache โดย default. ตอนรีวิวให้ถามเสมอว่าข้อมูลนี้ต้องสดแค่ไหน และ mutation ใดควร revalidate cache นี้.",
+    ],
+  },
+  "nextjs/metadata-per-route": {
+    title: "metadata ราย route",
+    summary: "ใช้ Metadata API หรือ generateMetadata ฝั่ง server แทนการแก้ document head ด้วย client effect.",
+    takeaways: ["metadata ของ route ควรเป็นส่วนหนึ่งของ route contract ไม่ใช่ side effect ใน browser."],
+    whatToReview: [
+      "โค้ดที่ดีสร้าง title และ description จากข้อมูล article ใน generateMetadata.",
+      "โค้ดที่ควรปรับตั้ง document.title หลัง hydration ทำให้ crawler หรือ social preview พลาด metadata สำคัญได้.",
+    ],
+    reviewNotes: [
+      "ตอนรีวิว SEO ใน App Router ให้มองหา metadata export หรือ generateMetadata. ถ้า head ถูกแก้ใน useEffect แปลว่าข้อมูลสำคัญมาช้าเกินไป.",
+    ],
+  },
+  "nextjs/route-handlers-api-boundaries": {
+    title: "Route Handler เป็น API boundary",
+    summary: "ใช้ route.ts สำหรับ HTTP API แยกจาก page UI และตอบ status ให้ชัดเจน.",
+    takeaways: ["Route Handler ควร validate request และคืน Response ที่บอก error/status ชัดเจน."],
+    whatToReview: [
+      "โค้ดที่ดีวาง API ไว้ใน `app/api/reviews/[id]/route.ts` และตอบ 404 เมื่อไม่พบ review.",
+      "โค้ดที่ควรปรับผสม GET handler กับ page ที่ segment เดียวกัน ทำให้ชนกับ route resolution ของ App Router.",
+    ],
+    reviewNotes: [
+      "ตอนรีวิวให้ถามว่าไฟล์นี้กำลัง serve UI หรือ HTTP data. page และ route handler เป็น primitive คนละแบบและไม่ควรอยู่ระดับ route เดียวกัน.",
     ],
   },
 } as const satisfies Record<string, LessonThaiTranslation>;

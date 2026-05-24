@@ -1,0 +1,38 @@
+export const metadata = {
+  title: "App Router file conventions",
+  track: "nextjs",
+  order: 1,
+  summary: "Use App Router folders and special files so routes match Next.js conventions.",
+  tags: ["routing", "app-router", "files"],
+  takeaways: ["Routes should be expressed with folders and special files, not invented naming schemes."],
+  goodCode: {
+    language: "tsx",
+    filename: "app/projects/[projectId]/page.tsx",
+    code: `export default async function ProjectPage({
+  params,
+}: PageProps<"/projects/[projectId]">) {
+  const { projectId } = await params;
+
+  return <h1>Project {projectId}</h1>;
+}`,
+  },
+  badCode: {
+    language: "tsx",
+    filename: "app/projects-projectId.tsx",
+    code: `export default function ProjectsProjectIdPage() {
+  const projectId = window.location.pathname.split("/").at(-1);
+
+  return <h1>Project {projectId}</h1>;
+}`,
+  },
+};
+
+## What to review
+
+The good version lets the folder path define the route and reads the dynamic segment through the route props that Next.js provides.
+
+The bad version invents a flat filename convention and parses the URL manually, which bypasses routing, typing, prerendering, and static params support.
+
+## Review notes
+
+In review, check whether route segments, dynamic params, and special files match the App Router model. The bad version is review-worthy because it makes routing look like ordinary React while losing the framework behavior that Next.js gives for free.

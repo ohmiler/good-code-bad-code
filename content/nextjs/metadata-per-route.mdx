@@ -1,0 +1,60 @@
+export const metadata = {
+  title: "Metadata per route",
+  track: "nextjs",
+  order: 9,
+  summary: "Use the Metadata API in Server Components instead of mutating the document head manually.",
+  tags: ["metadata", "seo", "routing"],
+  takeaways: ["Route metadata should live in metadata exports or generateMetadata."],
+  goodCode: {
+    language: "tsx",
+    filename: "app/articles/[slug]/page.tsx",
+    code: `import type { Metadata } from "next";
+import { getArticleBySlug } from "@/lib/articles";
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/articles/[slug]">): Promise<Metadata> {
+  const { slug } = await params;
+  const article = await getArticleBySlug(slug);
+
+  return {
+    title: article?.title ?? "Article not found",
+    description: article?.excerpt ?? "This article is not available.",
+  };
+}
+
+export default async function ArticlePage({
+  params,
+}: PageProps<"/articles/[slug]">) {
+  const { slug } = await params;
+  const article = await getArticleBySlug(slug);
+
+  return <h1>{article?.title}</h1>;
+}`,
+  },
+  badCode: {
+    language: "tsx",
+    filename: "app/articles/[slug]/article-title.tsx",
+    code: `"use client";
+
+import { useEffect } from "react";
+
+export function ArticleTitle({ title }: { title: string }) {
+  useEffect(() => {
+    document.title = title;
+  }, [title]);
+
+  return <h1>{title}</h1>;
+}`,
+  },
+};
+
+## What to review
+
+The good version lets Next.js generate route metadata from server-side article data.
+
+The bad version updates `document.title` after hydration, so crawlers and social previews can miss the route-specific metadata.
+
+## Review notes
+
+In review, check whether metadata is declared through `metadata` or `generateMetadata`. The bad version is review-worthy because head state is treated as a client effect instead of part of the route contract.

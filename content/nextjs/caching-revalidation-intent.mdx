@@ -1,0 +1,43 @@
+export const metadata = {
+  title: "Caching and revalidation intent",
+  track: "nextjs",
+  order: 8,
+  summary: "Make caching choices explicit so freshness and performance match the product need.",
+  tags: ["caching", "revalidation", "performance"],
+  takeaways: ["Cache data with an explicit lifetime or tag when shared content can be reused."],
+  goodCode: {
+    language: "typescript",
+    filename: "lib/posts.ts",
+    code: `import { cacheLife, cacheTag } from "next/cache";
+
+export async function getPublishedPosts() {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("posts");
+
+  return db.post.findMany({
+    where: { published: true },
+    orderBy: { publishedAt: "desc" },
+  });
+}`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "lib/posts.ts",
+    code: `export async function getPublishedPosts() {
+  const response = await fetch("https://cms.example.com/posts");
+
+  return response.json();
+}`,
+  },
+};
+
+## What to review
+
+The good version states that published posts can be cached for hours and tagged for targeted revalidation.
+
+The bad version relies on an unstated assumption that framework fetches are cached, which is not true by default in this Next.js version.
+
+## Review notes
+
+In review, ask whether the data should be fresh per request, cached for a period, or revalidated by mutation. The bad version is review-worthy because hidden caching assumptions cause either slow pages or stale content depending on how the app evolves.

@@ -29,6 +29,12 @@ export const tracks = [
     description:
       "Review component boundaries, state, effects, and rendering decisions.",
   },
+  {
+    slug: "nextjs",
+    title: "Next.js",
+    description:
+      "Review App Router structure, server boundaries, data fetching, and route APIs.",
+  },
 ] as const;
 
 export type Track = (typeof tracks)[number];
