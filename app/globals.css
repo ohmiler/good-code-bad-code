@@ -31,6 +31,11 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+html[lang="th"] body {
+  font-family: var(--font-ibm-plex-sans-thai), var(--font-geist-sans),
+    "Segoe UI", Arial, Helvetica, sans-serif;
+}
+
 a {
   text-decoration: none;
 }
