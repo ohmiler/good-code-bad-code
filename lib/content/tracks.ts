@@ -1,0 +1,45 @@
+export const tracks = [
+  {
+    slug: "html",
+    title: "HTML",
+    description:
+      "Review structure, semantics, forms, and accessible document foundations.",
+  },
+  {
+    slug: "css",
+    title: "CSS",
+    description:
+      "Review layout, responsive styling, contrast, and maintainable selectors.",
+  },
+  {
+    slug: "javascript",
+    title: "JavaScript",
+    description:
+      "Review control flow, async behavior, naming, and side effects.",
+  },
+  {
+    slug: "typescript",
+    title: "TypeScript",
+    description:
+      "Review type narrowing, API boundaries, unions, and safer function shapes.",
+  },
+  {
+    slug: "react",
+    title: "React",
+    description:
+      "Review component boundaries, state, effects, and rendering decisions.",
+  },
+] as const;
+
+export type Track = (typeof tracks)[number];
+export type TrackSlug = Track["slug"];
+
+const trackSlugs = new Set<string>(tracks.map((track) => track.slug));
+
+export function isTrackSlug(value: string): value is TrackSlug {
+  return trackSlugs.has(value);
+}
+
+export function getTrack(slug: string): Track | undefined {
+  return tracks.find((track) => track.slug === slug);
+}
