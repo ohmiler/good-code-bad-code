@@ -1,0 +1,50 @@
+export const metadata = {
+  title: "Interfaces at boundaries",
+  track: "go",
+  order: 5,
+  summary: "Define small interfaces where behavior is consumed instead of forcing every producer to satisfy a large package-wide contract.",
+  tags: ["interfaces", "dependencies", "testing"],
+  takeaways: ["In Go, interfaces are most useful when they describe what the caller needs right now."],
+  goodCode: {
+    language: "go",
+    filename: "reviews/notifier.go",
+    code: `type Mailer interface {
+    Send(ctx context.Context, message Message) error
+}
+
+type Service struct {
+    mailer Mailer
+}
+
+func (s *Service) RequestReview(ctx context.Context, review Review) error {
+    return s.mailer.Send(ctx, Message{
+        To:      review.ReviewerEmail,
+        Subject: "Review requested",
+    })
+}`,
+  },
+  badCode: {
+    language: "go",
+    filename: "notifications/client.go",
+    code: `type NotificationClient interface {
+    SendEmail(ctx context.Context, to string, subject string, body string) error
+    SendSMS(ctx context.Context, phone string, body string) error
+    SendSlack(ctx context.Context, channel string, body string) error
+    Close() error
+}
+
+func RequestReview(ctx context.Context, client NotificationClient, review Review) error {
+    return client.SendEmail(ctx, review.ReviewerEmail, "Review requested", "")
+}`,
+  },
+};
+
+## What to review
+
+The good version names the one behavior the service needs, so production clients and tests can provide the smallest useful implementation.
+
+The bad version makes a caller depend on email, SMS, Slack, and lifecycle methods even though it only sends one email.
+
+## Review notes
+
+Small interfaces keep package boundaries flexible. If a function only calls one method, requiring a four-method interface is usually a coupling smell.

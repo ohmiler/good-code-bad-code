@@ -365,6 +365,36 @@ import DjangoTransactionsAndSideEffects, {
 import DjangoTestsClientAndFixtures, {
   metadata as djangoTestsClientAndFixturesMetadata,
 } from "./django/tests-client-and-fixtures.mdx";
+import GoPackageAndFileOrganization, {
+  metadata as goPackageAndFileOrganizationMetadata,
+} from "./go/package-and-file-organization.mdx";
+import GoNamingAndExportedApi, {
+  metadata as goNamingAndExportedApiMetadata,
+} from "./go/naming-and-exported-api.mdx";
+import GoErrorHandlingWrapping, {
+  metadata as goErrorHandlingWrappingMetadata,
+} from "./go/error-handling-wrapping.mdx";
+import GoContextCancellation, {
+  metadata as goContextCancellationMetadata,
+} from "./go/context-cancellation.mdx";
+import GoInterfacesAtBoundaries, {
+  metadata as goInterfacesAtBoundariesMetadata,
+} from "./go/interfaces-at-boundaries.mdx";
+import GoStructValidationZeroValues, {
+  metadata as goStructValidationZeroValuesMetadata,
+} from "./go/struct-validation-zero-values.mdx";
+import GoGoroutinesAndChannelOwnership, {
+  metadata as goGoroutinesAndChannelOwnershipMetadata,
+} from "./go/goroutines-and-channel-ownership.mdx";
+import GoDeferResourceCleanup, {
+  metadata as goDeferResourceCleanupMetadata,
+} from "./go/defer-resource-cleanup.mdx";
+import GoTableDrivenTests, {
+  metadata as goTableDrivenTestsMetadata,
+} from "./go/table-driven-tests.mdx";
+import GoJsonHttpHandlerBoundaries, {
+  metadata as goJsonHttpHandlerBoundariesMetadata,
+} from "./go/json-http-handler-boundaries.mdx";
 
 type RawLesson = {
   slug: string;
@@ -1093,6 +1123,66 @@ const rawLessons: RawLesson[] = [
     source: "content/django/tests-client-and-fixtures.mdx",
     metadata: djangoTestsClientAndFixturesMetadata,
     Component: DjangoTestsClientAndFixtures,
+  },
+  {
+    slug: "package-and-file-organization",
+    source: "content/go/package-and-file-organization.mdx",
+    metadata: goPackageAndFileOrganizationMetadata,
+    Component: GoPackageAndFileOrganization,
+  },
+  {
+    slug: "naming-and-exported-api",
+    source: "content/go/naming-and-exported-api.mdx",
+    metadata: goNamingAndExportedApiMetadata,
+    Component: GoNamingAndExportedApi,
+  },
+  {
+    slug: "error-handling-wrapping",
+    source: "content/go/error-handling-wrapping.mdx",
+    metadata: goErrorHandlingWrappingMetadata,
+    Component: GoErrorHandlingWrapping,
+  },
+  {
+    slug: "context-cancellation",
+    source: "content/go/context-cancellation.mdx",
+    metadata: goContextCancellationMetadata,
+    Component: GoContextCancellation,
+  },
+  {
+    slug: "interfaces-at-boundaries",
+    source: "content/go/interfaces-at-boundaries.mdx",
+    metadata: goInterfacesAtBoundariesMetadata,
+    Component: GoInterfacesAtBoundaries,
+  },
+  {
+    slug: "struct-validation-zero-values",
+    source: "content/go/struct-validation-zero-values.mdx",
+    metadata: goStructValidationZeroValuesMetadata,
+    Component: GoStructValidationZeroValues,
+  },
+  {
+    slug: "goroutines-and-channel-ownership",
+    source: "content/go/goroutines-and-channel-ownership.mdx",
+    metadata: goGoroutinesAndChannelOwnershipMetadata,
+    Component: GoGoroutinesAndChannelOwnership,
+  },
+  {
+    slug: "defer-resource-cleanup",
+    source: "content/go/defer-resource-cleanup.mdx",
+    metadata: goDeferResourceCleanupMetadata,
+    Component: GoDeferResourceCleanup,
+  },
+  {
+    slug: "table-driven-tests",
+    source: "content/go/table-driven-tests.mdx",
+    metadata: goTableDrivenTestsMetadata,
+    Component: GoTableDrivenTests,
+  },
+  {
+    slug: "json-http-handler-boundaries",
+    source: "content/go/json-http-handler-boundaries.mdx",
+    metadata: goJsonHttpHandlerBoundariesMetadata,
+    Component: GoJsonHttpHandlerBoundaries,
   },
 ];
 

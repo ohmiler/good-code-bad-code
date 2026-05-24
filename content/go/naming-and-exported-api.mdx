@@ -1,0 +1,52 @@
+export const metadata = {
+  title: "Naming and exported APIs",
+  track: "go",
+  order: 2,
+  summary: "Export only the names callers need and avoid repeating the package name inside exported identifiers.",
+  tags: ["naming", "api", "exports"],
+  takeaways: ["Exported names are part of the package contract, so they should be minimal, clear, and caller-oriented."],
+  goodCode: {
+    language: "go",
+    filename: "reviews/repository.go",
+    code: `package reviews
+
+type Repository interface {
+    Find(ctx context.Context, id string) (Review, error)
+    Save(ctx context.Context, review Review) error
+}
+
+type Review struct {
+    ID     string
+    Title  string
+    Status Status
+}
+
+type Status string`,
+  },
+  badCode: {
+    language: "go",
+    filename: "reviews/repository.go",
+    code: `package reviews
+
+type ReviewsRepositoryInterface interface {
+    GetReviewObjectFromReviewID(ctx context.Context, reviewID string) (ReviewObject, error)
+    SaveReviewObjectToDatabase(ctx context.Context, reviewObject ReviewObject) error
+}
+
+type ReviewObject struct {
+    ReviewID     string
+    ReviewTitle  string
+    ReviewStatus string
+}`,
+  },
+};
+
+## What to review
+
+The good version uses the package name to provide context, so callers read `reviews.Repository`, `reviews.Review`, and `reviews.Status`.
+
+The bad version repeats "review" and implementation detail in every exported name. The API gets noisy and harder to change.
+
+## Review notes
+
+When reviewing Go APIs, read the code from the caller side. If the call site sounds redundant, the exported name is probably carrying words the package name already provides.

@@ -31,6 +31,28 @@ test("validateLessonMetadata accepts a complete lesson", () => {
   );
 });
 
+test("validateLessonMetadata accepts Go code samples", () => {
+  const goMetadata = {
+    ...validMetadata,
+    track: "go",
+    goodCode: {
+      language: "go",
+      filename: "reviews/repository.go",
+      code: "func FindReview(id string) (Review, error) { return Review{}, nil }",
+    },
+    badCode: {
+      language: "go",
+      filename: "reviews/repository.go",
+      code: "func findReview(id string) Review { return Review{} }",
+    },
+  };
+
+  assert.deepEqual(
+    validateLessonMetadata(goMetadata, "content/go/naming-and-exported-api.mdx"),
+    goMetadata,
+  );
+});
+
 test("validateLessonMetadata rejects unknown tracks", () => {
   assert.throws(
     () =>

@@ -1,0 +1,62 @@
+export const metadata = {
+  title: "Context cancellation",
+  track: "go",
+  order: 4,
+  summary: "Accept context at API boundaries and pass it through I/O so cancellation, deadlines, and request scope are honored.",
+  tags: ["context", "cancellation", "io"],
+  takeaways: ["Context belongs on work that can block, wait, or leave the process."],
+  goodCode: {
+    language: "go",
+    filename: "reviews/client.go",
+    code: `func (c *Client) FetchReview(ctx context.Context, id string) (Review, error) {
+    req, err := http.NewRequestWithContext(
+        ctx,
+        http.MethodGet,
+        c.baseURL+"/reviews/"+id,
+        nil,
+    )
+    if err != nil {
+        return Review{}, err
+    }
+
+    resp, err := c.http.Do(req)
+    if err != nil {
+        return Review{}, err
+    }
+    defer resp.Body.Close()
+
+    var review Review
+    if err := json.NewDecoder(resp.Body).Decode(&review); err != nil {
+        return Review{}, err
+    }
+    return review, nil
+}`,
+  },
+  badCode: {
+    language: "go",
+    filename: "reviews/client.go",
+    code: `func (c *Client) FetchReview(id string) (Review, error) {
+    resp, err := http.Get(c.baseURL + "/reviews/" + id)
+    if err != nil {
+        return Review{}, err
+    }
+    defer resp.Body.Close()
+
+    var review Review
+    if err := json.NewDecoder(resp.Body).Decode(&review); err != nil {
+        return Review{}, err
+    }
+    return review, nil
+}`,
+  },
+};
+
+## What to review
+
+The good version accepts a context and attaches it to the outbound HTTP request, so cancellation and deadlines can stop the whole operation.
+
+The bad version creates a request with no caller-controlled lifetime. If the caller times out or disconnects, the work can keep running.
+
+## Review notes
+
+Context is not a bag for optional parameters. In review, look for database calls, HTTP calls, locks, and goroutines that should stop when the caller stops caring.

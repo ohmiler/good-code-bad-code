@@ -1,0 +1,69 @@
+export const metadata = {
+  title: "JSON HTTP handler boundaries",
+  track: "go",
+  order: 10,
+  summary: "Keep HTTP handlers focused on method checks, JSON decoding, validation, service calls, and response shape.",
+  tags: ["http", "json", "handlers"],
+  takeaways: ["A Go HTTP handler should make request parsing and response writing explicit at the edge."],
+  goodCode: {
+    language: "go",
+    filename: "reviews/handler.go",
+    code: `type createReviewRequest struct {
+    Title string
+    Body  string
+}
+
+func (h *Handler) CreateReview(w http.ResponseWriter, r *http.Request) {
+    if r.Method != http.MethodPost {
+        http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+        return
+    }
+    defer r.Body.Close()
+
+    var input createReviewRequest
+    decoder := json.NewDecoder(r.Body)
+    decoder.DisallowUnknownFields()
+    if err := decoder.Decode(&input); err != nil {
+        http.Error(w, "invalid json", http.StatusBadRequest)
+        return
+    }
+
+    review, err := h.service.Create(r.Context(), input.Title, input.Body)
+    if err != nil {
+        http.Error(w, "create review failed", http.StatusInternalServerError)
+        return
+    }
+
+    w.Header().Set("Content-Type", "application/json")
+    w.WriteHeader(http.StatusCreated)
+    json.NewEncoder(w).Encode(review)
+}`,
+  },
+  badCode: {
+    language: "go",
+    filename: "reviews/handler.go",
+    code: `func (h *Handler) CreateReview(w http.ResponseWriter, r *http.Request) {
+    body, _ := io.ReadAll(r.Body)
+    var data map[string]string
+    json.Unmarshal(body, &data)
+
+    review, _ := h.service.Create(
+        context.Background(),
+        data["title"],
+        data["body"],
+    )
+
+    json.NewEncoder(w).Encode(review)
+}`,
+  },
+};
+
+## What to review
+
+The good version checks the method, closes the body, decodes into a request type, rejects unknown fields, passes `r.Context()`, and sets a clear response status.
+
+The bad version ignores decoding errors, uses a loose map, loses request cancellation, and always writes a success-looking response.
+
+## Review notes
+
+HTTP handlers are edge code. Review them for method gates, request size and decoding behavior, validation, context propagation, service boundaries, and response status consistency.

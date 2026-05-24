@@ -123,6 +123,11 @@ export const trackThaiTranslations = {
     description:
       "ฝึกรีวิว URL pattern, model, QuerySet, form, view, CSRF, settings, transaction และ test ของ Django.",
   },
+  go: {
+    title: "Go",
+    description:
+      "ฝึกรีวิว package, exported API, error, context, interface, goroutine, cleanup, test และ HTTP handler ของ Go.",
+  },
 } as const satisfies Record<TrackSlug, TrackTranslation>;
 
 export const lessonThaiTranslations = {
@@ -1564,6 +1569,126 @@ export const lessonThaiTranslations = {
     ],
     reviewNotes: [
       "Django test client มีค่ามากเมื่อ test เล่า behavior จากภายนอก ให้ชอบ setup, request และ observable assertion มากกว่าเช็ก implementation detail ลึก ๆ.",
+    ],
+  },
+  "go/package-and-file-organization": {
+    title: "การจัด package และไฟล์",
+    summary: "จัด package ให้เล็ก ชัด และตั้งชื่อตามสิ่งที่ caller ต้องใช้ ไม่ใช่ตาม layer ทางเทคนิคภายใน.",
+    takeaways: ["package ของ Go คือ API boundary ต้องรีวิวว่าชื่อและ exported surface บอกขอบเขตได้ชัดไหม."],
+    whatToReview: [
+      "โค้ดที่ดีใช้ชื่อ package ตาม domain ทำ dependency ให้ explicit และ export service boundary ที่เล็ก.",
+      "โค้ดที่ควรปรับซ่อน behavior ไว้ใน utils พร้อม global database state ทำให้ caller ไม่รู้ว่า package นี้เป็นเจ้าของอะไร.",
+    ],
+    reviewNotes: [
+      "ใน Go ชื่อ package โผล่ที่ call site เสมอ ควรเลือกชื่อที่อ่านแล้วเป็นธรรมชาติ และหลีกเลี่ยง package รวม helper ไม่เกี่ยวกัน.",
+    ],
+  },
+  "go/naming-and-exported-api": {
+    title: "การตั้งชื่อและ exported API",
+    summary: "export เฉพาะชื่อที่ caller ต้องใช้ และอย่าใส่ชื่อ package ซ้ำใน exported identifier โดยไม่จำเป็น.",
+    takeaways: ["ชื่อที่ export คือสัญญาของ package จึงควรน้อย ชัด และมองจากมุม caller."],
+    whatToReview: [
+      "โค้ดที่ดีใช้ชื่อ package ช่วยให้ caller อ่านเป็น reviews.Repository, reviews.Review และ reviews.Status ได้ชัด.",
+      "โค้ดที่ควรปรับใส่คำว่า review และรายละเอียด implementation ซ้ำในทุกชื่อ ทำให้ API เสียงดังและเปลี่ยนยาก.",
+    ],
+    reviewNotes: [
+      "เวลารีวิว Go API ให้อ่านจากฝั่ง caller ถ้า call site ฟังดูซ้ำหรือยาวเกินไป exported name อาจแบกคำที่ package name บอกอยู่แล้ว.",
+    ],
+  },
+  "go/error-handling-wrapping": {
+    title: "การจัดการ error และ wrapping",
+    summary: "คืน error พร้อม context ที่ช่วย debug และ wrap underlying error เมื่อ caller ควร inspect ต่อได้.",
+    takeaways: ["error ใน Go เป็น value ต้องรีวิวทั้งข้อความสำหรับคนอ่านและ wrapping contract สำหรับ caller."],
+    whatToReview: [
+      "โค้ดที่ดีเพิ่ม context ของ operation และเก็บ error chain ให้ caller ใช้ errors.Is หรือ errors.As ได้.",
+      "โค้ดที่ควรปรับ log แล้วแทน error เดิมด้วยข้อความกว้าง ๆ ทำให้ caller เสียเหตุผลจริงและตัดสินใจต่อไม่ได้.",
+    ],
+    reviewNotes: [
+      "อย่า wrap ทุก error แบบอัตโนมัติ ให้ wrap เมื่อการเปิดเผย error ต้นทางเป็นส่วนหนึ่งของ contract และไม่ทำให้รายละเอียดภายในรั่วเกินไป.",
+    ],
+  },
+  "go/context-cancellation": {
+    title: "context และ cancellation",
+    summary: "รับ context ที่ API boundary และส่งต่อไปยัง I/O เพื่อให้ cancellation, deadline และ request scope ทำงานได้จริง.",
+    takeaways: ["context ควรอยู่กับงานที่ block, รอ หรือออกไปนอก process."],
+    whatToReview: [
+      "โค้ดที่ดีรับ context จาก caller และผูกกับ outbound HTTP request เพื่อให้ timeout หรือ cancel หยุดงานทั้งสายได้.",
+      "โค้ดที่ควรปรับสร้าง request แบบไม่มี lifetime จาก caller เมื่อ caller timeout หรือ disconnect งานอาจยังวิ่งต่อ.",
+    ],
+    reviewNotes: [
+      "context ไม่ใช่ถุงใส่ optional parameter ตอนรีวิวให้หา database call, HTTP call, lock และ goroutine ที่ควรหยุดเมื่อ caller เลิกสนใจ.",
+    ],
+  },
+  "go/interfaces-at-boundaries": {
+    title: "interface ที่ boundary",
+    summary: "นิยาม interface เล็ก ๆ ตรงฝั่งที่ consume behavior แทนการบังคับให้ producer ต้องรองรับ contract ใหญ่.",
+    takeaways: ["interface ใน Go มีค่ามากเมื่อมันอธิบายสิ่งที่ caller ต้องใช้ในจุดนั้นจริง ๆ."],
+    whatToReview: [
+      "โค้ดที่ดีตั้งชื่อ behavior เดียวที่ service ต้องใช้ ทำให้ production client และ test fake ทำตามได้ง่าย.",
+      "โค้ดที่ควรปรับทำให้ caller ที่ต้องส่ง email ต้อง depend กับ SMS, Slack และ lifecycle method ไปด้วย.",
+    ],
+    reviewNotes: [
+      "interface เล็กทำให้ package boundary ยืดหยุ่น ถ้า function เรียกแค่ method เดียวแต่รับ interface สี่ method มักเป็นกลิ่น coupling.",
+    ],
+  },
+  "go/struct-validation-zero-values": {
+    title: "struct validation และ zero value",
+    summary: "ออกแบบ struct ให้ zero value ใช้ได้จริง หรือ validate ก่อนที่ value จะข้าม boundary สำคัญ.",
+    takeaways: ["zero value เป็นจุดแข็งของ Go ได้ แต่ domain object ยังต้องมีกฎ validity ที่ชัดเจน."],
+    whatToReview: [
+      "โค้ดที่ดีทำให้ invalid construction มองเห็นได้ และคืน error ก่อนปล่อย value เข้าไปในระบบ.",
+      "โค้ดที่ควรปรับยอมให้ ID และ title ว่างไหลผ่าน codebase เหมือนเป็น review ที่ valid.",
+    ],
+    reviewNotes: [
+      "zero value เหมาะกับ infrastructure type หลายแบบ แต่สำหรับ domain type ต้องรีวิวว่า zero value valid จริงไหม และ enforce ที่ไหน.",
+    ],
+  },
+  "go/goroutines-and-channel-ownership": {
+    title: "goroutine และ channel ownership",
+    summary: "ทำ lifetime ของ goroutine และ ownership ของการ close channel ให้ explicit เพื่อให้ concurrent code หยุดได้สะอาด.",
+    takeaways: ["โค้ดที่เริ่ม goroutine ควรทำให้เห็น stop condition และ channel ownership ชัดเจน."],
+    whatToReview: [
+      "โค้ดที่ดีบอกชัดว่าใครอ่าน ใครเขียน ใคร close output channel และ goroutine ออกเมื่อ context ถูก cancel อย่างไร.",
+      "โค้ดที่ควรปรับปล่อย lifetime ให้ implicit และให้ function อื่น close channel ที่ตัวเองไม่ได้ own.",
+    ],
+    reviewNotes: [
+      "ตอนรีวิว concurrency ใน Go ให้ถามว่าใคร start goroutine นี้ ใคร stop มัน ใคร close channel แต่ละตัว และถ้า receiver เลิกอ่านจะเกิดอะไร.",
+    ],
+  },
+  "go/defer-resource-cleanup": {
+    title: "defer และ resource cleanup",
+    summary: "ใช้ defer close เพื่อให้ cleanup อยู่ใกล้จุด acquire resource และครอบคลุมทุก return path.",
+    takeaways: ["cleanup ควรอยู่ใกล้ acquisition เพื่อให้ reviewer เห็นว่าทุก path ปล่อย resource จริง."],
+    whatToReview: [
+      "โค้ดที่ดี defer cleanup ทันทีหลังเปิดไฟล์สำเร็จ ทำให้ early return ยังปิด resource ได้.",
+      "โค้ดที่ควรปรับ close เฉพาะ happy path ถ้า import line fail file handle จะ leak จน process cleanup เอง.",
+    ],
+    reviewNotes: [
+      "defer แข็งแรงที่สุดเมื่อวางหลัง acquire สำเร็จทันที ตอนรีวิวให้ไล่ early return แล้วดูว่า cleanup ไม่ได้ขึ้นกับการวิ่งถึงท้าย function.",
+    ],
+  },
+  "go/table-driven-tests": {
+    title: "test แบบ table-driven",
+    summary: "ใช้ table-driven test เพื่อทำให้เคสที่เกี่ยวข้องกันชัด โดยแต่ละเคสยังมีชื่อและ debug ได้ง่าย.",
+    takeaways: ["test table ควรเพิ่ม coverage และ readability ไม่ใช่ซ่อนว่าเคสไหน fail."],
+    whatToReview: [
+      "โค้ดที่ดีตั้งชื่อแต่ละเคส ใช้ subtest และให้ failure output พอรู้ input กับ expected value.",
+      "โค้ดที่ควรปรับ assert ซ้ำ ๆ พร้อมข้อความกว้าง ๆ เมื่อ fail ต้องย้อนอ่านเองว่าเคสไหนพัง.",
+    ],
+    reviewNotes: [
+      "table-driven test เหมาะเมื่อทุก row เป็น variation ของ behavior เดียว ถ้า setup หรือ assertion ต่างกันมาก ให้แยก test ดีกว่า.",
+    ],
+  },
+  "go/json-http-handler-boundaries": {
+    title: "boundary ของ JSON HTTP handler",
+    summary: "ให้ HTTP handler โฟกัส method check, JSON decoding, validation, service call และ response shape ที่ชัด.",
+    takeaways: ["HTTP handler ใน Go ควรทำ request parsing และ response writing ให้ explicit ที่ edge."],
+    whatToReview: [
+      "โค้ดที่ดีเช็ก method, close body, decode เข้า request type, reject unknown field, ส่ง r.Context และตั้ง status ชัด.",
+      "โค้ดที่ควรปรับ ignore decode error ใช้ map หลวม ๆ ทิ้ง request cancellation และเขียน response เหมือน success เสมอ.",
+    ],
+    reviewNotes: [
+      "HTTP handler คือ edge code ให้รีวิว method gate, request size, decoding, validation, context propagation, service boundary และ status consistency.",
     ],
   },
 } as const satisfies Record<string, LessonThaiTranslation>;

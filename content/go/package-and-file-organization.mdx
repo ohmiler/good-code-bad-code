@@ -1,0 +1,59 @@
+export const metadata = {
+  title: "Package and file organization",
+  track: "go",
+  order: 1,
+  summary: "Keep packages small, cohesive, and named by what callers need instead of by internal technical layers.",
+  tags: ["packages", "organization", "boundaries"],
+  takeaways: ["A Go package is an API boundary; review whether its name and exported surface make that boundary clear."],
+  goodCode: {
+    language: "go",
+    filename: "reviews/service.go",
+    code: `package reviews
+
+type Service struct {
+    repo Repository
+}
+
+func NewService(repo Repository) *Service {
+    return &Service{repo: repo}
+}
+
+func (s *Service) Publish(ctx context.Context, id string) error {
+    review, err := s.repo.Find(ctx, id)
+    if err != nil {
+        return err
+    }
+
+    review.Publish()
+    return s.repo.Save(ctx, review)
+}`,
+  },
+  badCode: {
+    language: "go",
+    filename: "utils/review_helpers.go",
+    code: `package utils
+
+var ReviewDB *sql.DB
+
+func PublishReview(id string) error {
+    row := ReviewDB.QueryRow("select title from reviews where id = ?", id)
+    var title string
+    if err := row.Scan(&title); err != nil {
+        return err
+    }
+
+    _, err := ReviewDB.Exec("update reviews set status = 'published' where id = ?", id)
+    return err
+}`,
+  },
+};
+
+## What to review
+
+The good version gives the package a domain name, keeps dependencies explicit, and exports a small service boundary.
+
+The bad version hides review behavior in a generic `utils` package with global database state. Callers cannot tell what the package owns.
+
+## Review notes
+
+In Go, package names show up at every call site. Prefer names that let callers read code naturally and avoid packages that become catch-all drawers for unrelated helpers.

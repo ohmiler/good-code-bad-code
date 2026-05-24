@@ -1,0 +1,56 @@
+export const metadata = {
+  title: "Struct validation and zero values",
+  track: "go",
+  order: 6,
+  summary: "Design structs so zero values are either useful or validated before the value crosses an important boundary.",
+  tags: ["structs", "validation", "zero values"],
+  takeaways: ["A zero value can be a feature, but domain objects still need clear validity rules."],
+  goodCode: {
+    language: "go",
+    filename: "reviews/review.go",
+    code: `type Review struct {
+    ID    string
+    Title string
+    Body  string
+}
+
+func NewReview(id string, title string, body string) (Review, error) {
+    title = strings.TrimSpace(title)
+    if id == "" {
+        return Review{}, errors.New("id is required")
+    }
+    if title == "" {
+        return Review{}, errors.New("title is required")
+    }
+
+    return Review{ID: id, Title: title, Body: body}, nil
+}`,
+  },
+  badCode: {
+    language: "go",
+    filename: "reviews/review.go",
+    code: `type Review struct {
+    ID    string
+    Title string
+    Body  string
+}
+
+func CreateReview(id string, title string, body string) Review {
+    return Review{
+        ID:    id,
+        Title: title,
+        Body:  body,
+    }
+}`,
+  },
+};
+
+## What to review
+
+The good version makes invalid construction visible and returns a useful error before the value enters the rest of the system.
+
+The bad version allows empty IDs and titles to move through the codebase as if they were valid reviews.
+
+## Review notes
+
+Go's zero values are useful for many infrastructure types. For domain types, review whether zero values are valid, and if not, where validation is enforced.

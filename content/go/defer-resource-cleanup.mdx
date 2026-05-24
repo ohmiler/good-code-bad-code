@@ -1,0 +1,58 @@
+export const metadata = {
+  title: "Defer and resource cleanup",
+  track: "go",
+  order: 8,
+  summary: "Use defer close to make cleanup follow resource acquisition and cover every return path.",
+  tags: ["defer", "cleanup", "resources"],
+  takeaways: ["Cleanup should sit close to acquisition so reviewers can see every path releases the resource."],
+  goodCode: {
+    language: "go",
+    filename: "reviews/importer.go",
+    code: `func ImportReviews(path string) error {
+    file, err := os.Open(path)
+    if err != nil {
+        return err
+    }
+    defer file.Close()
+
+    scanner := bufio.NewScanner(file)
+    for scanner.Scan() {
+        if err := importLine(scanner.Text()); err != nil {
+            return err
+        }
+    }
+
+    return scanner.Err()
+}`,
+  },
+  badCode: {
+    language: "go",
+    filename: "reviews/importer.go",
+    code: `func ImportReviews(path string) error {
+    file, err := os.Open(path)
+    if err != nil {
+        return err
+    }
+
+    scanner := bufio.NewScanner(file)
+    for scanner.Scan() {
+        if err := importLine(scanner.Text()); err != nil {
+            return err
+        }
+    }
+
+    file.Close()
+    return scanner.Err()
+}`,
+  },
+};
+
+## What to review
+
+The good version defers cleanup immediately after opening the file, so early returns still release the resource.
+
+The bad version closes only on the happy path. If importing a line fails, the file handle leaks until the process cleans it up.
+
+## Review notes
+
+`defer` is strongest when it sits right after successful acquisition. Review code paths with early returns and make sure cleanup does not depend on reaching the bottom of the function.

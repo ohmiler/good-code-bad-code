@@ -1,0 +1,48 @@
+export const metadata = {
+  title: "Error handling and wrapping",
+  track: "go",
+  order: 3,
+  summary: "Return errors with useful context and wrap underlying errors when callers should be able to inspect them.",
+  tags: ["errors", "wrapping", "sentinels"],
+  takeaways: ["Errors are values in Go; review both the message for humans and the wrapping contract for callers."],
+  goodCode: {
+    language: "go",
+    filename: "reviews/repository.go",
+    code: `var ErrReviewNotFound = errors.New("review not found")
+
+func (r *Repository) Find(ctx context.Context, id string) (Review, error) {
+    review, err := r.store.FindReview(ctx, id)
+    if errors.Is(err, store.ErrNotFound) {
+        return Review{}, fmt.Errorf("find review %s: %w", id, ErrReviewNotFound)
+    }
+    if err != nil {
+        return Review{}, fmt.Errorf("find review %s: %w", id, err)
+    }
+
+    return review, nil
+}`,
+  },
+  badCode: {
+    language: "go",
+    filename: "reviews/repository.go",
+    code: `func (r *Repository) Find(ctx context.Context, id string) (Review, error) {
+    review, err := r.store.FindReview(ctx, id)
+    if err != nil {
+        log.Println("find review failed", err)
+        return Review{}, errors.New("failed")
+    }
+
+    return review, nil
+}`,
+  },
+};
+
+## What to review
+
+The good version adds operation context and preserves an inspectable error chain for callers that use `errors.Is`.
+
+The bad version logs and replaces the original error with a vague message. Callers lose the reason and cannot make a precise decision.
+
+## Review notes
+
+Do not wrap every error blindly. Wrap when exposing the underlying error is part of the contract; otherwise add a clear message without leaking internal details.

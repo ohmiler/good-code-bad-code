@@ -71,6 +71,12 @@ export const tracks = [
     description:
       "Review URL patterns, models, QuerySets, forms, views, CSRF, settings, transactions, and tests.",
   },
+  {
+    slug: "go",
+    title: "Go",
+    description:
+      "Review packages, exported APIs, errors, context, interfaces, goroutines, cleanup, tests, and HTTP handlers.",
+  },
 ] as const;
 
 export type Track = (typeof tracks)[number];

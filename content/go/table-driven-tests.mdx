@@ -1,0 +1,54 @@
+export const metadata = {
+  title: "Table-driven tests",
+  track: "go",
+  order: 9,
+  summary: "Use table-driven tests to make related cases explicit while keeping each case named and independently diagnosable.",
+  tags: ["testing", "table-driven", "coverage"],
+  takeaways: ["A test table should improve coverage and readability, not hide which case failed."],
+  goodCode: {
+    language: "go",
+    filename: "reviews/slug_test.go",
+    code: `func TestSlugify(t *testing.T) {
+    tests := []struct {
+        name string
+        in   string
+        want string
+    }{
+        {name: "lowercases title", in: "Code Review", want: "code-review"},
+        {name: "trims spaces", in: "  Draft Notes  ", want: "draft-notes"},
+    }
+
+    for _, tt := range tests {
+        t.Run(tt.name, func(t *testing.T) {
+            got := Slugify(tt.in)
+            if got != tt.want {
+                t.Fatalf("Slugify(%q) = %q, want %q", tt.in, got, tt.want)
+            }
+        })
+    }
+}`,
+  },
+  badCode: {
+    language: "go",
+    filename: "reviews/slug_test.go",
+    code: `func TestSlugify(t *testing.T) {
+    if Slugify("Code Review") != "code-review" {
+        t.Fatal("bad slug")
+    }
+
+    if Slugify("  Draft Notes  ") != "draft-notes" {
+        t.Fatal("bad slug")
+    }
+}`,
+  },
+};
+
+## What to review
+
+The good version names each case, uses subtests, and includes enough failure output to understand the broken input and expected value.
+
+The bad version repeats assertions with vague messages. When it fails, the reviewer has to reverse engineer the case.
+
+## Review notes
+
+Table-driven tests work best when cases are genuinely variations of one behavior. If the setup or assertion shape changes per row, split the tests instead.

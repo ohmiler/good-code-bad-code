@@ -1,0 +1,54 @@
+export const metadata = {
+  title: "Goroutines and channel ownership",
+  track: "go",
+  order: 7,
+  summary: "Make goroutine lifetime and channel closing ownership explicit so concurrent code can stop cleanly.",
+  tags: ["goroutines", "channels", "concurrency"],
+  takeaways: ["The code that starts a goroutine should make its stop condition and channel ownership visible."],
+  goodCode: {
+    language: "go",
+    filename: "reviews/worker.go",
+    code: `func StartWorker(ctx context.Context, jobs <-chan Job, results chan<- Result) {
+    go func() {
+        defer close(results)
+
+        for {
+            select {
+            case <-ctx.Done():
+                return
+            case job, ok := <-jobs:
+                if !ok {
+                    return
+                }
+                results <- process(job)
+            }
+        }
+    }()
+}`,
+  },
+  badCode: {
+    language: "go",
+    filename: "reviews/worker.go",
+    code: `func StartWorker(jobs chan Job, results chan Result) {
+    go func() {
+        for job := range jobs {
+            results <- process(job)
+        }
+    }()
+}
+
+func StopWorker(results chan Result) {
+    close(results)
+}`,
+  },
+};
+
+## What to review
+
+The good version shows who reads, who writes, who closes the output channel, and how the goroutine exits when the context is canceled.
+
+The bad version leaves lifetime implicit and lets a separate function close a channel it does not own.
+
+## Review notes
+
+In Go concurrency review, ask: who starts this goroutine, who stops it, who closes each channel, and what happens if the receiver leaves early?
