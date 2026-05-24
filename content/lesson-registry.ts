@@ -395,6 +395,36 @@ import GoTableDrivenTests, {
 import GoJsonHttpHandlerBoundaries, {
   metadata as goJsonHttpHandlerBoundariesMetadata,
 } from "./go/json-http-handler-boundaries.mdx";
+import DockerBuildContextDockerignore, {
+  metadata as dockerBuildContextDockerignoreMetadata,
+} from "./docker/build-context-dockerignore.mdx";
+import DockerBaseImagesAndTagPinning, {
+  metadata as dockerBaseImagesAndTagPinningMetadata,
+} from "./docker/base-images-and-tag-pinning.mdx";
+import DockerLayerCacheDependencyOrder, {
+  metadata as dockerLayerCacheDependencyOrderMetadata,
+} from "./docker/layer-cache-dependency-order.mdx";
+import DockerMultiStageBuilds, {
+  metadata as dockerMultiStageBuildsMetadata,
+} from "./docker/multi-stage-builds.mdx";
+import DockerCopyAddAndWorkdir, {
+  metadata as dockerCopyAddAndWorkdirMetadata,
+} from "./docker/copy-add-and-workdir.mdx";
+import DockerNonRootUserPermissions, {
+  metadata as dockerNonRootUserPermissionsMetadata,
+} from "./docker/non-root-user-permissions.mdx";
+import DockerArgsEnvAndSecrets, {
+  metadata as dockerArgsEnvAndSecretsMetadata,
+} from "./docker/args-env-and-secrets.mdx";
+import DockerEntrypointCmdAndSignals, {
+  metadata as dockerEntrypointCmdAndSignalsMetadata,
+} from "./docker/entrypoint-cmd-and-signals.mdx";
+import DockerHealthchecksAndRuntimeConfig, {
+  metadata as dockerHealthchecksAndRuntimeConfigMetadata,
+} from "./docker/healthchecks-and-runtime-config.mdx";
+import DockerComposeServicesVolumesNetworks, {
+  metadata as dockerComposeServicesVolumesNetworksMetadata,
+} from "./docker/compose-services-volumes-networks.mdx";
 
 type RawLesson = {
   slug: string;
@@ -1183,6 +1213,66 @@ const rawLessons: RawLesson[] = [
     source: "content/go/json-http-handler-boundaries.mdx",
     metadata: goJsonHttpHandlerBoundariesMetadata,
     Component: GoJsonHttpHandlerBoundaries,
+  },
+  {
+    slug: "build-context-dockerignore",
+    source: "content/docker/build-context-dockerignore.mdx",
+    metadata: dockerBuildContextDockerignoreMetadata,
+    Component: DockerBuildContextDockerignore,
+  },
+  {
+    slug: "base-images-and-tag-pinning",
+    source: "content/docker/base-images-and-tag-pinning.mdx",
+    metadata: dockerBaseImagesAndTagPinningMetadata,
+    Component: DockerBaseImagesAndTagPinning,
+  },
+  {
+    slug: "layer-cache-dependency-order",
+    source: "content/docker/layer-cache-dependency-order.mdx",
+    metadata: dockerLayerCacheDependencyOrderMetadata,
+    Component: DockerLayerCacheDependencyOrder,
+  },
+  {
+    slug: "multi-stage-builds",
+    source: "content/docker/multi-stage-builds.mdx",
+    metadata: dockerMultiStageBuildsMetadata,
+    Component: DockerMultiStageBuilds,
+  },
+  {
+    slug: "copy-add-and-workdir",
+    source: "content/docker/copy-add-and-workdir.mdx",
+    metadata: dockerCopyAddAndWorkdirMetadata,
+    Component: DockerCopyAddAndWorkdir,
+  },
+  {
+    slug: "non-root-user-permissions",
+    source: "content/docker/non-root-user-permissions.mdx",
+    metadata: dockerNonRootUserPermissionsMetadata,
+    Component: DockerNonRootUserPermissions,
+  },
+  {
+    slug: "args-env-and-secrets",
+    source: "content/docker/args-env-and-secrets.mdx",
+    metadata: dockerArgsEnvAndSecretsMetadata,
+    Component: DockerArgsEnvAndSecrets,
+  },
+  {
+    slug: "entrypoint-cmd-and-signals",
+    source: "content/docker/entrypoint-cmd-and-signals.mdx",
+    metadata: dockerEntrypointCmdAndSignalsMetadata,
+    Component: DockerEntrypointCmdAndSignals,
+  },
+  {
+    slug: "healthchecks-and-runtime-config",
+    source: "content/docker/healthchecks-and-runtime-config.mdx",
+    metadata: dockerHealthchecksAndRuntimeConfigMetadata,
+    Component: DockerHealthchecksAndRuntimeConfig,
+  },
+  {
+    slug: "compose-services-volumes-networks",
+    source: "content/docker/compose-services-volumes-networks.mdx",
+    metadata: dockerComposeServicesVolumesNetworksMetadata,
+    Component: DockerComposeServicesVolumesNetworks,
   },
 ];
 

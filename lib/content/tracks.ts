@@ -77,6 +77,12 @@ export const tracks = [
     description:
       "Review packages, exported APIs, errors, context, interfaces, goroutines, cleanup, tests, and HTTP handlers.",
   },
+  {
+    slug: "docker",
+    title: "Docker",
+    description:
+      "Review build contexts, base images, cache layers, multi-stage builds, secrets, users, healthchecks, and Compose files.",
+  },
 ] as const;
 
 export type Track = (typeof tracks)[number];

@@ -1,0 +1,49 @@
+export const metadata = {
+  title: "Healthchecks and runtime config",
+  track: "docker",
+  order: 9,
+  summary: "Describe runtime health and configuration explicitly so operators can tell whether the container is ready and healthy.",
+  tags: ["healthcheck", "runtime", "operations"],
+  takeaways: ["A running container is not always a healthy application; expose a meaningful health signal."],
+  goodCode: {
+    language: "dockerfile",
+    filename: "Dockerfile",
+    code: `FROM node:22-alpine
+
+WORKDIR /app
+ENV NODE_ENV=production
+ENV PORT=3000
+
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev
+COPY server.js ./server.js
+
+EXPOSE 3000
+HEALTHCHECK --interval=30s --timeout=3s --retries=3 \
+  CMD wget -qO- http://127.0.0.1:3000/health || exit 1
+
+CMD ["node", "server.js"]`,
+  },
+  badCode: {
+    language: "dockerfile",
+    filename: "Dockerfile",
+    code: `FROM node:22-alpine
+
+WORKDIR /app
+COPY . .
+RUN npm install
+
+EXPOSE 3000
+CMD ["node", "server.js"]`,
+  },
+};
+
+## What to review
+
+The good version declares runtime defaults, exposes the expected port, and provides a healthcheck tied to the app's health endpoint.
+
+The bad version can be running while the application is unable to serve requests. Operators get less signal when something is wrong.
+
+## Review notes
+
+Healthchecks should be cheap and meaningful. Avoid checks that only prove the process exists if the real failure mode is a broken dependency or dead HTTP server.

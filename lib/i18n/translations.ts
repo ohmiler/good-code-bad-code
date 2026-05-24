@@ -128,6 +128,11 @@ export const trackThaiTranslations = {
     description:
       "ฝึกรีวิว package, exported API, error, context, interface, goroutine, cleanup, test และ HTTP handler ของ Go.",
   },
+  docker: {
+    title: "Docker",
+    description:
+      "ฝึกรีวิว build context, base image, cache layer, multi-stage build, secret, user, healthcheck และ Compose file.",
+  },
 } as const satisfies Record<TrackSlug, TrackTranslation>;
 
 export const lessonThaiTranslations = {
@@ -1689,6 +1694,126 @@ export const lessonThaiTranslations = {
     ],
     reviewNotes: [
       "HTTP handler คือ edge code ให้รีวิว method gate, request size, decoding, validation, context propagation, service boundary และ status consistency.",
+    ],
+  },
+  "docker/build-context-dockerignore": {
+    title: "build context และ .dockerignore",
+    summary: "ทำให้ Docker build context เล็กและตั้งใจเลือกไฟล์ เพื่อให้ build เร็ว ปลอดภัย และ reproduce ได้ง่ายขึ้น.",
+    takeaways: ["build context คือ input ของ image ดังนั้นต้องรีวิวว่าไฟล์อะไรถูกส่งเข้า builder ได้บ้าง."],
+    whatToReview: [
+      "โค้ดที่ดี exclude dependency folder, build output, secret, log และ metadata ของ repository ออกจาก build context.",
+      "โค้ดที่ควรปรับส่งทั้ง repository เข้า builder ทำให้ cache invalidation วุ่นวาย และเสี่ยง copy ไฟล์ลับหรือไฟล์ไม่เกี่ยวข้องเข้า image.",
+    ],
+    reviewNotes: [
+      "เริ่มรีวิว Docker จาก build context ก่อนเสมอ ถ้า .dockerignore หายหรือบางเกินไป Dockerfile ที่ดูสะอาดก็ยังช้า flaky หรือไม่ปลอดภัยได้.",
+    ],
+  },
+  "docker/base-images-and-tag-pinning": {
+    title: "base image และ tag pinning",
+    summary: "เลือก base image ให้แคบและ pin version อย่างตั้งใจ เพื่อไม่ให้ rebuild แล้ว dependency เปลี่ยนเองโดยไม่มีรีวิว.",
+    takeaways: ["base image คือ dependency ชนิดหนึ่ง จึงควรรีวิวด้วยความละเอียดใกล้เคียงกับ package version."],
+    whatToReview: [
+      "โค้ดที่ดีใช้ runtime base ที่เจาะจง และทำให้การติดตั้ง production dependency ชัดเจน.",
+      "โค้ดที่ควรปรับพึ่ง latest ทำให้ rebuild commit เดิมแล้วได้ Node หรือ OS package คนละชุดแบบเงียบ ๆ.",
+    ],
+    reviewNotes: [
+      "pinning ไม่ได้แปลว่าไม่อัปเดต แต่ทำให้อัปเดตกลายเป็น change ที่ CI, security scanner และ reviewer เห็นได้.",
+    ],
+  },
+  "docker/layer-cache-dependency-order": {
+    title: "layer cache และลำดับ dependency",
+    summary: "เรียง instruction ใน Dockerfile เพื่อให้ dependency layer ใช้ cache ต่อได้เมื่อแก้ source file.",
+    takeaways: ["Docker cache อิงลำดับ instruction ดังนั้นมักควร copy dependency file ก่อน application source."],
+    whatToReview: [
+      "โค้ดที่ดีทำให้ layer ติดตั้ง dependency ยังถูก cache เมื่อเปลี่ยนเฉพาะ source file.",
+      "โค้ดที่ควรปรับ copy ทั้ง project ก่อน install dependency ทำให้ source edit เล็ก ๆ invalidate install layer ราคาแพง.",
+    ],
+    reviewNotes: [
+      "Dockerfile ที่เป็นมิตรกับ cache มักเป็นมิตรกับ reviewer ด้วย ให้หา input ที่เล็กและเสถียรก่อน RUN step ที่แพง.",
+    ],
+  },
+  "docker/multi-stage-builds": {
+    title: "build แบบ multi-stage",
+    summary: "แยก build tooling ออกจาก runtime image สุดท้าย เพื่อให้ production container มีเฉพาะสิ่งที่ต้องใช้ตอนรัน.",
+    takeaways: ["multi-stage build ลดขนาด final image และแยก build concern ออกจาก runtime concern."],
+    whatToReview: [
+      "โค้ดที่ดีเก็บ install/build tooling ไว้ใน stage ก่อนหน้า แล้ว copy เฉพาะ runtime artifact ไป final image.",
+      "โค้ดที่ควรปรับ ship source file, dev dependency และ build tool ไปใน image เดียวกับที่รัน production.",
+    ],
+    reviewNotes: [
+      "สำหรับแอปที่ compile หรือ bundle ได้ ให้ถามว่า final stage ต้องการอะไรจริง ๆ สิ่งที่ใช้แค่ build ควรอยู่นอก runtime stage.",
+    ],
+  },
+  "docker/copy-add-and-workdir": {
+    title: "COPY, ADD และ WORKDIR",
+    summary: "ใช้ WORKDIR และ COPY อย่างตั้งใจ เพื่อให้ path ชัด และไม่ซ่อน side effect จาก remote content ไว้ใน ADD.",
+    takeaways: ["ควรให้ path และ download/extraction step ชัดเจน แทนการพึ่ง side effect ที่อ่านยากใน Dockerfile."],
+    whatToReview: [
+      "โค้ดที่ดีใช้ WORKDIR แบบ absolute, copy ไฟล์ที่รู้แน่ และทำให้ input ของการ install มองเห็นได้.",
+      "โค้ดที่ควรปรับพึ่ง cd ใน RUN แต่ละ layer, ดึง remote content ผ่าน ADD และ copy repository ไป root ของ image.",
+    ],
+    reviewNotes: [
+      "COPY มักเป็น default ที่อ่านง่ายกว่า ใช้ ADD เมื่อ behavior พิเศษของมันถูกตั้งใจและถูกรีวิวแล้วจริง ๆ.",
+    ],
+  },
+  "docker/non-root-user-permissions": {
+    title: "non-root user และ permission",
+    summary: "รัน application process ด้วย user ที่ไม่ใช่ root และทำ ownership ของไฟล์ให้ตรงกับ runtime user.",
+    takeaways: ["container ไม่ควรต้องใช้ root ตอน runtime ถ้า application ไม่มีเหตุผลเฉพาะที่ต้องใช้จริง ๆ."],
+    whatToReview: [
+      "โค้ดที่ดีสร้าง dedicated user, กำหนด ownership ตอน copy และ switch user ก่อน process เริ่ม.",
+      "โค้ดที่ควรปรับรันด้วย root user ค่า default ทำให้ process ที่ถูก compromise มี privilege มากเกินจำเป็นใน container.",
+    ],
+    reviewNotes: [
+      "เมื่อเพิ่ม USER ต้องรีวิว writable directory ด้วย container non-root ที่เขียน cache, temp หรือ upload path ที่ต้องใช้ไม่ได้จะพังตอน runtime.",
+    ],
+  },
+  "docker/args-env-and-secrets": {
+    title: "ARG, ENV และ secret",
+    summary: "แยก build-time argument, runtime environment variable และ secret ออกจากกัน เพื่อไม่ให้ sensitive value ถูก bake เข้า image.",
+    takeaways: ["secret ควรถูกส่งตอน runtime หรือผ่าน secret mount ไม่ใช่ถูกเก็บใน image layer."],
+    whatToReview: [
+      "โค้ดที่ดีแยก build args, runtime env และ secrets เป็นคนละ concern ที่อ่านได้ชัด.",
+      "โค้ดที่ควรปรับส่ง secret ผ่าน ARG แล้วเก็บเป็น ENV ทำให้ค่าลับติด image configuration หรือ build history.",
+    ],
+    reviewNotes: [
+      "ถ้าค่าเป็น secret ให้สมมติว่า image layer, log และ metadata อาจเปิดเผยได้ ควรใช้ Compose secrets, orchestrator secrets หรือ BuildKit secret mounts.",
+    ],
+  },
+  "docker/entrypoint-cmd-and-signals": {
+    title: "ENTRYPOINT, CMD และ signal",
+    summary: "ใช้คำสั่งแบบ exec form และทำ startup wrapper ให้ปลอดภัยต่อ signal เพื่อให้ container stop ได้อย่าง graceful.",
+    takeaways: ["process ที่ Docker เริ่มควรรับ signal โดยตรงและปิดตัวได้แบบคาดเดาได้."],
+    whatToReview: [
+      "โค้ดที่ดีใช้ exec form ทำให้ application process ได้รับ termination signal โดยตรง.",
+      "โค้ดที่ควรปรับใช้ shell form ทำให้ shell กลายเป็น PID 1 และ signal forwarding หรือ graceful shutdown คาดเดายากขึ้น.",
+    ],
+    reviewNotes: [
+      "ถ้าจำเป็นต้องใช้ entrypoint script ให้เช็กว่าจบด้วย exec \"$@\" เพื่อให้ script เตรียม environment แล้วส่งต่อให้ process จริง.",
+    ],
+  },
+  "docker/healthchecks-and-runtime-config": {
+    title: "healthcheck และ runtime config",
+    summary: "อธิบาย health และ runtime config ให้ชัด เพื่อให้ operator รู้ว่า container พร้อมและ healthy จริงไหม.",
+    takeaways: ["container ที่ running ไม่ได้แปลว่า application healthy เสมอ ต้องมี health signal ที่มีความหมาย."],
+    whatToReview: [
+      "โค้ดที่ดีประกาศ runtime default, expose port ที่คาดไว้ และผูก healthcheck กับ endpoint สุขภาพของแอป.",
+      "โค้ดที่ควรปรับอาจ running อยู่แม้แอปไม่สามารถรับ request ได้ ทำให้ operator ได้ signal น้อยตอนมีปัญหา.",
+    ],
+    reviewNotes: [
+      "healthcheck ควรถูกและมีความหมาย อย่าเช็กแค่ว่า process อยู่ ถ้า failure mode จริงคือ dependency พังหรือ HTTP server ตาย.",
+    ],
+  },
+  "docker/compose-services-volumes-networks": {
+    title: "Compose service, volume และ network",
+    summary: "ใช้ Compose เพื่อกำหนด service boundary, persistent volume และ internal network โดยไม่เปิด port หรือ state เกินจำเป็น.",
+    takeaways: ["Compose file ควรทำให้ความสัมพันธ์ของ service ชัด และทำให้ persistence กับ exposure เป็นเรื่องตั้งใจ."],
+    whatToReview: [
+      "โค้ดที่ดีตั้งชื่อ persistence, เก็บ service ไว้ใน internal network และ expose เฉพาะ app port ที่ host ต้องใช้.",
+      "โค้ดที่ควรปรับใช้ host networking, mount host filesystem และเปิด database port โดยไม่มีเหตุผลชัดเจน.",
+    ],
+    reviewNotes: [
+      "การรีวิว Compose คือการรีวิว boundary ให้ดูว่า service ไหน host เข้าถึงได้ ข้อมูลไหนรอดหลัง restart และ mount ไหนแก้เครื่อง dev ได้.",
     ],
   },
 } as const satisfies Record<string, LessonThaiTranslation>;

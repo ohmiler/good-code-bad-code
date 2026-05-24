@@ -1,0 +1,44 @@
+export const metadata = {
+  title: "Non-root users and permissions",
+  track: "docker",
+  order: 6,
+  summary: "Run application processes as a non-root user and make file ownership match the runtime user.",
+  tags: ["security", "user", "permissions"],
+  takeaways: ["Containers should not need root at runtime unless the application has a specific reason."],
+  goodCode: {
+    language: "dockerfile",
+    filename: "Dockerfile",
+    code: `FROM node:22-alpine AS runtime
+
+WORKDIR /app
+RUN addgroup -S app && adduser -S app -G app
+
+COPY --chown=app:app package.json package-lock.json ./
+RUN npm ci --omit=dev
+COPY --chown=app:app server.js ./server.js
+
+USER app
+CMD ["node", "server.js"]`,
+  },
+  badCode: {
+    language: "dockerfile",
+    filename: "Dockerfile",
+    code: `FROM node:22-alpine
+
+WORKDIR /app
+COPY . .
+RUN npm install
+
+CMD ["node", "server.js"]`,
+  },
+};
+
+## What to review
+
+The good version creates a dedicated user, assigns ownership during copy, and switches to that user before the process starts.
+
+The bad version runs as the default root user. A compromised process gets more privileges inside the container than it needs.
+
+## Review notes
+
+When adding `USER`, also review writable directories. A non-root container that cannot write its required cache, temp, or upload paths will fail at runtime.

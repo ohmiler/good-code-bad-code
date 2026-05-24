@@ -1,0 +1,71 @@
+export const metadata = {
+  title: "Compose services, volumes, and networks",
+  track: "docker",
+  order: 10,
+  summary: "Use Compose to define service boundaries, persistent volumes, and internal networks without overexposing ports or state.",
+  tags: ["compose", "volumes", "networks"],
+  takeaways: ["A Compose file should make service relationships explicit while keeping persistence and exposure deliberate."],
+  goodCode: {
+    language: "yaml",
+    filename: "compose.yaml",
+    code: `services:
+  app:
+    build: .
+    environment:
+      DATABASE_HOST: db
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    networks:
+      - internal
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: reviews
+      POSTGRES_USER: reviews
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U reviews"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - internal
+
+volumes:
+  postgres_data:
+
+networks:
+  internal:`,
+  },
+  badCode: {
+    language: "yaml",
+    filename: "compose.yaml",
+    code: `services:
+  app:
+    build: .
+    network_mode: host
+    volumes:
+      - .:/app
+      - /:/host
+
+  db:
+    image: postgres:latest
+    ports:
+      - "5432:5432"`,
+  },
+};
+
+## What to review
+
+The good version names persistence, keeps services on an internal network, and exposes only the application port needed by the host.
+
+The bad version uses host networking, mounts the host filesystem, and exposes the database without a clear reason.
+
+## Review notes
+
+Compose review is boundary review. Look at which services are reachable from the host, which data survives restarts, and which mounts can mutate the developer machine.

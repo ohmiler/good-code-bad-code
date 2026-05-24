@@ -1,0 +1,42 @@
+export const metadata = {
+  title: "COPY, ADD, and WORKDIR",
+  track: "docker",
+  order: 5,
+  summary: "Use WORKDIR and COPY intentionally so filesystem paths are clear and remote side effects are not hidden in ADD.",
+  tags: ["copy", "add", "workdir"],
+  takeaways: ["Prefer explicit paths and explicit download or extraction steps over surprising Dockerfile side effects."],
+  goodCode: {
+    language: "dockerfile",
+    filename: "Dockerfile",
+    code: `FROM python:3.12-slim
+
+WORKDIR /app
+
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY app ./app
+CMD ["python", "-m", "app"]`,
+  },
+  badCode: {
+    language: "dockerfile",
+    filename: "Dockerfile",
+    code: `FROM python:latest
+
+RUN mkdir app
+RUN cd app && pip install flask
+
+ADD https://example.com/app.tar.gz /app
+COPY . /`,
+  },
+};
+
+## What to review
+
+The good version uses an absolute `WORKDIR`, copies known files, and keeps installation inputs visible.
+
+The bad version relies on `cd` inside individual layers, fetches remote content through `ADD`, and copies the repository into the image root.
+
+## Review notes
+
+`COPY` is usually the clearer default. Reach for `ADD` only when its special behavior is intentional and reviewed.

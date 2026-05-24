@@ -53,6 +53,31 @@ test("validateLessonMetadata accepts Go code samples", () => {
   );
 });
 
+test("validateLessonMetadata accepts Dockerfile and YAML code samples", () => {
+  const dockerMetadata = {
+    ...validMetadata,
+    track: "docker",
+    goodCode: {
+      language: "dockerfile",
+      filename: "Dockerfile",
+      code: "FROM node:22-alpine\\nWORKDIR /app\\nCOPY package*.json ./",
+    },
+    badCode: {
+      language: "yaml",
+      filename: "compose.yaml",
+      code: "services:\\n  app:\\n    image: node:latest",
+    },
+  };
+
+  assert.deepEqual(
+    validateLessonMetadata(
+      dockerMetadata,
+      "content/docker/multi-stage-builds.mdx",
+    ),
+    dockerMetadata,
+  );
+});
+
 test("validateLessonMetadata rejects unknown tracks", () => {
   assert.throws(
     () =>

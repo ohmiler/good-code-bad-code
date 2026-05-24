@@ -1,0 +1,42 @@
+export const metadata = {
+  title: "Layer cache and dependency order",
+  track: "docker",
+  order: 3,
+  summary: "Order Dockerfile instructions so dependency layers are reused when source files change.",
+  tags: ["cache", "layers", "dependencies"],
+  takeaways: ["Docker cache follows instruction order, so dependency files should usually be copied before application source."],
+  goodCode: {
+    language: "dockerfile",
+    filename: "Dockerfile",
+    code: `FROM node:22-alpine AS app
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+RUN npm ci
+
+COPY src ./src
+COPY public ./public
+
+RUN npm run build`,
+  },
+  badCode: {
+    language: "dockerfile",
+    filename: "Dockerfile",
+    code: `FROM node:22-alpine AS app
+WORKDIR /app
+
+COPY . .
+RUN npm install
+RUN npm run build`,
+  },
+};
+
+## What to review
+
+The good version lets the dependency install layer stay cached when only source files change.
+
+The bad version copies the whole project before installing dependencies. Any source edit can invalidate the expensive install layer.
+
+## Review notes
+
+Cache-friendly Dockerfiles are also review-friendly. Look for the smallest stable inputs before expensive `RUN` steps.

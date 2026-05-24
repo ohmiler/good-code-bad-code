@@ -1,0 +1,42 @@
+export const metadata = {
+  title: "ENTRYPOINT, CMD, and signals",
+  track: "docker",
+  order: 8,
+  summary: "Use exec-form commands and keep startup wrappers signal-safe so containers stop gracefully.",
+  tags: ["entrypoint", "cmd", "signals"],
+  takeaways: ["The process started by Docker should receive signals directly and shut down predictably."],
+  goodCode: {
+    language: "dockerfile",
+    filename: "Dockerfile",
+    code: `FROM node:22-alpine
+
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev
+COPY server.js ./server.js
+
+ENTRYPOINT ["node"]
+CMD ["server.js"]`,
+  },
+  badCode: {
+    language: "dockerfile",
+    filename: "Dockerfile",
+    code: `FROM node:22-alpine
+
+WORKDIR /app
+COPY . .
+RUN npm install
+
+CMD npm start`,
+  },
+};
+
+## What to review
+
+The good version uses exec form, so the application process receives termination signals directly.
+
+The bad version uses shell form. The shell can become PID 1 and make signal forwarding and graceful shutdown less predictable.
+
+## Review notes
+
+If an entrypoint script is needed, check that it ends with `exec "$@"`. Startup scripts should prepare the environment, then hand off to the real process.

@@ -1,0 +1,36 @@
+export const metadata = {
+  title: "Build context and .dockerignore",
+  track: "docker",
+  order: 1,
+  summary: "Keep the Docker build context small and intentional so builds are faster, safer, and easier to reproduce.",
+  tags: ["build context", "dockerignore", "security"],
+  takeaways: ["The build context is part of the input to your image, so review what files are allowed into it."],
+  goodCode: {
+    language: "dockerfile",
+    filename: ".dockerignore",
+    code: `node_modules
+.git
+.env
+.next
+coverage
+dist
+*.log
+Dockerfile*
+compose*.yaml`,
+  },
+  badCode: {
+    language: "dockerfile",
+    filename: ".dockerignore",
+    code: `# Everything in the repository is sent to the builder.`,
+  },
+};
+
+## What to review
+
+The good version excludes dependency folders, local build output, secrets, logs, and repository metadata from the build context.
+
+The bad version sends the whole repository to the builder. That makes cache invalidation noisy and increases the chance of copying sensitive or irrelevant files.
+
+## Review notes
+
+Start Docker reviews at the build context. If `.dockerignore` is missing or too small, a clean Dockerfile can still be slow, flaky, or unsafe.

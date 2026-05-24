@@ -1,0 +1,49 @@
+export const metadata = {
+  title: "Multi-stage builds",
+  track: "docker",
+  order: 4,
+  summary: "Separate build tooling from the final runtime image so production containers contain only what they need to run.",
+  tags: ["multi-stage", "runtime", "image size"],
+  takeaways: ["Multi-stage builds reduce final image size and separate build concerns from runtime concerns."],
+  goodCode: {
+    language: "dockerfile",
+    filename: "Dockerfile",
+    code: `FROM node:22-alpine AS deps
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci
+
+FROM deps AS build
+COPY . .
+RUN npm run build
+
+FROM node:22-alpine AS runtime
+WORKDIR /app
+ENV NODE_ENV=production
+COPY --from=build /app/.next/standalone ./
+COPY --from=build /app/.next/static ./.next/static
+CMD ["node", "server.js"]`,
+  },
+  badCode: {
+    language: "dockerfile",
+    filename: "Dockerfile",
+    code: `FROM node:22-alpine
+WORKDIR /app
+
+COPY . .
+RUN npm install
+RUN npm run build
+
+CMD ["npm", "start"]`,
+  },
+};
+
+## What to review
+
+The good version keeps install and build tooling in earlier stages and copies only runtime artifacts into the final image.
+
+The bad version ships source files, dev dependencies, and build tools in the same image that runs production.
+
+## Review notes
+
+For compiled or bundled apps, ask what the final stage actually needs. Anything only needed to build should usually stay out of the runtime stage.
