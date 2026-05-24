@@ -13,6 +13,18 @@ export type LessonNavigation = {
   next?: LessonNavigationItem;
 };
 
+function toNavigationItem(lesson: LessonNavigationItem | undefined) {
+  if (!lesson) {
+    return undefined;
+  }
+
+  return {
+    slug: lesson.slug,
+    title: lesson.title,
+    track: lesson.track,
+  };
+}
+
 export function buildLessonNavigation(
   lessons: readonly LessonNavigationItem[],
   track: TrackSlug,
@@ -30,7 +42,7 @@ export function buildLessonNavigation(
   return {
     currentIndex: currentIndex + 1,
     total: trackLessons.length,
-    previous: trackLessons[currentIndex - 1],
-    next: trackLessons[currentIndex + 1],
+    previous: toNavigationItem(trackLessons[currentIndex - 1]),
+    next: toNavigationItem(trackLessons[currentIndex + 1]),
   };
 }

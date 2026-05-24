@@ -1,4 +1,12 @@
-import type { HighlightedCodeSample } from "@/lib/content/lessons";
+"use client";
+
+import { useLanguage } from "@/components/language/language-provider";
+import { uiCopy } from "@/lib/i18n/translations";
+
+type HighlightedCodeSample = {
+  filename: string;
+  html: string;
+};
 
 type CodeComparisonProps = {
   goodCode: HighlightedCodeSample;
@@ -36,10 +44,13 @@ function CodePanel({
 }
 
 export function CodeComparison({ goodCode, badCode }: CodeComparisonProps) {
+  const { language } = useLanguage();
+  const copy = uiCopy[language];
+
   return (
     <div className="grid min-w-0 gap-4 lg:grid-cols-2">
-      <CodePanel label="Good Code" tone="good" sample={goodCode} />
-      <CodePanel label="Bad Code" tone="bad" sample={badCode} />
+      <CodePanel label={copy.goodCode} tone="good" sample={goodCode} />
+      <CodePanel label={copy.badCode} tone="bad" sample={badCode} />
     </div>
   );
 }

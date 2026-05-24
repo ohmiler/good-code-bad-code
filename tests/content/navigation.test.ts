@@ -71,3 +71,22 @@ test("buildLessonNavigation omits unavailable neighbors at track boundaries", ()
     },
   );
 });
+
+test("buildLessonNavigation returns serializable navigation items", () => {
+  const [firstLesson, secondLesson] = lessons;
+  const navigation = buildLessonNavigation(
+    [
+      { ...firstLesson, Component: () => null },
+      { ...secondLesson, Component: () => null },
+    ],
+    "html",
+    "accessible-form-labels",
+  );
+
+  assert.deepEqual(navigation?.next, {
+    slug: "interactive-elements",
+    title: "Interactive elements",
+    track: "html",
+  });
+  assert.equal("Component" in (navigation?.next ?? {}), false);
+});

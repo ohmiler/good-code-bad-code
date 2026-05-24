@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { LanguageToggle } from "./language/language-toggle";
+import { HeaderTagline } from "./language/localized-ui";
 
 export function SiteHeader() {
   return (
@@ -10,8 +12,11 @@ export function SiteHeader() {
         >
           Good Code Bad Code
         </Link>
-        <div className="hidden shrink-0 text-right text-sm text-zinc-400 sm:block">
-          Review patterns by Track
+        <div className="flex shrink-0 items-center gap-3">
+          <div className="hidden text-right text-sm text-zinc-400 sm:block">
+            <HeaderTagline />
+          </div>
+          <LanguageToggle />
         </div>
       </nav>
     </header>

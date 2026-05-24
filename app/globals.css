@@ -27,7 +27,7 @@ body {
   min-width: 320px;
   background: radial-gradient(circle at top, #111827 0, #070b12 34rem);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), "Segoe UI", Arial, Helvetica, sans-serif;
   text-rendering: optimizeLegibility;
 }
 

@@ -1,8 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { LessonPreview } from "@/lib/content/lessons";
-import { LessonList } from "./lesson-list";
+import { LessonList, type LessonPreview } from "./lesson-list";
 import { TagFilter } from "./tag-filter";
 
 export function LessonBrowser({ lessons }: { lessons: LessonPreview[] }) {
