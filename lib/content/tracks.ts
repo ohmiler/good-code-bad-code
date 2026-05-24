@@ -83,6 +83,12 @@ export const tracks = [
     description:
       "Review build contexts, base images, cache layers, multi-stage builds, secrets, users, healthchecks, and Compose files.",
   },
+  {
+    slug: "tailwindcss",
+    title: "Tailwind CSS",
+    description:
+      "Review utility composition, responsive variants, states, theme tokens, dark mode, reuse boundaries, accessibility, and class conflicts.",
+  },
 ] as const;
 
 export type Track = (typeof tracks)[number];

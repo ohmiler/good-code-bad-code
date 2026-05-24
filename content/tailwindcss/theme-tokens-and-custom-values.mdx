@@ -1,0 +1,40 @@
+export const metadata = {
+  title: "Theme tokens and custom values",
+  track: "tailwindcss",
+  order: 5,
+  summary: "Prefer named theme tokens for shared decisions and reserve custom values for truly local exceptions.",
+  tags: ["theme", "tokens", "design-system"],
+  takeaways: ["A repeated color, spacing, or radius should usually become a token that reviewers can discuss by name."],
+  goodCode: {
+    language: "tsx",
+    filename: "PlanBadge.tsx",
+    code: `export function PlanBadge({ plan }: { plan: "team" | "pro" }) {
+  return (
+    <span className="inline-flex items-center rounded-md bg-brand-600 px-3 py-1 text-xs font-semibold text-white shadow-sm ring-1 ring-brand-500">
+      {plan === "team" ? "Team" : "Pro"}
+    </span>
+  );
+}`,
+  },
+  badCode: {
+    language: "tsx",
+    filename: "PlanBadge.tsx",
+    code: `export function PlanBadge({ plan }) {
+  return (
+    <span className="inline-flex items-center rounded-[5px] bg-[#2563eb] px-[13px] py-[5px] text-[12px] font-semibold text-white shadow-[0_1px_2px_rgba(37,99,235,0.24)] ring-1 ring-[#3b82f6]">
+      {plan === "team" ? "Team" : "Pro"}
+    </span>
+  );
+}`,
+  },
+};
+
+## What to review
+
+The good version uses named brand utilities, so repeated design decisions can be changed and reviewed through the theme.
+
+The bad version encodes the design system into one component with hex colors, custom shadows, and pixel values. The same decision will likely be copied differently elsewhere.
+
+## Review notes
+
+Tailwind custom values are useful, but repeated custom values are design tokens asking for a name. During review, ask whether the value belongs to the component or the theme.

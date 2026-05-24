@@ -1,0 +1,52 @@
+export const metadata = {
+  title: "Responsive breakpoints",
+  track: "tailwindcss",
+  order: 2,
+  summary: "Use Tailwind breakpoints as mobile-first overrides instead of locking layouts to a desktop width.",
+  tags: ["responsive", "breakpoints", "layout"],
+  takeaways: ["Responsive utilities should describe how a small-screen layout grows, not how a large layout is squeezed down."],
+  goodCode: {
+    language: "tsx",
+    filename: "LessonGrid.tsx",
+    code: `export function LessonGrid({ lessons }: { lessons: Lesson[] }) {
+  return (
+    <section className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {lessons.map((lesson) => (
+          <a key={lesson.slug} href={lesson.href} className="rounded-md border border-slate-200 p-4 hover:border-sky-400">
+            {lesson.title}
+          </a>
+        ))}
+      </div>
+    </section>
+  );
+}`,
+  },
+  badCode: {
+    language: "tsx",
+    filename: "LessonGrid.tsx",
+    code: `export function LessonGrid({ lessons }) {
+  return (
+    <section className="mx-auto w-[960px] px-[32px] py-[40px]">
+      <div className="grid grid-cols-3 gap-[18px]">
+        {lessons.map((lesson) => (
+          <a key={lesson.slug} href={lesson.href} className="rounded-md border p-4">
+            {lesson.title}
+          </a>
+        ))}
+      </div>
+    </section>
+  );
+}`,
+  },
+};
+
+## What to review
+
+The good version starts with one column and adds columns at `sm` and `lg`, while the container uses flexible width with a maximum.
+
+The bad version fixes a desktop width and column count. On smaller screens, the layout is forced to overflow or shrink in ways the code does not explain.
+
+## Review notes
+
+Review responsive Tailwind by reading left to right: base utility first, breakpoint override after. If the base style is not a usable mobile layout, the breakpoint stack is probably backwards.

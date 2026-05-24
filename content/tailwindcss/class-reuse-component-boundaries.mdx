@@ -1,0 +1,52 @@
+export const metadata = {
+  title: "Class reuse and component boundaries",
+  track: "tailwindcss",
+  order: 7,
+  summary: "Extract reusable class decisions at component boundaries instead of duplicating long class lists across call sites.",
+  tags: ["reuse", "components", "duplication"],
+  takeaways: ["Repeated Tailwind strings are still duplication; extract them when they represent the same UI concept."],
+  goodCode: {
+    language: "tsx",
+    filename: "ReviewStatusBadge.tsx",
+    code: `const statusClasses = {
+  passed: "bg-emerald-50 text-emerald-700 ring-emerald-200",
+  failed: "bg-rose-50 text-rose-700 ring-rose-200",
+  pending: "bg-amber-50 text-amber-700 ring-amber-200",
+} as const;
+
+export function ReviewStatusBadge({ status }: { status: keyof typeof statusClasses }) {
+  return (
+    <span className={["inline-flex rounded-md px-2 py-1 text-xs font-medium ring-1", statusClasses[status]].join(" ")}>
+      {status}
+    </span>
+  );
+}`,
+  },
+  badCode: {
+    language: "tsx",
+    filename: "ReviewList.tsx",
+    code: `export function ReviewList({ reviews }) {
+  return (
+    <ul>
+      {reviews.map((review) => (
+        <li key={review.id}>
+          {review.status === "passed" && <span className="inline-flex rounded-md bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700 ring-1 ring-emerald-200">passed</span>}
+          {review.status === "failed" && <span className="inline-flex rounded-md bg-rose-50 px-2 py-1 text-xs font-medium text-rose-700 ring-1 ring-rose-200">failed</span>}
+          {review.status === "pending" && <span className="inline-flex rounded-md bg-amber-50 px-2 py-1 text-xs font-medium text-amber-700 ring-1 ring-amber-200">pending</span>}
+        </li>
+      ))}
+    </ul>
+  );
+}`,
+  },
+};
+
+## What to review
+
+The good version gives the badge a component boundary and keeps variant classes in one typed map.
+
+The bad version repeats the same structural utilities across branches. A small visual change now requires editing every branch and hoping the copies stay aligned.
+
+## Review notes
+
+Extract when duplication represents one UI concept. Do not extract every class list by reflex; extract when review comments would apply to all copies together.

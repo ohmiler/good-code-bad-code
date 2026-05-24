@@ -425,6 +425,36 @@ import DockerHealthchecksAndRuntimeConfig, {
 import DockerComposeServicesVolumesNetworks, {
   metadata as dockerComposeServicesVolumesNetworksMetadata,
 } from "./docker/compose-services-volumes-networks.mdx";
+import TailwindcssUtilityCompositionReadability, {
+  metadata as tailwindcssUtilityCompositionReadabilityMetadata,
+} from "./tailwindcss/utility-composition-readability.mdx";
+import TailwindcssResponsiveBreakpoints, {
+  metadata as tailwindcssResponsiveBreakpointsMetadata,
+} from "./tailwindcss/responsive-breakpoints.mdx";
+import TailwindcssStateVariantsHoverFocusDisabled, {
+  metadata as tailwindcssStateVariantsHoverFocusDisabledMetadata,
+} from "./tailwindcss/state-variants-hover-focus-disabled.mdx";
+import TailwindcssSpacingLayoutConsistency, {
+  metadata as tailwindcssSpacingLayoutConsistencyMetadata,
+} from "./tailwindcss/spacing-layout-consistency.mdx";
+import TailwindcssThemeTokensAndCustomValues, {
+  metadata as tailwindcssThemeTokensAndCustomValuesMetadata,
+} from "./tailwindcss/theme-tokens-and-custom-values.mdx";
+import TailwindcssDarkModeVariants, {
+  metadata as tailwindcssDarkModeVariantsMetadata,
+} from "./tailwindcss/dark-mode-variants.mdx";
+import TailwindcssClassReuseComponentBoundaries, {
+  metadata as tailwindcssClassReuseComponentBoundariesMetadata,
+} from "./tailwindcss/class-reuse-component-boundaries.mdx";
+import TailwindcssArbitraryValuesRestraint, {
+  metadata as tailwindcssArbitraryValuesRestraintMetadata,
+} from "./tailwindcss/arbitrary-values-restraint.mdx";
+import TailwindcssAccessibilityContrastFocus, {
+  metadata as tailwindcssAccessibilityContrastFocusMetadata,
+} from "./tailwindcss/accessibility-contrast-focus.mdx";
+import TailwindcssConditionalClassesAndConflicts, {
+  metadata as tailwindcssConditionalClassesAndConflictsMetadata,
+} from "./tailwindcss/conditional-classes-and-conflicts.mdx";
 
 type RawLesson = {
   slug: string;
@@ -1273,6 +1303,66 @@ const rawLessons: RawLesson[] = [
     source: "content/docker/compose-services-volumes-networks.mdx",
     metadata: dockerComposeServicesVolumesNetworksMetadata,
     Component: DockerComposeServicesVolumesNetworks,
+  },
+  {
+    slug: "utility-composition-readability",
+    source: "content/tailwindcss/utility-composition-readability.mdx",
+    metadata: tailwindcssUtilityCompositionReadabilityMetadata,
+    Component: TailwindcssUtilityCompositionReadability,
+  },
+  {
+    slug: "responsive-breakpoints",
+    source: "content/tailwindcss/responsive-breakpoints.mdx",
+    metadata: tailwindcssResponsiveBreakpointsMetadata,
+    Component: TailwindcssResponsiveBreakpoints,
+  },
+  {
+    slug: "state-variants-hover-focus-disabled",
+    source: "content/tailwindcss/state-variants-hover-focus-disabled.mdx",
+    metadata: tailwindcssStateVariantsHoverFocusDisabledMetadata,
+    Component: TailwindcssStateVariantsHoverFocusDisabled,
+  },
+  {
+    slug: "spacing-layout-consistency",
+    source: "content/tailwindcss/spacing-layout-consistency.mdx",
+    metadata: tailwindcssSpacingLayoutConsistencyMetadata,
+    Component: TailwindcssSpacingLayoutConsistency,
+  },
+  {
+    slug: "theme-tokens-and-custom-values",
+    source: "content/tailwindcss/theme-tokens-and-custom-values.mdx",
+    metadata: tailwindcssThemeTokensAndCustomValuesMetadata,
+    Component: TailwindcssThemeTokensAndCustomValues,
+  },
+  {
+    slug: "dark-mode-variants",
+    source: "content/tailwindcss/dark-mode-variants.mdx",
+    metadata: tailwindcssDarkModeVariantsMetadata,
+    Component: TailwindcssDarkModeVariants,
+  },
+  {
+    slug: "class-reuse-component-boundaries",
+    source: "content/tailwindcss/class-reuse-component-boundaries.mdx",
+    metadata: tailwindcssClassReuseComponentBoundariesMetadata,
+    Component: TailwindcssClassReuseComponentBoundaries,
+  },
+  {
+    slug: "arbitrary-values-restraint",
+    source: "content/tailwindcss/arbitrary-values-restraint.mdx",
+    metadata: tailwindcssArbitraryValuesRestraintMetadata,
+    Component: TailwindcssArbitraryValuesRestraint,
+  },
+  {
+    slug: "accessibility-contrast-focus",
+    source: "content/tailwindcss/accessibility-contrast-focus.mdx",
+    metadata: tailwindcssAccessibilityContrastFocusMetadata,
+    Component: TailwindcssAccessibilityContrastFocus,
+  },
+  {
+    slug: "conditional-classes-and-conflicts",
+    source: "content/tailwindcss/conditional-classes-and-conflicts.mdx",
+    metadata: tailwindcssConditionalClassesAndConflictsMetadata,
+    Component: TailwindcssConditionalClassesAndConflicts,
   },
 ];
 

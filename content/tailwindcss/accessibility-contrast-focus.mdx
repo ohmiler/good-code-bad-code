@@ -1,0 +1,44 @@
+export const metadata = {
+  title: "Accessibility: contrast and focus",
+  track: "tailwindcss",
+  order: 9,
+  summary: "Review Tailwind styling for visible focus, readable contrast, and accessible labels on icon-only controls.",
+  tags: ["accessibility", "contrast", "focus"],
+  takeaways: ["Utility classes can make accessibility explicit when contrast, focus, and labels are part of the class list."],
+  goodCode: {
+    language: "tsx",
+    filename: "CopyLinkButton.tsx",
+    code: `export function CopyLinkButton() {
+  return (
+    <button
+      type="button"
+      className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2"
+    >
+      <LinkIcon className="h-4 w-4" aria-hidden="true" />
+      <span className="sr-only">Copy lesson link</span>
+    </button>
+  );
+}`,
+  },
+  badCode: {
+    language: "tsx",
+    filename: "CopyLinkButton.tsx",
+    code: `export function CopyLinkButton() {
+  return (
+    <button className="h-9 w-9 rounded-md bg-slate-200 text-slate-300 outline-none hover:bg-slate-300">
+      <LinkIcon className="mx-auto h-4 w-4" />
+    </button>
+  );
+}`,
+  },
+};
+
+## What to review
+
+The good version gives the icon-only button an accessible text label, adequate contrast, and a strong keyboard focus ring.
+
+The bad version removes the outline, uses weak foreground contrast, and leaves the icon as the only name for the control.
+
+## Review notes
+
+Tailwind can make accessibility easier to review because the focus ring, contrast choices, and `sr-only` label are visible at the call site.

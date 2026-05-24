@@ -1,0 +1,58 @@
+export const metadata = {
+  title: "Spacing and layout consistency",
+  track: "tailwindcss",
+  order: 4,
+  summary: "Use a consistent spacing scale and layout rhythm instead of one-off nudges that make future changes fragile.",
+  tags: ["spacing", "layout", "scale"],
+  takeaways: ["Repeated spacing utilities should reveal a rhythm; random values usually reveal local visual patching."],
+  goodCode: {
+    language: "tsx",
+    filename: "ReviewPanel.tsx",
+    code: `export function ReviewPanel({ title, items }: ReviewPanelProps) {
+  return (
+    <section className="rounded-md border border-slate-200 bg-white p-4">
+      <div className="space-y-3">
+        <h2 className="text-base font-semibold text-slate-950">{title}</h2>
+        <ul className="space-y-2">
+          {items.map((item) => (
+            <li key={item.id} className="rounded-md bg-slate-50 p-3 text-sm text-slate-700">
+              {item.label}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}`,
+  },
+  badCode: {
+    language: "tsx",
+    filename: "ReviewPanel.tsx",
+    code: `export function ReviewPanel({ title, items }) {
+  return (
+    <section className="rounded-md border bg-white p-[19px]">
+      <div className="mt-[3px]">
+        <h2 className="mb-[14px] ml-[2px] text-[17px] font-semibold">{title}</h2>
+        <ul>
+          {items.map((item) => (
+            <li key={item.id} className="mb-[7px] rounded-md bg-slate-50 px-[11px] py-[9px]">
+              {item.label}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}`,
+  },
+};
+
+## What to review
+
+The good version uses container padding and `space-y` utilities to make vertical rhythm explicit.
+
+The bad version uses arbitrary pixel nudges for almost every gap. That usually means the code was tuned by eye for one screenshot, not designed as a reusable layout.
+
+## Review notes
+
+One arbitrary value can be reasonable. A cluster of arbitrary spacing values in the same component is a signal to ask whether the layout should return to the project spacing scale.

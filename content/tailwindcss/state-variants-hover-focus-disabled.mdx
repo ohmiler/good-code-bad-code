@@ -1,0 +1,47 @@
+export const metadata = {
+  title: "State variants: hover, focus, and disabled",
+  track: "tailwindcss",
+  order: 3,
+  summary: "Review interactive utilities as a full state set, not just the hover style that looks good with a mouse.",
+  tags: ["states", "focus", "disabled"],
+  takeaways: ["Buttons and links should expose hover, focus-visible, and disabled states with the same care as their default style."],
+  goodCode: {
+    language: "tsx",
+    filename: "SubmitButton.tsx",
+    code: `export function SubmitButton({ isSaving }: { isSaving: boolean }) {
+  return (
+    <button
+      type="submit"
+      disabled={isSaving}
+      className="inline-flex h-10 items-center rounded-md bg-emerald-600 px-4 text-sm font-medium text-white transition hover:bg-emerald-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-600"
+    >
+      {isSaving ? "Saving" : "Save"}
+    </button>
+  );
+}`,
+  },
+  badCode: {
+    language: "tsx",
+    filename: "SubmitButton.tsx",
+    code: `export function SubmitButton({ isSaving }) {
+  return (
+    <button
+      disabled={isSaving}
+      className="rounded-md bg-emerald-600 px-4 py-2 text-white hover:bg-emerald-500 outline-none"
+    >
+      Save
+    </button>
+  );
+}`,
+  },
+};
+
+## What to review
+
+The good version includes a visible keyboard focus treatment and a disabled style that changes both pointer behavior and visual affordance.
+
+The bad version only handles hover and removes the outline without replacing it. Disabled users see the same call to action even when the button cannot be used.
+
+## Review notes
+
+When you see `hover:` in a review, also look for `focus-visible:` and `disabled:` if the element is interactive. Missing states are often UX bugs hiding in plain sight.

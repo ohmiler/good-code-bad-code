@@ -1,0 +1,54 @@
+export const metadata = {
+  title: "Conditional classes and conflicts",
+  track: "tailwindcss",
+  order: 10,
+  summary: "Build conditional class lists so mutually exclusive states cannot accidentally emit conflicting utilities.",
+  tags: ["conditional-classes", "conflicts", "state"],
+  takeaways: ["Conditional Tailwind should make variant precedence obvious; conflicting utilities turn state review into guesswork."],
+  goodCode: {
+    language: "tsx",
+    filename: "SegmentedOption.tsx",
+    code: `import clsx from "clsx";
+
+export function SegmentedOption({ selected, disabled, children }: SegmentedOptionProps) {
+  return (
+    <button
+      type="button"
+      disabled={disabled}
+      className={clsx(
+        "rounded-md px-3 py-1.5 text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400",
+        selected ? "bg-sky-600 text-white" : "bg-white text-slate-700 hover:bg-slate-50",
+        disabled && "cursor-not-allowed opacity-50 hover:bg-white",
+      )}
+    >
+      {children}
+    </button>
+  );
+}`,
+  },
+  badCode: {
+    language: "tsx",
+    filename: "SegmentedOption.tsx",
+    code: `export function SegmentedOption({ selected, disabled, children }) {
+  const className = [
+    "rounded-md px-3 py-1.5 text-sm font-medium",
+    "bg-white text-slate-700 hover:bg-slate-50",
+    selected && "bg-sky-600 text-white",
+    disabled && "opacity-50 bg-white",
+    !disabled && "opacity-100",
+  ].filter(Boolean).join(" ");
+
+  return <button disabled={disabled} className={className}>{children}</button>;
+}`,
+  },
+};
+
+## What to review
+
+The good version makes selected and unselected styles mutually exclusive, then layers disabled behavior deliberately.
+
+The bad version can emit conflicting background, text, and opacity utilities in the same string. The final style depends on ordering instead of clear state logic.
+
+## Review notes
+
+When reviewing conditional Tailwind, look for pairs that should not coexist, such as two backgrounds, two opacity values, or a disabled state that still keeps hover styling active.

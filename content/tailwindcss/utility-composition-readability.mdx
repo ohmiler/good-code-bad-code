@@ -1,0 +1,59 @@
+export const metadata = {
+  title: "Utility composition readability",
+  track: "tailwindcss",
+  order: 1,
+  summary: "Group Tailwind utilities by purpose so reviewers can understand layout, color, state, and motion without decoding one long string.",
+  tags: ["utilities", "readability", "composition"],
+  takeaways: ["A utility-first class list still needs structure; readable grouping makes design intent reviewable."],
+  goodCode: {
+    language: "tsx",
+    filename: "PrimaryButton.tsx",
+    code: `type PrimaryButtonProps = {
+  children: React.ReactNode;
+  disabled?: boolean;
+};
+
+const baseClasses =
+  "inline-flex h-10 items-center justify-center gap-2 rounded-md px-4 text-sm font-medium";
+const toneClasses =
+  "bg-sky-600 text-white shadow-sm hover:bg-sky-500";
+const stateClasses =
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300 disabled:cursor-not-allowed disabled:opacity-50";
+
+export function PrimaryButton({ children, disabled }: PrimaryButtonProps) {
+  return (
+    <button
+      type="button"
+      disabled={disabled}
+      className={[baseClasses, toneClasses, stateClasses].join(" ")}
+    >
+      {children}
+    </button>
+  );
+}`,
+  },
+  badCode: {
+    language: "tsx",
+    filename: "PrimaryButton.tsx",
+    code: `export function PrimaryButton({ children, disabled }) {
+  return (
+    <button
+      disabled={disabled}
+      className="px-4 text-white rounded-md h-10 bg-sky-600 text-sm hover:bg-sky-500 inline-flex shadow-sm items-center disabled:opacity-50 justify-center font-medium focus-visible:ring-2 gap-2 rounded-lg disabled:cursor-not-allowed focus-visible:ring-sky-300"
+    >
+      {children}
+    </button>
+  );
+}`,
+  },
+};
+
+## What to review
+
+The good version separates base structure, visual tone, and interaction states. A reviewer can scan each concern and spot duplicate or conflicting utilities quickly.
+
+The bad version ships one long class list with mixed concerns and an accidental rounded value conflict. The UI may render, but the intent is harder to review.
+
+## Review notes
+
+Tailwind does not remove the need for naming. When a class list becomes part of a reusable UI decision, group it by concern or extract a small component-level constant.
