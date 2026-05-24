@@ -2,10 +2,17 @@ import assert from "node:assert/strict";
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { test } from "node:test";
+import ts from "typescript";
 import { tracks } from "../../lib/content/tracks";
 
 const contentRoot = path.join(process.cwd(), "content");
 const registryPath = path.join(contentRoot, "lesson-registry.ts");
+const trackSlugs = new Set<string>(tracks.map((track) => track.slug));
+
+type RawLessonEntry = {
+  slug: string;
+  source: string;
+};
 
 async function getTrackLessonFiles() {
   const lessonsByTrack = new Map<string, string[]>();
@@ -26,7 +33,145 @@ async function getTrackLessonFiles() {
 }
 
 function slugFromContentPath(contentPath: string): string {
-  return path.basename(contentPath, ".mdx");
+  return path.posix.basename(contentPath, ".mdx");
+}
+
+function trackFromContentPath(contentPath: string): string {
+  return contentPath.split("/")[1] ?? "";
+}
+
+function readStringProperty(
+  objectLiteral: ts.ObjectLiteralExpression,
+  propertyName: string,
+): string {
+  const property = objectLiteral.properties.find(
+    (item): item is ts.PropertyAssignment =>
+      ts.isPropertyAssignment(item) &&
+      ts.isIdentifier(item.name) &&
+      item.name.text === propertyName,
+  );
+
+  assert.ok(property, `rawLessons entry is missing ${propertyName}`);
+  assert.ok(
+    ts.isStringLiteral(property.initializer),
+    `rawLessons ${propertyName} must be a string literal`,
+  );
+
+  return property.initializer.text.replaceAll("\\", "/");
+}
+
+async function readRegisteredLessons(): Promise<RawLessonEntry[]> {
+  const sourceText = await readFile(registryPath, "utf8");
+  const sourceFile = ts.createSourceFile(
+    registryPath,
+    sourceText,
+    ts.ScriptTarget.Latest,
+    true,
+    ts.ScriptKind.TS,
+  );
+  let rawLessons: ts.ArrayLiteralExpression | undefined;
+
+  function visit(node: ts.Node) {
+    if (
+      ts.isVariableDeclaration(node) &&
+      ts.isIdentifier(node.name) &&
+      node.name.text === "rawLessons" &&
+      node.initializer &&
+      ts.isArrayLiteralExpression(node.initializer)
+    ) {
+      rawLessons = node.initializer;
+      return;
+    }
+
+    ts.forEachChild(node, visit);
+  }
+
+  visit(sourceFile);
+  assert.ok(rawLessons, "content/lesson-registry.ts must declare rawLessons");
+
+  return rawLessons.elements.map((element) => {
+    assert.ok(
+      ts.isObjectLiteralExpression(element),
+      "rawLessons entries must be object literals",
+    );
+
+    return {
+      slug: readStringProperty(element, "slug"),
+      source: readStringProperty(element, "source"),
+    };
+  });
+}
+
+function extractObjectLiteral(source: string, marker: string): string {
+  const markerIndex = source.indexOf(marker);
+  assert.notEqual(markerIndex, -1, `${marker} export is missing`);
+
+  const objectStart = source.indexOf("{", markerIndex);
+  assert.notEqual(objectStart, -1, `${marker} object literal is missing`);
+
+  let depth = 0;
+  let quote: '"' | "'" | "`" | undefined;
+  let escaped = false;
+
+  for (let index = objectStart; index < source.length; index += 1) {
+    const character = source[index];
+
+    if (quote) {
+      if (escaped) {
+        escaped = false;
+      } else if (character === "\\") {
+        escaped = true;
+      } else if (character === quote) {
+        quote = undefined;
+      }
+      continue;
+    }
+
+    if (character === '"' || character === "'" || character === "`") {
+      quote = character;
+      continue;
+    }
+
+    if (character === "{") {
+      depth += 1;
+    } else if (character === "}") {
+      depth -= 1;
+      if (depth === 0) {
+        return source.slice(objectStart, index + 1);
+      }
+    }
+  }
+
+  assert.fail(`${marker} object literal was not closed`);
+}
+
+async function readMdxMetadataTrack(contentPath: string): Promise<string> {
+  const mdxSource = await readFile(contentPath, "utf8");
+  const metadataObject = extractObjectLiteral(
+    mdxSource,
+    "export const metadata",
+  );
+  const sourceFile = ts.createSourceFile(
+    contentPath,
+    `const metadata = ${metadataObject};`,
+    ts.ScriptTarget.Latest,
+    true,
+    ts.ScriptKind.TS,
+  );
+  const statement = sourceFile.statements[0];
+
+  assert.ok(
+    ts.isVariableStatement(statement),
+    `${contentPath} metadata must parse as a variable statement`,
+  );
+
+  const initializer = statement.declarationList.declarations[0]?.initializer;
+  assert.ok(
+    initializer && ts.isObjectLiteralExpression(initializer),
+    `${contentPath} metadata must be an object literal`,
+  );
+
+  return readStringProperty(initializer, "track");
 }
 
 test("test:content runs the registry content coverage test", async () => {
@@ -40,16 +185,14 @@ test("test:content runs the registry content coverage test", async () => {
   assert.match(testContentScript, /lesson-registry\.test\.ts/);
 });
 
-test("seeded lessons have three MDX files per track and unique slugs", async () => {
+test("seeded lessons have three MDX files per track", async () => {
   const lessonsByTrack = await getTrackLessonFiles();
   const allLessonFiles = [...lessonsByTrack.values()].flat();
-  const slugs = allLessonFiles.map(slugFromContentPath);
 
   assert.equal(allLessonFiles.length, 15);
   for (const track of tracks) {
     assert.equal(lessonsByTrack.get(track.slug)?.length, 3, track.slug);
   }
-  assert.equal(new Set(slugs).size, slugs.length);
 });
 
 test("every seeded MDX lesson compiles", async () => {
@@ -62,22 +205,32 @@ test("every seeded MDX lesson compiles", async () => {
   }
 });
 
-test("registry explicitly imports and sources every seeded lesson", async () => {
+test("rawLessons exactly matches seeded lessons with aligned slugs and tracks", async () => {
   const lessonsByTrack = await getTrackLessonFiles();
-  const registrySource = await readFile(registryPath, "utf8");
+  const discoveredSources = [...lessonsByTrack.values()].flat().sort();
+  const registeredLessons = await readRegisteredLessons();
+  const registeredSources = registeredLessons
+    .map((lesson) => lesson.source)
+    .sort();
+  const registeredSlugs = registeredLessons.map((lesson) => lesson.slug);
 
-  for (const contentPath of [...lessonsByTrack.values()].flat()) {
-    const importPath = contentPath.replace(/^content\//, "./");
+  assert.deepEqual(registeredSources, discoveredSources);
+  assert.equal(new Set(registeredSlugs).size, registeredSlugs.length);
 
-    assert.match(
-      registrySource,
-      new RegExp(`from "${importPath.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}"`),
-      `${contentPath} must have an explicit MDX import`,
+  for (const lesson of registeredLessons) {
+    const expectedSlug = slugFromContentPath(lesson.source);
+    const trackFolder = trackFromContentPath(lesson.source);
+    const mdxTrack = await readMdxMetadataTrack(lesson.source);
+
+    assert.equal(lesson.slug, expectedSlug, lesson.source);
+    assert.ok(
+      trackSlugs.has(trackFolder),
+      `${lesson.source} has unknown track folder`,
     );
-    assert.match(
-      registrySource,
-      new RegExp(`source: "${contentPath.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}"`),
-      `${contentPath} must have an explicit source entry`,
+    assert.ok(
+      lesson.source.startsWith(`content/${trackFolder}/`),
+      `${lesson.source} must start with its track folder`,
     );
+    assert.equal(mdxTrack, trackFolder, lesson.source);
   }
 });
