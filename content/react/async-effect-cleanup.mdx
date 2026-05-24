@@ -1,0 +1,104 @@
+export const metadata = {
+  title: "Async effect cleanup",
+  track: "react",
+  order: 7,
+  summary: "Guard async effects so stale responses cannot update the current screen.",
+  tags: ["effects", "async", "cleanup"],
+  takeaways: ["Clean up async effects when inputs change or the component unmounts."],
+  goodCode: {
+    language: "tsx",
+    filename: "ReviewDetails.tsx",
+    code: `import { useEffect, useState } from "react";
+
+type Review = {
+  id: string;
+  title: string;
+  status: string;
+};
+
+async function fetchReview(reviewId: string): Promise<Review> {
+  const response = await fetch("/api/reviews/" + reviewId);
+
+  if (!response.ok) {
+    throw new Error("Could not load review.");
+  }
+
+  return response.json();
+}
+
+export function ReviewDetails({ reviewId }: { reviewId: string }) {
+  const [review, setReview] = useState<Review | null>(null);
+  const [status, setStatus] = useState<"idle" | "loading" | "ready" | "error">(
+    "idle",
+  );
+
+  useEffect(() => {
+    let cancelled = false;
+
+    setStatus("loading");
+    fetchReview(reviewId)
+      .then((nextReview) => {
+        if (!cancelled) {
+          setReview(nextReview);
+          setStatus("ready");
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setStatus("error");
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [reviewId]);
+
+  if (status === "loading") {
+    return <p>Loading review...</p>;
+  }
+
+  if (status === "error") {
+    return <p role="alert">Could not load review.</p>;
+  }
+
+  return review ? <h2>{review.title}</h2> : null;
+}`,
+  },
+  badCode: {
+    language: "tsx",
+    filename: "ReviewDetails.tsx",
+    code: `import { useEffect, useState } from "react";
+
+type Review = {
+  id: string;
+  title: string;
+  status: string;
+};
+
+async function fetchReview(reviewId: string): Promise<Review> {
+  const response = await fetch("/api/reviews/" + reviewId);
+  return response.json();
+}
+
+export function ReviewDetails({ reviewId }: { reviewId: string }) {
+  const [review, setReview] = useState<Review | null>(null);
+
+  useEffect(() => {
+    fetchReview(reviewId).then(setReview);
+  }, [reviewId]);
+
+  return review ? <h2>{review.title}</h2> : <p>Loading review...</p>;
+}`,
+  },
+};
+
+## What to review
+
+The good version marks the request as cancelled during cleanup, so an older response cannot update state after the component has moved on.
+
+The bad version starts a new request for every `reviewId` but allows older requests to finish later and overwrite the latest review.
+
+## Review notes
+
+In review, check what happens if the user navigates quickly or the component unmounts before a promise resolves. The bad version is review-worthy because it has the right dependency array but still misses the lifecycle cleanup that protects the current UI.

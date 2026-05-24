@@ -1,0 +1,54 @@
+export const metadata = {
+  title: "Stable keys in lists",
+  track: "react",
+  order: 2,
+  summary: "Use stable item identities as keys so React can preserve the right state.",
+  tags: ["lists", "keys", "identity"],
+  takeaways: ["Prefer durable IDs for list keys instead of array positions."],
+  goodCode: {
+    language: "tsx",
+    filename: "CommentList.tsx",
+    code: `type Comment = {
+  id: string;
+  authorName: string;
+  body: string;
+};
+
+export function CommentList({ comments }: { comments: Comment[] }) {
+  return comments.map((comment) => (
+    <article key={comment.id}>
+      <h3>{comment.authorName}</h3>
+      <p>{comment.body}</p>
+    </article>
+  ));
+}`,
+  },
+  badCode: {
+    language: "tsx",
+    filename: "CommentList.tsx",
+    code: `type Comment = {
+  id: string;
+  authorName: string;
+  body: string;
+};
+
+export function CommentList({ comments }: { comments: Comment[] }) {
+  return comments.map((comment, index) => (
+    <article key={index}>
+      <h3>{comment.authorName}</h3>
+      <p>{comment.body}</p>
+    </article>
+  ));
+}`,
+  },
+};
+
+## What to review
+
+The good version uses the comment ID as the key, so React can keep each rendered item attached to the same comment when the list changes.
+
+The bad version uses the array index, which only represents a position. Insertions, removals, and sorting can make React reuse the wrong DOM or component state for another comment.
+
+## Review notes
+
+In review, look for keys that survive reordering. The bad version is review-worthy because it often looks fine in static data while causing subtle bugs once users add, delete, filter, or sort items.

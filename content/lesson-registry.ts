@@ -128,12 +128,33 @@ import TsTypeOnlyImportsModuleBoundaries, {
 import ReactPropsComponentBoundaries, {
   metadata as reactPropsComponentBoundariesMetadata,
 } from "./react/props-component-boundaries.mdx";
+import ReactStableKeysLists, {
+  metadata as reactStableKeysListsMetadata,
+} from "./react/stable-keys-lists.mdx";
 import ReactDerivedState, {
   metadata as reactDerivedStateMetadata,
 } from "./react/derived-state.mdx";
+import ReactUpdatingStateFromPreviousState, {
+  metadata as reactUpdatingStateFromPreviousStateMetadata,
+} from "./react/updating-state-from-previous-state.mdx";
+import ReactControlledFormInputs, {
+  metadata as reactControlledFormInputsMetadata,
+} from "./react/controlled-form-inputs.mdx";
 import ReactEffectDependencies, {
   metadata as reactEffectDependenciesMetadata,
 } from "./react/effect-dependencies.mdx";
+import ReactAsyncEffectCleanup, {
+  metadata as reactAsyncEffectCleanupMetadata,
+} from "./react/async-effect-cleanup.mdx";
+import ReactContextBoundaries, {
+  metadata as reactContextBoundariesMetadata,
+} from "./react/context-boundaries.mdx";
+import ReactMemoizationWhenItHelps, {
+  metadata as reactMemoizationWhenItHelpsMetadata,
+} from "./react/memoization-when-it-helps.mdx";
+import ReactCompositionOverPropFlags, {
+  metadata as reactCompositionOverPropFlagsMetadata,
+} from "./react/composition-over-prop-flags.mdx";
 
 type RawLesson = {
   slug: string;
@@ -390,16 +411,58 @@ const rawLessons: RawLesson[] = [
     Component: ReactPropsComponentBoundaries,
   },
   {
+    slug: "stable-keys-lists",
+    source: "content/react/stable-keys-lists.mdx",
+    metadata: reactStableKeysListsMetadata,
+    Component: ReactStableKeysLists,
+  },
+  {
     slug: "derived-state",
     source: "content/react/derived-state.mdx",
     metadata: reactDerivedStateMetadata,
     Component: ReactDerivedState,
   },
   {
+    slug: "updating-state-from-previous-state",
+    source: "content/react/updating-state-from-previous-state.mdx",
+    metadata: reactUpdatingStateFromPreviousStateMetadata,
+    Component: ReactUpdatingStateFromPreviousState,
+  },
+  {
+    slug: "controlled-form-inputs",
+    source: "content/react/controlled-form-inputs.mdx",
+    metadata: reactControlledFormInputsMetadata,
+    Component: ReactControlledFormInputs,
+  },
+  {
     slug: "effect-dependencies",
     source: "content/react/effect-dependencies.mdx",
     metadata: reactEffectDependenciesMetadata,
     Component: ReactEffectDependencies,
+  },
+  {
+    slug: "async-effect-cleanup",
+    source: "content/react/async-effect-cleanup.mdx",
+    metadata: reactAsyncEffectCleanupMetadata,
+    Component: ReactAsyncEffectCleanup,
+  },
+  {
+    slug: "context-boundaries",
+    source: "content/react/context-boundaries.mdx",
+    metadata: reactContextBoundariesMetadata,
+    Component: ReactContextBoundaries,
+  },
+  {
+    slug: "memoization-when-it-helps",
+    source: "content/react/memoization-when-it-helps.mdx",
+    metadata: reactMemoizationWhenItHelpsMetadata,
+    Component: ReactMemoizationWhenItHelps,
+  },
+  {
+    slug: "composition-over-prop-flags",
+    source: "content/react/composition-over-prop-flags.mdx",
+    metadata: reactCompositionOverPropFlagsMetadata,
+    Component: ReactCompositionOverPropFlags,
   },
 ];
 

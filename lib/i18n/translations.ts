@@ -583,6 +583,18 @@ export const lessonThaiTranslations = {
       "ตอนรีวิว React ให้ดูว่า component นี้รู้มากเกินหน้าที่หรือไม่. ขอบเขตที่ดีทำให้ component ย้ายที่ ใช้ซ้ำ และทดสอบได้ง่ายขึ้น.",
     ],
   },
+  "react/stable-keys-lists": {
+    title: "key ใน list ที่ stable",
+    summary: "ใช้ id ที่คงที่เป็น key เพื่อให้ React รักษาตัวตนของ item ได้ถูกต้อง.",
+    takeaways: ["หลีกเลี่ยงการใช้ index เป็น key เมื่อ list มีการเพิ่ม ลบ เรียง หรือ filter."],
+    whatToReview: [
+      "โค้ดที่ดีใช้ id ของ comment เป็น key ทำให้ React จับคู่ DOM และ state กับ item เดิมได้.",
+      "โค้ดที่ควรปรับใช้ตำแหน่งใน array เป็น key ซึ่งพังง่ายเมื่อ list เปลี่ยนลำดับ.",
+    ],
+    reviewNotes: [
+      "ตอนรีวิว list ให้ถามว่า key นี้ยังชี้ item เดิมอยู่ไหมหลังเพิ่ม ลบ หรือ sort. bug จาก key ไม่ stable มักซ่อนอยู่จนข้อมูลเริ่มเปลี่ยนจริง.",
+    ],
+  },
   "react/derived-state": {
     title: "derived state ควรคำนวณจากแหล่งจริง",
     summary: "คำนวณค่าที่ derive ได้ระหว่าง render แทนการเก็บ state ซ้ำแล้ว sync ด้วย effect.",
@@ -595,6 +607,30 @@ export const lessonThaiTranslations = {
       "เวลาเห็น useEffect ที่แค่ sync state จาก props หรือ state อื่น ให้ถามว่าคำนวณตรง ๆ ได้ไหม. การลด state ที่ไม่จำเป็นทำให้ React code ง่ายและ bug น้อยลง.",
     ],
   },
+  "react/updating-state-from-previous-state": {
+    title: "อัปเดต state จากค่าก่อนหน้า",
+    summary: "ใช้ functional update เมื่อค่า state ใหม่ต้องคำนวณจาก state ปัจจุบัน.",
+    takeaways: ["ถ้า next state อ้างอิง previous state ให้ส่ง function เข้า setter."],
+    whatToReview: [
+      "โค้ดที่ดีให้ React ส่งค่า state ล่าสุดเข้ามาก่อนคำนวณ selected ids ชุดใหม่.",
+      "โค้ดที่ควรปรับคำนวณจากค่า selectedIds ที่ถูกจับไว้ตอน render ทำให้ update หายได้.",
+    ],
+    reviewNotes: [
+      "เวลาเห็น setState ที่ใช้ state ตัวเดิมประกอบค่าใหม่ ให้พิจารณา functional update. เคสนี้สำคัญมากเมื่อมี event เร็ว ๆ batching หรือ callback ที่รันทีหลัง.",
+    ],
+  },
+  "react/controlled-form-inputs": {
+    title: "controlled form input ที่ชัดเจน",
+    summary: "ให้ค่าของ form อยู่ใน React state เมื่อ UI ต้อง validate, reset หรือ submit ด้วย logic ของเรา.",
+    takeaways: ["controlled input ทำให้ค่าที่เห็นและค่าที่ submit มาจากแหล่งเดียวกัน."],
+    whatToReview: [
+      "โค้ดที่ดีผูก input กับ state และใช้ค่าเดียวกันตอน validate, submit และ reset.",
+      "โค้ดที่ควรปรับ query DOM เพื่ออ่านและแก้ input เอง ทำให้ data flow หลุดจาก React.",
+    ],
+    reviewNotes: [
+      "ตอนรีวิว form ให้ดูว่าค่านี้มี behavior มากกว่า native submit ไหม. ถ้ามี validation, disabled state หรือ error message การเก็บค่าใน React จะดูแลง่ายกว่า.",
+    ],
+  },
   "react/effect-dependencies": {
     title: "dependency ของ effect ต้องครบ",
     summary: "ใส่ dependency ให้ครบและ cleanup งาน async เมื่อ input เปลี่ยน.",
@@ -605,6 +641,54 @@ export const lessonThaiTranslations = {
     ],
     reviewNotes: [
       "ตอนรีวิว effect ให้ดูทั้ง dependency array และ cleanup. ถ้า effect ใช้ค่าใดใน scope ค่านั้นควรอยู่ใน dependency หรือมีเหตุผลที่ชัดเจนว่าทำไมไม่อยู่.",
+    ],
+  },
+  "react/async-effect-cleanup": {
+    title: "cleanup งาน async ใน effect",
+    summary: "ป้องกัน response เก่าจาก async effect ไม่ให้มาเขียนทับหน้าจอปัจจุบัน.",
+    takeaways: ["effect ที่เริ่มงาน async ควร cleanup เมื่อ input เปลี่ยนหรือ component unmount."],
+    whatToReview: [
+      "โค้ดที่ดีตั้ง flag cleanup เพื่อไม่ให้ promise เก่า update state หลังหน้าจอเปลี่ยนไปแล้ว.",
+      "โค้ดที่ควรปรับเริ่ม request ใหม่ทุกครั้งแต่ปล่อย response เก่ากลับมาเขียน state ได้.",
+    ],
+    reviewNotes: [
+      "ตอนรีวิว async effect ให้ลองคิดกรณีผู้ใช้กดเปลี่ยนหน้าเร็ว ๆ หรือ request ตอบกลับคนละลำดับ. dependency ครบอย่างเดียวอาจยังไม่พอถ้าไม่มี cleanup.",
+    ],
+  },
+  "react/context-boundaries": {
+    title: "ขอบเขตของ context",
+    summary: "ใช้ context กับข้อมูลร่วมที่เป็น ambient จริง ๆ ไม่ใช่ทางลัดเลี่ยง props ทุกอย่าง.",
+    takeaways: ["context ที่แคบช่วยให้ component ไม่ subscribe state ที่ไม่เกี่ยวข้อง."],
+    whatToReview: [
+      "โค้ดที่ดีใช้ context เฉพาะ viewer และส่งข้อมูล review ผ่าน props ที่ชัดเจน.",
+      "โค้ดที่ควรปรับใส่ state ทั้งแอปใน context เดียว ทำให้ component รู้และ rerender เกินจำเป็น.",
+    ],
+    reviewNotes: [
+      "ตอนรีวิว consumer ของ context ให้เทียบว่ามันรับข้อมูลมากแค่ไหนกับสิ่งที่ render จริง. context กว้างเกินไปทำให้ reuse ยากและ performance คาดเดายาก.",
+    ],
+  },
+  "react/memoization-when-it-helps": {
+    title: "memoization เมื่อช่วยจริง",
+    summary: "ใช้ memoization เมื่อมีงานแพงที่ต้องเลี่ยงซ้ำ พร้อม dependency ที่ถูกต้อง.",
+    takeaways: ["memoization ควรมีเหตุผลด้าน cost และ dependency list ต้องครบ."],
+    whatToReview: [
+      "โค้ดที่ดี memoize ผลลัพธ์การ filter ที่ขึ้นกับ reviews และ search อย่างชัดเจน.",
+      "โค้ดที่ควรปรับใช้ dependency ว่างจนข้อมูล stale และ memoize ข้อความง่าย ๆ โดยไม่จำเป็น.",
+    ],
+    reviewNotes: [
+      "ตอนรีวิว useMemo หรือ useCallback ให้ถามว่ามันแก้ปัญหา performance อะไร และ dependency ครบไหม. memo ที่ผิดทำให้โค้ดดูเร็วขึ้นแต่จริง ๆ freeze ข้อมูลเก่า.",
+    ],
+  },
+  "react/composition-over-prop-flags": {
+    title: "composition แทน prop flag",
+    summary: "ใช้ children หรือ slot สำหรับ UI หลายรูปแบบ แทนการเพิ่ม boolean prop ไปเรื่อย ๆ.",
+    takeaways: ["composition ช่วยลด prop combination ที่ผิดพลาดง่ายใน component ที่มีหลาย variant."],
+    whatToReview: [
+      "โค้ดที่ดีให้ caller ส่ง action และ content เข้ามาประกอบ panel ตาม use case.",
+      "โค้ดที่ควรปรับมี mode และ boolean หลายตัว ทำให้เกิด combination ที่ component ไม่ได้ตั้งใจรองรับ.",
+    ],
+    reviewNotes: [
+      "ถ้าทุก requirement ใหม่ทำให้ component เพิ่ม flag อีกตัว ให้ลองมองหา composition. API แบบ slot ช่วยให้ caller สร้าง UI ที่ต้องการโดยไม่บังคับ component ให้รู้ทุก variant.",
     ],
   },
 } as const satisfies Record<string, LessonThaiTranslation>;

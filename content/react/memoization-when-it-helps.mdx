@@ -1,0 +1,101 @@
+export const metadata = {
+  title: "Memoization when it helps",
+  track: "react",
+  order: 9,
+  summary: "Use memoization for repeated expensive work with correct dependencies, not as decoration.",
+  tags: ["memoization", "performance", "rendering"],
+  takeaways: ["Memoization should have a clear cost to avoid and a complete dependency list."],
+  goodCode: {
+    language: "tsx",
+    filename: "ReviewSearch.tsx",
+    code: `import { useMemo } from "react";
+
+type Review = {
+  id: string;
+  title: string;
+  authorName: string;
+};
+
+function matchesSearch(review: Review, search: string) {
+  const query = search.toLowerCase();
+  return (
+    review.title.toLowerCase().includes(query) ||
+    review.authorName.toLowerCase().includes(query)
+  );
+}
+
+export function ReviewSearch({
+  reviews,
+  search,
+}: {
+  reviews: Review[];
+  search: string;
+}) {
+  const visibleReviews = useMemo(
+    () => reviews.filter((review) => matchesSearch(review, search)),
+    [reviews, search],
+  );
+
+  return (
+    <ul>
+      {visibleReviews.map((review) => (
+        <li key={review.id}>{review.title}</li>
+      ))}
+    </ul>
+  );
+}`,
+  },
+  badCode: {
+    language: "tsx",
+    filename: "ReviewSearch.tsx",
+    code: `import { useMemo } from "react";
+
+type Review = {
+  id: string;
+  title: string;
+  authorName: string;
+};
+
+function matchesSearch(review: Review, search: string) {
+  return review.title.toLowerCase().includes(search.toLowerCase());
+}
+
+export function ReviewSearch({
+  reviews,
+  search,
+}: {
+  reviews: Review[];
+  search: string;
+}) {
+  const visibleReviews = useMemo(
+    () => reviews.filter((review) => matchesSearch(review, search)),
+    [],
+  );
+  const resultLabel = useMemo(
+    () => "Showing " + visibleReviews.length + " reviews",
+    [visibleReviews.length],
+  );
+
+  return (
+    <>
+      <p>{resultLabel}</p>
+      <ul>
+        {visibleReviews.map((review) => (
+          <li key={review.id}>{review.title}</li>
+        ))}
+      </ul>
+    </>
+  );
+}`,
+  },
+};
+
+## What to review
+
+The good version memoizes a filtered list and lists the inputs that affect that list.
+
+The bad version memoizes the list with an empty dependency array, so the UI can ignore new reviews or search text. It also memoizes a cheap label that does not need caching.
+
+## Review notes
+
+In review, ask what cost the memoization avoids and whether the dependency array is complete. The bad version is review-worthy because extra `useMemo` calls can make code look optimized while freezing stale data.

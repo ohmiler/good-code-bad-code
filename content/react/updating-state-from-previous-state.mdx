@@ -1,0 +1,85 @@
+export const metadata = {
+  title: "Updating state from previous state",
+  track: "react",
+  order: 4,
+  summary: "Use functional state updates when the next value depends on the current value.",
+  tags: ["state", "events", "updates"],
+  takeaways: ["When state depends on prior state, pass an updater function to the setter."],
+  goodCode: {
+    language: "tsx",
+    filename: "ReviewerPicker.tsx",
+    code: `import { useState } from "react";
+
+type Reviewer = {
+  id: string;
+  name: string;
+};
+
+export function ReviewerPicker({ reviewers }: { reviewers: Reviewer[] }) {
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+
+  function toggleReviewer(id: string) {
+    setSelectedIds((currentIds) =>
+      currentIds.includes(id)
+        ? currentIds.filter((currentId) => currentId !== id)
+        : [...currentIds, id],
+    );
+  }
+
+  return reviewers.map((reviewer) => (
+    <button
+      key={reviewer.id}
+      type="button"
+      aria-pressed={selectedIds.includes(reviewer.id)}
+      onClick={() => toggleReviewer(reviewer.id)}
+    >
+      {reviewer.name}
+    </button>
+  ));
+}`,
+  },
+  badCode: {
+    language: "tsx",
+    filename: "ReviewerPicker.tsx",
+    code: `import { useState } from "react";
+
+type Reviewer = {
+  id: string;
+  name: string;
+};
+
+export function ReviewerPicker({ reviewers }: { reviewers: Reviewer[] }) {
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+
+  function toggleReviewer(id: string) {
+    if (selectedIds.includes(id)) {
+      setSelectedIds(selectedIds.filter((currentId) => currentId !== id));
+      return;
+    }
+
+    setSelectedIds([...selectedIds, id]);
+  }
+
+  return reviewers.map((reviewer) => (
+    <button
+      key={reviewer.id}
+      type="button"
+      aria-pressed={selectedIds.includes(reviewer.id)}
+      onClick={() => toggleReviewer(reviewer.id)}
+    >
+      {reviewer.name}
+    </button>
+  ));
+}`,
+  },
+};
+
+## What to review
+
+The good version asks React for the latest selected IDs before calculating the next state.
+
+The bad version calculates from the value captured by the current render. That can lose updates when multiple events or batched changes happen close together.
+
+## Review notes
+
+In review, scan setter calls for values derived from the current state variable. The bad version is review-worthy because it is readable and common, but it can fail under fast interaction, batching, or callbacks that run after the render that created them.

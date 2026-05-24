@@ -1,0 +1,100 @@
+export const metadata = {
+  title: "Context boundaries",
+  track: "react",
+  order: 8,
+  summary: "Use context for shared ambient data, not as a shortcut around component boundaries.",
+  tags: ["context", "components", "state"],
+  takeaways: ["Keep context narrow so components do not subscribe to unrelated app state."],
+  goodCode: {
+    language: "tsx",
+    filename: "ReviewCard.tsx",
+    code: `import { createContext, useContext } from "react";
+
+type Viewer = {
+  id: string;
+  name: string;
+  role: "viewer" | "maintainer";
+};
+
+const ViewerContext = createContext<Viewer | null>(null);
+
+function useViewer() {
+  const viewer = useContext(ViewerContext);
+
+  if (!viewer) {
+    throw new Error("ReviewCard must be rendered inside ViewerContext.");
+  }
+
+  return viewer;
+}
+
+type ReviewCardProps = {
+  title: string;
+  reviewerName: string;
+  status: "approved" | "changes-requested" | "pending";
+};
+
+export function ReviewCard({
+  title,
+  reviewerName,
+  status,
+}: ReviewCardProps) {
+  const viewer = useViewer();
+  const canApprove = viewer.role === "maintainer";
+
+  return (
+    <article>
+      <h2>{title}</h2>
+      <p>{reviewerName} marked this review as {status}.</p>
+      {canApprove ? <button type="button">Approve</button> : null}
+    </article>
+  );
+}`,
+  },
+  badCode: {
+    language: "tsx",
+    filename: "ReviewCard.tsx",
+    code: `import { createContext, useContext } from "react";
+
+type AppState = {
+  viewer: { id: string; name: string; role: string };
+  currentProject: { id: string; name: string };
+  activeReview: { title: string; reviewerName: string; status: string };
+  searchQuery: string;
+  sidebarOpen: boolean;
+};
+
+const AppContext = createContext<AppState | null>(null);
+
+export function ReviewCard() {
+  const appState = useContext(AppContext);
+
+  if (!appState) {
+    return null;
+  }
+
+  return (
+    <article>
+      <h2>{appState.currentProject.name}: {appState.activeReview.title}</h2>
+      <p>
+        {appState.activeReview.reviewerName} marked this review as{" "}
+        {appState.activeReview.status}.
+      </p>
+      {appState.viewer.role === "maintainer" ? (
+        <button type="button">Approve</button>
+      ) : null}
+    </article>
+  );
+}`,
+  },
+};
+
+## What to review
+
+The good version uses context only for ambient viewer information and keeps review data explicit at the component boundary.
+
+The bad version treats a broad app context as a global bag. The component subscribes to project, review, search, sidebar, and viewer data even though it only needs a small subset.
+
+## Review notes
+
+In review, look at how much data a context consumer receives compared with what it renders. The bad version is review-worthy because broad context makes components harder to reuse and can cause rerenders from unrelated state changes.

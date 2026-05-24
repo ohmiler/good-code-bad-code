@@ -1,0 +1,86 @@
+export const metadata = {
+  title: "Controlled form inputs",
+  track: "react",
+  order: 5,
+  summary: "Keep form values in React state when the UI needs validation, reset, or submit logic.",
+  tags: ["forms", "state", "events"],
+  takeaways: ["Controlled inputs make the displayed value and submitted value come from one source."],
+  goodCode: {
+    language: "tsx",
+    filename: "ReviewTitleForm.tsx",
+    code: `import { type FormEvent, useState } from "react";
+
+type ReviewTitleFormProps = {
+  onCreate: (title: string) => void;
+};
+
+export function ReviewTitleForm({ onCreate }: ReviewTitleFormProps) {
+  const [title, setTitle] = useState("");
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const trimmedTitle = title.trim();
+    if (!trimmedTitle) {
+      return;
+    }
+
+    onCreate(trimmedTitle);
+    setTitle("");
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <label htmlFor="review-title">Review title</label>
+      <input
+        id="review-title"
+        value={title}
+        onChange={(event) => setTitle(event.target.value)}
+      />
+      <button type="submit">Create review</button>
+    </form>
+  );
+}`,
+  },
+  badCode: {
+    language: "tsx",
+    filename: "ReviewTitleForm.tsx",
+    code: `import type { FormEvent } from "react";
+
+type ReviewTitleFormProps = {
+  onCreate: (title: string) => void;
+};
+
+export function ReviewTitleForm({ onCreate }: ReviewTitleFormProps) {
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const input = document.querySelector<HTMLInputElement>("#review-title");
+    const title = input?.value.trim();
+
+    if (title) {
+      onCreate(title);
+      input.value = "";
+    }
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <label htmlFor="review-title">Review title</label>
+      <input id="review-title" defaultValue="" />
+      <button type="submit">Create review</button>
+    </form>
+  );
+}`,
+  },
+};
+
+## What to review
+
+The good version keeps the input value in React state, so validation, submit behavior, and reset behavior all use the same value.
+
+The bad version reaches into the DOM to read and mutate the input. That bypasses React's data flow and makes the form harder to test or extend.
+
+## Review notes
+
+In review, ask whether the form value has behavior beyond native browser submission. The bad version is review-worthy because DOM queries hide the value from React, which becomes painful when adding validation, disabled states, autosave, or error messages.

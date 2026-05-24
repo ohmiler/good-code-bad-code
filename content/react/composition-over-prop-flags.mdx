@@ -1,0 +1,93 @@
+export const metadata = {
+  title: "Composition over prop flags",
+  track: "react",
+  order: 10,
+  summary: "Prefer flexible component slots over growing boolean prop combinations.",
+  tags: ["composition", "components", "props"],
+  takeaways: ["Use children and named slots when a component has multiple content variants."],
+  goodCode: {
+    language: "tsx",
+    filename: "Panel.tsx",
+    code: `import type { ReactNode } from "react";
+
+type PanelProps = {
+  title: string;
+  tone?: "neutral" | "danger";
+  actions?: ReactNode;
+  children: ReactNode;
+};
+
+export function Panel({
+  title,
+  tone = "neutral",
+  actions,
+  children,
+}: PanelProps) {
+  return (
+    <section data-tone={tone}>
+      <header>
+        <h2>{title}</h2>
+        {actions}
+      </header>
+      <div>{children}</div>
+    </section>
+  );
+}
+
+export function DeleteReviewPanel({ onDelete }: { onDelete: () => void }) {
+  return (
+    <Panel
+      title="Delete review"
+      tone="danger"
+      actions={<button type="button" onClick={onDelete}>Delete</button>}
+    >
+      <p>This review and its comments will be removed.</p>
+    </Panel>
+  );
+}`,
+  },
+  badCode: {
+    language: "tsx",
+    filename: "Panel.tsx",
+    code: `import type { ReactNode } from "react";
+
+type PanelProps = {
+  title: string;
+  mode: "details" | "delete" | "approval";
+  showFooter: boolean;
+  showDeleteButton: boolean;
+  onDelete?: () => void;
+  children: ReactNode;
+};
+
+export function Panel({
+  title,
+  mode,
+  showFooter,
+  showDeleteButton,
+  onDelete,
+  children,
+}: PanelProps) {
+  return (
+    <section data-mode={mode}>
+      <h2>{title}</h2>
+      <div>{children}</div>
+      {showFooter ? <footer>Review actions</footer> : null}
+      {showDeleteButton ? (
+        <button type="button" onClick={onDelete}>Delete</button>
+      ) : null}
+    </section>
+  );
+}`,
+  },
+};
+
+## What to review
+
+The good version gives callers a clear slot for actions and content, so each variant composes the panel it needs.
+
+The bad version grows mode and boolean props for every new variation. Those combinations make the component harder to understand and easier to call incorrectly.
+
+## Review notes
+
+In review, watch for components where every new requirement adds another flag. The bad version is review-worthy because the API invites invalid combinations, while composition lets the caller provide the exact UI for that use case.
