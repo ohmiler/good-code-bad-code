@@ -1,0 +1,56 @@
+export const metadata = {
+  title: "Strict equality and nullish checks",
+  track: "javascript",
+  order: 1,
+  summary: "Compare values intentionally and preserve meaningful falsy values.",
+  tags: ["equality", "nullish", "coercion"],
+  takeaways: ["Use strict equality for comparisons and nullish coalescing when only null or undefined should fall back."],
+  goodCode: {
+    language: "javascript",
+    filename: "review-options.js",
+    code: `function formatReviewState(state) {
+  if (state === "approved") {
+    return "Approved";
+  }
+
+  if (state === "changes_requested") {
+    return "Changes requested";
+  }
+
+  return "Pending";
+}
+
+function getRetryCount(options) {
+  return options.retryCount ?? 3;
+}`,
+  },
+  badCode: {
+    language: "javascript",
+    filename: "review-options.js",
+    code: `function formatReviewState(state) {
+  if (state == "approved") {
+    return "Approved";
+  }
+
+  if (state == "changes_requested") {
+    return "Changes requested";
+  }
+
+  return "Pending";
+}
+
+function getRetryCount(options) {
+  return options.retryCount || 3;
+}`,
+  },
+};
+
+## What to review
+
+The good version compares exact values and only falls back when `retryCount` is `null` or `undefined`, so `0` remains a valid explicit value.
+
+The bad version depends on coercion and uses `||`, which treats valid falsy values like `0` as missing configuration.
+
+## Review notes
+
+In review, look for loose equality and fallback logic together. They often hide bugs where the code cannot tell the difference between absent data and a deliberately chosen falsy value.

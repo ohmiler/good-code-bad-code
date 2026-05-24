@@ -331,6 +331,90 @@ export const lessonThaiTranslations = {
       "ตอนรีวิวให้ถามว่า motion สื่ออะไร และเมื่อปิดหรือลด motion แล้วยังเข้าใจ state ไหม animation ที่ดีควรช่วยอธิบาย ไม่ใช่เป็นทางเดียวที่ทำให้เข้าใจ.",
     ],
   },
+  "javascript/strict-equality-nullish-checks": {
+    title: "strict equality และ nullish check",
+    summary: "เปรียบเทียบค่าแบบตั้งใจ และไม่ทำให้ค่าที่เป็น falsy แต่มีความหมายถูกแทนด้วย default ผิด ๆ.",
+    takeaways: ["ใช้ strict equality สำหรับการเทียบค่า และใช้ ?? เมื่อควร fallback เฉพาะ null หรือ undefined."],
+    whatToReview: [
+      "โค้ดที่ดีเทียบค่าตรงตัวและ fallback เฉพาะตอน retryCount ไม่มีค่าจริง ๆ ทำให้ 0 ยังเป็นค่าที่ตั้งใจได้.",
+      "โค้ดที่ควรปรับพึ่ง coercion และใช้ || จนค่าอย่าง 0 ถูกมองว่าไม่มีค่า ทั้งที่อาจเป็น configuration ที่ถูกต้อง.",
+    ],
+    reviewNotes: [
+      "เวลารีวิวให้มอง loose equality กับ fallback logic คู่กัน เพราะมักซ่อน bug ที่แยกไม่ออกว่าข้อมูลหายหรือผู้ใช้ตั้งค่า falsy ไว้เอง.",
+    ],
+  },
+  "javascript/data-boundary-validation": {
+    title: "ตรวจข้อมูลที่ขอบเขตระบบ",
+    summary: "ตรวจข้อมูลจากภายนอกก่อนให้ส่วนที่เหลือของ function เชื่อว่ารูปทรงข้อมูลถูกต้อง.",
+    takeaways: ["ข้อมูลจาก API, storage หรือ message ควรถูก validate ที่ boundary ก่อนอ่าน field ด้านใน."],
+    whatToReview: [
+      "โค้ดที่ดีถือว่า payload ภายนอกยังไม่น่าเชื่อถือ และคืน failure ที่อ่านเข้าใจก่อนแตะ field ซ้อน.",
+      "โค้ดที่ควรปรับ assume ว่า shape ถูกต้องเสมอ ทำให้ข้อมูลผิดรูปกลายเป็น runtime error ที่เดายาก.",
+    ],
+    reviewNotes: [
+      "ตอนรีวิวให้หาบรรทัดแรกที่ข้อมูลภายนอกเข้าระบบ จุดนั้นคือที่เหมาะสุดในการทำความไม่แน่นอนให้ชัด ไม่ใช่ปล่อยให้ caller ทุกจุดเดาเอง.",
+    ],
+  },
+  "javascript/array-transformations": {
+    title: "แปลง array ให้อ่านเป็นขั้นตอน",
+    summary: "ใช้ array methods เพื่อบอกการเปลี่ยนรูปข้อมูลให้ชัด และเลี่ยงการ mutate input โดยไม่ตั้งใจ.",
+    takeaways: ["ใช้ filter, map และ reduce เมื่อมันอธิบายการแปลงข้อมูลได้โดยไม่ต้องแก้ object หรือ array ต้นทาง."],
+    whatToReview: [
+      "โค้ดที่ดีอ่านเหมือน pipeline: กรองไฟล์ที่ไม่ต้องการ แปลงรูปร่างข้อมูล แล้วค่อยเรียงผลลัพธ์ใหม่.",
+      "โค้ดที่ควรปรับ sort array เดิมและเติม field ลง object เดิม ทำให้ code อื่นที่ถือ reference เดียวกันถูกกระทบ.",
+    ],
+    reviewNotes: [
+      "เวลารีวิว collection logic ให้ถามว่าฟังก์ชันนี้เปลี่ยน input หรือคืนมุมมองใหม่ของข้อมูล Hidden mutation ใน loop มักดูไม่อันตรายตอนแรก.",
+    ],
+  },
+  "javascript/promise-concurrency": {
+    title: "รัน promise พร้อมกันเมื่อไม่ขึ้นต่อกัน",
+    summary: "งาน async ที่ไม่พึ่งผลลัพธ์กันควรถูกเริ่มพร้อมกัน แทนการ await ทีละคำขอ.",
+    takeaways: ["ใช้ Promise.all กับงานที่จำเป็นและเป็นอิสระต่อกัน ส่วน await แบบเรียงลำดับควรใช้เมื่อมี dependency จริง."],
+    whatToReview: [
+      "โค้ดที่ดีเริ่ม request อิสระหลายตัวพร้อมกัน แล้วรอผลรวมครั้งเดียว.",
+      "โค้ดที่ควรปรับทำให้ request แต่ละตัวรอตัวก่อนหน้า ทั้งที่ไม่มีตัวไหนใช้ผลของกันและกัน ทำให้หน้าช้าลงโดยไม่จำเป็น.",
+    ],
+    reviewNotes: [
+      "อย่า assume ว่า await ที่เรียงกันคือ sequencing ที่จำเป็นเสมอ ให้ถามว่า operation ไหนต้องใช้ผลลัพธ์ก่อนหน้า และอันไหนรวมเป็น concurrent work ได้.",
+    ],
+  },
+  "javascript/event-listener-cleanup": {
+    title: "การ cleanup event listener",
+    summary: "ทุก listener ควรมีทางถอดออก เพื่อไม่ให้ setup ซ้ำแล้วพฤติกรรมซ้อนกัน.",
+    takeaways: ["เก็บ handler reference ให้ stable และคืน cleanup function เมื่อติด event listener."],
+    whatToReview: [
+      "โค้ดที่ดีเก็บ reference ของ handler และคืน function สำหรับ remove listener เมื่อ UI ถูกถอด.",
+      "โค้ดที่ควรปรับใช้ anonymous listener แล้ว caller ไม่มีทางถอดออกได้จริง ทำให้ shortcut หรือ handler ซ้ำหลัง setup หลายรอบ.",
+    ],
+    reviewNotes: [
+      "เวลาเห็น listener, subscription, timer หรือ observer ให้ถามคำเดียวกันเสมอว่า cleanup อยู่ตรงไหน ถ้าตอบไม่ได้ behavior อาจเพิ่มขึ้นเรื่อย ๆ.",
+    ],
+  },
+  "javascript/module-boundaries-globals": {
+    title: "ขอบเขต module และ global state",
+    summary: "เก็บ behavior ที่ใช้ร่วมกันไว้หลัง module API แทนการกระจาย mutable global state.",
+    takeaways: ["เปิดเผย function เล็ก ๆ จาก module และส่ง dependency เข้ามาเมื่อ code ต้องใช้ storage, network หรือ browser API."],
+    whatToReview: [
+      "โค้ดที่ดีซ่อน storage key ใน module และรับ storage เป็น dependency ทำให้ test และ reuse ง่ายขึ้น.",
+      "โค้ดที่ควรปรับเขียนลง window และ localStorage ตรง ๆ ทำให้ code ที่ไม่เกี่ยวข้องเปลี่ยน state ได้โดยไม่ผ่าน API ชัดเจน.",
+    ],
+    reviewNotes: [
+      "global ไม่ได้ผิดเสมอ แต่ควรตั้งใจใช้ ขอบเขต module ที่ดีควรบอก caller ว่าต้องใช้งานยังไง โดยไม่ต้องรู้ว่าค่าทุกอย่างถูกเก็บไว้ที่ไหน.",
+    ],
+  },
+  "javascript/dates-time-zones": {
+    title: "วันที่และ time zone",
+    summary: "format วันที่ด้วย locale และ time zone ที่ตั้งใจ แทนการประกอบวันที่เองจากค่า runtime.",
+    takeaways: ["ใช้ Intl สำหรับ date formatting และส่ง time zone ให้ชัดเมื่อวันที่ที่แสดงมีความสำคัญ."],
+    whatToReview: [
+      "โค้ดที่ดีทำให้ locale และ time zone เป็นส่วนหนึ่งของการตัดสินใจ จึงแสดง timestamp เดียวกันได้สอดคล้องกับกลุ่มผู้ใช้.",
+      "โค้ดที่ควรปรับประกอบวันที่เองด้วย local time zone ของเครื่อง ทำให้วันที่อาจเลื่อนสำหรับผู้ใช้คนละภูมิภาค.",
+    ],
+    reviewNotes: [
+      "วันที่ควรถูกรีวิวด้วยความระวังเป็นพิเศษ เพราะมักใช้ได้บนเครื่องเราแต่พังที่ขอบวัน ขอบเดือน หรือ time zone การ format แบบ explicit ปลอดภัยกว่า default ที่ซ่อนอยู่.",
+    ],
+  },
   "javascript/guard-clauses": {
     title: "guard clause ลดความซ้อน",
     summary: "คืนค่าเร็วเมื่อข้อมูลไม่พร้อม เพื่อให้ path หลักอ่านตรงและสั้นลง.",

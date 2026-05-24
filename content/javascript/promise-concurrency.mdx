@@ -1,0 +1,42 @@
+export const metadata = {
+  title: "Promise concurrency",
+  track: "javascript",
+  order: 7,
+  summary: "Run independent async work together instead of waiting one request at a time.",
+  tags: ["async", "promises", "performance"],
+  takeaways: ["Use Promise.all for independent required work and reserve sequential awaits for true dependencies."],
+  goodCode: {
+    language: "javascript",
+    filename: "review-sidebar.js",
+    code: `async function loadReviewSidebar(pullRequestId) {
+  const [checks, comments, reviewers] = await Promise.all([
+    fetchChecks(pullRequestId),
+    fetchComments(pullRequestId),
+    fetchReviewers(pullRequestId),
+  ]);
+
+  return { checks, comments, reviewers };
+}`,
+  },
+  badCode: {
+    language: "javascript",
+    filename: "review-sidebar.js",
+    code: `async function loadReviewSidebar(pullRequestId) {
+  const checks = await fetchChecks(pullRequestId);
+  const comments = await fetchComments(pullRequestId);
+  const reviewers = await fetchReviewers(pullRequestId);
+
+  return { checks, comments, reviewers };
+}`,
+  },
+};
+
+## What to review
+
+The good version starts three independent requests together and waits for the shared result once.
+
+The bad version makes each request wait for the previous one even though none of them uses the previous result, adding avoidable latency to the page.
+
+## Review notes
+
+In review, do not treat every chain of `await` as necessary sequencing. Ask which operations truly depend on earlier results and which can be grouped as concurrent work.

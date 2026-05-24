@@ -1,0 +1,48 @@
+export const metadata = {
+  title: "Event listener cleanup",
+  track: "javascript",
+  order: 8,
+  summary: "Pair event listeners with cleanup so repeated setup does not duplicate behavior.",
+  tags: ["events", "cleanup", "browser"],
+  takeaways: ["Keep a stable handler reference and return a cleanup function when attaching listeners."],
+  goodCode: {
+    language: "javascript",
+    filename: "keyboard-shortcut.js",
+    code: `function attachSaveShortcut(target, onSave) {
+  function handleKeydown(event) {
+    if ((event.ctrlKey || event.metaKey) && event.key === "s") {
+      event.preventDefault();
+      onSave();
+    }
+  }
+
+  target.addEventListener("keydown", handleKeydown);
+
+  return () => {
+    target.removeEventListener("keydown", handleKeydown);
+  };
+}`,
+  },
+  badCode: {
+    language: "javascript",
+    filename: "keyboard-shortcut.js",
+    code: `function attachSaveShortcut(target, onSave) {
+  target.addEventListener("keydown", (event) => {
+    if ((event.ctrlKey || event.metaKey) && event.key === "s") {
+      event.preventDefault();
+      onSave();
+    }
+  });
+}`,
+  },
+};
+
+## What to review
+
+The good version keeps the handler reference and returns a cleanup function, so the caller can detach the listener when the UI is removed.
+
+The bad version adds an anonymous listener and gives the caller no practical way to remove it, which can duplicate shortcuts after repeated setup.
+
+## Review notes
+
+In review, every listener, subscription, timer, or observer should raise the same question: where does it get cleaned up? If the answer is unclear, the behavior may grow over time.

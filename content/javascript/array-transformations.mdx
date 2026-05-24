@@ -1,0 +1,49 @@
+export const metadata = {
+  title: "Array transformations",
+  track: "javascript",
+  order: 5,
+  summary: "Use array methods to make collection changes readable and avoid accidental mutation.",
+  tags: ["arrays", "immutability", "readability"],
+  takeaways: ["Prefer filter, map, and reduce when they describe the transformation without mutating input data."],
+  goodCode: {
+    language: "javascript",
+    filename: "changed-files.js",
+    code: `function summarizeChangedFiles(files) {
+  return files
+    .filter((file) => file.status !== "deleted")
+    .map((file) => ({
+      path: file.path,
+      churn: file.additions + file.deletions,
+    }))
+    .sort((left, right) => right.churn - left.churn);
+}`,
+  },
+  badCode: {
+    language: "javascript",
+    filename: "changed-files.js",
+    code: `function summarizeChangedFiles(files) {
+  files.sort((left, right) => right.additions - left.additions);
+
+  const summary = [];
+
+  files.forEach((file) => {
+    if (file.status !== "deleted") {
+      file.churn = file.additions + file.deletions;
+      summary.push(file);
+    }
+  });
+
+  return summary;
+}`,
+  },
+};
+
+## What to review
+
+The good version reads like a pipeline: remove deleted files, shape each item, then sort the new summaries by churn.
+
+The bad version mutates the original array order and adds `churn` onto existing file objects, which can surprise other code that still holds those references.
+
+## Review notes
+
+In review, ask whether the transformation changes the input or returns a new view of the data. Hidden mutation in collection code is easy to miss because the loop can look harmless at first glance.

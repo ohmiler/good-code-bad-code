@@ -65,15 +65,36 @@ import CssCustomPropertiesTokens, {
 import CssReducedMotion, {
   metadata as cssReducedMotionMetadata,
 } from "./css/reduced-motion.mdx";
+import JsStrictEqualityNullishChecks, {
+  metadata as jsStrictEqualityNullishChecksMetadata,
+} from "./javascript/strict-equality-nullish-checks.mdx";
 import JsGuardClauses, {
   metadata as jsGuardClausesMetadata,
 } from "./javascript/guard-clauses.mdx";
-import JsAsyncErrorHandling, {
-  metadata as jsAsyncErrorHandlingMetadata,
-} from "./javascript/async-error-handling.mdx";
+import JsDataBoundaryValidation, {
+  metadata as jsDataBoundaryValidationMetadata,
+} from "./javascript/data-boundary-validation.mdx";
 import JsNamingSideEffects, {
   metadata as jsNamingSideEffectsMetadata,
 } from "./javascript/naming-side-effects.mdx";
+import JsArrayTransformations, {
+  metadata as jsArrayTransformationsMetadata,
+} from "./javascript/array-transformations.mdx";
+import JsAsyncErrorHandling, {
+  metadata as jsAsyncErrorHandlingMetadata,
+} from "./javascript/async-error-handling.mdx";
+import JsPromiseConcurrency, {
+  metadata as jsPromiseConcurrencyMetadata,
+} from "./javascript/promise-concurrency.mdx";
+import JsEventListenerCleanup, {
+  metadata as jsEventListenerCleanupMetadata,
+} from "./javascript/event-listener-cleanup.mdx";
+import JsModuleBoundariesGlobals, {
+  metadata as jsModuleBoundariesGlobalsMetadata,
+} from "./javascript/module-boundaries-globals.mdx";
+import JsDatesTimeZones, {
+  metadata as jsDatesTimeZonesMetadata,
+} from "./javascript/dates-time-zones.mdx";
 import TsDiscriminatedUnions, {
   metadata as tsDiscriminatedUnionsMetadata,
 } from "./typescript/discriminated-unions.mdx";
@@ -222,10 +243,34 @@ const rawLessons: RawLesson[] = [
     Component: CssReducedMotion,
   },
   {
+    slug: "strict-equality-nullish-checks",
+    source: "content/javascript/strict-equality-nullish-checks.mdx",
+    metadata: jsStrictEqualityNullishChecksMetadata,
+    Component: JsStrictEqualityNullishChecks,
+  },
+  {
     slug: "guard-clauses",
     source: "content/javascript/guard-clauses.mdx",
     metadata: jsGuardClausesMetadata,
     Component: JsGuardClauses,
+  },
+  {
+    slug: "data-boundary-validation",
+    source: "content/javascript/data-boundary-validation.mdx",
+    metadata: jsDataBoundaryValidationMetadata,
+    Component: JsDataBoundaryValidation,
+  },
+  {
+    slug: "naming-side-effects",
+    source: "content/javascript/naming-side-effects.mdx",
+    metadata: jsNamingSideEffectsMetadata,
+    Component: JsNamingSideEffects,
+  },
+  {
+    slug: "array-transformations",
+    source: "content/javascript/array-transformations.mdx",
+    metadata: jsArrayTransformationsMetadata,
+    Component: JsArrayTransformations,
   },
   {
     slug: "async-error-handling",
@@ -234,10 +279,28 @@ const rawLessons: RawLesson[] = [
     Component: JsAsyncErrorHandling,
   },
   {
-    slug: "naming-side-effects",
-    source: "content/javascript/naming-side-effects.mdx",
-    metadata: jsNamingSideEffectsMetadata,
-    Component: JsNamingSideEffects,
+    slug: "promise-concurrency",
+    source: "content/javascript/promise-concurrency.mdx",
+    metadata: jsPromiseConcurrencyMetadata,
+    Component: JsPromiseConcurrency,
+  },
+  {
+    slug: "event-listener-cleanup",
+    source: "content/javascript/event-listener-cleanup.mdx",
+    metadata: jsEventListenerCleanupMetadata,
+    Component: JsEventListenerCleanup,
+  },
+  {
+    slug: "module-boundaries-globals",
+    source: "content/javascript/module-boundaries-globals.mdx",
+    metadata: jsModuleBoundariesGlobalsMetadata,
+    Component: JsModuleBoundariesGlobals,
+  },
+  {
+    slug: "dates-time-zones",
+    source: "content/javascript/dates-time-zones.mdx",
+    metadata: jsDatesTimeZonesMetadata,
+    Component: JsDatesTimeZones,
   },
   {
     slug: "discriminated-unions",

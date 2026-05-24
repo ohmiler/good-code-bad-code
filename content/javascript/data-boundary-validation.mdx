@@ -1,0 +1,58 @@
+export const metadata = {
+  title: "Validating data boundaries",
+  track: "javascript",
+  order: 3,
+  summary: "Check data from outside your code before the rest of the function trusts it.",
+  tags: ["validation", "boundaries", "defensive-code"],
+  takeaways: ["Validate API, storage, and message payloads at the boundary before using nested fields."],
+  goodCode: {
+    language: "javascript",
+    filename: "review-payload.js",
+    code: `function normalizeReviewPayload(payload) {
+  if (!payload || typeof payload !== "object") {
+    return { ok: false, error: "Invalid payload." };
+  }
+
+  const { title, reviewers } = payload;
+
+  if (typeof title !== "string" || title.trim() === "") {
+    return { ok: false, error: "Title is required." };
+  }
+
+  if (!Array.isArray(reviewers)) {
+    return { ok: false, error: "Reviewers must be a list." };
+  }
+
+  return {
+    ok: true,
+    value: {
+      title: title.trim(),
+      reviewers: reviewers.filter((id) => typeof id === "string"),
+    },
+  };
+}`,
+  },
+  badCode: {
+    language: "javascript",
+    filename: "review-payload.js",
+    code: `function normalizeReviewPayload(payload) {
+  return {
+    ok: true,
+    value: {
+      title: payload.title.trim(),
+      reviewers: payload.reviewers.map((id) => id.toLowerCase()),
+    },
+  };
+}`,
+  },
+};
+
+## What to review
+
+The good version treats incoming data as untrusted and returns a clear failure before the rest of the code touches nested fields.
+
+The bad version is short, but it crashes when the payload shape changes or when a field is missing, which turns a data problem into an unrelated runtime error.
+
+## Review notes
+
+In review, find the first line where external data enters the app. That boundary is the best place to make uncertainty explicit instead of spreading defensive checks across every caller.

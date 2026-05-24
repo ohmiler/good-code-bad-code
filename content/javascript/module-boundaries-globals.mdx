@@ -1,0 +1,51 @@
+export const metadata = {
+  title: "Module boundaries and globals",
+  track: "javascript",
+  order: 9,
+  summary: "Keep shared behavior behind module APIs instead of scattering mutable global state.",
+  tags: ["modules", "globals", "architecture"],
+  takeaways: ["Expose small functions from modules and pass dependencies in when code needs storage, network, or browser APIs."],
+  goodCode: {
+    language: "javascript",
+    filename: "review-filters.js",
+    code: `const FILTER_STORAGE_KEY = "review-filters";
+
+export function readReviewFilters(storage) {
+  const rawValue = storage.getItem(FILTER_STORAGE_KEY);
+
+  if (!rawValue) {
+    return { status: "open" };
+  }
+
+  return JSON.parse(rawValue);
+}
+
+export function saveReviewFilters(storage, filters) {
+  storage.setItem(FILTER_STORAGE_KEY, JSON.stringify(filters));
+}`,
+  },
+  badCode: {
+    language: "javascript",
+    filename: "review-filters.js",
+    code: `window.reviewFilters = { status: "open" };
+
+function readReviewFilters() {
+  return JSON.parse(localStorage.reviewFilters || "{}");
+}
+
+function saveReviewFilters(filters) {
+  localStorage.reviewFilters = JSON.stringify(filters);
+  window.reviewFilters = filters;
+}`,
+  },
+};
+
+## What to review
+
+The good version hides the storage key inside the module and accepts storage as a dependency, which makes the behavior easier to test and reuse.
+
+The bad version writes to `window` and `localStorage` directly from the module, so unrelated code can change state without going through a clear API.
+
+## Review notes
+
+In review, globals are not automatically wrong, but they should be deliberate. A module boundary should tell callers how to use shared behavior without requiring them to know where every value is stored.

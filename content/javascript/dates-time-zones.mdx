@@ -1,0 +1,45 @@
+export const metadata = {
+  title: "Dates and time zones",
+  track: "javascript",
+  order: 10,
+  summary: "Format dates with explicit locale and time zone choices instead of manual date math.",
+  tags: ["dates", "time-zones", "internationalization"],
+  takeaways: ["Use Intl date formatting and pass the intended time zone when the displayed day matters."],
+  goodCode: {
+    language: "javascript",
+    filename: "release-date.js",
+    code: `function formatReleaseDate(isoDate, locale, timeZone) {
+  const formatter = new Intl.DateTimeFormat(locale, {
+    dateStyle: "medium",
+    timeZone,
+  });
+
+  return formatter.format(new Date(isoDate));
+}
+
+formatReleaseDate("2026-05-24T00:00:00Z", "en-US", "UTC");`,
+  },
+  badCode: {
+    language: "javascript",
+    filename: "release-date.js",
+    code: `function formatReleaseDate(dateString) {
+  const date = new Date(dateString);
+
+  return (
+    date.getMonth() + 1 + "/" +
+    date.getDate() + "/" +
+    date.getFullYear()
+  );
+}`,
+  },
+};
+
+## What to review
+
+The good version makes locale and time zone part of the formatting decision, so the same timestamp can be displayed consistently for the intended audience.
+
+The bad version formats by hand using the runtime's local time zone, which can shift the displayed day for users in different regions.
+
+## Review notes
+
+In review, dates deserve extra suspicion because they often work on one machine and fail at the edge of a day, month, or time zone. Prefer explicit formatting over hidden runtime defaults.
