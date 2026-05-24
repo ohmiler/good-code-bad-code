@@ -1,0 +1,40 @@
+export const metadata = {
+  title: "Filtering and NULL handling",
+  track: "sql",
+  order: 3,
+  summary: "Use SQL NULL operators and explicit boolean logic so filters match real data.",
+  tags: ["where", "null", "filters"],
+  takeaways: ["NULL is not equal to anything, so review nullable filters with extra care."],
+  goodCode: {
+    language: "sql",
+    filename: "review-filters.sql",
+    code: `SELECT id, title, approved_at
+FROM code_reviews
+WHERE deleted_at IS NULL
+  AND (
+    approved_at IS NULL
+    OR approved_at >= CURRENT_DATE - INTERVAL '30 days'
+  )
+ORDER BY submitted_at DESC;`,
+  },
+  badCode: {
+    language: "sql",
+    filename: "review-filters.sql",
+    code: `SELECT id, title, approved_at
+FROM code_reviews
+WHERE deleted_at = NULL
+  AND approved_at != NULL
+   OR approved_at >= CURRENT_DATE - INTERVAL '30 days'
+ORDER BY submitted_at DESC;`,
+  },
+};
+
+## What to review
+
+The good version uses `IS NULL` and groups the `OR` condition so deleted rows cannot leak into the result.
+
+The bad version compares to `NULL` with equality operators and relies on ambiguous operator precedence. It can return the wrong rows or no rows at all.
+
+## Review notes
+
+Nullable columns change how filters behave. In review, read every `AND` and `OR` with parentheses in mind, then check whether `NULL` should be included or excluded.

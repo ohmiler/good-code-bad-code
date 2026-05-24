@@ -1,0 +1,49 @@
+export const metadata = {
+  title: "Join cardinality",
+  track: "sql",
+  order: 4,
+  summary: "Review joins for one-to-one, one-to-many, and missing-row behavior before trusting the result.",
+  tags: ["joins", "cardinality", "duplicates"],
+  takeaways: ["A join changes row count, so review the relationship before reviewing the selected columns."],
+  goodCode: {
+    language: "sql",
+    filename: "review-summary.sql",
+    code: `WITH comment_counts AS (
+  SELECT
+    review_id,
+    COUNT(*) AS comment_count
+  FROM review_comments
+  GROUP BY review_id
+)
+SELECT
+  reviews.id,
+  reviews.title,
+  COALESCE(comment_counts.comment_count, 0) AS comment_count
+FROM code_reviews AS reviews
+LEFT JOIN comment_counts
+  ON comment_counts.review_id = reviews.id
+WHERE reviews.author_id = $1;`,
+  },
+  badCode: {
+    language: "sql",
+    filename: "review-summary.sql",
+    code: `SELECT
+  reviews.id,
+  reviews.title,
+  review_comments.id AS comment_id
+FROM code_reviews AS reviews
+JOIN review_comments
+  ON review_comments.review_id = reviews.id
+WHERE reviews.author_id = $1;`,
+  },
+};
+
+## What to review
+
+The good version pre-aggregates comments and uses a left join so reviews without comments still appear once.
+
+The bad version turns each review into one row per comment and drops reviews that have no comments. That may silently corrupt pagination, counts, and UI summaries.
+
+## Review notes
+
+Before approving a join, ask what row count should come out. If the caller expects one row per review, joining directly to a many-side table is a review smell.

@@ -1,0 +1,35 @@
+export const metadata = {
+  title: "Index-friendly predicates",
+  track: "sql",
+  order: 6,
+  summary: "Keep indexed columns searchable by avoiding unnecessary functions on the column side.",
+  tags: ["indexes", "where", "performance"],
+  takeaways: ["A correct query can still be review-worthy if it prevents useful index access."],
+  goodCode: {
+    language: "sql",
+    filename: "monthly-reviews.sql",
+    code: `SELECT id, title, submitted_at
+FROM code_reviews
+WHERE submitted_at >= TIMESTAMPTZ '2026-01-01'
+  AND submitted_at < TIMESTAMPTZ '2026-02-01'
+ORDER BY submitted_at DESC;`,
+  },
+  badCode: {
+    language: "sql",
+    filename: "monthly-reviews.sql",
+    code: `SELECT id, title, submitted_at
+FROM code_reviews
+WHERE TO_CHAR(submitted_at, 'YYYY-MM') = '2026-01'
+ORDER BY submitted_at DESC;`,
+  },
+};
+
+## What to review
+
+The good version expresses the month as a half-open range, which keeps an index on `submitted_at` useful.
+
+The bad version wraps the column in a formatting function for every row. It is readable, but it usually blocks normal index usage.
+
+## Review notes
+
+Performance review starts with shape, not guesswork. When a filter touches many rows, check whether the predicate lets the database seek through an index.

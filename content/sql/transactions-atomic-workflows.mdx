@@ -1,0 +1,45 @@
+export const metadata = {
+  title: "Transactions for atomic workflows",
+  track: "sql",
+  order: 7,
+  summary: "Wrap multi-step writes in a transaction so related changes succeed or fail together.",
+  tags: ["transactions", "atomicity", "writes"],
+  takeaways: ["If one business action writes multiple rows, review where the transaction begins and ends."],
+  goodCode: {
+    language: "sql",
+    filename: "approve-review.sql",
+    code: `BEGIN;
+
+UPDATE code_reviews
+SET status = 'approved',
+    approved_at = now()
+WHERE id = $1
+  AND status = 'submitted';
+
+INSERT INTO review_events (review_id, event_type, created_at)
+VALUES ($1, 'approved', now());
+
+COMMIT;`,
+  },
+  badCode: {
+    language: "sql",
+    filename: "approve-review.sql",
+    code: `UPDATE code_reviews
+SET status = 'approved',
+    approved_at = now()
+WHERE id = $1;
+
+INSERT INTO review_events (review_id, event_type, created_at)
+VALUES ($1, 'approved', now());`,
+  },
+};
+
+## What to review
+
+The good version treats the status change and audit event as one unit of work.
+
+The bad version can approve a review without recording the event if the second statement fails. It also approves without checking the expected starting state.
+
+## Review notes
+
+Transactions are a product requirement hiding in database code. In review, ask what inconsistent state would exist if any statement in the middle failed.

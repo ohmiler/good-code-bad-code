@@ -47,6 +47,12 @@ export const tracks = [
     description:
       "Review app factories, routers, middleware order, validation, auth, and error handling.",
   },
+  {
+    slug: "sql",
+    title: "SQL",
+    description:
+      "Review schemas, queries, joins, indexes, transactions, migrations, and data safety.",
+  },
 ] as const;
 
 export type Track = (typeof tracks)[number];

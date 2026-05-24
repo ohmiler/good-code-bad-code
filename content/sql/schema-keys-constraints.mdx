@@ -1,0 +1,56 @@
+export const metadata = {
+  title: "Schema keys and constraints",
+  track: "sql",
+  order: 1,
+  summary: "Model table ownership with primary keys, foreign keys, uniqueness, and check constraints.",
+  tags: ["schema", "constraints", "keys"],
+  takeaways: ["A schema should enforce the data rules the application depends on."],
+  goodCode: {
+    language: "sql",
+    filename: "schema.sql",
+    code: `CREATE TABLE users (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  email TEXT NOT NULL UNIQUE,
+  name TEXT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE code_reviews (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  author_id BIGINT NOT NULL REFERENCES users(id),
+  title TEXT NOT NULL,
+  status TEXT NOT NULL CHECK (
+    status IN ('draft', 'submitted', 'approved', 'rejected')
+  ),
+  submitted_at TIMESTAMPTZ
+);`,
+  },
+  badCode: {
+    language: "sql",
+    filename: "schema.sql",
+    code: `CREATE TABLE users (
+  id BIGINT,
+  email TEXT,
+  name TEXT,
+  created_at TEXT
+);
+
+CREATE TABLE code_reviews (
+  id BIGINT,
+  author_id BIGINT,
+  title TEXT,
+  status TEXT,
+  submitted_at TEXT
+);`,
+  },
+};
+
+## What to review
+
+The good version makes identity, uniqueness, relationships, required fields, and allowed review states explicit in the database.
+
+The bad version stores important rules only as hope. Duplicate users, orphaned reviews, invalid statuses, and inconsistent dates can all be inserted.
+
+## Review notes
+
+When reviewing SQL, start with the schema contract. If the application assumes a value is present or a relationship exists, the database should usually help enforce it.

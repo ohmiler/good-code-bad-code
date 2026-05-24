@@ -245,6 +245,36 @@ import ExpressRateLimitingTrustProxy, {
 import ExpressBusinessLogicOutOfRoutes, {
   metadata as expressBusinessLogicOutOfRoutesMetadata,
 } from "./express/business-logic-out-of-routes.mdx";
+import SqlSchemaKeysConstraints, {
+  metadata as sqlSchemaKeysConstraintsMetadata,
+} from "./sql/schema-keys-constraints.mdx";
+import SqlExplicitSelectColumns, {
+  metadata as sqlExplicitSelectColumnsMetadata,
+} from "./sql/explicit-select-columns.mdx";
+import SqlFilteringNullHandling, {
+  metadata as sqlFilteringNullHandlingMetadata,
+} from "./sql/filtering-null-handling.mdx";
+import SqlJoinCardinality, {
+  metadata as sqlJoinCardinalityMetadata,
+} from "./sql/join-cardinality.mdx";
+import SqlAggregationGrouping, {
+  metadata as sqlAggregationGroupingMetadata,
+} from "./sql/aggregation-grouping.mdx";
+import SqlIndexFriendlyPredicates, {
+  metadata as sqlIndexFriendlyPredicatesMetadata,
+} from "./sql/index-friendly-predicates.mdx";
+import SqlTransactionsAtomicWorkflows, {
+  metadata as sqlTransactionsAtomicWorkflowsMetadata,
+} from "./sql/transactions-atomic-workflows.mdx";
+import SqlMigrationBackfills, {
+  metadata as sqlMigrationBackfillsMetadata,
+} from "./sql/migration-backfills.mdx";
+import SqlParameterizedQueries, {
+  metadata as sqlParameterizedQueriesMetadata,
+} from "./sql/parameterized-queries.mdx";
+import SqlStablePagination, {
+  metadata as sqlStablePaginationMetadata,
+} from "./sql/stable-pagination.mdx";
 
 type RawLesson = {
   slug: string;
@@ -733,6 +763,66 @@ const rawLessons: RawLesson[] = [
     source: "content/express/business-logic-out-of-routes.mdx",
     metadata: expressBusinessLogicOutOfRoutesMetadata,
     Component: ExpressBusinessLogicOutOfRoutes,
+  },
+  {
+    slug: "schema-keys-constraints",
+    source: "content/sql/schema-keys-constraints.mdx",
+    metadata: sqlSchemaKeysConstraintsMetadata,
+    Component: SqlSchemaKeysConstraints,
+  },
+  {
+    slug: "explicit-select-columns",
+    source: "content/sql/explicit-select-columns.mdx",
+    metadata: sqlExplicitSelectColumnsMetadata,
+    Component: SqlExplicitSelectColumns,
+  },
+  {
+    slug: "filtering-null-handling",
+    source: "content/sql/filtering-null-handling.mdx",
+    metadata: sqlFilteringNullHandlingMetadata,
+    Component: SqlFilteringNullHandling,
+  },
+  {
+    slug: "join-cardinality",
+    source: "content/sql/join-cardinality.mdx",
+    metadata: sqlJoinCardinalityMetadata,
+    Component: SqlJoinCardinality,
+  },
+  {
+    slug: "aggregation-grouping",
+    source: "content/sql/aggregation-grouping.mdx",
+    metadata: sqlAggregationGroupingMetadata,
+    Component: SqlAggregationGrouping,
+  },
+  {
+    slug: "index-friendly-predicates",
+    source: "content/sql/index-friendly-predicates.mdx",
+    metadata: sqlIndexFriendlyPredicatesMetadata,
+    Component: SqlIndexFriendlyPredicates,
+  },
+  {
+    slug: "transactions-atomic-workflows",
+    source: "content/sql/transactions-atomic-workflows.mdx",
+    metadata: sqlTransactionsAtomicWorkflowsMetadata,
+    Component: SqlTransactionsAtomicWorkflows,
+  },
+  {
+    slug: "migration-backfills",
+    source: "content/sql/migration-backfills.mdx",
+    metadata: sqlMigrationBackfillsMetadata,
+    Component: SqlMigrationBackfills,
+  },
+  {
+    slug: "parameterized-queries",
+    source: "content/sql/parameterized-queries.mdx",
+    metadata: sqlParameterizedQueriesMetadata,
+    Component: SqlParameterizedQueries,
+  },
+  {
+    slug: "stable-pagination",
+    source: "content/sql/stable-pagination.mdx",
+    metadata: sqlStablePaginationMetadata,
+    Component: SqlStablePagination,
   },
 ];
 

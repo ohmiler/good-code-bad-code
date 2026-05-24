@@ -1,7 +1,13 @@
 import type { ComponentType } from "react";
 import { isTrackSlug, type TrackSlug } from "./tracks";
 
-export type CodeLanguage = "html" | "css" | "javascript" | "typescript" | "tsx";
+export type CodeLanguage =
+  | "html"
+  | "css"
+  | "javascript"
+  | "typescript"
+  | "tsx"
+  | "sql";
 
 export type CodeSample = {
   language: CodeLanguage;
@@ -31,6 +37,7 @@ const codeLanguages = new Set<CodeLanguage>([
   "javascript",
   "typescript",
   "tsx",
+  "sql",
 ]);
 
 function isRecord(value: unknown): value is Record<string, unknown> {

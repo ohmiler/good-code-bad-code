@@ -1,0 +1,43 @@
+export const metadata = {
+  title: "Explicit SELECT columns",
+  track: "sql",
+  order: 2,
+  summary: "Select the columns the caller needs instead of depending on table shape.",
+  tags: ["select", "projection", "api"],
+  takeaways: ["A query result is an API contract, so keep its shape intentional."],
+  goodCode: {
+    language: "sql",
+    filename: "submitted-reviews.sql",
+    code: `SELECT
+  reviews.id,
+  reviews.title,
+  reviews.status,
+  users.name AS author_name,
+  reviews.submitted_at
+FROM code_reviews AS reviews
+JOIN users ON users.id = reviews.author_id
+WHERE reviews.status = 'submitted'
+ORDER BY reviews.submitted_at DESC
+LIMIT 20;`,
+  },
+  badCode: {
+    language: "sql",
+    filename: "submitted-reviews.sql",
+    code: `SELECT *
+FROM code_reviews
+JOIN users ON users.id = code_reviews.author_id
+WHERE status = 'submitted'
+ORDER BY submitted_at DESC
+LIMIT 20;`,
+  },
+};
+
+## What to review
+
+The good version names the result columns and aliases the author field so the consumer gets a stable shape.
+
+The bad version leaks every column from both tables, risks duplicate column names, and can break callers when schema changes add sensitive or unexpected fields.
+
+## Review notes
+
+`SELECT *` is tempting during exploration, but it is a poor production contract. In review, ask whether every returned column is needed by the caller.

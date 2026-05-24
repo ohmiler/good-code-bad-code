@@ -1,0 +1,42 @@
+export const metadata = {
+  title: "Aggregation and grouping",
+  track: "sql",
+  order: 5,
+  summary: "Group by the same dimensions you want to report, and make aggregate meaning clear.",
+  tags: ["aggregate", "group by", "reporting"],
+  takeaways: ["Every non-aggregated selected value should be part of the grouping intent."],
+  goodCode: {
+    language: "sql",
+    filename: "review-metrics.sql",
+    code: `SELECT
+  DATE_TRUNC('day', submitted_at) AS review_day,
+  status,
+  COUNT(*) AS review_count
+FROM code_reviews
+WHERE submitted_at >= CURRENT_DATE - INTERVAL '30 days'
+GROUP BY review_day, status
+ORDER BY review_day DESC, status;`,
+  },
+  badCode: {
+    language: "sql",
+    filename: "review-metrics.sql",
+    code: `SELECT
+  submitted_at,
+  status,
+  COUNT(*) AS review_count
+FROM code_reviews
+WHERE submitted_at >= CURRENT_DATE - INTERVAL '30 days'
+GROUP BY status
+ORDER BY submitted_at DESC;`,
+  },
+};
+
+## What to review
+
+The good version reports counts by day and status, so both dimensions are selected, grouped, and ordered intentionally.
+
+The bad version mixes a raw timestamp with an aggregate grouped only by status. Depending on the database, it either fails or returns misleading values.
+
+## Review notes
+
+Aggregations answer a specific question. In review, write that question in plain language, then check that the `GROUP BY` columns match it exactly.

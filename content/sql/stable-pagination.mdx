@@ -1,0 +1,37 @@
+export const metadata = {
+  title: "Stable pagination",
+  track: "sql",
+  order: 10,
+  summary: "Use deterministic ordering and cursor predicates for pages that stay stable as data changes.",
+  tags: ["pagination", "ordering", "cursors"],
+  takeaways: ["Pagination needs a stable order, not just a limit."],
+  goodCode: {
+    language: "sql",
+    filename: "review-feed.sql",
+    code: `SELECT id, title, submitted_at
+FROM code_reviews
+WHERE status = 'submitted'
+  AND (submitted_at, id) < ($1, $2)
+ORDER BY submitted_at DESC, id DESC
+LIMIT 20;`,
+  },
+  badCode: {
+    language: "sql",
+    filename: "review-feed.sql",
+    code: `SELECT id, title, submitted_at
+FROM code_reviews
+WHERE status = 'submitted'
+ORDER BY submitted_at DESC
+LIMIT 20 OFFSET $1;`,
+  },
+};
+
+## What to review
+
+The good version uses a cursor made from `submitted_at` and `id`, giving the database a deterministic place to continue.
+
+The bad version uses offset pagination with a non-unique order. New rows can shift earlier pages, causing duplicates or missing items.
+
+## Review notes
+
+Offset pagination is sometimes acceptable for small admin screens, but review feed-like queries harder. Stable ordering and a cursor usually age better.

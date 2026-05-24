@@ -1,0 +1,41 @@
+export const metadata = {
+  title: "Parameterized queries",
+  track: "sql",
+  order: 9,
+  summary: "Bind user input as parameters instead of building SQL strings from untrusted values.",
+  tags: ["security", "injection", "parameters"],
+  takeaways: ["User input should become query data, not query text."],
+  goodCode: {
+    language: "typescript",
+    filename: "users-repository.ts",
+    code: `export async function findUserByEmail(email: string) {
+  const result = await db.query(
+    "SELECT id, email, name FROM users WHERE email = $1",
+    [email],
+  );
+
+  return result.rows[0] ?? null;
+}`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "users-repository.ts",
+    code: `export async function findUserByEmail(email: string) {
+  const result = await db.query(
+    "SELECT id, email, name FROM users WHERE email = '" + email + "'",
+  );
+
+  return result.rows[0] ?? null;
+}`,
+  },
+};
+
+## What to review
+
+The good version keeps the SQL text fixed and sends `email` as a bound parameter.
+
+The bad version inserts user input into the query string. A value that contains quotes or SQL syntax can change what the database executes.
+
+## Review notes
+
+In review, scan for string concatenation, template interpolation, and manual escaping around SQL. Parameter binding should be the default habit.

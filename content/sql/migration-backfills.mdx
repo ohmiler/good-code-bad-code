@@ -1,0 +1,40 @@
+export const metadata = {
+  title: "Migration backfills",
+  track: "sql",
+  order: 8,
+  summary: "Split schema changes, backfills, and stricter constraints into safe migration steps.",
+  tags: ["migrations", "backfill", "constraints"],
+  takeaways: ["A safe migration respects the data that already exists."],
+  goodCode: {
+    language: "sql",
+    filename: "20260525090000_add_display_name.sql",
+    code: `ALTER TABLE users
+ADD COLUMN display_name TEXT;
+
+UPDATE users
+SET display_name = COALESCE(NULLIF(name, ''), email)
+WHERE display_name IS NULL;
+
+ALTER TABLE users
+ALTER COLUMN display_name SET NOT NULL;`,
+  },
+  badCode: {
+    language: "sql",
+    filename: "20260525090000_add_display_name.sql",
+    code: `ALTER TABLE users
+ADD COLUMN display_name TEXT NOT NULL;
+
+UPDATE users
+SET display_name = name;`,
+  },
+};
+
+## What to review
+
+The good version adds the column, fills existing rows, then tightens the constraint after data is ready.
+
+The bad version adds a required column before existing rows have a value. It can fail immediately or force unsafe defaults.
+
+## Review notes
+
+Migration review is not just syntax review. Check the current data shape, table size, rollback story, and whether the application can run between migration steps.
