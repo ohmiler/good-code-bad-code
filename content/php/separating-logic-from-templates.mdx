@@ -1,0 +1,50 @@
+export const metadata = {
+  title: "Separating logic from templates",
+  track: "php",
+  order: 10,
+  summary: "Keep request handling and data access outside templates so rendering code stays small and easy to review.",
+  tags: ["templates", "separation", "mvc"],
+  takeaways: ["Templates should render a prepared view model, not query databases or decide application flow."],
+  goodCode: {
+    language: "php",
+    filename: "src/Controller/ProfileController.php",
+    code: `<?php declare(strict_types=1);
+
+final class ProfileController
+{
+    public function __construct(private UserRepository $users) {}
+
+    public function show(int $userId): array
+    {
+        $user = $this->users->findProfile($userId);
+
+        return [
+            'title' => $user['name'],
+            'user' => $user,
+        ];
+    }
+}`,
+  },
+  badCode: {
+    language: "php",
+    filename: "profile.php",
+    code: `<?php
+
+$userId = $_GET['id'];
+$user = $pdo->query("SELECT * FROM users WHERE id = $userId")->fetch();
+?>
+
+<h1><?= $user['name'] ?></h1>
+<p><?= $user['bio'] ?></p>`,
+  },
+};
+
+## What to review
+
+The good version prepares a view model before rendering. The template can focus on display and escaping.
+
+The bad version mixes request input, SQL, database access, and raw output in one file. Every change becomes a cross-cutting review.
+
+## Review notes
+
+PHP can embed HTML naturally, but that convenience should not erase boundaries. Ask whether the file is handling a request, fetching data, or rendering a view; if it is doing all three, split it.

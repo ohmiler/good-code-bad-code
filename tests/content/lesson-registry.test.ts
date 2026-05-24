@@ -24,6 +24,7 @@ const expectedLessonCounts = {
   go: 10,
   docker: 10,
   tailwindcss: 10,
+  php: 10,
 } as const;
 
 type RawLessonEntry = {
@@ -242,13 +243,14 @@ test("test:content runs the registry content coverage test", async () => {
 
   assert.match(testContentScript, /schema\.test\.ts/);
   assert.match(testContentScript, /lesson-registry\.test\.ts/);
+  assert.match(testContentScript, /track-icons\.test\.ts/);
 });
 
 test("seeded lessons match expected track counts", async () => {
   const lessonsByTrack = await getTrackLessonFiles();
   const allLessonFiles = [...lessonsByTrack.values()].flat();
 
-  assert.equal(allLessonFiles.length, 150);
+  assert.equal(allLessonFiles.length, 160);
   for (const track of tracks) {
     assert.equal(
       lessonsByTrack.get(track.slug)?.length,

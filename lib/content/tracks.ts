@@ -60,6 +60,12 @@ export const tracks = [
       "Review readable functions, data shapes, exceptions, typing, testability, and async boundaries.",
   },
   {
+    slug: "php",
+    title: "PHP",
+    description:
+      "Review strict types, request validation, output escaping, PDO queries, passwords, sessions, configuration, and template boundaries.",
+  },
+  {
     slug: "fastapi",
     title: "FastAPI",
     description:

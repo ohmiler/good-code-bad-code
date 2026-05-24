@@ -1,0 +1,48 @@
+export const metadata = {
+  title: "PDO prepared statements",
+  track: "php",
+  order: 4,
+  summary: "Use prepared statements with bound values instead of interpolating request data into SQL strings.",
+  tags: ["pdo", "sql", "prepared-statements"],
+  takeaways: ["SQL structure and SQL values should stay separate; PDO placeholders make that boundary reviewable."],
+  goodCode: {
+    language: "php",
+    filename: "src/UserRepository.php",
+    code: `<?php declare(strict_types=1);
+
+final class UserRepository
+{
+    public function __construct(private PDO $pdo) {}
+
+    public function findActiveByEmail(string $email): ?array
+    {
+        $stmt = $this->pdo->prepare(
+            'SELECT id, email, name FROM users WHERE email = :email AND active = 1'
+        );
+        $stmt->execute(['email' => $email]);
+
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $user === false ? null : $user;
+    }
+}`,
+  },
+  badCode: {
+    language: "php",
+    filename: "users.php",
+    code: `<?php
+
+$email = $_GET['email'];
+$sql = "SELECT * FROM users WHERE email = '$email' AND active = 1";
+$user = $pdo->query($sql)->fetch();`,
+  },
+};
+
+## What to review
+
+The good version prepares SQL once, binds the email as data, selects explicit columns, and handles the no-row case.
+
+The bad version interpolates a request value into SQL and selects every column. A reviewer cannot trust the query boundary or the response shape.
+
+## Review notes
+
+Prepared statements are not just a security habit. They also make query intent, parameter names, and result handling clearer during review.

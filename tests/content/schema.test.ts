@@ -78,6 +78,31 @@ test("validateLessonMetadata accepts Dockerfile and YAML code samples", () => {
   );
 });
 
+test("validateLessonMetadata accepts PHP code samples", () => {
+  const phpMetadata = {
+    ...validMetadata,
+    track: "php",
+    goodCode: {
+      language: "php",
+      filename: "src/Controller/ProfileController.php",
+      code: "<?php declare(strict_types=1);\\nfunction show(int $id): string { return (string) $id; }",
+    },
+    badCode: {
+      language: "php",
+      filename: "profile.php",
+      code: "<?php echo $_GET['id'];",
+    },
+  };
+
+  assert.deepEqual(
+    validateLessonMetadata(
+      phpMetadata,
+      "content/php/strict-types-and-return-types.mdx",
+    ),
+    phpMetadata,
+  );
+});
+
 test("validateLessonMetadata rejects unknown tracks", () => {
   assert.throws(
     () =>

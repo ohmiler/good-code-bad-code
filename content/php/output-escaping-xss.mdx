@@ -1,0 +1,41 @@
+export const metadata = {
+  title: "Output escaping for XSS",
+  track: "php",
+  order: 3,
+  summary: "Escape untrusted values when rendering HTML so user content cannot become markup or script.",
+  tags: ["xss", "escaping", "templates"],
+  takeaways: ["Prepared statements protect SQL, but HTML output still needs context-aware escaping."],
+  goodCode: {
+    language: "php",
+    filename: "templates/profile.php",
+    code: `<?php declare(strict_types=1);
+
+function e(string $value): string
+{
+    return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+}
+?>
+
+<h1><?= e($user['name']) ?></h1>
+<p><?= e($user['bio']) ?></p>`,
+  },
+  badCode: {
+    language: "php",
+    filename: "templates/profile.php",
+    code: `<?php
+?>
+
+<h1><?= $user['name'] ?></h1>
+<p><?= $_GET['bio'] ?></p>`,
+  },
+};
+
+## What to review
+
+The good version uses a small escaping helper for text rendered into HTML, including quotes and invalid byte substitution.
+
+The bad version outputs database and request values directly. If those values contain HTML, the template will treat them as markup.
+
+## Review notes
+
+Review output by context. Text nodes need HTML escaping, attributes need attribute-safe escaping, and JavaScript contexts need a different strategy.

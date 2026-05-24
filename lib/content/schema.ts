@@ -9,6 +9,7 @@ export type CodeLanguage =
   | "tsx"
   | "sql"
   | "python"
+  | "php"
   | "go"
   | "dockerfile"
   | "yaml";
@@ -43,6 +44,7 @@ const codeLanguages = new Set<CodeLanguage>([
   "tsx",
   "sql",
   "python",
+  "php",
   "go",
   "dockerfile",
   "yaml",

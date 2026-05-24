@@ -1,0 +1,51 @@
+export const metadata = {
+  title: "Autoloading and namespaces",
+  track: "php",
+  order: 8,
+  summary: "Use namespaces and autoloaded classes so file structure, ownership, and dependencies are explicit.",
+  tags: ["autoloading", "namespaces", "structure"],
+  takeaways: ["Modern PHP code should make class ownership visible through namespaces instead of require chains."],
+  goodCode: {
+    language: "php",
+    filename: "src/Service/UserProfileService.php",
+    code: `<?php declare(strict_types=1);
+
+namespace App\\Service;
+
+use App\\Repository\\UserRepository;
+
+final class UserProfileService
+{
+    public function __construct(private UserRepository $users) {}
+
+    public function profileFor(int $userId): array
+    {
+        return $this->users->findProfile($userId);
+    }
+}`,
+  },
+  badCode: {
+    language: "php",
+    filename: "profile.php",
+    code: `<?php
+
+require_once 'db.php';
+require_once 'users.php';
+require_once 'helpers.php';
+
+function profile_for($id) {
+    global $db;
+    return find_profile($db, $id);
+}`,
+  },
+};
+
+## What to review
+
+The good version gives the class a namespace, injects its dependency, and lets autoloading connect files to class names.
+
+The bad version depends on include order, global state, and free functions whose ownership is hard to trace.
+
+## Review notes
+
+Autoloading is a maintainability boundary. If a reviewer has to follow a chain of `require_once` calls to understand a dependency, the structure is doing too little work.

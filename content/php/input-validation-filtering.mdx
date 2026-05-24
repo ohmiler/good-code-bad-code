@@ -1,0 +1,51 @@
+export const metadata = {
+  title: "Input validation and filtering",
+  track: "php",
+  order: 2,
+  summary: "Validate request input at the boundary before it reaches query, domain, or template code.",
+  tags: ["input", "validation", "request"],
+  takeaways: ["Superglobals are untrusted boundaries; normalize them into explicit values before using them."],
+  goodCode: {
+    language: "php",
+    filename: "public/orders.php",
+    code: `<?php declare(strict_types=1);
+
+$orderId = filter_input(
+    INPUT_GET,
+    'order_id',
+    FILTER_VALIDATE_INT,
+    ['options' => ['min_range' => 1]]
+);
+
+if ($orderId === false || $orderId === null) {
+    http_response_code(400);
+    echo 'Invalid order id';
+    return;
+}
+
+$order = $orders->findById($orderId);`,
+  },
+  badCode: {
+    language: "php",
+    filename: "public/orders.php",
+    code: `<?php
+
+$orderId = $_GET['order_id'];
+
+if (!$orderId) {
+    echo 'Missing order id';
+}
+
+$order = $orders->findById($orderId);`,
+  },
+};
+
+## What to review
+
+The good version reads the original request value, validates that it is a positive integer, and stops early with a clear HTTP response.
+
+The bad version pulls directly from `$_GET`, treats empty and invalid values the same, and passes a raw boundary value deeper into the application.
+
+## Review notes
+
+Validation should happen once near the boundary. After that point, downstream code should receive typed, normalized values instead of reading superglobals again.

@@ -1,0 +1,44 @@
+export const metadata = {
+  title: "Strict types and return types",
+  track: "php",
+  order: 1,
+  summary: "Make PHP function contracts explicit with strict scalar types and return types so reviewers can catch coercion bugs at boundaries.",
+  tags: ["types", "strict-types", "contracts"],
+  takeaways: ["A PHP file that handles business rules should make parameter and return expectations visible at the function boundary."],
+  goodCode: {
+    language: "php",
+    filename: "src/Billing/InvoiceTotal.php",
+    code: `<?php declare(strict_types=1);
+
+function invoiceTotalCents(int $subtotalCents, int $taxCents): int
+{
+    if ($subtotalCents < 0 || $taxCents < 0) {
+        throw new InvalidArgumentException('Invoice amounts must be positive.');
+    }
+
+    return $subtotalCents + $taxCents;
+}`,
+  },
+  badCode: {
+    language: "php",
+    filename: "invoice.php",
+    code: `<?php
+
+function invoiceTotal($subtotal, $tax)
+{
+    return $subtotal + $tax;
+}
+
+echo invoiceTotal($_POST['subtotal'], $_POST['tax']);`,
+  },
+};
+
+## What to review
+
+The good version declares strict typing, names the unit of money, returns a specific type, and rejects invalid values before computing.
+
+The bad version relies on PHP coercion and untyped request values. A reviewer has to infer whether strings, floats, negative numbers, or missing fields are valid.
+
+## Review notes
+
+In PHP reviews, look for contracts at the edge of every important function. Strict types do not replace validation, but they make accidental coercion much harder to miss.

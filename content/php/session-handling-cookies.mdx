@@ -1,0 +1,51 @@
+export const metadata = {
+  title: "Session handling and cookies",
+  track: "php",
+  order: 6,
+  summary: "Configure session cookies deliberately and regenerate session IDs when authentication state changes.",
+  tags: ["sessions", "cookies", "auth"],
+  takeaways: ["Session code should make cookie flags and identity transitions visible to reviewers."],
+  goodCode: {
+    language: "php",
+    filename: "src/Auth/Session.php",
+    code: `<?php declare(strict_types=1);
+
+session_set_cookie_params([
+    'lifetime' => 0,
+    'path' => '/',
+    'secure' => true,
+    'httponly' => true,
+    'samesite' => 'Lax',
+]);
+
+session_start();
+
+function signIn(int $userId): void
+{
+    session_regenerate_id(true);
+    $_SESSION['user_id'] = $userId;
+}`,
+  },
+  badCode: {
+    language: "php",
+    filename: "login.php",
+    code: `<?php
+
+session_start();
+
+if ($_POST['password'] === $user['password']) {
+    $_SESSION['user_id'] = $user['id'];
+    $_SESSION['role'] = $_GET['role'];
+}`,
+  },
+};
+
+## What to review
+
+The good version sets cookie flags before starting the session and regenerates the session ID when the user signs in.
+
+The bad version uses default cookie behavior, does not rotate the session ID, and trusts a request parameter for authorization state.
+
+## Review notes
+
+Authentication changes are session boundary changes. Review login, logout, and privilege changes for cookie flags, ID rotation, and where session values come from.

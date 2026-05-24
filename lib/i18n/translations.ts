@@ -113,6 +113,11 @@ export const trackThaiTranslations = {
     description:
       "ฝึกรีวิวฟังก์ชันที่อ่านง่าย รูปทรงข้อมูล exception, typing, testability และ async boundary.",
   },
+  php: {
+    title: "PHP",
+    description:
+      "ฝึกรีวิว strict types, request validation, output escaping, PDO query, password, session, config และขอบเขตของ template.",
+  },
   fastapi: {
     title: "FastAPI",
     description:
@@ -1339,6 +1344,126 @@ export const lessonThaiTranslations = {
     ],
     reviewNotes: [
       "เวลารีวิว async Python ให้ไล่ทุก coroutine ว่าถูก await, ถูก return อย่างตั้งใจให้ caller await หรือถูก schedule โดยมี owner ชัดเจน.",
+    ],
+  },
+  "php/strict-types-and-return-types": {
+    title: "strict type และ return type",
+    summary: "ทำ contract ของ PHP function ให้ชัดด้วย strict scalar type และ return type เพื่อให้ reviewer จับ coercion bug ที่ boundary ได้.",
+    takeaways: ["ไฟล์ PHP ที่ทำ business rule ควรทำให้ parameter และ return expectation เห็นได้ชัดที่ function boundary."],
+    whatToReview: [
+      "โค้ดที่ดีประกาศ strict typing ตั้งชื่อหน่วยของเงิน คืน type ชัด และ reject ค่าผิดก่อนคำนวณ.",
+      "โค้ดที่ควรปรับพึ่ง PHP coercion และ request value ที่ยังไม่ typed ทำให้ต้องเดาว่า string, float, negative number หรือ field ที่หายไป valid ไหม.",
+    ],
+    reviewNotes: [
+      "เวลารีวิว PHP ให้มองหา contract ที่ขอบของ function สำคัญ strict types ไม่ได้แทน validation แต่ช่วยให้ accidental coercion หลุดยากขึ้น.",
+    ],
+  },
+  "php/input-validation-filtering": {
+    title: "การ validate และ filter input",
+    summary: "validate request input ที่ boundary ก่อนปล่อยเข้า query, domain หรือ template code.",
+    takeaways: ["superglobal คือ untrusted boundary ควร normalize ให้เป็นค่าที่ชัดก่อนใช้งาน."],
+    whatToReview: [
+      "โค้ดที่ดีอ่าน request value ดิบ validate ว่าเป็น positive integer และหยุดเร็วด้วย HTTP response ที่ชัด.",
+      "โค้ดที่ควรปรับดึงจาก $_GET โดยตรง แยก missing กับ invalid ไม่ชัด และส่ง raw boundary value ลึกเข้า application.",
+    ],
+    reviewNotes: [
+      "validation ควรเกิดใกล้ boundary หนึ่งครั้ง หลังจากนั้น downstream code ควรได้รับ typed normalized value ไม่ใช่กลับไปอ่าน superglobal ซ้ำ.",
+    ],
+  },
+  "php/output-escaping-xss": {
+    title: "output escaping เพื่อกัน XSS",
+    summary: "escape ค่าที่ไม่น่าไว้ใจตอน render HTML เพื่อไม่ให้ user content กลายเป็น markup หรือ script.",
+    takeaways: ["prepared statement ป้องกัน SQL แต่ HTML output ยังต้อง escape ตาม context."],
+    whatToReview: [
+      "โค้ดที่ดีใช้ helper เล็ก ๆ สำหรับ escape text ที่ render เข้า HTML รวมถึง quote และ invalid byte substitution.",
+      "โค้ดที่ควรปรับ output ค่า database และ request ตรง ๆ ถ้าค่านั้นมี HTML template จะตีความเป็น markup.",
+    ],
+    reviewNotes: [
+      "รีวิว output ต้องดูตาม context text node ใช้ HTML escaping, attribute ต้อง escape ให้เหมาะกับ attribute และ JavaScript context ต้องใช้ strategy คนละแบบ.",
+    ],
+  },
+  "php/pdo-prepared-statements": {
+    title: "PDO prepared statement ที่ปลอดภัย",
+    summary: "ใช้ prepared statement พร้อม bound value แทนการ interpolate request data เข้า SQL string.",
+    takeaways: ["SQL structure กับ SQL value ควรถูกแยกกัน placeholder ของ PDO ทำให้ boundary นี้รีวิวได้ชัด."],
+    whatToReview: [
+      "โค้ดที่ดี prepare SQL, bind email เป็น data, เลือก column ชัด และ handle กรณีไม่เจอ row.",
+      "โค้ดที่ควรปรับ interpolate request value เข้า SQL และ select ทุก column ทำให้ reviewer ไม่มั่นใจทั้ง query boundary และ response shape.",
+    ],
+    reviewNotes: [
+      "prepared statement ไม่ใช่แค่นิสัยด้าน security แต่ทำให้ query intent, parameter name และ result handling อ่านง่ายขึ้นตอนรีวิว.",
+    ],
+  },
+  "php/password-hashing-verification": {
+    title: "password hashing และ verification",
+    summary: "เก็บ password hash ด้วย PHP password API และ verify โดยไม่สร้างกฎ hashing เอง.",
+    takeaways: ["password ควรผ่าน password_hash และ password_verify ไม่ใช่ fast general-purpose hash."],
+    whatToReview: [
+      "โค้ดที่ดีพึ่ง PHP password API ซึ่งเก็บ algorithm และ cost ไว้ใน hash และบอกได้เมื่อควร rehash.",
+      "โค้ดที่ควรปรับใช้ fast hash ที่ไม่ได้ออกแบบมาสำหรับ password และผูก login success กับ session mutation โดยตรง.",
+    ],
+    reviewNotes: [
+      "การรีวิว password ควรน่าเบื่อ ถ้าเจอ custom salt, fast hash, manual comparison หรือ homegrown upgrade logic ให้ชะลอแล้วถามเหตุผล.",
+    ],
+  },
+  "php/session-handling-cookies": {
+    title: "session และ cookie handling",
+    summary: "ตั้งค่า session cookie อย่างตั้งใจ และ regenerate session ID เมื่อ authentication state เปลี่ยน.",
+    takeaways: ["session code ควรทำให้ cookie flag และ identity transition เห็นชัดกับ reviewer."],
+    whatToReview: [
+      "โค้ดที่ดีตั้ง cookie flag ก่อน start session และ regenerate session ID เมื่อ user sign in.",
+      "โค้ดที่ควรปรับใช้ค่า default ของ cookie ไม่ rotate session ID และเชื่อ request parameter สำหรับ authorization state.",
+    ],
+    reviewNotes: [
+      "authentication change คือ session boundary change ให้รีวิว login, logout และ privilege change ว่ามี cookie flag, ID rotation และ source ของ session value ชัดไหม.",
+    ],
+  },
+  "php/error-handling-exceptions": {
+    title: "error handling และ exception",
+    summary: "handle exception ที่ boundary ชัดเจน log context ที่มีประโยชน์ และคืน response ที่ปลอดภัยให้ผู้ใช้.",
+    takeaways: ["error handling ที่ดีใน PHP แยก developer diagnostics ออกจาก user-facing response."],
+    whatToReview: [
+      "โค้ดที่ดี catch failure ที่ front controller boundary, log รายละเอียดภายใน และคืน generic response.",
+      "โค้ดที่ควรปรับผสม routing กับ unsafe include และส่ง raw exception message ไปที่ browser.",
+    ],
+    reviewNotes: [
+      "ให้รีวิวว่า exception ถูก catch ที่ไหน catch ต่ำเกินไปจะซ่อน failure แต่ catch ที่ boundary ทำให้ log context และป้องกัน user output ได้.",
+    ],
+  },
+  "php/autoloading-and-namespaces": {
+    title: "autoloading และ namespace",
+    summary: "ใช้ namespace และ autoloaded class เพื่อให้ file structure, ownership และ dependency ชัดเจน.",
+    takeaways: ["PHP สมัยใหม่ควรทำให้ class ownership เห็นผ่าน namespace แทนการตาม require chain."],
+    whatToReview: [
+      "โค้ดที่ดีให้ class มี namespace, inject dependency และให้ autoloading เชื่อม file กับ class name.",
+      "โค้ดที่ควรปรับพึ่ง include order, global state และ free function ที่ตาม ownership ยาก.",
+    ],
+    reviewNotes: [
+      "autoloading คือ maintainability boundary ถ้า reviewer ต้องตาม require_once หลายไฟล์เพื่อเข้าใจ dependency แปลว่า structure ช่วยน้อยไป.",
+    ],
+  },
+  "php/configuration-and-secrets": {
+    title: "configuration และ secret",
+    summary: "โหลด configuration จาก environment และ fail ให้ชัดเมื่อ secret ที่จำเป็นหายไป.",
+    takeaways: ["secret ควรเป็น runtime configuration ไม่ใช่ string ที่ commit อยู่ข้าง application logic."],
+    whatToReview: [
+      "โค้ดที่ดีอ่าน secret ที่จำเป็นจาก runtime environment และ fail ตอน startup ถ้าไม่มีค่า.",
+      "โค้ดที่ควรปรับ commit credential และเปิดให้ request value เปลี่ยน infrastructure configuration.",
+    ],
+    reviewNotes: [
+      "รีวิว config ควรตอบสองคำถามเร็ว ๆ ว่าค่านี้มาจากไหน และ user input เปลี่ยนมันได้หรือไม่.",
+    ],
+  },
+  "php/separating-logic-from-templates": {
+    title: "แยก logic ออกจาก template",
+    summary: "แยก request handling และ data access ออกจาก template เพื่อให้ rendering code เล็กและรีวิวง่าย.",
+    takeaways: ["template ควร render view model ที่เตรียมไว้แล้ว ไม่ใช่ query database หรือตัดสิน application flow."],
+    whatToReview: [
+      "โค้ดที่ดีเตรียม view model ก่อน render ทำให้ template โฟกัสที่ display และ escaping.",
+      "โค้ดที่ควรปรับผสม request input, SQL, database access และ raw output ในไฟล์เดียว ทำให้ทุก change ต้องรีวิวหลาย concern พร้อมกัน.",
+    ],
+    reviewNotes: [
+      "PHP embed HTML ได้สะดวก แต่ความสะดวกไม่ควรลบ boundary ถามว่าไฟล์นี้ handle request, fetch data หรือ render view ถ้าทำทั้งสามอย่างควรแยก.",
     ],
   },
   "fastapi/path-operation-order": {

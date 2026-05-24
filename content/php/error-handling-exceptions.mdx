@@ -1,0 +1,47 @@
+export const metadata = {
+  title: "Error handling and exceptions",
+  track: "php",
+  order: 7,
+  summary: "Handle exceptions at a clear boundary, log useful context, and return safe responses to users.",
+  tags: ["errors", "exceptions", "logging"],
+  takeaways: ["Good PHP error handling separates developer diagnostics from user-facing responses."],
+  goodCode: {
+    language: "php",
+    filename: "public/index.php",
+    code: `<?php declare(strict_types=1);
+
+try {
+    $response = $router->dispatch($request);
+    $response->send();
+} catch (Throwable $error) {
+    $logger->error('Unhandled request failure', [
+        'path' => $request->path(),
+        'exception' => $error,
+    ]);
+
+    http_response_code(500);
+    echo 'Something went wrong.';
+}`,
+  },
+  badCode: {
+    language: "php",
+    filename: "public/index.php",
+    code: `<?php
+
+try {
+    include $_GET['page'] . '.php';
+} catch (Exception $error) {
+    die($error->getMessage());
+}`,
+  },
+};
+
+## What to review
+
+The good version catches failures at the front controller boundary, logs internal details, and returns a generic response.
+
+The bad version mixes routing with unsafe include behavior and sends raw exception messages to the browser.
+
+## Review notes
+
+Review where exceptions are caught. Catching too low hides failures; catching at the boundary lets the app log context and keep user output safe.

@@ -305,6 +305,36 @@ import PythonDependencyInjectionTestability, {
 import PythonAsyncAwaitBoundaries, {
   metadata as pythonAsyncAwaitBoundariesMetadata,
 } from "./python/async-await-boundaries.mdx";
+import PhpStrictTypesAndReturnTypes, {
+  metadata as phpStrictTypesAndReturnTypesMetadata,
+} from "./php/strict-types-and-return-types.mdx";
+import PhpInputValidationFiltering, {
+  metadata as phpInputValidationFilteringMetadata,
+} from "./php/input-validation-filtering.mdx";
+import PhpOutputEscapingXss, {
+  metadata as phpOutputEscapingXssMetadata,
+} from "./php/output-escaping-xss.mdx";
+import PhpPdoPreparedStatements, {
+  metadata as phpPdoPreparedStatementsMetadata,
+} from "./php/pdo-prepared-statements.mdx";
+import PhpPasswordHashingVerification, {
+  metadata as phpPasswordHashingVerificationMetadata,
+} from "./php/password-hashing-verification.mdx";
+import PhpSessionHandlingCookies, {
+  metadata as phpSessionHandlingCookiesMetadata,
+} from "./php/session-handling-cookies.mdx";
+import PhpErrorHandlingExceptions, {
+  metadata as phpErrorHandlingExceptionsMetadata,
+} from "./php/error-handling-exceptions.mdx";
+import PhpAutoloadingAndNamespaces, {
+  metadata as phpAutoloadingAndNamespacesMetadata,
+} from "./php/autoloading-and-namespaces.mdx";
+import PhpConfigurationAndSecrets, {
+  metadata as phpConfigurationAndSecretsMetadata,
+} from "./php/configuration-and-secrets.mdx";
+import PhpSeparatingLogicFromTemplates, {
+  metadata as phpSeparatingLogicFromTemplatesMetadata,
+} from "./php/separating-logic-from-templates.mdx";
 import FastapiPathOperationOrder, {
   metadata as fastapiPathOperationOrderMetadata,
 } from "./fastapi/path-operation-order.mdx";
@@ -1063,6 +1093,66 @@ const rawLessons: RawLesson[] = [
     source: "content/python/async-await-boundaries.mdx",
     metadata: pythonAsyncAwaitBoundariesMetadata,
     Component: PythonAsyncAwaitBoundaries,
+  },
+  {
+    slug: "strict-types-and-return-types",
+    source: "content/php/strict-types-and-return-types.mdx",
+    metadata: phpStrictTypesAndReturnTypesMetadata,
+    Component: PhpStrictTypesAndReturnTypes,
+  },
+  {
+    slug: "input-validation-filtering",
+    source: "content/php/input-validation-filtering.mdx",
+    metadata: phpInputValidationFilteringMetadata,
+    Component: PhpInputValidationFiltering,
+  },
+  {
+    slug: "output-escaping-xss",
+    source: "content/php/output-escaping-xss.mdx",
+    metadata: phpOutputEscapingXssMetadata,
+    Component: PhpOutputEscapingXss,
+  },
+  {
+    slug: "pdo-prepared-statements",
+    source: "content/php/pdo-prepared-statements.mdx",
+    metadata: phpPdoPreparedStatementsMetadata,
+    Component: PhpPdoPreparedStatements,
+  },
+  {
+    slug: "password-hashing-verification",
+    source: "content/php/password-hashing-verification.mdx",
+    metadata: phpPasswordHashingVerificationMetadata,
+    Component: PhpPasswordHashingVerification,
+  },
+  {
+    slug: "session-handling-cookies",
+    source: "content/php/session-handling-cookies.mdx",
+    metadata: phpSessionHandlingCookiesMetadata,
+    Component: PhpSessionHandlingCookies,
+  },
+  {
+    slug: "error-handling-exceptions",
+    source: "content/php/error-handling-exceptions.mdx",
+    metadata: phpErrorHandlingExceptionsMetadata,
+    Component: PhpErrorHandlingExceptions,
+  },
+  {
+    slug: "autoloading-and-namespaces",
+    source: "content/php/autoloading-and-namespaces.mdx",
+    metadata: phpAutoloadingAndNamespacesMetadata,
+    Component: PhpAutoloadingAndNamespaces,
+  },
+  {
+    slug: "configuration-and-secrets",
+    source: "content/php/configuration-and-secrets.mdx",
+    metadata: phpConfigurationAndSecretsMetadata,
+    Component: PhpConfigurationAndSecrets,
+  },
+  {
+    slug: "separating-logic-from-templates",
+    source: "content/php/separating-logic-from-templates.mdx",
+    metadata: phpSeparatingLogicFromTemplatesMetadata,
+    Component: PhpSeparatingLogicFromTemplates,
   },
   {
     slug: "path-operation-order",
