@@ -1,0 +1,51 @@
+export const metadata = {
+  title: "Streams vs readable loops",
+  track: "java",
+  order: 7,
+  summary: "Use streams for clear transformations and loops when branching, validation, or naming intermediate steps makes the review easier.",
+  tags: ["streams", "loops", "readability"],
+  takeaways: ["The best Java iteration shape is the one that makes intent and failure points easiest to review."],
+  goodCode: {
+    language: "java",
+    filename: "src/main/java/dev/review/orders/DiscountCalculator.java",
+    code: `public Money discountFor(List<OrderLine> lines) {
+    Money discount = Money.zero();
+
+    for (OrderLine line : lines) {
+        if (!line.isDiscountable()) {
+            continue;
+        }
+
+        Money lineDiscount = policy.discountFor(line);
+        discount = discount.plus(lineDiscount);
+    }
+
+    return discount;
+}`,
+  },
+  badCode: {
+    language: "java",
+    filename: "src/main/java/DiscountCalculator.java",
+    code: `public Money discountFor(List<OrderLine> lines) {
+    AtomicReference<Money> discount = new AtomicReference<>(Money.zero());
+
+    lines.stream()
+        .filter(line -> line.isDiscountable())
+        .peek(line -> audit.log(line.id()))
+        .map(line -> policy.discountFor(line))
+        .forEach(value -> discount.set(discount.get().plus(value)));
+
+    return discount.get();
+}`,
+  },
+};
+
+## What to review
+
+The good version uses a loop because the operation has branching and a named accumulation step. Each review question has a place to attach.
+
+The bad version hides mutation inside a stream pipeline and uses `peek` for side effects. The stream looks functional, but it is harder to reason about.
+
+## Review notes
+
+Streams are not automatically cleaner than loops. Prefer streams for simple mapping, filtering, and collecting; use loops when the business rule needs names and branches.

@@ -103,6 +103,31 @@ test("validateLessonMetadata accepts PHP code samples", () => {
   );
 });
 
+test("validateLessonMetadata accepts Java code samples", () => {
+  const javaMetadata = {
+    ...validMetadata,
+    track: "java",
+    goodCode: {
+      language: "java",
+      filename: "src/main/java/dev/review/UserService.java",
+      code: "public Optional<User> findById(UserId id) { return users.find(id); }",
+    },
+    badCode: {
+      language: "java",
+      filename: "UserService.java",
+      code: "public User findById(String id) { return users.get(id); }",
+    },
+  };
+
+  assert.deepEqual(
+    validateLessonMetadata(
+      javaMetadata,
+      "content/java/null-handling-and-optional-boundaries.mdx",
+    ),
+    javaMetadata,
+  );
+});
+
 test("validateLessonMetadata rejects unknown tracks", () => {
   assert.throws(
     () =>

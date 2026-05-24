@@ -1,0 +1,45 @@
+export const metadata = {
+  title: "Concurrency and shared state",
+  track: "java",
+  order: 8,
+  summary: "Use concurrent primitives for shared state so check-then-act races do not appear under load.",
+  tags: ["concurrency", "shared-state", "thread-safety"],
+  takeaways: ["If multiple threads can touch a value, the code should show which primitive owns synchronization."],
+  goodCode: {
+    language: "java",
+    filename: "src/main/java/dev/review/cache/ProfileCache.java",
+    code: `public final class ProfileCache {
+    private final ConcurrentMap<UserId, UserProfile> profiles = new ConcurrentHashMap<>();
+    private final UserService users;
+
+    public UserProfile get(UserId id) {
+        return profiles.computeIfAbsent(id, users::loadProfile);
+    }
+}`,
+  },
+  badCode: {
+    language: "java",
+    filename: "src/main/java/ProfileCache.java",
+    code: `public class ProfileCache {
+    private final Map<String, UserProfile> profiles = new HashMap<>();
+
+    public UserProfile get(String id) {
+        if (!profiles.containsKey(id)) {
+            profiles.put(id, users.loadProfile(id));
+        }
+
+        return profiles.get(id);
+    }
+}`,
+  },
+};
+
+## What to review
+
+The good version uses a concurrent map and makes the atomic operation explicit with `computeIfAbsent`.
+
+The bad version uses a shared `HashMap` and a check-then-put sequence. Two threads can compute the same value, corrupt the map, or observe inconsistent state.
+
+## Review notes
+
+When reviewing shared state, find the synchronization owner. If the answer is "the timing usually works", the code needs a safer primitive or a narrower ownership model.

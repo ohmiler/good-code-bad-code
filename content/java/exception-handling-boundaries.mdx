@@ -1,0 +1,48 @@
+export const metadata = {
+  title: "Exception handling boundaries",
+  track: "java",
+  order: 4,
+  summary: "Throw domain-specific exceptions inside the application and translate them at the outer boundary.",
+  tags: ["exceptions", "boundaries", "errors"],
+  takeaways: ["Exceptions should carry useful meaning inside the system and become user-facing responses only at a clear boundary."],
+  goodCode: {
+    language: "java",
+    filename: "src/main/java/dev/review/api/UserController.java",
+    code: `public final class UserController {
+    private final UserService users;
+
+    public ResponseEntity<UserResponse> show(UUID id) {
+        try {
+            UserProfile profile = users.profileFor(new UserId(id));
+            return ResponseEntity.ok(UserResponse.from(profile));
+        } catch (UserNotFoundException exception) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+}`,
+  },
+  badCode: {
+    language: "java",
+    filename: "src/main/java/UserController.java",
+    code: `public class UserController {
+    public UserResponse show(String id) {
+        try {
+            return users.profileFor(id);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return null;
+        }
+    }
+}`,
+  },
+};
+
+## What to review
+
+The good version keeps the service failure meaningful, then maps it to HTTP at the controller boundary. The response shape stays predictable.
+
+The bad version catches every exception, prints diagnostics to standard output, and returns `null`. The caller now has a second failure mode that hides the original problem.
+
+## Review notes
+
+Ask whether the catch block is at the right layer. Catching too low often hides bugs; catching at a boundary lets the application translate failures without losing intent.

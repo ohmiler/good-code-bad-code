@@ -1,0 +1,58 @@
+export const metadata = {
+  title: "try-with-resources cleanup",
+  track: "java",
+  order: 5,
+  summary: "Use try-with-resources for files, connections, statements, and result sets so cleanup happens on success and failure.",
+  tags: ["resources", "cleanup", "jdbc"],
+  takeaways: ["Any Java object that must be closed should have an obvious owner and a cleanup path that survives exceptions."],
+  goodCode: {
+    language: "java",
+    filename: "src/main/java/dev/review/user/JdbcUserRepository.java",
+    code: `public Optional<User> findByEmail(String email) throws SQLException {
+    String sql = "select id, email, name from users where email = ?";
+
+    try (
+        Connection connection = dataSource.getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql)
+    ) {
+        statement.setString(1, email);
+
+        try (ResultSet rows = statement.executeQuery()) {
+            if (!rows.next()) {
+                return Optional.empty();
+            }
+
+            return Optional.of(mapUser(rows));
+        }
+    }
+}`,
+  },
+  badCode: {
+    language: "java",
+    filename: "src/main/java/JdbcUserRepository.java",
+    code: `public User findByEmail(String email) throws SQLException {
+    Connection connection = dataSource.getConnection();
+    PreparedStatement statement = connection.prepareStatement(
+        "select * from users where email = '" + email + "'"
+    );
+
+    ResultSet rows = statement.executeQuery();
+    if (!rows.next()) {
+        return null;
+    }
+
+    connection.close();
+    return mapUser(rows);
+}`,
+  },
+};
+
+## What to review
+
+The good version makes resource ownership visible. Connections, statements, and result sets are closed even when the query or mapping throws.
+
+The bad version manually closes only one resource on the happy path, skips cleanup on early returns, and mixes unsafe SQL construction into the same method.
+
+## Review notes
+
+Resource cleanup bugs are easy to miss in review because the happy path looks fine. Follow every return and exception path, then check that each closeable resource has an owner.

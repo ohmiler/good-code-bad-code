@@ -1,0 +1,45 @@
+export const metadata = {
+  title: "Records and DTO boundaries",
+  track: "java",
+  order: 9,
+  summary: "Use records or explicit DTOs for request and response shapes instead of untyped maps that push errors deeper into the application.",
+  tags: ["records", "dto", "api-boundaries"],
+  takeaways: ["Boundary data should cross the application as a named shape with validation close to the edge."],
+  goodCode: {
+    language: "java",
+    filename: "src/main/java/dev/review/api/CreateUserRequest.java",
+    code: `public record CreateUserRequest(String email, String displayName) {
+    public CreateUserRequest {
+        if (email == null || email.isBlank()) {
+            throw new IllegalArgumentException("email is required");
+        }
+
+        if (displayName == null || displayName.isBlank()) {
+            throw new IllegalArgumentException("displayName is required");
+        }
+    }
+}`,
+  },
+  badCode: {
+    language: "java",
+    filename: "src/main/java/UserController.java",
+    code: `public UserResponse create(Map<String, Object> body) {
+    String email = (String) body.get("email");
+    String name = (String) body.get("name");
+
+    User user = users.create(email.trim(), name.trim());
+
+    return new UserResponse(user.id(), user.email(), user.name());
+}`,
+  },
+};
+
+## What to review
+
+The good version gives the boundary a name and validates required fields before the service receives them.
+
+The bad version treats the request as a loose map, relies on casts, and uses a different key name than the domain concept. Missing values fail later in confusing ways.
+
+## Review notes
+
+DTOs are not ceremony when they protect a boundary. They make request shape, validation, and downstream expectations visible in one small place.

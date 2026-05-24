@@ -335,6 +335,36 @@ import PhpConfigurationAndSecrets, {
 import PhpSeparatingLogicFromTemplates, {
   metadata as phpSeparatingLogicFromTemplatesMetadata,
 } from "./php/separating-logic-from-templates.mdx";
+import JavaNullHandlingAndOptionalBoundaries, {
+  metadata as javaNullHandlingAndOptionalBoundariesMetadata,
+} from "./java/null-handling-and-optional-boundaries.mdx";
+import JavaImmutableDataAndDefensiveCopies, {
+  metadata as javaImmutableDataAndDefensiveCopiesMetadata,
+} from "./java/immutable-data-and-defensive-copies.mdx";
+import JavaEqualsHashcodeAndValueObjects, {
+  metadata as javaEqualsHashcodeAndValueObjectsMetadata,
+} from "./java/equals-hashcode-and-value-objects.mdx";
+import JavaExceptionBoundaries, {
+  metadata as javaExceptionBoundariesMetadata,
+} from "./java/exception-handling-boundaries.mdx";
+import JavaTryWithResourcesCleanup, {
+  metadata as javaTryWithResourcesCleanupMetadata,
+} from "./java/try-with-resources-cleanup.mdx";
+import JavaGenericsAndCollectionTypes, {
+  metadata as javaGenericsAndCollectionTypesMetadata,
+} from "./java/generics-and-collection-types.mdx";
+import JavaStreamsVsReadableLoops, {
+  metadata as javaStreamsVsReadableLoopsMetadata,
+} from "./java/streams-vs-readable-loops.mdx";
+import JavaConcurrencyAndSharedState, {
+  metadata as javaConcurrencyAndSharedStateMetadata,
+} from "./java/concurrency-and-shared-state.mdx";
+import JavaRecordsAndDtoBoundaries, {
+  metadata as javaRecordsAndDtoBoundariesMetadata,
+} from "./java/records-and-dto-boundaries.mdx";
+import JavaPackageServiceBoundaries, {
+  metadata as javaPackageServiceBoundariesMetadata,
+} from "./java/package-service-boundaries.mdx";
 import FastapiPathOperationOrder, {
   metadata as fastapiPathOperationOrderMetadata,
 } from "./fastapi/path-operation-order.mdx";
@@ -1153,6 +1183,66 @@ const rawLessons: RawLesson[] = [
     source: "content/php/separating-logic-from-templates.mdx",
     metadata: phpSeparatingLogicFromTemplatesMetadata,
     Component: PhpSeparatingLogicFromTemplates,
+  },
+  {
+    slug: "null-handling-and-optional-boundaries",
+    source: "content/java/null-handling-and-optional-boundaries.mdx",
+    metadata: javaNullHandlingAndOptionalBoundariesMetadata,
+    Component: JavaNullHandlingAndOptionalBoundaries,
+  },
+  {
+    slug: "immutable-data-and-defensive-copies",
+    source: "content/java/immutable-data-and-defensive-copies.mdx",
+    metadata: javaImmutableDataAndDefensiveCopiesMetadata,
+    Component: JavaImmutableDataAndDefensiveCopies,
+  },
+  {
+    slug: "equals-hashcode-and-value-objects",
+    source: "content/java/equals-hashcode-and-value-objects.mdx",
+    metadata: javaEqualsHashcodeAndValueObjectsMetadata,
+    Component: JavaEqualsHashcodeAndValueObjects,
+  },
+  {
+    slug: "exception-handling-boundaries",
+    source: "content/java/exception-handling-boundaries.mdx",
+    metadata: javaExceptionBoundariesMetadata,
+    Component: JavaExceptionBoundaries,
+  },
+  {
+    slug: "try-with-resources-cleanup",
+    source: "content/java/try-with-resources-cleanup.mdx",
+    metadata: javaTryWithResourcesCleanupMetadata,
+    Component: JavaTryWithResourcesCleanup,
+  },
+  {
+    slug: "generics-and-collection-types",
+    source: "content/java/generics-and-collection-types.mdx",
+    metadata: javaGenericsAndCollectionTypesMetadata,
+    Component: JavaGenericsAndCollectionTypes,
+  },
+  {
+    slug: "streams-vs-readable-loops",
+    source: "content/java/streams-vs-readable-loops.mdx",
+    metadata: javaStreamsVsReadableLoopsMetadata,
+    Component: JavaStreamsVsReadableLoops,
+  },
+  {
+    slug: "concurrency-and-shared-state",
+    source: "content/java/concurrency-and-shared-state.mdx",
+    metadata: javaConcurrencyAndSharedStateMetadata,
+    Component: JavaConcurrencyAndSharedState,
+  },
+  {
+    slug: "records-and-dto-boundaries",
+    source: "content/java/records-and-dto-boundaries.mdx",
+    metadata: javaRecordsAndDtoBoundariesMetadata,
+    Component: JavaRecordsAndDtoBoundaries,
+  },
+  {
+    slug: "package-service-boundaries",
+    source: "content/java/package-service-boundaries.mdx",
+    metadata: javaPackageServiceBoundariesMetadata,
+    Component: JavaPackageServiceBoundaries,
   },
   {
     slug: "path-operation-order",

@@ -1,0 +1,48 @@
+export const metadata = {
+  title: "equals, hashCode, and value objects",
+  track: "java",
+  order: 3,
+  summary: "Use small value objects or records for identity values so equality, hashing, and validation stay together.",
+  tags: ["value-objects", "equals", "hashcode"],
+  takeaways: ["If a type can be used as a map key or set member, equality and hash behavior must be deliberate and consistent."],
+  goodCode: {
+    language: "java",
+    filename: "src/main/java/dev/review/user/UserId.java",
+    code: `public record UserId(UUID value) {
+    public UserId {
+        Objects.requireNonNull(value, "value");
+    }
+
+    public static UserId parse(String rawValue) {
+        return new UserId(UUID.fromString(rawValue));
+    }
+}`,
+  },
+  badCode: {
+    language: "java",
+    filename: "src/main/java/User.java",
+    code: `public class User {
+    private String id;
+    private String displayName;
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof User user)) {
+            return false;
+        }
+
+        return displayName.equals(user.displayName);
+    }
+}`,
+  },
+};
+
+## What to review
+
+The good version models identity as a value object. Java records give consistent equality and hash behavior, while the constructor keeps invalid values out.
+
+The bad version compares users by display name and overrides `equals` without a matching `hashCode`. Collections such as `HashSet` and `HashMap` can behave incorrectly.
+
+## Review notes
+
+When reviewing equality, check both the domain meaning and the Java contract. If equality is important, prefer a focused value object over spreading identity rules through larger mutable classes.

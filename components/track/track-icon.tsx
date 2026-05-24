@@ -118,6 +118,16 @@ const iconShapes = {
       <path d="m14 12 2 2-2 2" />
     </>
   ),
+  coffee: (
+    <>
+      <path d="M6 8h11v5a5 5 0 0 1-5 5H9a3 3 0 0 1-3-3V8Z" />
+      <path d="M17 9h1.5a2.5 2.5 0 0 1 0 5H17" />
+      <path d="M8 3v2" />
+      <path d="M12 3v2" />
+      <path d="M16 3v2" />
+      <path d="M5 21h14" />
+    </>
+  ),
   zap: (
     <path d="M13 2 4 14h7l-1 8 10-13h-7l1-7Z" />
   ),

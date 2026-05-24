@@ -1,0 +1,49 @@
+export const metadata = {
+  title: "Generics and collection types",
+  track: "java",
+  order: 6,
+  summary: "Keep collection element types precise so casts, raw types, and runtime class errors do not leak through the codebase.",
+  tags: ["generics", "collections", "types"],
+  takeaways: ["A Java collection type should tell reviewers what it contains and what key shape it expects."],
+  goodCode: {
+    language: "java",
+    filename: "src/main/java/dev/review/orders/OrderSummaryIndex.java",
+    code: `public final class OrderSummaryIndex {
+    public Map<UserId, List<OrderSummary>> groupByOwner(List<OrderSummary> orders) {
+        return orders.stream()
+            .collect(Collectors.groupingBy(OrderSummary::ownerId));
+    }
+
+    public List<OrderSummary> summariesFor(
+        Map<UserId, List<OrderSummary>> index,
+        UserId ownerId
+    ) {
+        return index.getOrDefault(ownerId, List.of());
+    }
+}`,
+  },
+  badCode: {
+    language: "java",
+    filename: "src/main/java/OrderSummaryIndex.java",
+    code: `public class OrderSummaryIndex {
+    public Map groupByOwner(List orders) {
+        Map index = new HashMap();
+        for (Object item : orders) {
+            OrderSummary order = (OrderSummary) item;
+            index.put(order.ownerId().toString(), order);
+        }
+        return index;
+    }
+}`,
+  },
+};
+
+## What to review
+
+The good version names both the key and value types. Reviewers can see that one owner may have many summaries, and callers do not need casts.
+
+The bad version uses raw `List` and `Map`, stores only one order per owner, and pushes type mistakes to runtime.
+
+## Review notes
+
+Raw collections are a review smell in modern Java. They remove the compiler from the conversation and make reviewers simulate type checks by hand.

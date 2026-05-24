@@ -1,0 +1,51 @@
+export const metadata = {
+  title: "Null handling and Optional boundaries",
+  track: "java",
+  order: 1,
+  summary: "Make absence explicit at method boundaries with Optional or exceptions, instead of returning null from finder code.",
+  tags: ["null", "optional", "boundaries"],
+  takeaways: ["A Java method should make missing data visible in its return type or exception path, not hide it behind a nullable value."],
+  goodCode: {
+    language: "java",
+    filename: "src/main/java/dev/review/user/UserService.java",
+    code: `public final class UserService {
+    private final UserRepository users;
+
+    public UserService(UserRepository users) {
+        this.users = Objects.requireNonNull(users);
+    }
+
+    public UserProfile profileFor(UserId id) {
+        Objects.requireNonNull(id, "id");
+
+        User user = users.findById(id)
+            .orElseThrow(() -> new UserNotFoundException(id));
+
+        return UserProfile.from(user);
+    }
+}`,
+  },
+  badCode: {
+    language: "java",
+    filename: "src/main/java/UserService.java",
+    code: `public class UserService {
+    private UserRepository users;
+
+    public UserProfile profileFor(String id) {
+        User user = users.findById(id);
+
+        return new UserProfile(user.name(), user.email());
+    }
+}`,
+  },
+};
+
+## What to review
+
+The good version treats missing users as part of the contract. The repository returns an `Optional`, the service checks its input, and the failure path is named.
+
+The bad version lets `null` travel through the application. Reviewers have to infer whether `findById` can miss, and the actual error appears later as a less helpful `NullPointerException`.
+
+## Review notes
+
+In Java reviews, ask where absence is allowed. If a method may not find a value, the caller should see that in the return type or in a clear exception at the boundary.

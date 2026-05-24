@@ -66,6 +66,12 @@ export const tracks = [
       "Review strict types, request validation, output escaping, PDO queries, passwords, sessions, configuration, and template boundaries.",
   },
   {
+    slug: "java",
+    title: "Java",
+    description:
+      "Review null boundaries, immutability, value objects, exceptions, resources, generics, streams, concurrency, records, and service boundaries.",
+  },
+  {
     slug: "fastapi",
     title: "FastAPI",
     description:

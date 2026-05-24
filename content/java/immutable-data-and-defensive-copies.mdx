@@ -1,0 +1,49 @@
+export const metadata = {
+  title: "Immutable data and defensive copies",
+  track: "java",
+  order: 2,
+  summary: "Protect domain snapshots from outside mutation by copying collections and exposing immutable views.",
+  tags: ["immutability", "collections", "defensive-copies"],
+  takeaways: ["Objects that represent a completed decision should not change because a caller still holds a mutable collection reference."],
+  goodCode: {
+    language: "java",
+    filename: "src/main/java/dev/review/orders/OrderSnapshot.java",
+    code: `public record OrderSnapshot(OrderId id, List<LineItem> items) {
+    public OrderSnapshot {
+        Objects.requireNonNull(id, "id");
+        items = List.copyOf(items);
+    }
+
+    public Money total() {
+        return items.stream()
+            .map(LineItem::subtotal)
+            .reduce(Money.zero(), Money::plus);
+    }
+}`,
+  },
+  badCode: {
+    language: "java",
+    filename: "src/main/java/OrderSnapshot.java",
+    code: `public class OrderSnapshot {
+    private final List<LineItem> items;
+
+    public OrderSnapshot(List<LineItem> items) {
+        this.items = items;
+    }
+
+    public List<LineItem> items() {
+        return items;
+    }
+}`,
+  },
+};
+
+## What to review
+
+The good version copies the collection at construction time, so later caller mutation cannot change the snapshot. Its fields are final through the record shape.
+
+The bad version stores and returns the same mutable list. Any code with a reference can add, remove, or reorder items after the object was created.
+
+## Review notes
+
+Look closely at constructors and getters that accept or return collections. A defensive copy is often the difference between a stable value and a hidden shared state bug.

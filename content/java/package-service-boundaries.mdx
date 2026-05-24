@@ -1,0 +1,53 @@
+export const metadata = {
+  title: "Package and service boundaries",
+  track: "java",
+  order: 10,
+  summary: "Keep controllers, services, repositories, and packages focused so each layer owns one kind of decision.",
+  tags: ["architecture", "packages", "services"],
+  takeaways: ["A Java class is easier to review when HTTP, business rules, and persistence are separated by clear package boundaries."],
+  goodCode: {
+    language: "java",
+    filename: "src/main/java/dev/review/user/UserService.java",
+    code: `package dev.review.user;
+
+public final class UserService {
+    private final UserRepository users;
+    private final WelcomeEmail welcomeEmail;
+
+    public UserService(UserRepository users, WelcomeEmail welcomeEmail) {
+        this.users = users;
+        this.welcomeEmail = welcomeEmail;
+    }
+
+    public UserProfile register(CreateUserCommand command) {
+        User user = users.save(User.create(command.email(), command.displayName()));
+        welcomeEmail.sendTo(user);
+        return UserProfile.from(user);
+    }
+}`,
+  },
+  badCode: {
+    language: "java",
+    filename: "src/main/java/UserController.java",
+    code: `public class UserController {
+    public ResponseEntity<?> register(HttpServletRequest request) throws SQLException {
+        String email = request.getParameter("email");
+        Connection connection = DriverManager.getConnection(databaseUrl);
+        Statement statement = connection.createStatement();
+        statement.executeUpdate("insert into users(email) values('" + email + "')");
+        mailer.send(email, "Welcome");
+        return ResponseEntity.ok().build();
+    }
+}`,
+  },
+};
+
+## What to review
+
+The good version gives business behavior a service boundary. Persistence and email are dependencies, not hidden work inside a controller.
+
+The bad version mixes request parsing, SQL construction, database connection management, email, and HTTP response code in one class.
+
+## Review notes
+
+For Java architecture reviews, trace one user action through packages. If a controller owns every decision, split by responsibility before adding more behavior.

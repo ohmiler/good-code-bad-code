@@ -12,6 +12,7 @@ export const trackIconKeys = {
   sql: "database",
   python: "terminal",
   php: "file-code",
+  java: "coffee",
   fastapi: "zap",
   django: "layers",
   go: "gauge",

@@ -118,6 +118,11 @@ export const trackThaiTranslations = {
     description:
       "ฝึกรีวิว strict types, request validation, output escaping, PDO query, password, session, config และขอบเขตของ template.",
   },
+  java: {
+    title: "Java",
+    description:
+      "ฝึกรีวิว null, Optional, immutable data, value object, exception, resource cleanup, generic, stream, concurrency, record และ service boundary.",
+  },
   fastapi: {
     title: "FastAPI",
     description:
@@ -1464,6 +1469,126 @@ export const lessonThaiTranslations = {
     ],
     reviewNotes: [
       "PHP embed HTML ได้สะดวก แต่ความสะดวกไม่ควรลบ boundary ถามว่าไฟล์นี้ handle request, fetch data หรือ render view ถ้าทำทั้งสามอย่างควรแยก.",
+    ],
+  },
+  "java/null-handling-and-optional-boundaries": {
+    title: "null และ Optional ที่ boundary",
+    summary: "ทำให้กรณีไม่พบข้อมูลเห็นชัดผ่าน Optional หรือ exception แทนการคืน null แล้วปล่อยให้พังทีหลัง.",
+    takeaways: ["method ที่อาจไม่พบข้อมูลควรบอกผ่าน return type หรือ exception ที่ชัดเจน ไม่ใช่ซ่อนด้วยค่า null."],
+    whatToReview: [
+      "โค้ดที่ดีให้ repository คืน Optional, เช็ก input และตั้งชื่อ failure path ให้ reviewer ตามเหตุผลได้ง่าย.",
+      "โค้ดที่ควรปรับปล่อย null ไหลต่อไป ทำให้ต้องเดาว่า method อาจไม่เจอข้อมูลหรือไม่ และมักจบด้วย NullPointerException ที่บอกบริบทน้อย.",
+    ],
+    reviewNotes: [
+      "เวลารีวิว Java ให้ถามเสมอว่าความว่างหรือการไม่พบข้อมูลถูกอนุญาตตรงไหน ถ้าอนุญาต ควรเห็นจาก contract ไม่ใช่จาก bug ตอน runtime.",
+    ],
+  },
+  "java/immutable-data-and-defensive-copies": {
+    title: "immutable data และ defensive copy",
+    summary: "ป้องกัน object ที่เป็น snapshot ไม่ให้เปลี่ยนตาม mutable collection ที่ caller ยังถืออยู่.",
+    takeaways: ["ข้อมูลที่แทนการตัดสินใจเสร็จแล้วควรนิ่ง ไม่ควรถูกแก้จาก reference ภายนอกได้ภายหลัง."],
+    whatToReview: [
+      "โค้ดที่ดี copy collection ตอนสร้าง object และเปิดเผยข้อมูลแบบ immutable ทำให้ state หลังสร้างคาดเดาได้.",
+      "โค้ดที่ควรปรับเก็บและคืน list เดิม ทำให้ส่วนอื่น add, remove หรือ reorder item ได้โดย class นี้ไม่รู้ตัว.",
+    ],
+    reviewNotes: [
+      "ให้ดู constructor และ getter ที่รับหรือคืน collection เป็นพิเศษ เพราะ defensive copy มักกัน bug ที่ตามยากมากในระบบจริง.",
+    ],
+  },
+  "java/equals-hashcode-and-value-objects": {
+    title: "equals/hashCode และ value object",
+    summary: "ใช้ value object หรือ record เล็ก ๆ เพื่อให้ identity, validation, equality และ hash behavior อยู่ในที่เดียว.",
+    takeaways: ["type ที่ใช้เป็น key ใน map หรือสมาชิกใน set ต้องมี equality และ hash behavior ที่ตั้งใจและสอดคล้องกัน."],
+    whatToReview: [
+      "โค้ดที่ดีแยก UserId เป็น record ทำให้ equality และ hashCode สอดคล้องโดยธรรมชาติ และ validate ค่าได้ตั้งแต่ต้น.",
+      "โค้ดที่ควรปรับ override equals ด้วย field ที่ไม่ใช่ identity และไม่มี hashCode ทำให้ collection behavior เพี้ยนได้.",
+    ],
+    reviewNotes: [
+      "เวลาเห็น equals ให้รีวิวทั้งความหมายทาง domain และ contract ของ Java ถ้า identity สำคัญ มักควรมี value object เฉพาะทาง.",
+    ],
+  },
+  "java/exception-handling-boundaries": {
+    title: "ขอบเขตของ exception",
+    summary: "โยน exception ที่มีความหมายใน application แล้วค่อยแปลงเป็น response ที่ boundary ด้านนอก.",
+    takeaways: ["exception ควรสื่อความหมายในระบบ และถูกแปลงเป็นข้อความหรือ response สำหรับผู้ใช้เฉพาะจุดที่เหมาะสม."],
+    whatToReview: [
+      "โค้ดที่ดีจับ domain exception ที่ controller boundary แล้ว map เป็น HTTP response ที่คาดเดาได้.",
+      "โค้ดที่ควรปรับ catch Exception กว้างเกินไป, printStackTrace และคืน null ซึ่งซ่อน failure จริงไว้.",
+    ],
+    reviewNotes: [
+      "ให้ถามว่า catch block อยู่ layer ที่ถูกไหม จับลึกเกินไปมักกลบ bug แต่จับที่ boundary ช่วยแปล failure โดยไม่เสียเจตนา.",
+    ],
+  },
+  "java/try-with-resources-cleanup": {
+    title: "try-with-resources และ cleanup",
+    summary: "ใช้ try-with-resources กับ connection, statement, result set หรือ file เพื่อให้ cleanup เกิดทั้งตอนสำเร็จและล้มเหลว.",
+    takeaways: ["resource ที่ต้อง close ควรมี owner และ path cleanup ที่ชัด แม้เกิด exception กลางทาง."],
+    whatToReview: [
+      "โค้ดที่ดีทำให้ ownership ของ resource เห็นชัด และปิด connection, statement, result set ได้ครบทุก path.",
+      "โค้ดที่ควรปรับ close เองเฉพาะ happy path ทำให้ early return หรือ exception ทิ้ง resource ค้างไว้.",
+    ],
+    reviewNotes: [
+      "resource leak มักดูไม่ออกจาก happy path ให้ไล่ทุก return และ exception path แล้วดูว่า closeable แต่ละตัวถูกจัดการโดยใคร.",
+    ],
+  },
+  "java/generics-and-collection-types": {
+    title: "generic และ collection type",
+    summary: "ระบุชนิดข้อมูลใน collection ให้แม่น เพื่อลด cast, raw type และ ClassCastException ตอน runtime.",
+    takeaways: ["collection type ใน Java ควรบอก reviewer ได้ว่าข้างในคืออะไร และ key/value มีรูปทรงแบบไหน."],
+    whatToReview: [
+      "โค้ดที่ดีระบุทั้ง key และ value type ชัดเจน ทำให้ caller ไม่ต้อง cast และ compiler ช่วยจับผิดได้.",
+      "โค้ดที่ควรปรับใช้ raw List หรือ raw Map ทำให้ type error หลุดไป runtime และ reviewer ต้องเดาเอง.",
+    ],
+    reviewNotes: [
+      "raw collection เป็น smell ใน Java สมัยใหม่ เพราะเหมือนถอด compiler ออกจากวงรีวิว แล้วให้คนไล่ type ด้วยตาแทน.",
+    ],
+  },
+  "java/streams-vs-readable-loops": {
+    title: "stream หรือ loop ที่อ่านง่าย",
+    summary: "ใช้ stream กับ transformation ที่ชัด และใช้ loop เมื่อมี branching, validation หรือ step ที่ควรตั้งชื่อให้อ่านง่าย.",
+    takeaways: ["รูปแบบ iteration ที่ดีคือแบบที่ทำให้เจตนาและจุดผิดพลาดรีวิวง่ายที่สุด ไม่ใช่แบบที่สั้นที่สุดเสมอ."],
+    whatToReview: [
+      "โค้ดที่ดีเลือก loop เพราะ rule มี branch และ accumulation ที่ควรเห็นเป็นขั้น ๆ.",
+      "โค้ดที่ควรปรับซ่อน mutation และ side effect ใน stream pipeline ทำให้ดู functional แต่ reason ยากขึ้น.",
+    ],
+    reviewNotes: [
+      "stream ไม่ได้ดีกว่า loop อัตโนมัติ ใช้ stream เมื่อ map/filter/collect ตรงไปตรงมา และใช้ loop เมื่อ business rule ต้องการชื่อและลำดับที่อ่านง่าย.",
+    ],
+  },
+  "java/concurrency-and-shared-state": {
+    title: "concurrency และ shared state",
+    summary: "ใช้ primitive ที่ออกแบบมาสำหรับ concurrent access เพื่อกัน check-then-act race เมื่อมีหลาย thread.",
+    takeaways: ["ถ้าหลาย thread แตะค่าเดียวกัน โค้ดควรบอกชัดว่าใครเป็นเจ้าของ synchronization."],
+    whatToReview: [
+      "โค้ดที่ดีใช้ ConcurrentHashMap และ computeIfAbsent เพื่อให้ operation สำคัญเป็น atomic.",
+      "โค้ดที่ควรปรับใช้ HashMap ร่วมกันพร้อม containsKey แล้วค่อย put ทำให้เกิด race ภายใต้ load ได้.",
+    ],
+    reviewNotes: [
+      "เวลารีวิว shared state ให้หา synchronization owner ถ้าคำตอบคือเวลาใช้งานจริงคงไม่ชนกัน แปลว่าควรเปลี่ยน primitive หรือจำกัด ownership ใหม่.",
+    ],
+  },
+  "java/records-and-dto-boundaries": {
+    title: "record และ DTO boundary",
+    summary: "ใช้ record หรือ DTO ที่ชัดสำหรับ request/response แทน Map ที่ทำให้ error ไหลลึกเข้า application.",
+    takeaways: ["ข้อมูลที่ข้าม boundary ควรมีชื่อ shape และ validation ใกล้ edge ของระบบ."],
+    whatToReview: [
+      "โค้ดที่ดีตั้งชื่อ request shape และ validate field ที่จำเป็นก่อนส่งเข้า service.",
+      "โค้ดที่ควรปรับใช้ Map<String, Object> แล้ว cast เอง ทำให้ missing field หรือ key ผิดพังแบบตามยาก.",
+    ],
+    reviewNotes: [
+      "DTO ไม่ใช่พิธีรีตองถ้ามันป้องกัน boundary ได้ มันทำให้ request shape, validation และ expectation ของ downstream เห็นในที่เดียว.",
+    ],
+  },
+  "java/package-service-boundaries": {
+    title: "package และ service boundary",
+    summary: "แยก controller, service, repository และ package ให้แต่ละชั้นรับผิดชอบการตัดสินใจคนละแบบ.",
+    takeaways: ["class ใน Java จะรีวิวง่ายขึ้นเมื่อ HTTP, business rule และ persistence ถูกแยกด้วย boundary ที่ชัด."],
+    whatToReview: [
+      "โค้ดที่ดีให้ service เป็นที่อยู่ของ business behavior ส่วน persistence และ email เป็น dependency ที่เห็นได้.",
+      "โค้ดที่ควรปรับผสม request parsing, SQL, database connection, email และ HTTP response ไว้ใน controller เดียว.",
+    ],
+    reviewNotes: [
+      "เวลารีวิว architecture ให้ trace หนึ่ง user action ผ่าน package ถ้า controller ตัดสินใจทุกอย่าง ควรแยก responsibility ก่อนเพิ่ม feature ใหม่.",
     ],
   },
   "fastapi/path-operation-order": {
