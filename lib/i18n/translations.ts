@@ -100,7 +100,7 @@ export const trackThaiTranslations = {
   nodejs: {
     title: "Node.js",
     description:
-      "ฝึกรีวิว runtime boundary, async I/O, HTTP lifecycle, logging และ process safety.",
+      "ฝึกรีวิวไฟล์เริ่มระบบ, งาน I/O แบบ async, ลำดับของ HTTP request, log ที่ค้นหาได้ และการปิด process ให้ปลอดภัย.",
   },
   express: {
     title: "Express",
@@ -1122,98 +1122,98 @@ export const lessonThaiTranslations = {
   },
   "nodejs/runtime-boundaries-entry-points": {
     codeComments: {
-      goodCode: ["แยกจุดเริ่ม process ไว้ที่ entry point เท่านั้น"],
-      badCode: ["แค่ import module นี้ก็เปิด socket ทันที"],
+      goodCode: ["แยกจุดเริ่มโปรแกรมไว้ที่ entry point เท่านั้น"],
+      badCode: ["แค่ import module นี้ก็เปิด server/port ทันที"],
     },
-    title: "แยก entry point ออกจาก app wiring",
-    summary: "แยกโค้ดที่เริ่ม process ออกจากโค้ดประกอบ app เพื่อให้ module ถูก import ไป test หรือ reuse ได้โดยไม่เปิด server เอง.",
-    takeaways: ["module ของ Node.js ควรถูก import ได้โดยไม่เริ่ม process, เปิด socket หรือเริ่มงานเบื้องหลังทันที."],
+    title: "แยกไฟล์เริ่มระบบออกจากโค้ดประกอบ app",
+    summary: "แยกโค้ดที่เริ่มโปรแกรม Node.js (process) ออกจากโค้ดประกอบ app เพื่อให้ module ถูก import ไป test หรือใช้ซ้ำได้โดยไม่เปิด server เอง.",
+    takeaways: ["module ของ Node.js ควรถูก import ได้โดยไม่เริ่ม process, เปิด port/socket หรือเริ่มงานเบื้องหลังทันที."],
     whatToReview: [
       "โค้ดที่ดีให้ `server.ts` เป็น entry point ที่อ่าน config, สร้าง app และ `listen` port อย่างชัดเจน.",
-      "โค้ดที่ควรปรับเริ่ม server ตั้งแต่ตอน import module ทำให้ test, worker หรือ script เปิด socket โดยไม่ตั้งใจ.",
+      "โค้ดที่ควรปรับเริ่ม server ตั้งแต่ตอน import module ทำให้ test, worker หรือ script เปิด port โดยไม่ตั้งใจ.",
     ],
     reviewNotes: [
-      "ตอนรีวิวให้ถามว่าเกิดอะไรขึ้นถ้าไฟล์นี้ถูก import จาก test หรือ process อื่น. ถ้า import แล้วเริ่ม runtime side effect ทันที โค้ดจะ compose ยาก test ยาก และ shutdown ให้สะอาดยากขึ้น.",
+      "ตอนรีวิวให้ถามว่าเกิดอะไรขึ้นถ้าไฟล์นี้ถูก import จาก test หรือ process อื่น. ถ้าแค่ import ก็เริ่มงานตอน runtime ทันที โค้ดจะประกอบใช้ซ้ำยาก test ยาก และ shutdown ให้สะอาดยากขึ้น.",
     ],
   },
   "nodejs/async-filesystem-without-blocking": {
     codeComments: {
-      goodCode: ["async I/O ปล่อยให้ event loop รับ request อื่นต่อได้"],
+      goodCode: ["async I/O ปล่อยให้คิวงานหลักของ Node.js รับ request อื่นต่อได้"],
       badCode: ["sync I/O ทำให้ทั้ง process หยุดรอระหว่าง request"],
     },
-    title: "อ่านไฟล์แบบ async ใน request path",
-    summary: "ใช้ filesystem API แบบ async ในเส้นทางที่รับ request เพื่อไม่ให้ disk read หนึ่งครั้งบล็อกงานอื่นทั้ง process.",
+    title: "อ่านไฟล์แบบ async ตอนมี request",
+    summary: "ใช้ filesystem API แบบ async ในโค้ดที่ทำงานตอน request เข้ามา เพื่อไม่ให้การอ่าน disk ครั้งหนึ่งบล็อก request อื่นทั้ง process.",
     takeaways: ["หลีกเลี่ยง filesystem sync call ใน HTTP handler หรือ hot path ที่อาจมีหลาย request พร้อมกัน."],
     whatToReview: [
       "โค้ดที่ดีใช้ `readFile` จาก `node:fs/promises` เพื่อให้ event loop ไปจัดการงานอื่นได้ระหว่างรอ disk.",
       "โค้ดที่ควรปรับใช้ `readFileSync` ใน request handler ทำให้ process หยุดรับงานอื่นจนอ่านไฟล์เสร็จ.",
     ],
     reviewNotes: [
-      "sync filesystem API อาจยอมรับได้ตอน startup หรือใน build tooling แต่ถ้าอยู่ใน request handler ให้ตั้งคำถามทันที. ปัญหานี้มักไม่เห็นในเครื่อง local แต่จะกลายเป็น latency spike เมื่อมี traffic พร้อมกัน.",
+      "sync filesystem API อาจยอมรับได้ตอน startup หรือใน build tooling แต่ถ้าอยู่ใน request handler ให้ตั้งคำถามทันที. ปัญหานี้มักไม่เห็นในเครื่อง local แต่จะทำให้เวลาตอบสนองพุ่งสูงเมื่อมี traffic พร้อมกัน.",
     ],
   },
   "nodejs/async-failure-boundaries": {
     codeComments: {
-      goodCode: ["HTTP boundary รับผิดชอบทั้ง success และ failure response"],
-      badCode: ["rejection ไม่มีคนรับผิดชอบ client จึงอาจไม่ได้ response"],
+      goodCode: ["จุดรับ HTTP รับผิดชอบทั้ง response สำเร็จและล้มเหลว"],
+      badCode: ["promise ที่ reject ไม่มีคนรับผิดชอบ client จึงอาจไม่ได้ response"],
     },
-    title: "กำหนดขอบเขต error ของ async code",
-    summary: "จัดการ rejected promise ที่ boundary ซึ่งยัง log context และตอบ response ที่มีประโยชน์ให้ client ได้.",
-    takeaways: ["request path แบบ async ควรมี failure path ชัดเจน และต้องส่ง response เพียงครั้งเดียว."],
+    title: "กำหนดจุดจัดการ error ของ async",
+    summary: "เมื่อ promise ล้มเหลว ให้จัดการที่ขอบ HTTP ซึ่งยัง log บริบทและตอบ response ที่มีประโยชน์ให้ client ได้.",
+    takeaways: ["โค้ดที่ทำงานตอน request เข้ามาแบบ async ควรมีทางล้มเหลวที่ชัดเจน และต้องส่ง response เพียงครั้งเดียว."],
     whatToReview: [
       "โค้ดที่ดี catch error ที่ HTTP boundary, log context และส่ง status 500 พร้อมข้อความที่เข้าใจได้.",
       "โค้ดที่ควรปรับสร้าง promise แล้วไม่จัดการ rejection ทำให้ client อาจค้างหรือ process เจอ unhandled rejection.",
     ],
     reviewNotes: [
-      "ตอนรีวิวให้ไล่ทุก promise ใน request code ว่าถ้า reject แล้วใครรับผิดชอบ. happy path ที่ดูสะอาดอาจซ่อน failure behavior ที่ไม่มีใครนิยามไว้เลย.",
+      "ตอนรีวิวให้ไล่ทุก promise ใน request code ว่าถ้า reject แล้วใครรับผิดชอบ. happy path ที่ดูสะอาดอาจซ่อนพฤติกรรมตอนล้มเหลวที่ไม่มีใครนิยามไว้เลย.",
     ],
   },
   "nodejs/environment-configuration": {
     codeComments: {
-      goodCode: ["validate config ก่อน app เริ่มรับ traffic"],
-      badCode: ["fallback ที่ซ่อนอยู่พา production ไปผิด service ได้"],
+      goodCode: ["ตรวจ config ก่อน app เริ่มรับ traffic"],
+      badCode: ["ค่าสำรองที่ซ่อนอยู่พา production ไปผิด service ได้"],
     },
-    title: "รวม config จาก environment ให้ชัด",
-    summary: "อ่านและ validate environment configuration ครั้งเดียวตอน startup แล้วส่งต่อเป็น config object ที่มีรูปทรงชัดเจน.",
+    title: "รวม config จาก environment ไว้จุดเดียว",
+    summary: "อ่านและตรวจค่า environment configuration ครั้งเดียวตอน startup แล้วส่งต่อเป็น config object ที่มีหน้าตาชัดเจน.",
     takeaways: ["config ควร fail fast พร้อมข้อความชัดเจน ไม่ควรกระจาย `process.env` และ fallback เงียบ ๆ ไปทั่ว codebase."],
     whatToReview: [
       "โค้ดที่ดีแปลง env เป็น typed config object และตรวจ required value ก่อน app เริ่มรับ traffic.",
       "โค้ดที่ควรปรับอ่าน `process.env` ลึกใน infrastructure code พร้อม fallback ที่อาจชี้ production ไปผิด database.",
     ],
     reviewNotes: [
-      "เวลาเห็น `process.env` กระจายหลายไฟล์ ให้ดึงกลับมาคิดเรื่อง config boundary. configuration bug ควรล้มตั้งแต่เริ่มระบบ ไม่ใช่ล้มตอนผู้ใช้ส่ง request หรือเงียบจนต่อ service ผิด.",
+      "เวลาเห็น `process.env` กระจายหลายไฟล์ ให้ดึงกลับมาคิดเรื่องขอบเขต config. bug เรื่อง configuration ควรล้มตั้งแต่เริ่มระบบ ไม่ใช่ล้มตอนผู้ใช้ส่ง request หรือเงียบจนต่อ service ผิด.",
     ],
   },
   "nodejs/module-side-effects-startup": {
     codeComments: {
-      goodCode: ["caller เป็นคนตัดสินใจว่าจะเริ่มและหยุด background job เมื่อไร"],
+      goodCode: ["คนเรียกเป็นคนตัดสินใจว่าจะเริ่มและหยุด background job เมื่อไร"],
       badCode: ["import helper แล้วเริ่ม loop ถาวรไปด้วยทันที"],
     },
     title: "อย่าเริ่มงานตอน import module",
     summary: "อย่าเริ่ม timer, connection หรือ background job เพียงเพราะมีคน import module เพื่อใช้ function บางตัว.",
-    takeaways: ["side effect ควรอยู่หลัง explicit start function หรือ entry point ที่ควบคุม lifecycle ได้."],
+    takeaways: ["side effect ควรอยู่หลัง start function ที่เรียกชัดเจน หรืออยู่ใน entry point ที่ควบคุม lifecycle ได้."],
     whatToReview: [
       "โค้ดที่ดีมี `startCleanupJob` ที่เริ่มงานชัดเจนและคืน `stop` handle สำหรับ shutdown หรือ test.",
       "โค้ดที่ควรปรับเริ่ม `setInterval` ที่ top level ทำให้แค่ import เพื่อใช้ function เดียวก็เริ่ม background loop.",
     ],
     reviewNotes: [
-      "ตอนรีวิว top-level code ให้มองหา timer, connection, subscription และ network call. implicit startup ทำให้ test isolation, worker reuse และ lifecycle control เปราะมาก.",
+      "ตอนรีวิว top-level code ให้มองหา timer, connection, subscription และ network call. การเริ่มงานเองแบบซ่อน ๆ ทำให้ test isolation, worker reuse และการคุม lifecycle เปราะมาก.",
     ],
   },
   "nodejs/streams-large-payloads": {
     codeComments: {
-      goodCode: ["pipeline จัดการ backpressure และ stream error ให้"],
-      badCode: ["โหลดทั้ง export เข้า memory ตามขนาดไฟล์"],
+      goodCode: ["pipeline ช่วยทยอยส่งข้อมูลและจัดการ stream error"],
+      badCode: ["โหลด export ทั้งก้อนเข้า memory ตามขนาดไฟล์"],
     },
-    title: "ใช้ stream กับ payload ขนาดใหญ่",
-    summary: "ส่งไฟล์หรือ response ขนาดใหญ่ด้วย stream แทนการโหลดทั้งหมดเข้า memory ก่อนส่ง.",
-    takeaways: ["payload ใหญ่ควรใช้ pipeline-based streaming พร้อม error handling ไม่ใช่ `readFile` ทั้งก้อนเสมอไป."],
+    title: "ทยอยส่งข้อมูลใหญ่ด้วย stream",
+    summary: "ส่งไฟล์หรือ response ขนาดใหญ่ด้วย stream เพื่อทยอยอ่านและทยอยส่ง แทนการโหลดทั้งหมดเข้า memory ก่อนส่ง.",
+    takeaways: ["payload ใหญ่ควรใช้ streaming ผ่าน pipeline พร้อม error handling ไม่ใช่ `readFile` ทั้งก้อนเสมอไป."],
     whatToReview: [
-      "โค้ดที่ดีใช้ `createReadStream` กับ `pipeline` เพื่อรองรับ backpressure และจัดการ stream failure.",
+      "โค้ดที่ดีใช้ `createReadStream` กับ `pipeline` เพื่อรองรับ backpressure หรือจังหวะที่ฝั่งรับตามไม่ทัน และจัดการ stream failure.",
       "โค้ดที่ควรปรับ `readFile` ทั้งไฟล์ก่อนส่ง response ทำให้ memory เพิ่มตามขนาดไฟล์และจำนวนผู้ใช้พร้อมกัน.",
     ],
     reviewNotes: [
-      "ตอนรีวิว download หรือ export ให้ถามว่าข้อมูลใหญ่ได้แค่ไหนและมี concurrent request ได้กี่ชุด. การโหลดทั้งไฟล์เข้า memory อาจดูง่ายใน demo แต่เสี่ยงมากเมื่อไฟล์ใหญ่หรือผู้ใช้พร้อมกันหลายคน.",
+      "ตอนรีวิว download หรือ export ให้ถามว่าข้อมูลใหญ่ได้แค่ไหนและมี request พร้อมกันได้กี่ชุด. การโหลดทั้งไฟล์เข้า memory อาจดูง่ายใน demo แต่เสี่ยงมากเมื่อไฟล์ใหญ่หรือผู้ใช้พร้อมกันหลายคน.",
     ],
   },
   "nodejs/http-request-lifecycle": {
@@ -1221,7 +1221,7 @@ export const lessonThaiTranslations = {
       goodCode: ["ปฏิเสธ method ที่ไม่รองรับก่อนอ่าน body"],
       badCode: ["อ่าน body แบบไม่จำกัดก่อนเช็ก method ด้วยซ้ำ"],
     },
-    title: "จัดลำดับ lifecycle ของ HTTP request",
+    title: "จัดลำดับชีวิตของ HTTP request",
     summary: "ตรวจ method, จำกัด body และ return หลังส่ง response ตามลำดับที่คาดเดาได้.",
     takeaways: ["handler ที่ดีควร validate ก่อน อ่าน input แบบมี limit และไม่เขียน response ซ้ำหลังส่ง error แล้ว."],
     whatToReview: [
@@ -1229,17 +1229,17 @@ export const lessonThaiTranslations = {
       "โค้ดที่ควรปรับอ่าน body แบบไม่จำกัดก่อนเช็ก method และยังอาจเขียน response ซ้ำหลังส่ง 405.",
     ],
     reviewNotes: [
-      "ตอนรีวิวให้ไล่ request ตั้งแต่ entry จนจบ response. lifecycle bug มักโผล่กับ invalid method, body ใหญ่ หรือ client ที่ disconnect กลางทาง ไม่ใช่กับ happy path ปกติ.",
+      "ตอนรีวิวให้ไล่ request ตั้งแต่เข้ามาจนจบ response. bug ของ lifecycle มักโผล่กับ method ที่ไม่รองรับ, body ใหญ่ หรือ client ที่ตัดการเชื่อมต่อกลางทาง ไม่ใช่กับ happy path ปกติ.",
     ],
   },
   "nodejs/graceful-shutdown-signals": {
     codeComments: {
-      goodCode: ["หยุดรับงานใหม่ก่อนค่อยปิด dependency"],
+      goodCode: ["หยุดรับงานใหม่ก่อน แล้วค่อยปิด dependency ที่ใช้อยู่"],
       badCode: ["exit ทันทีอาจตัด request ที่ยังทำงานอยู่"],
     },
-    title: "ปิด process แบบ graceful shutdown",
-    summary: "เมื่อ process ได้รับสัญญาณ shutdown ให้หยุดรับงานใหม่ ปิด resource และมี timeout กันการปิดค้าง.",
-    takeaways: ["Node process ใน production ควร drain HTTP และ dependency connection ก่อน `exit`."],
+    title: "ปิด process แบบรอให้งานเดิมจบก่อน",
+    summary: "เมื่อ process ได้รับสัญญาณ shutdown ให้หยุดรับงานใหม่ ปิด resource ที่ใช้อยู่ และมี timeout กันการปิดค้าง.",
+    takeaways: ["Node process ใน production ควรรอให้ HTTP request เดิมจบ และปิด dependency connection ก่อน `exit`."],
     whatToReview: [
       "โค้ดที่ดีใช้ `server.close`, ปิด database และมี timeout กัน shutdown ค้าง.",
       "โค้ดที่ควรปรับ `process.exit` ทันทีเมื่อได้ `SIGTERM` หรือ `SIGINT` ทำให้ request ที่กำลังทำงานหลุดได้.",
@@ -1250,31 +1250,31 @@ export const lessonThaiTranslations = {
   },
   "nodejs/structured-logging": {
     codeComments: {
-      goodCode: ["field ที่คงที่ทำให้ค้นหาและเชื่อม event ใน log ได้"],
+      goodCode: ["field ที่คงที่ทำให้ค้นหาและเชื่อมเหตุการณ์ใน log ได้"],
       badCode: ["secret ใน log จะกลายเป็นข้อมูลรั่วใน production"],
     },
-    title: "ทำ structured logging ให้ค้นหาได้",
-    summary: "log เป็น event ที่ machine อ่านได้ มี context ของ request และไม่ใส่ secret หรือข้อมูลส่วนตัว.",
-    takeaways: ["log ควรช่วย correlate behavior ได้ โดยไม่ทำให้ secret หรือข้อมูลผู้ใช้รั่วไปอยู่ในระบบ log."],
+    title: "ทำ log แบบมี field ให้ค้นหาได้",
+    summary: "เขียน log เป็น event ที่ machine อ่านได้ มีบริบทของ request และไม่ใส่ secret หรือข้อมูลส่วนตัว.",
+    takeaways: ["log ควรช่วยเชื่อมเหตุการณ์ของ request ได้ โดยไม่ทำให้ secret หรือข้อมูลผู้ใช้รั่วไปอยู่ในระบบ log."],
     whatToReview: [
       "โค้ดที่ดี log JSON ด้วย field ที่คงที่ เช่น `level`, `message`, `requestId` และ `durationMs`.",
       "โค้ดที่ควรปรับ log string อิสระและใส่ password ลง log ซึ่งกลายเป็นความเสี่ยงด้าน security ทันที.",
     ],
     reviewNotes: [
-      "ตอนรีวิว log ให้ดู correlation id, event name, level และ sensitive field. log เป็น production data จึงต้องค้นหาได้ เป็นระบบ และต้องไม่กลายเป็นที่เก็บ secret.",
+      "ตอนรีวิว log ให้ดู request id, event name, level และ field ที่อ่อนไหว. log เป็น production data จึงต้องค้นหาได้ เป็นระบบ และต้องไม่กลายเป็นที่เก็บ secret.",
     ],
   },
   "nodejs/input-validation-path-safety": {
     codeComments: {
-      goodCode: ["validate แล้ว resolve user input เทียบกับ root ที่อนุญาต"],
-      badCode: ["user input อาจ traverse ออกนอก directory ที่ตั้งใจ"],
+      goodCode: ["ตรวจแล้ว resolve user input เทียบกับ root ที่อนุญาต"],
+      badCode: ["user input อาจไต่ path ออกนอก directory ที่ตั้งใจ"],
     },
-    title: "validate input ก่อนใช้กับ path",
-    summary: "validate user input ก่อนนำไปใช้กับ filesystem path หรือ operation ที่แตะ resource สำคัญ.",
-    takeaways: ["path ที่มาจากผู้ใช้ควรถูก resolve เทียบกับ root ที่อนุญาต และต้องปฏิเสธ traversal attempt."],
+    title: "ตรวจ input ก่อนใช้กับ path ของไฟล์",
+    summary: "ตรวจ user input ก่อนนำไปใช้กับ filesystem path หรือ operation ที่แตะ resource สำคัญ.",
+    takeaways: ["path ที่มาจากผู้ใช้ควรถูก resolve เทียบกับ root ที่อนุญาต และต้องปฏิเสธความพยายามไต่ path ออกนอกพื้นที่."],
     whatToReview: [
-      "โค้ดที่ดี validate filename, resolve เทียบกับ upload root และป้องกัน path ที่หลุดออกนอก directory ที่อนุญาต.",
-      "โค้ดที่ควรปรับ join user input เข้ากับ path ตรง ๆ ทำให้ traversal input ชี้ไปไฟล์นอกพื้นที่ที่ตั้งใจได้.",
+      "โค้ดที่ดีตรวจ filename, resolve เทียบกับ upload root และป้องกัน path ที่หลุดออกนอก directory ที่อนุญาต.",
+      "โค้ดที่ควรปรับ join user input เข้ากับ path ตรง ๆ ทำให้ path traversal ชี้ไปไฟล์นอกพื้นที่ที่ตั้งใจได้.",
     ],
     reviewNotes: [
       "ตอนรีวิวให้มอง file path, shell argument, URL และ database filter เป็น boundary สำคัญ. helper สั้น ๆ อาจเป็นจุดที่ user input ข้ามเข้า operating system หรือ resource ที่ไม่ควรแตะ.",
