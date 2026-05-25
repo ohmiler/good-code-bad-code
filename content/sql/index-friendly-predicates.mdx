@@ -8,7 +8,8 @@ export const metadata = {
   goodCode: {
     language: "sql",
     filename: "monthly-reviews.sql",
-    code: `SELECT id, title, submitted_at
+    code: `/* Range predicates keep submitted_at searchable by index. */
+SELECT id, title, submitted_at
 FROM code_reviews
 WHERE submitted_at >= TIMESTAMPTZ '2026-01-01'
   AND submitted_at < TIMESTAMPTZ '2026-02-01'
@@ -17,7 +18,8 @@ ORDER BY submitted_at DESC;`,
   badCode: {
     language: "sql",
     filename: "monthly-reviews.sql",
-    code: `SELECT id, title, submitted_at
+    code: `/* Formatting the column forces work on every row. */
+SELECT id, title, submitted_at
 FROM code_reviews
 WHERE TO_CHAR(submitted_at, 'YYYY-MM') = '2026-01'
 ORDER BY submitted_at DESC;`,

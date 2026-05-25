@@ -8,7 +8,8 @@ export const metadata = {
   goodCode: {
     language: "sql",
     filename: "review-feed.sql",
-    code: `SELECT id, title, submitted_at
+    code: `/* Cursor uses timestamp plus id so the next page starts safely. */
+SELECT id, title, submitted_at
 FROM code_reviews
 WHERE status = 'submitted'
   AND (submitted_at, id) < ($1, $2)
@@ -18,7 +19,8 @@ LIMIT 20;`,
   badCode: {
     language: "sql",
     filename: "review-feed.sql",
-    code: `SELECT id, title, submitted_at
+    code: `/* OFFSET can shift when new rows arrive between page loads. */
+SELECT id, title, submitted_at
 FROM code_reviews
 WHERE status = 'submitted'
 ORDER BY submitted_at DESC

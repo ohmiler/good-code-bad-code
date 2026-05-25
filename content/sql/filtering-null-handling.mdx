@@ -8,7 +8,8 @@ export const metadata = {
   goodCode: {
     language: "sql",
     filename: "review-filters.sql",
-    code: `SELECT id, title, approved_at
+    code: `/* IS NULL and parentheses make nullable filters explicit. */
+SELECT id, title, approved_at
 FROM code_reviews
 WHERE deleted_at IS NULL
   AND (
@@ -20,7 +21,8 @@ ORDER BY submitted_at DESC;`,
   badCode: {
     language: "sql",
     filename: "review-filters.sql",
-    code: `SELECT id, title, approved_at
+    code: `/* = NULL and loose OR logic do not match nullable data. */
+SELECT id, title, approved_at
 FROM code_reviews
 WHERE deleted_at = NULL
   AND approved_at != NULL

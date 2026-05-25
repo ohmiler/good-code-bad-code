@@ -8,7 +8,8 @@ export const metadata = {
   goodCode: {
     language: "sql",
     filename: "submitted-reviews.sql",
-    code: `SELECT
+    code: `/* Return only the fields this screen or API needs. */
+SELECT
   reviews.id,
   reviews.title,
   reviews.status,
@@ -23,7 +24,8 @@ LIMIT 20;`,
   badCode: {
     language: "sql",
     filename: "submitted-reviews.sql",
-    code: `SELECT *
+    code: `/* SELECT * leaks table shape and duplicate column names. */
+SELECT *
 FROM code_reviews
 JOIN users ON users.id = code_reviews.author_id
 WHERE status = 'submitted'

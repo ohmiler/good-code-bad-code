@@ -1441,6 +1441,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "sql/schema-keys-constraints": {
+    codeComments: {
+      goodCode: ["key และ constraint ให้ database ช่วยคุมกฎข้อมูลหลัก"],
+      badCode: ["ขาด constraint ทำให้ข้อมูลผิดหลุดเข้า database ได้"],
+    },
     title: "ให้ database ช่วยกันข้อมูลผิด",
     summary: "ใช้ key และ constraint ให้ database ช่วยกันข้อมูลซ้ำ ข้อมูลกำพร้า และสถานะที่ผิด เช่น primary key, foreign key, UNIQUE, NOT NULL และ CHECK.",
     takeaways: ["กฎข้อมูลที่แอปพึ่งพาควรมี constraint ใน database ช่วยคุม ไม่ใช่หวังให้โค้ดทุกจุดจำได้."],
@@ -1453,6 +1457,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "sql/explicit-select-columns": {
+    codeComments: {
+      goodCode: ["คืนเฉพาะ field ที่หน้าจอหรือ API นี้ต้องใช้"],
+      badCode: ["SELECT * ทำให้รูปร่าง table และชื่อ column ที่ชนกันหลุดออกมา"],
+    },
     title: "ระบุ column ใน SELECT ให้ชัด",
     summary: "เลือกเฉพาะ column ที่โค้ดฝั่งเรียกใช้ต้องใช้ แทนการ `SELECT *` แล้วเอาทุกอย่างจาก table ออกมา.",
     takeaways: ["ผลลัพธ์ของ query คือสัญญากับโค้ดที่เอาไปใช้ (API contract) รูปร่างของมันจึงควรถูกเลือกอย่างตั้งใจ."],
@@ -1465,6 +1473,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "sql/filtering-null-handling": {
+    codeComments: {
+      goodCode: ["IS NULL และวงเล็บทำให้ filter ของข้อมูล nullable ชัดเจน"],
+      badCode: ["= NULL และ OR ที่ไม่ครอบวงเล็บไม่ตรงกับข้อมูล nullable"],
+    },
     title: "เช็ก NULL ใน WHERE ให้ถูก",
     summary: "ใช้ `IS NULL` / `IS NOT NULL` แทน `=` หรือ `!=` และใส่วงเล็บกับ AND/OR ให้ชัด เพื่อให้ filter ตรงกับข้อมูลจริง.",
     takeaways: ["NULL ไม่เท่ากับอะไรเลย แม้แต่ NULL ด้วยกัน ดังนั้นเงื่อนไขที่เกี่ยวกับ nullable column ต้องรีวิวละเอียดเป็นพิเศษ."],
@@ -1477,6 +1489,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "sql/join-cardinality": {
+    codeComments: {
+      goodCode: ["นับ comment ก่อน เพื่อให้ review หนึ่งรายการยังออกมาหนึ่งแถว"],
+      badCode: ["JOIN comment ตรง ๆ ทำให้หนึ่ง review กลายเป็นหลายแถว"],
+    },
     title: "JOIN แล้วจำนวนแถวอาจเปลี่ยน",
     summary: "ก่อนเชื่อผลลัพธ์ ให้เช็คว่า JOIN นี้ควรได้หนึ่งแถวต่อหนึ่ง review หรือจะทำให้แถวเพิ่ม/หายได้.",
     takeaways: ["JOIN เปลี่ยนจำนวน row ได้ จึงต้องรีวิวความสัมพันธ์ก่อนดู column ที่ SELECT."],
@@ -1489,6 +1505,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "sql/aggregation-grouping": {
+    codeComments: {
+      goodCode: ["มิติที่ SELECT ตรงกับคำถามที่ GROUP BY ต้องตอบ"],
+      badCode: ["submitted_at ถูก SELECT แต่ไม่ใช่ส่วนหนึ่งของการ group"],
+    },
     title: "สรุปข้อมูลด้วย GROUP BY ให้ตรงคำถาม",
     summary: "ก่อน GROUP BY ให้พูดคำถามเป็นภาษาคน เช่น “นับ review รายวันแยกตาม status” แล้ว group ตามวันและ status จริง ๆ.",
     takeaways: ["ค่าที่ SELECT แต่ไม่ได้ aggregate ควรเป็นส่วนหนึ่งของคำถามที่ต้องการสรุปผล."],
@@ -1501,6 +1521,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "sql/index-friendly-predicates": {
+    codeComments: {
+      goodCode: ["เงื่อนไขแบบช่วงเวลายังเปิดทางให้ใช้ index บน submitted_at"],
+      badCode: ["การ format column บังคับให้ database ทำงานกับทุก row"],
+    },
     title: "เขียน WHERE ให้ database ใช้ index ได้",
     summary: "หลีกเลี่ยงการเอา function ไปครอบ column ที่มี index ถ้าไม่จำเป็น เพราะ database อาจต้องไล่อ่านทุก row.",
     takeaways: ["query ที่ให้ผลถูกต้องยังควรถูกรีวิว ถ้ามันทำให้ database ใช้ index สำคัญไม่ได้."],
@@ -1513,6 +1537,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "sql/transactions-atomic-workflows": {
+    codeComments: {
+      goodCode: ["ทั้งสอง write ต้องสำเร็จหรือล้มไปพร้อมกัน"],
+      badCode: ["ถ้าไม่มี transaction อาจ approve สำเร็จแต่บันทึก audit event ล้มเหลว"],
+    },
     title: "ใช้ transaction กับงานที่ต้องสำเร็จพร้อมกัน",
     summary: "ครอบการเขียนหลาย step ด้วย transaction เพื่อให้งานที่เกี่ยวข้องกัน เช่น approve review และบันทึก audit log สำเร็จพร้อมกันหรือล้มพร้อมกัน.",
     takeaways: ["ถ้างานหนึ่งเขียนหลาย row เช่น approve review แล้วบันทึก audit log ต้องรีวิวว่า transaction เริ่มและจบตรงไหน."],
@@ -1525,6 +1553,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "sql/migration-backfills": {
+    codeComments: {
+      goodCode: ["เพิ่ม column ก่อน เติมข้อมูล row เก่า แล้วค่อยบังคับ NOT NULL"],
+      badCode: ["ตั้ง NOT NULL ก่อน backfill อาจ fail กับ row ที่มีอยู่แล้ว"],
+    },
     title: "เติมข้อมูลย้อนหลัง (backfill) ใน migration",
     summary: "แยกการเปลี่ยน schema, การเติมข้อมูลให้ row เดิม (backfill) และการใส่ constraint ที่เข้มขึ้นออกเป็น step ที่ปลอดภัย.",
     takeaways: ["migration ที่ดีต้องเคารพข้อมูลที่มีอยู่แล้ว ไม่ใช่คิดแค่ข้อมูลใหม่."],
@@ -1537,6 +1569,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "sql/parameterized-queries": {
+    codeComments: {
+      goodCode: ["parameter ที่ bind แยกไว้กัน input ผู้ใช้ไม่ให้กลายเป็น SQL text"],
+      badCode: ["การต่อ string ทำให้ input ผู้ใช้กลายเป็นข้อความ SQL"],
+    },
     title: "ใช้ parameterized query แทนการต่อ string",
     summary: "ส่ง input ของผู้ใช้เป็น parameter ที่ bind แยกจาก SQL text แทนการเอาค่าที่ไม่น่าเชื่อถือไปต่อเป็น string SQL.",
     takeaways: ["input ของผู้ใช้ควรเป็นข้อมูลของ query ไม่ใช่กลายเป็นข้อความ SQL."],
@@ -1549,6 +1585,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "sql/stable-pagination": {
+    codeComments: {
+      goodCode: ["cursor ใช้ทั้งเวลาและ id เพื่อเริ่มหน้าถัดไปได้มั่นคง"],
+      badCode: ["OFFSET อาจเลื่อนเมื่อมี row ใหม่เข้ามาระหว่างโหลดหน้า"],
+    },
     title: "แบ่งหน้าให้เลื่อนต่อแล้วรายการไม่ซ้ำ/ไม่หาย",
     summary: "เวลาโหลดหน้าถัดไป ต้องมีลำดับที่แน่นอนและ cursor บอกตำแหน่งต่อ เพื่อให้รายการไม่ซ้ำหรือหาย แม้มี row ใหม่เพิ่มเข้ามาระหว่างที่ผู้ใช้กำลังเลื่อนดู.",
     takeaways: ["pagination ต้องมี order ที่แน่นอนและใช้ต่อหน้าเดิมได้ ไม่ใช่มีแค่ LIMIT."],

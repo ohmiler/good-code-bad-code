@@ -8,7 +8,8 @@ export const metadata = {
   goodCode: {
     language: "sql",
     filename: "review-metrics.sql",
-    code: `SELECT
+    code: `/* Selected dimensions match the GROUP BY report question. */
+SELECT
   DATE_TRUNC('day', submitted_at) AS review_day,
   status,
   COUNT(*) AS review_count
@@ -20,7 +21,8 @@ ORDER BY review_day DESC, status;`,
   badCode: {
     language: "sql",
     filename: "review-metrics.sql",
-    code: `SELECT
+    code: `/* submitted_at is selected but not part of the grouping intent. */
+SELECT
   submitted_at,
   status,
   COUNT(*) AS review_count

@@ -8,7 +8,8 @@ export const metadata = {
   goodCode: {
     language: "sql",
     filename: "schema.sql",
-    code: `CREATE TABLE users (
+    code: `/* Keys and constraints let the database enforce core data rules. */
+CREATE TABLE users (
   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   email TEXT NOT NULL UNIQUE,
   name TEXT NOT NULL,
@@ -28,7 +29,8 @@ CREATE TABLE code_reviews (
   badCode: {
     language: "sql",
     filename: "schema.sql",
-    code: `CREATE TABLE users (
+    code: `/* Missing constraints lets invalid rows into the database. */
+CREATE TABLE users (
   id BIGINT,
   email TEXT,
   name TEXT,

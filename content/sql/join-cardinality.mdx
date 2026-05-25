@@ -8,7 +8,8 @@ export const metadata = {
   goodCode: {
     language: "sql",
     filename: "review-summary.sql",
-    code: `WITH comment_counts AS (
+    code: `/* Count comments first so each review stays one row. */
+WITH comment_counts AS (
   SELECT
     review_id,
     COUNT(*) AS comment_count
@@ -27,7 +28,8 @@ WHERE reviews.author_id = $1;`,
   badCode: {
     language: "sql",
     filename: "review-summary.sql",
-    code: `SELECT
+    code: `/* Joining comments directly creates one row per comment. */
+SELECT
   reviews.id,
   reviews.title,
   review_comments.id AS comment_id

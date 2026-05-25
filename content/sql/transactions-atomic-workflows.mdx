@@ -8,7 +8,8 @@ export const metadata = {
   goodCode: {
     language: "sql",
     filename: "approve-review.sql",
-    code: `BEGIN;
+    code: `/* Both writes succeed or fail as one unit. */
+BEGIN;
 
 UPDATE code_reviews
 SET status = 'approved',
@@ -24,7 +25,8 @@ COMMIT;`,
   badCode: {
     language: "sql",
     filename: "approve-review.sql",
-    code: `UPDATE code_reviews
+    code: `/* Without a transaction, the audit event can fail after approval. */
+UPDATE code_reviews
 SET status = 'approved',
     approved_at = now()
 WHERE id = $1;

@@ -8,7 +8,8 @@ export const metadata = {
   goodCode: {
     language: "sql",
     filename: "20260525090000_add_display_name.sql",
-    code: `ALTER TABLE users
+    code: `/* Add the column, backfill old rows, then enforce NOT NULL. */
+ALTER TABLE users
 ADD COLUMN display_name TEXT;
 
 UPDATE users
@@ -21,7 +22,8 @@ ALTER COLUMN display_name SET NOT NULL;`,
   badCode: {
     language: "sql",
     filename: "20260525090000_add_display_name.sql",
-    code: `ALTER TABLE users
+    code: `/* NOT NULL before backfill can fail on existing rows. */
+ALTER TABLE users
 ADD COLUMN display_name TEXT NOT NULL;
 
 UPDATE users

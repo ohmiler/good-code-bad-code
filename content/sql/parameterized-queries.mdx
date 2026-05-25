@@ -9,6 +9,7 @@ export const metadata = {
     language: "typescript",
     filename: "users-repository.ts",
     code: `export async function findUserByEmail(email: string) {
+  // Bound parameters keep user input out of the SQL text.
   const result = await db.query(
     "SELECT id, email, name FROM users WHERE email = $1",
     [email],
@@ -21,6 +22,7 @@ export const metadata = {
     language: "typescript",
     filename: "users-repository.ts",
     code: `export async function findUserByEmail(email: string) {
+  // String concatenation turns user input into SQL text.
   const result = await db.query(
     "SELECT id, email, name FROM users WHERE email = '" + email + "'",
   );
