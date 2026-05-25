@@ -162,63 +162,63 @@ export const trackThaiTranslations = {
 export const lessonThaiTranslations = {
   "html/document-language-metadata": {
     codeComments: {
-      goodCode: ["metadata ของเอกสารช่วยให้ browser และ assistive tech ใช้ค่าเริ่มต้นที่ถูกต้อง"],
-      badCode: ["ไม่มี language และ viewport ทำให้ default สำคัญถูกเดาเอง"],
+      goodCode: ["metadata ช่วยให้ browser และเครื่องมือช่วยอ่านเริ่มจากข้อมูลที่ถูกต้อง"],
+      badCode: ["ไม่ประกาศภาษาและ viewport ทำให้ browser ต้องเดาค่าเริ่มต้นเอง"],
     },
-    title: "ภาษาและ metadata ของเอกสาร",
-    summary: "ประกาศข้อมูลพื้นฐานของหน้า เช่น ภาษา charset viewport และ title ให้ชัดตั้งแต่ต้น.",
-    takeaways: ["ทุกหน้าควรเริ่มจาก lang, charset, viewport และ title ที่สื่อความหมาย."],
+    title: "ภาษาและ metadata ของหน้าเว็บ",
+    summary: "ประกาศภาษา charset viewport และ title ตั้งแต่ต้น เพื่อให้ browser และเครื่องมือช่วยอ่านเข้าใจหน้าได้ถูกต้อง.",
+    takeaways: ["ทุกหน้าควรมี lang, charset, viewport และ title ที่บอกบริบทของหน้าอย่างชัดเจน."],
     whatToReview: [
-      "โค้ดที่ดีบอกภาษา การเข้ารหัส ขนาด viewport และชื่อหน้าให้ browser เข้าใจตั้งแต่ก่อน render body.",
-      "โค้ดที่ควรปรับปล่อยค่าเริ่มต้นสำคัญไว้ให้ browser เดา ทำให้การอ่านออกเสียงและตัวตนของหน้าคลาดเคลื่อนได้.",
+      "โค้ดที่ดีบอกภาษา การเข้ารหัส ขนาด viewport และชื่อหน้าให้ browser เข้าใจก่อนเริ่ม render เนื้อหา.",
+      "โค้ดที่ควรปรับปล่อยค่าพื้นฐานสำคัญให้ browser เดาเอง ทำให้การอ่านออกเสียงและตัวตนของหน้าอาจผิดไป.",
     ],
     reviewNotes: [
-      "เวลารีวิว HTML ให้เริ่มจากหัวเอกสารก่อนเสมอ เพราะ body ที่เขียนดีอาจยังใช้งานยากได้ถ้า lang, charset, viewport หรือ title ไม่ชัด.",
+      "เวลารีวิว HTML ให้เริ่มจากส่วนหัวของเอกสารก่อนเสมอ เพราะ body ที่เขียนดีอาจยังใช้งานยากได้ถ้า lang, charset, viewport หรือ title ไม่ชัด.",
     ],
   },
   "html/semantic-document-structure": {
     codeComments: {
-      goodCode: ["main และ article ทำให้เห็น outline ของหน้าก่อน CSS ทำงาน"],
-      badCode: ["div ทั่วไปซ่อนโครงสร้างเนื้อหาจาก document outline"],
+      goodCode: ["main และ article ทำให้เห็นโครงสร้างหน้าได้จาก HTML"],
+      badCode: ["div ทั่วไปทำให้ความหมายของเนื้อหาถูกซ่อนไว้"],
     },
-    title: "โครงสร้างเอกสารแบบมีความหมาย",
-    summary: "ใช้ landmark และ heading เพื่อให้โครงสร้างหน้าอ่านเข้าใจง่าย.",
+    title: "โครงสร้าง HTML ที่มีความหมาย",
+    summary: "ใช้ landmark และ heading เพื่อให้คนอ่านโค้ด browser และเครื่องมือช่วยอ่านเข้าใจโครงสร้างหน้า.",
     takeaways: ["เลือกแท็กที่สื่อความหมายก่อนใช้ div ครอบทุกอย่าง."],
     whatToReview: [
       "โค้ดที่ดีทำให้โครงสร้างของหน้าเห็นได้จาก HTML เลย ไม่ต้องเดาจาก CSS.",
-      "โค้ดที่ควรปรับอาจแสดงผลเหมือนกัน แต่ซ่อนความหมายไว้ใน div ทั่วไป.",
+      "โค้ดที่ควรปรับอาจแสดงผลเหมือนกัน แต่ซ่อนความหมายของเนื้อหาไว้ใน div ทั่วไป.",
     ],
     reviewNotes: [
-      "เวลารีวิว ให้ถามว่า browser, คนอ่านโค้ด และ assistive technology เข้าใจหน้าได้ไหมโดยไม่ต้องดู style. Semantic HTML คือสัญญาของ interface ไม่ใช่แค่เรื่องความสวย.",
+      "เวลารีวิว ให้ถามว่า browser คนอ่านโค้ด และเครื่องมือช่วยอ่านเข้าใจหน้าได้ไหมโดยไม่ต้องดู style. Semantic HTML คือโครงสร้างของ interface ไม่ใช่แค่เรื่องความสวย.",
     ],
   },
   "html/heading-hierarchy": {
     codeComments: {
-      goodCode: ["ระดับ heading ไล่ตาม outline ของหน้าอย่างเป็นลำดับ"],
-      badCode: ["ระดับ heading ถูกใช้เพื่อหน้าตาแทนโครงสร้าง"],
+      goodCode: ["ระดับ heading เล่าโครงเรื่องของหน้าอย่างเป็นลำดับ"],
+      badCode: ["heading ถูกใช้เพื่อขนาดตัวอักษรแทนโครงสร้างเนื้อหา"],
     },
     title: "ลำดับ heading",
     summary: "ใช้ heading เพื่อบอกโครงสร้างเอกสาร ไม่ใช่เลือกตามขนาดตัวอักษรที่อยากได้.",
-    takeaways: ["ระดับ heading ควรเรียงตามโครงเรื่อง ไม่ใช่ใช้แทน class สำหรับขนาดฟอนต์."],
+    takeaways: ["ระดับ heading ควรเรียงตามโครงเรื่อง ไม่ใช่ใช้แทน class สำหรับปรับขนาดฟอนต์."],
     whatToReview: [
       "โค้ดที่ดีทำให้ outline ของหน้าอ่านตามลำดับได้ ตั้งแต่ชื่อหน้า ไปส่วนหลัก แล้วค่อยลงรายละเอียด.",
-      "โค้ดที่ควรปรับกระโดดระดับ heading เพราะใช้ heading เพื่อคุมหน้าตา ทำให้คนอ่านและเครื่องมือเข้าใจโครงสร้างยาก.",
+      "โค้ดที่ควรปรับกระโดดระดับ heading เพราะใช้ heading เพื่อคุมหน้าตา ทำให้คนอ่านและเครื่องมือช่วยอ่านเข้าใจโครงสร้างยาก.",
     ],
     reviewNotes: [
-      "ให้ลองอ่านเฉพาะ heading แล้วถามว่ายังเข้าใจหน้าไหม ถ้าไม่เข้าใจ แปลว่า heading อาจกำลังรับหน้าที่ style แทน information architecture.",
+      "ให้ลองอ่านเฉพาะ heading แล้วถามว่ายังเข้าใจหน้าไหม ถ้าไม่เข้าใจ แปลว่า heading อาจกำลังทำหน้าที่จัดหน้าตาแทนการบอกโครงสร้างข้อมูล.",
     ],
   },
   "html/links-and-navigation": {
     codeComments: {
-      goodCode: ["anchor จริงรักษาพฤติกรรม navigation พื้นฐานของ browser"],
-      badCode: ["click handler และ label กว้าง ๆ ทำลาย expectation ของ link"],
+      goodCode: ["anchor จริงทำให้พฤติกรรมการนำทางของ browser ยังอยู่ครบ"],
+      badCode: ["click handler และข้อความกว้าง ๆ ทำให้ link ใช้งานยากขึ้น"],
     },
-    title: "ลิงก์และ navigation",
-    summary: "ใช้ลิงก์จริงพร้อมชื่อที่ชัดเมื่อพาผู้ใช้ไปที่อื่น แทน element ทั่วไปที่คลิกได้.",
+    title: "ลิงก์และการนำทาง",
+    summary: "ถ้าพาผู้ใช้ไปที่อื่น ให้ใช้ลิงก์จริงพร้อมข้อความที่บอกปลายทางชัดเจน.",
     takeaways: ["ถ้าการกระทำนั้นพาไปที่อื่น ให้เริ่มจาก anchor ที่มี href และข้อความลิงก์ที่เข้าใจได้."],
     whatToReview: [
       "โค้ดที่ดีใช้ anchor สำหรับการนำทาง และตั้งชื่อปลายทางให้รู้ว่าคลิกแล้วไปไหน.",
-      "โค้ดที่ควรปรับซ่อน navigation ไว้หลัง JavaScript หรือข้อความกำกวม เช่น click here ทำให้ใช้งานพื้นฐานของ browser ได้แย่ลง.",
+      "โค้ดที่ควรปรับซ่อนการนำทางไว้หลัง JavaScript หรือใช้ข้อความกำกวม เช่น click here ทำให้ฟีเจอร์พื้นฐานของ browser ใช้ได้แย่ลง.",
     ],
     reviewNotes: [
       "ตอนรีวิวให้ถามว่าลิงก์ยังเปิดแท็บใหม่ คัดลอก URL โฟกัสด้วย keyboard และอ่านชื่อแล้วเข้าใจปลายทางได้ไหม ถ้าไม่ได้ควรกลับไปใช้ anchor ที่ชัดเจน.",
@@ -226,47 +226,47 @@ export const lessonThaiTranslations = {
   },
   "html/images-alt-text": {
     codeComments: {
-      goodCode: ["alt text อธิบายความหมาย ส่วนรูปตกแต่งควรเงียบ"],
-      badCode: ["ชื่อไฟล์และคำอธิบายของตกแต่งเพิ่ม noise ให้ screen reader"],
+      goodCode: ["alt text ควรอธิบายความหมายของรูป ส่วนรูปตกแต่งควรเงียบ"],
+      badCode: ["ชื่อไฟล์และคำอธิบายรูปตกแต่งเพิ่มเสียงรบกวนให้ screen reader"],
     },
-    title: "รูปภาพและ alt text",
-    summary: "เขียน alt text ให้รูปที่มีความหมาย และซ่อนรูปตกแต่งจาก assistive technology.",
+    title: "รูปภาพและข้อความ alt",
+    summary: "เขียน alt text ให้รูปที่สื่อสารข้อมูล และซ่อนรูปตกแต่งจากเครื่องมือช่วยอ่าน.",
     takeaways: ["alt text ควรอธิบายหน้าที่ของรูปในบริบทนั้น ไม่ใช่ทวนชื่อไฟล์."],
     whatToReview: [
-      "โค้ดที่ดีอธิบายรูปที่มีสาระตามข้อความที่รูปต้องการสื่อ และให้ alt ว่างกับรูปตกแต่ง.",
-      "โค้ดที่ควรปรับใช้ชื่อไฟล์หรือรายละเอียดตกแต่งเป็น alt ทำให้ผู้อ่านได้ข้อมูลที่ไม่ช่วยตัดสินใจ.",
+      "โค้ดที่ดีอธิบายรูปที่มีความหมายตามสิ่งที่รูปต้องการสื่อ และใช้ alt ว่างกับรูปที่มีไว้ตกแต่ง.",
+      "โค้ดที่ควรปรับใช้ชื่อไฟล์หรือรายละเอียดตกแต่งเป็น alt ทำให้ผู้ใช้ได้ข้อมูลที่ไม่ช่วยอะไร.",
     ],
     reviewNotes: [
-      "อย่ารีวิวแค่ว่ามี alt หรือไม่มี ให้ดูว่ารูปนั้นมีหน้าที่อะไรในบริบทนี้ เพราะรูปเดียวกันอาจต้องใช้คำอธิบายต่างกันในแต่ละหน้า.",
+      "อย่ารีวิวแค่ว่ามี alt หรือไม่มี ให้ดูว่ารูปนั้นทำหน้าที่อะไรในบริบทนี้ เพราะรูปเดียวกันอาจต้องใช้คำอธิบายต่างกันในแต่ละหน้า.",
     ],
   },
   "html/accessible-form-labels": {
     codeComments: {
-      goodCode: ["label และ help text เชื่อมกับ input ด้วย id ที่ชัดเจน"],
-      badCode: ["placeholder ไม่ใช่ label ที่คงอยู่ตลอดสำหรับ field"],
+      goodCode: ["label และข้อความช่วยเหลือเชื่อมกับ input ด้วย id ที่ชัดเจน"],
+      badCode: ["placeholder ไม่ใช่ชื่อ field ที่คงอยู่ตลอดเวลา"],
     },
-    title: "label ของฟอร์มที่เข้าถึงได้",
-    summary: "ผูก label กับ input ให้ชัดเจน แทนการพึ่ง placeholder อย่างเดียว.",
+    title: "label ของฟอร์มที่ใช้งานได้จริง",
+    summary: "ผูก label กับ input ให้ชัดเจน แทนการพึ่ง placeholder เพียงอย่างเดียว.",
     takeaways: ["input สำคัญควรมี label จริง ไม่ใช่ hint ที่หายไปตอนพิมพ์."],
     whatToReview: [
       "โค้ดที่ดีบอกชื่อ field ผ่าน label ที่เชื่อมกับ input โดยตรง.",
       "โค้ดที่ควรปรับใช้ placeholder เป็นชื่อ field ทำให้ผู้ใช้บางกลุ่มและ screen reader เข้าใจยาก.",
     ],
     reviewNotes: [
-      "ตอนรีวิวฟอร์ม ให้เช็กว่าถ้าลบ placeholder ออก ผู้ใช้ยังรู้ไหมว่าต้องกรอกอะไร. label ที่ดีช่วยทั้ง accessibility, การทดสอบ และการ maintain ฟอร์มระยะยาว.",
+      "ตอนรีวิวฟอร์ม ให้เช็กว่าถ้าลบ placeholder ออก ผู้ใช้ยังรู้ไหมว่าต้องกรอกอะไร. label ที่ดีช่วยทั้ง accessibility การทดสอบ และการดูแลฟอร์มระยะยาว.",
     ],
   },
   "html/form-help-errors": {
     codeComments: {
-      goodCode: ["aria-describedby เชื่อมทั้งคำแนะนำและ error text กับ field"],
-      badCode: ["ข้อความที่อยู่ใกล้กันเป็นแค่ visual ถ้าไม่ได้เชื่อมด้วยโปรแกรม"],
+      goodCode: ["aria-describedby เชื่อมคำแนะนำและข้อความ error เข้ากับ field"],
+      badCode: ["ข้อความที่อยู่ใกล้กันทางหน้าจอไม่ได้แปลว่าเชื่อมกันจริง"],
     },
     title: "คำแนะนำและ error ของฟอร์ม",
-    summary: "เชื่อม help text และ error text เข้ากับ field เพื่อให้ feedback ถูกอ่านพร้อม control.",
+    summary: "เชื่อมข้อความช่วยเหลือและข้อความ error เข้ากับ field เพื่อให้ feedback ถูกอ่านพร้อม input.",
     takeaways: ["ใช้ aria-describedby และ aria-invalid เพื่อผูกคำแนะนำและสถานะผิดพลาดกับ input."],
     whatToReview: [
-      "โค้ดที่ดีทำให้ input รู้ว่าข้อความช่วยเหลือและ error ไหนเกี่ยวข้องกับมัน และบอกสถานะ invalid ชัดเจน.",
-      "โค้ดที่ควรปรับวางข้อความใกล้ input แค่ทางสายตา แต่ไม่มีความสัมพันธ์ที่ทนทานใน accessibility tree.",
+      "โค้ดที่ดีทำให้ input รู้ว่าข้อความช่วยเหลือและ error ไหนเกี่ยวข้องกับมัน และบอกสถานะผิดพลาดชัดเจน.",
+      "โค้ดที่ควรปรับวางข้อความใกล้ input แค่ทางสายตา แต่ไม่ได้เชื่อมความสัมพันธ์ไว้ใน accessibility tree.",
     ],
     reviewNotes: [
       "ในการรีวิวฟอร์ม ความใกล้บนหน้าจอไม่พอ ให้เช็กว่า field, help text และ error state ถูกเชื่อมกันจริง ไม่ใช่แค่ดูเหมือนอยู่ด้วยกัน.",
@@ -274,15 +274,15 @@ export const lessonThaiTranslations = {
   },
   "html/interactive-elements": {
     codeComments: {
-      goodCode: ["button แท้มี keyboard และ focus behavior มาให้แล้ว"],
-      badCode: ["div ที่ click ได้ต้องสร้าง behavior ของ button เองทั้งหมด"],
+      goodCode: ["button จริงมี keyboard และ focus behavior มาให้แล้ว"],
+      badCode: ["div ที่คลิกได้ต้องสร้างพฤติกรรมแบบ button เองทั้งหมด"],
     },
-    title: "element สำหรับ interaction",
-    summary: "ใช้ element ที่เกิดมาเพื่อกด เช่น button แทน div ที่ใส่ onClick เอง.",
+    title: "element สำหรับการโต้ตอบ",
+    summary: "ใช้ element ที่ออกแบบมาเพื่อการกด เช่น button แทน div ที่ใส่ onClick เอง.",
     takeaways: ["ถ้าเป็น action ให้เริ่มจาก button หรือ element native ที่เหมาะสม."],
     whatToReview: [
       "โค้ดที่ดีใช้ button ทำให้ keyboard, focus และ role ทำงานตาม browser ให้ทันที.",
-      "โค้ดที่ควรปรับทำ div ให้เหมือนปุ่ม ซึ่งมักต้องเขียน behavior สำคัญเพิ่มเองและพลาดง่าย.",
+      "โค้ดที่ควรปรับทำ div ให้เหมือนปุ่ม ซึ่งมักต้องเขียนพฤติกรรมสำคัญเพิ่มเองและพลาดง่าย.",
     ],
     reviewNotes: [
       "เวลาเห็น div ที่คลิกได้ ให้ถามว่าทำไมไม่ใช้ button. ถ้าไม่มีเหตุผลชัดเจน การใช้ native element มักปลอดภัยและอ่านง่ายกว่า.",
@@ -290,15 +290,15 @@ export const lessonThaiTranslations = {
   },
   "html/tables-tabular-data": {
     codeComments: {
-      goodCode: ["caption และ scope รักษาความสัมพันธ์ระหว่าง header กับ cell"],
-      badCode: ["CSS ทำให้ div ดูเหมือนตารางได้ แต่สร้าง table semantics ไม่ได้"],
+      goodCode: ["caption และ scope ช่วยเชื่อม header กับ cell ให้ถูกต้อง"],
+      badCode: ["CSS ทำให้ div ดูเหมือนตารางได้ แต่ให้ความหมายแบบ table ไม่ได้"],
     },
-    title: "table สำหรับข้อมูลแบบตาราง",
-    summary: "ใช้ markup ของ table เมื่อข้อมูลเป็นแถวและคอลัมน์ เพื่อรักษาความสัมพันธ์ระหว่างหัวข้อกับค่า.",
+    title: "ใช้ table กับข้อมูลตาราง",
+    summary: "เมื่อข้อมูลเป็นแถวและคอลัมน์ ให้ใช้ table markup เพื่อรักษาความสัมพันธ์ระหว่างหัวข้อกับค่า.",
     takeaways: ["ถ้าเนื้อหาเป็นข้อมูลแบบ row/column ให้ใช้ table, caption, th และ scope ก่อนสร้างด้วย div."],
     whatToReview: [
-      "โค้ดที่ดีเก็บความสัมพันธ์ระหว่าง header และ cell ไว้ใน HTML พร้อม caption ที่บอกว่าตารางนี้คืออะไร.",
-      "โค้ดที่ควรปรับทำให้ div ดูเหมือนตาราง แต่ความสัมพันธ์ของข้อมูลอยู่แค่ใน CSS และตำแหน่งบนจอ.",
+      "โค้ดที่ดีเก็บความสัมพันธ์ระหว่าง header และ cell ไว้ใน HTML พร้อม caption ที่บอกว่าตารางนี้เกี่ยวกับอะไร.",
+      "โค้ดที่ควรปรับทำให้ div ดูเหมือนตาราง แต่ความสัมพันธ์ของข้อมูลอยู่แค่ใน CSS และตำแหน่งบนหน้าจอ.",
     ],
     reviewNotes: [
       "ให้ถามว่าผู้ใช้เข้าใจ cell หนึ่งช่องได้ไหมถ้าไม่ได้เห็น layout ถ้าต้องพึ่งตำแหน่งคอลัมน์อย่างเดียว ควรใช้ semantic table.",
@@ -306,14 +306,14 @@ export const lessonThaiTranslations = {
   },
   "html/aria-restraint": {
     codeComments: {
-      goodCode: ["button แท้ให้ role อยู่แล้ว ARIA แค่เติม label ที่ขาด"],
-      badCode: ["role และ state ของ ARIA ขัดกับ behavior ของ element ตรงนี้"],
+      goodCode: ["button จริงมี role อยู่แล้ว ARIA แค่เติม label ที่ขาด"],
+      badCode: ["role และ state ของ ARIA ขัดกับพฤติกรรมจริงของ element"],
     },
-    title: "ใช้ ARIA อย่างพอดี",
-    summary: "เริ่มจาก HTML native ก่อน แล้วใช้ ARIA เฉพาะเมื่อช่วยอธิบายพฤติกรรมที่ HTML บอกเองไม่ได้.",
+    title: "ใช้ ARIA เท่าที่จำเป็น",
+    summary: "เริ่มจาก HTML native ก่อน แล้วใช้ ARIA เฉพาะเมื่อช่วยอธิบายสิ่งที่ HTML บอกเองไม่ได้.",
     takeaways: ["เลือก semantic HTML ก่อนเสมอ ARIA ควรช่วยทำให้ชัด ไม่ใช่ซ่อม element ที่เลือกผิด."],
     whatToReview: [
-      "โค้ดที่ดีใช้ element native ที่มี role และ keyboard behavior มาให้ แล้วเติม ARIA เฉพาะจุดที่จำเป็นจริง.",
+      "โค้ดที่ดีใช้ element native ที่มี role และพฤติกรรม keyboard มาให้ แล้วเติม ARIA เฉพาะจุดที่จำเป็นจริง.",
       "โค้ดที่ควรปรับใส่ role หรือ state ที่ไม่ตรงกับพฤติกรรมจริง ทำให้ assistive technology รับข้อมูลผิด.",
     ],
     reviewNotes: [
