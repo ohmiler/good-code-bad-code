@@ -645,15 +645,15 @@ export const lessonThaiTranslations = {
       goodCode: ["กำหนด type ที่จุดรับเข้า แล้วให้ TypeScript เดาชนิดข้างในจากค่าจริง"],
       badCode: ["ใส่ type ให้ตัวแปรข้างใน แต่ปล่อย input เป็น any จุดเสี่ยงจึงยังเปิดอยู่"],
     },
-    title: "ให้ TypeScript เดาชนิดข้างใน แต่กำหนด type ที่จุดรับเข้า",
-    summary: "ปล่อยให้ TypeScript เดาชนิดจากค่าจริง (infer) ภายใน function ได้ แต่ต้องระบุ type ชัดตรงจุดที่โค้ดอื่นเรียกใช้.",
-    takeaways: ["ใส่ type ให้ input, output และ exported API ส่วนค่าภายในให้ TypeScript infer จาก implementation ได้."],
+    title: "กำหนด type ที่จุดรับเข้า แล้วให้ TypeScript ช่วยต่อข้างใน",
+    summary: "ระบุ type ตรงฟังก์ชันหรือ API ที่คนอื่นเรียกใช้ ส่วนตัวแปรข้างในให้ TypeScript เดาจากค่าจริงได้ ไม่ต้องใส่ซ้ำทุกบรรทัด.",
+    takeaways: ["ใส่ type ที่ parameter, return value และ API ที่ export ส่วนค่าภายในให้ TypeScript เดาจากโค้ดจริงได้."],
     whatToReview: [
-      "โค้ดที่ดีระบุ type ที่ input boundary หรือจุดรับข้อมูล และปล่อยให้ค่าภายในกับ object ที่ return ถูก infer จากค่าจริง.",
-      "โค้ดที่ควรปรับใส่ type ให้ตัวแปรภายใน แต่ปล่อย public input เป็น any ทำให้จุดที่คนอื่นส่งข้อมูลเข้ามายังไม่น่าเชื่อถือ.",
+      "โค้ดที่ดีระบุ type ตรงจุดที่ข้อมูลเข้าฟังก์ชัน แล้วปล่อยให้ค่าภายในและ object ที่ return ถูกเดาจากค่าจริง.",
+      "โค้ดที่ควรปรับใส่ type ให้ตัวแปรข้างใน แต่ปล่อย input ที่คนอื่นส่งเข้ามาเป็น any จุดเสี่ยงจึงยังเปิดอยู่.",
     ],
     reviewNotes: [
-      "เวลารีวิวให้ดูว่า type ถูกใส่ตรงจุดสำคัญไหม จุดที่คุ้มที่สุดคือจุดที่โค้ดอื่นเรียกเข้ามา เช่น exported function, API adapter, callback contract และข้อมูลจากภายนอก module.",
+      "เวลารีวิวให้ดูว่า type อยู่ตรงจุดที่คนอื่นเรียกใช้หรือยัง เช่น exported function, ตัวแปลงข้อมูลจาก API, callback ที่ส่งข้าม component และข้อมูลจากไฟล์อื่น.",
     ],
   },
   "typescript/unsafe-assertions": {
@@ -662,14 +662,14 @@ export const lessonThaiTranslations = {
       badCode: ["บอกให้ TypeScript เชื่อว่า unknown เป็น Session โดยไม่มีหลักฐาน"],
     },
     title: "เลี่ยงการบังคับเชื่อ type ที่ไม่ปลอดภัย",
-    summary: "ใช้ check ที่พิสูจน์หน้าตาข้อมูลตอนรันจริง แทนการใช้ assertion ที่แค่ทำให้ compiler เงียบ.",
-    takeaways: ["ใช้ as เป็นทางเลือกท้าย ๆ เฉพาะจุดที่เชื่อถือได้ ไม่ใช่ทางลัดเพื่อข้าม validation."],
+    summary: "ตรวจค่าจริงตอนรันก่อนบอก TypeScript ว่านี่คือข้อมูลชนิดนั้น อย่าใช้ as แค่เพื่อทำให้ error ใน editor หายไป.",
+    takeaways: ["ใช้ as เฉพาะจุดที่มีเหตุผลรองรับ ไม่ใช่ทางลัดเพื่อข้ามการตรวจข้อมูล."],
     whatToReview: [
-      "โค้ดที่ดีสร้างความน่าเชื่อถือด้วยการตรวจหน้าตาข้อมูลตอนรันจริง (runtime shape) ก่อนคืนค่าเป็นข้อมูลของระบบที่มี type.",
+      "โค้ดที่ดีตรวจหน้าตาข้อมูลตอนรันจริงก่อนยอมรับว่าเป็น Session ของระบบ.",
       "โค้ดที่ควรปรับบอก TypeScript ให้เชื่อว่า value เป็น Session โดยไม่พิสูจน์อะไรเลย ทำให้ข้อมูลผิดรูปไหลผ่านระบบได้.",
     ],
     reviewNotes: [
-      "เวลาเห็น assertion หรือ `as` ใกล้ข้อมูลจาก JSON, storage, network, URL params หรือ third-party code ให้ถามว่ามีหลักฐานอะไรยืนยัน type นี้ไหม ยิ่งข้อมูลไม่น่าเชื่อถือเท่าไร ยิ่งต้องมี runtime check รองรับ.",
+      "เวลาเห็น assertion หรือ `as` ใกล้ข้อมูลจาก JSON, storage, network, URL params หรือ library ภายนอก ให้ถามว่ามีหลักฐานอะไรยืนยันชนิดนี้ไหม ยิ่งข้อมูลไม่น่าเชื่อถือเท่าไร ยิ่งควรตรวจตอนรันจริง.",
     ],
   },
   "typescript/exhaustive-never-checks": {
@@ -677,15 +677,15 @@ export const lessonThaiTranslations = {
       goodCode: ["ใช้ never ทำให้ case ของ union ที่ลืมจัดการกลายเป็น compile error"],
       badCode: ["fallback กว้าง ๆ ซ่อน state ใหม่ที่โค้ดลืมรองรับ"],
     },
-    title: "บังคับให้จัดการ case ครบด้วย never",
-    summary: "ทำให้ union ทุกกรณีต้องถูกจัดการครบ ถ้าเพิ่ม state ใหม่แล้วลืมรองรับ TypeScript จะเตือนตั้งแต่ตอนพัฒนา.",
-    takeaways: ["ใช้ never ใน branch สุดท้ายเพื่อให้ union case ที่ตกหล่นกลายเป็น type error."],
+    title: "บังคับให้จัดการทุกสถานะด้วย never",
+    summary: "ถ้า union มีหลายสถานะ ให้เขียนให้ครบทุกกรณี เมื่อเพิ่มสถานะใหม่แล้วลืมรองรับ TypeScript จะเตือนทันที.",
+    takeaways: ["ใช้ never ใน branch สุดท้าย เพื่อให้สถานะของ union ที่ตกหล่นกลายเป็น type error."],
     whatToReview: [
-      "โค้ดที่ดีทำให้ branch สุดท้ายเป็นไปไม่ได้เมื่อจัดการ union ครบทุกกรณี และเตือนทันทีเมื่อมี state ใหม่ถูกเพิ่มเข้ามา.",
-      "โค้ดที่ควรปรับซ่อน case ที่ขาดไว้หลัง fallback กว้าง ๆ ทำให้ state ใหม่แสดงเป็น Unknown แทนที่จะบังคับให้เขียน behavior จริง.",
+      "โค้ดที่ดีทำให้ branch สุดท้ายเป็นไปไม่ได้เมื่อจัดการทุกสถานะครบ และจะเตือนทันทีเมื่อมีสถานะใหม่ถูกเพิ่มเข้ามา.",
+      "โค้ดที่ควรปรับซ่อนกรณีที่ลืมไว้หลัง fallback กว้าง ๆ ทำให้สถานะใหม่ถูกแสดงเป็น Unknown แทนที่จะบังคับให้เขียนพฤติกรรมจริง.",
     ],
     reviewNotes: [
-      "default branch ของ discriminated union อาจใจดีเกินไป ถ้าเรารู้ทุก case อยู่แล้ว exhaustive check ด้วย never จะช่วยเตือนตอนแก้ในอนาคตได้ดีกว่า.",
+      "default branch ของ union อาจใจดีเกินไป ถ้าเรารู้ทุกสถานะอยู่แล้ว การเช็กด้วย never จะช่วยเตือนตอนแก้ในอนาคตได้ดีกว่า.",
     ],
   },
   "typescript/optional-vs-nullable": {
@@ -694,14 +694,14 @@ export const lessonThaiTranslations = {
       badCode: ["optional ปน null ทำให้คนเรียกต้องเดาเองว่าค่าว่างหมายถึงอะไร"],
     },
     title: "แยก field ที่หายไป กับค่าที่ตั้งใจว่าง",
-    summary: "ใช้ optional property เมื่อ field อาจไม่มีอยู่ และใช้ nullable value เมื่อ field มีอยู่แต่ตั้งใจให้ค่าเป็น null.",
-    takeaways: ["ใช้ ? เมื่อ property อาจไม่มีอยู่ และใช้ null เมื่อ property มีอยู่แต่ตั้งใจให้ว่าง."],
+    summary: "ใช้ ? เมื่อ field อาจไม่ถูกส่งมาเลย และใช้ null เมื่อ field มีอยู่แต่ตั้งใจให้ค่าว่าง เช่น ผู้ใช้ลบ avatar ออก.",
+    takeaways: ["ใช้ ? เมื่อ property อาจไม่มีอยู่ และใช้ null เมื่อ property มีอยู่แต่ตั้งใจให้ว่างจริง ๆ."],
     whatToReview: [
       "โค้ดที่ดีแยก field ที่ยังไม่ถูกกรอกออกจาก field ที่ตั้งใจไม่มี avatar อย่างชัดเจน.",
       "โค้ดที่ควรปรับยอมทั้ง undefined และ null แทบทุกที่ ทำให้คนเรียกแยกไม่ออกว่าข้อมูลหาย ถูกล้าง หรือยังโหลดไม่เสร็จ.",
     ],
     reviewNotes: [
-      "การไม่มีค่าเป็นส่วนหนึ่งของกฎในระบบ ไม่ใช่รายละเอียดเล็ก ๆ optional กับ nullable หมายถึงคนละเรื่อง ถ้าปนกันง่ายเกินไป consumer ทุกตัวต้องเดาความหมายซ้ำเอง.",
+      "การไม่มีค่าเป็นกฎของระบบ ไม่ใช่รายละเอียดเล็ก ๆ optional กับ nullable หมายถึงคนละเรื่อง ถ้าปนกันง่ายเกินไป โค้ดทุกจุดที่ใช้ข้อมูลนี้ต้องเดาความหมายซ้ำเอง.",
     ],
   },
   "typescript/generic-constraints": {
@@ -709,15 +709,15 @@ export const lessonThaiTranslations = {
       goodCode: ["constraint บอกเงื่อนไขขั้นต่ำว่า function ต้องใช้ field อะไร"],
       badCode: ["any ซ่อนเงื่อนไขที่หายไป จนไปพังตอนรันจริง"],
     },
-    title: "กำหนดเงื่อนไขขั้นต่ำให้ generic",
-    summary: "ถ้า generic function ต้องใช้บาง field ให้บอกด้วย constraint เพื่อให้ยืดหยุ่นแต่ยังปลอดภัย.",
-    takeaways: ["ใช้ extends เพื่อให้ generic function รับข้อมูลได้หลาย shape แต่ยังรับประกัน property ที่ implementation ต้องใช้."],
+    title: "บอกเงื่อนไขขั้นต่ำของ generic ให้ชัด",
+    summary: "ถ้าฟังก์ชัน generic ต้องใช้บาง field เช่น updatedAt ให้บอกไว้ด้วย extends เพื่อให้รับข้อมูลได้หลายแบบแต่ยังปลอดภัย.",
+    takeaways: ["ใช้ extends เพื่อให้ generic function รับข้อมูลได้หลายรูปแบบ แต่ยังรับประกัน field ที่โค้ดข้างในต้องใช้."],
     whatToReview: [
-      "โค้ดที่ดีคงความ generic ไว้ แต่ระบุว่าของทุกชิ้นต้องมี updatedAt เป็นเงื่อนไขขั้นต่ำ.",
-      "โค้ดที่ควรปรับรับ type อะไรก็ได้แล้วหนีด้วย any ข้างใน ทำให้การเรียกที่ผิด compile ผ่านและไปพังทีหลัง.",
+      "โค้ดที่ดียังยืดหยุ่นได้ แต่ระบุว่าของทุกชิ้นต้องมี updatedAt เป็นเงื่อนไขขั้นต่ำ.",
+      "โค้ดที่ควรปรับรับ type อะไรก็ได้แล้วหนีด้วย any ข้างใน ทำให้เรียกผิดแล้วยัง compile ผ่าน ก่อนจะไปพังตอนรันจริง.",
     ],
     reviewNotes: [
-      "Generic ที่ cast เป็น any ทันที มักขาด constraint ที่ถูกต้อง Type parameter ควรบอกว่าอะไรยืดหยุ่นได้ และ function ยังต้องการอะไรแน่นอน.",
+      "Generic ที่ cast เป็น any ทันทีมักยังไม่ได้บอกเงื่อนไขขั้นต่ำให้ดีพอ ให้ถามว่าอะไรยืดหยุ่นได้ และ field ไหนที่ฟังก์ชันต้องมีแน่นอน.",
     ],
   },
   "typescript/utility-types-api-boundaries": {
@@ -725,15 +725,15 @@ export const lessonThaiTranslations = {
       goodCode: ["Pick เปิดเผยเฉพาะ field ที่ API นี้สัญญาว่าจะให้ใช้"],
       badCode: ["คืน domain object ทั้งก้อน ทำให้ field ภายในรั่วออกไป"],
     },
-    title: "ใช้ utility types จำกัดข้อมูลที่ API เปิดเผย",
-    summary: "สร้าง request หรือ view type จาก domain type เดิม แต่เลือกเฉพาะ field ที่ boundary นี้ควรสัญญากับคนเรียก.",
-    takeaways: ["ใช้ Pick, Omit, Partial และ Readonly เพื่ออธิบาย contract เฉพาะจุดจาก type ที่มีอยู่."],
+    title: "เลือก field ที่ API ควรเปิดเผยด้วย utility types",
+    summary: "สร้าง type สำหรับ request หรือ view จากข้อมูลหลักของระบบ แต่เลือกเฉพาะ field ที่ API นี้ตั้งใจให้คนอื่นใช้.",
+    takeaways: ["ใช้ Pick, Omit, Partial และ Readonly เพื่อบอกว่าจุดนี้เปิดเผย field ไหน และ field ไหนไม่ควรถูกแก้."],
     whatToReview: [
-      "โค้ดที่ดีเปิดเผยเฉพาะ field ที่ list API ต้องใช้ และยังผูก response type กับ domain model เดิม.",
-      "โค้ดที่ควรปรับคืน domain object ทั้งก้อน รวมถึง field ภายในที่ boundary ไม่ควรสัญญากับ caller ภายนอก.",
+      "โค้ดที่ดีเปิดเผยเฉพาะ field ที่ list API ต้องใช้ และยังผูก response type กับข้อมูลหลักของระบบเดิม.",
+      "โค้ดที่ควรปรับคืน object ทั้งก้อน รวมถึง field ภายในที่ API ไม่ควรสัญญาว่าคนข้างนอกจะใช้ได้.",
     ],
     reviewNotes: [
-      "Utility types มีประโยชน์เมื่อทำให้ boundary เล็กและชัดขึ้น มันควรสื่อว่า API สัญญาจะให้ข้อมูลอะไร ไม่ใช่แค่ย่อ type ซับซ้อนให้ดูสั้น.",
+      "Utility types มีประโยชน์เมื่อทำให้ข้อมูลที่เปิดเผยเล็กและชัดขึ้น มันควรสื่อว่า API ให้ข้อมูลอะไร ไม่ใช่แค่ย่อ type ซับซ้อนให้ดูสั้น.",
     ],
   },
   "typescript/type-only-imports-module-boundaries": {
@@ -742,14 +742,14 @@ export const lessonThaiTranslations = {
       badCode: ["import ปกติทำให้ dependency ตอนเช็ก type กับตอนรันจริงปนกัน"],
     },
     title: "แยก import ที่ใช้เฉพาะ type ออกจาก code ที่รันจริง",
-    summary: "ใช้ import type เมื่อต้องการแค่ type ตอน compile และใช้ import ปกติเมื่อต้องใช้ value ตอน runtime จริง ๆ.",
-    takeaways: ["แยก type dependency ออกจาก runtime dependency เพื่อให้ module เบาและอ่านความสัมพันธ์ของไฟล์ได้ชัด."],
+    summary: "ใช้ import type เมื่อเอามาใช้แค่ตอนเช็ก type และใช้ import ปกติเมื่อค่าหรือฟังก์ชันนั้นต้องมีตอนโปรแกรมรันจริง.",
+    takeaways: ["แยก dependency ที่ใช้แค่เช็ก type ออกจาก dependency ที่ต้องใช้ตอนรันจริง เพื่อให้อ่านความสัมพันธ์ของไฟล์ได้ชัด."],
     whatToReview: [
-      "โค้ดที่ดีบอกชัดว่า PullRequest ใช้แค่ตอน compile ส่วน formatAuthorName เป็น value ที่ต้องมีตอนรันจริง.",
-      "โค้ดที่ควรปรับ import type เหมือน runtime value ทำให้ความสัมพันธ์ของ module ไม่ชัด และอาจสร้าง runtime coupling ที่ไม่จำเป็นตาม compiler setting.",
+      "โค้ดที่ดีบอกชัดว่า PullRequest ใช้แค่ตอนเช็ก type ส่วน formatAuthorName เป็นฟังก์ชันที่ต้องมีตอนรันจริง.",
+      "โค้ดที่ควรปรับ import type เหมือนค่าที่ใช้ตอนรัน ทำให้ความสัมพันธ์ของไฟล์ไม่ชัด และอาจดึง code เข้ามาโดยไม่จำเป็นตาม config ของ compiler.",
     ],
     reviewNotes: [
-      "Import เล่าเรื่องว่า module นี้พึ่งอะไร ถ้าใช้แค่ shape ของข้อมูล ให้ใช้ import type เพื่อแยกสิ่งที่ใช้ตอน compile ออกจาก behavior ที่ต้องมีตอน runtime.",
+      "Import เล่าเรื่องว่าไฟล์นี้พึ่งอะไร ถ้าใช้แค่รูปข้อมูล ให้ใช้ import type เพื่อแยกสิ่งที่ใช้ตอนเช็ก type ออกจากฟังก์ชันหรือค่าที่ต้องมีตอนรัน.",
     ],
   },
   "typescript/discriminated-unions": {
@@ -757,15 +757,15 @@ export const lessonThaiTranslations = {
       goodCode: ["field status บอกว่า branch นี้ใช้ข้อมูลชุดไหนได้"],
       badCode: ["optional field หลายตัวเปิดทางให้ state ที่เป็นไปไม่ได้ compile ผ่าน"],
     },
-    title: "ใช้ union ที่มี field บอกสถานะ",
-    summary: "ใช้ field กลาง เช่น status เพื่อบอกว่า object ตอนนี้อยู่กรณีไหน และข้อมูล field ไหนใช้ได้จริง.",
-    takeaways: ["ทำให้ state ที่เป็นไปไม่ได้เขียนยากขึ้นด้วย discriminated union ที่แยกกรณีชัดเจน."],
+    title: "ใช้ union ที่มี field บอกสถานะชัดเจน",
+    summary: "ใช้ field กลาง เช่น status เพื่อบอกว่า object ตอนนี้อยู่กรณีไหน และ field ไหนอ่านได้จริงในกรณีนั้น.",
+    takeaways: ["ทำให้สถานะที่เป็นไปไม่ได้เขียนยากขึ้น ด้วย union ที่แยกกรณีชัดเจน."],
     whatToReview: [
-      "โค้ดที่ดีมี field กลางสำหรับบอกสถานะ ทำให้ branch แต่ละแบบรู้ข้อมูลที่ใช้ได้แน่นอน.",
-      "โค้ดที่ควรปรับใช้ optional field หลายตัวที่ต้องเดาความสัมพันธ์กันเอง.",
+      "โค้ดที่ดีมี field กลางสำหรับบอกสถานะ ทำให้แต่ละ branch รู้ว่าข้อมูลชุดไหนใช้ได้แน่นอน.",
+      "โค้ดที่ควรปรับใช้ optional field หลายตัวจนต้องเดาเองว่า field ไหนควรมาคู่กับ field ไหน.",
     ],
     reviewNotes: [
-      "ในการรีวิว type ให้ถามว่า object นี้มี state ที่ไม่ควรเกิดขึ้นแต่ type ยังยอมไหม. discriminated union ช่วยปิดช่องนั้น เพราะ status จะพา TypeScript ไปยัง shape ที่ถูกต้องของแต่ละกรณี.",
+      "เวลารีวิว type ให้ถามว่า object นี้มีสถานะที่ไม่ควรเกิดขึ้นแต่ type ยังยอมไหม union ที่มี status ช่วยปิดช่องนั้น เพราะ TypeScript จะรู้รูปข้อมูลที่ถูกต้องของแต่ละกรณี.",
     ],
   },
   "typescript/narrowing-unknown": {
@@ -774,14 +774,14 @@ export const lessonThaiTranslations = {
       badCode: ["double cast ข้ามการพิสูจน์ค่าที่ unknown ต้องการ"],
     },
     title: "ตรวจ unknown ให้แคบลงก่อนใช้งาน",
-    summary: "unknown คือค่าที่ยังไม่รู้ชนิดแน่ชัด ให้ตรวจหน้าตาข้อมูลก่อนใช้ แทนการ cast เป็น any แล้วหวังว่าถูก.",
+    summary: "unknown คือค่าที่ยังไม่รู้ชนิดแน่ชัด ให้ตรวจรูปข้อมูลก่อนใช้ แทนการ cast เป็น any แล้วหวังว่าข้อมูลถูก.",
     takeaways: ["unknown บังคับให้เราพิสูจน์ข้อมูลก่อนใช้ จึงปลอดภัยกว่า any ในจุดที่ข้อมูลมาจากภายนอก."],
     whatToReview: [
       "โค้ดที่ดีตรวจ type และ property สำคัญก่อนนำข้อมูลไปใช้ต่อ.",
       "โค้ดที่ควรปรับ cast เป็น any ทำให้ TypeScript หยุดช่วยเราในจุดที่เสี่ยงที่สุด.",
     ],
     reviewNotes: [
-      "ข้อมูลจาก API, localStorage หรือ message event ควรถูกมองว่ายังไม่น่าเชื่อถือก่อนเสมอ. การ narrow unknown ทำให้ error ถูกจับใกล้จุดรับข้อมูลมากขึ้น.",
+      "ข้อมูลจาก API, localStorage หรือ message event ควรถูกมองว่ายังไม่น่าเชื่อถือก่อนเสมอ. การตรวจ unknown ให้แคบลงทำให้ error ถูกจับใกล้จุดรับข้อมูลมากขึ้น.",
     ],
   },
   "typescript/precise-function-types": {
@@ -790,14 +790,14 @@ export const lessonThaiTranslations = {
       badCode: ["Function กว้างเกินไป ใครเรียกด้วยรูปแบบผิดก็ยัง compile ผ่าน"],
     },
     title: "กำหนดรูปแบบ function ให้ชัด",
-    summary: "ระบุ signature ของ callback ว่ารับอะไรและคืนอะไร แทนการใช้ Function กว้าง ๆ.",
+    summary: "ระบุรูปแบบของ callback ว่ารับอะไรและคืนอะไร แทนการใช้ Function กว้าง ๆ ที่แทบไม่ช่วยตรวจการเรียกผิด.",
     takeaways: ["callback type ที่ชัดทำให้เรียกผิดยากขึ้น และทำให้คนรีวิวเห็นเจตนาของ API ได้ง่ายขึ้น."],
     whatToReview: [
       "โค้ดที่ดีบอก parameter และ return type ของ callback ชัดเจน.",
       "โค้ดที่ควรปรับใช้ Function ทำให้ใครส่งอะไรก็ได้ และ compiler ช่วยจับผิดไม่ได้.",
     ],
     reviewNotes: [
-      "เวลาเห็น Function ใน TypeScript ให้ถือเป็นกลิ่นที่ควรถามต่อ. ส่วนใหญ่เรารู้ signature ที่ต้องการอยู่แล้ว และควรเขียนให้ type system ช่วยป้องกันการเรียกผิด.",
+      "เวลาเห็น Function ใน TypeScript ให้ถือเป็นกลิ่นที่ควรถามต่อ. ส่วนใหญ่เรารู้รูปแบบที่ต้องการอยู่แล้ว และควรเขียนให้ TypeScript ช่วยกันการเรียกผิด.",
     ],
   },
   "react/props-component-boundaries": {
