@@ -16,6 +16,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // Only SearchBox needs client JavaScript; the root layout stays server-rendered.
   return (
     <html lang="en">
       <body>
@@ -44,6 +45,7 @@ export default function RootLayout({
 }) {
   const [query, setQuery] = useState("");
 
+  // One input state pulls the whole root layout into the client bundle.
   return (
     <html lang="en">
       <body>

@@ -14,6 +14,7 @@ export default async function ProjectPage({
   params,
 }: PageProps<"/projects/[projectId]">) {
   const { projectId } = await params;
+  // Start independent requests before awaiting so rendering waits once.
   const projectPromise = getProject(projectId);
   const summaryPromise = getReviewSummary(projectId);
   const [project, summary] = await Promise.all([
@@ -38,6 +39,7 @@ export default async function ProjectPage({
   params,
 }: PageProps<"/projects/[projectId]">) {
   const { projectId } = await params;
+  // Awaiting each independent request in order creates a server-side waterfall.
   const project = await getProject(projectId);
   const summary = await getReviewSummary(projectId);
 

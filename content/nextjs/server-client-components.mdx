@@ -15,6 +15,7 @@ export default async function ReviewPage({
   params,
 }: PageProps<"/reviews/[id]">) {
   const { id } = await params;
+  // Server rendering fetches the review before handing votes to a client island.
   const review = await getReview(id);
 
   return (
@@ -36,6 +37,7 @@ import { useEffect, useState } from "react";
 export default function ReviewPage() {
   const [review, setReview] = useState(null);
 
+  // This client boundary moves page data fetching after hydration.
   useEffect(() => {
     fetch("/api/current-review")
       .then((response) => response.json())

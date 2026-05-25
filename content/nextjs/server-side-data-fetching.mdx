@@ -15,6 +15,7 @@ export default async function ArticlePage({
   params,
 }: PageProps<"/articles/[slug]">) {
   const { slug } = await params;
+  // Fetch essential page data on the server and use notFound for missing slugs.
   const article = await getArticleBySlug(slug);
 
   if (!article) {
@@ -39,6 +40,7 @@ import { useEffect, useState } from "react";
 export function ArticleClient({ slug }: { slug: string }) {
   const [article, setArticle] = useState(null);
 
+  // Hydration-gated fetching delays page data and adds an avoidable API hop.
   useEffect(() => {
     fetch("/api/articles/" + slug)
       .then((response) => response.json())

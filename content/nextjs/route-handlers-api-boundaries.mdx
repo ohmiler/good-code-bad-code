@@ -18,6 +18,7 @@ export async function GET(
   const { id } = await context.params;
   const review = await getReview(id);
 
+  // The route handler validates lookup results and returns explicit HTTP status.
   if (!review) {
     return NextResponse.json(
       { error: "Review not found." },
@@ -33,6 +34,7 @@ export async function GET(
     filename: "app/reviews/[id]/page.tsx",
     code: `import { getReview } from "@/lib/reviews";
 
+// Mixing GET and page UI in one file blurs the App Router boundary.
 export async function GET() {
   const review = await getReview("current");
   return Response.json(review);

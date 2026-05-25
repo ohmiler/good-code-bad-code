@@ -23,6 +23,7 @@ export default function ReviewsError({
     console.error(error);
   }, [error]);
 
+  // A route error boundary can log, show fallback UI, and trigger retry.
   return (
     <section role="alert">
       <h2>Reviews could not load.</h2>
@@ -39,6 +40,7 @@ export default function ReviewsError({
     code: `import { getReviews } from "@/lib/reviews";
 
 export default async function ReviewsPage() {
+  // Catching every error in the page hides failures from the route boundary.
   try {
     const reviews = await getReviews();
     return reviews.map((review) => <p key={review.id}>{review.title}</p>);

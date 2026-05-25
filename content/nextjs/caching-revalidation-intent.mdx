@@ -15,6 +15,7 @@ export async function getPublishedPosts() {
   cacheLife("hours");
   cacheTag("posts");
 
+  // The cache directive, lifetime, and tag make freshness explicit.
   return db.post.findMany({
     where: { published: true },
     orderBy: { publishedAt: "desc" },
@@ -25,6 +26,7 @@ export async function getPublishedPosts() {
     language: "typescript",
     filename: "lib/posts.ts",
     code: `export async function getPublishedPosts() {
+  // This fetch has no stated freshness or revalidation policy.
   const response = await fetch("https://cms.example.com/posts");
 
   return response.json();

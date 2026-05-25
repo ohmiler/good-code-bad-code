@@ -15,6 +15,7 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // The layout owns shared navigation while child pages supply route content.
   return (
     <section>
       <nav aria-label="Dashboard">
@@ -36,6 +37,7 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // Fetching leaf-page data here blocks child routes that may not need it.
   const reviews = await getLatestReviews();
 
   return (

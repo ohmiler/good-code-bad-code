@@ -11,6 +11,7 @@ export const metadata = {
     code: `export default async function ProjectPage({
   params,
 }: PageProps<"/projects/[projectId]">) {
+  // Route props keep dynamic segments typed and aligned with the folder path.
   const { projectId } = await params;
 
   return <h1>Project {projectId}</h1>;
@@ -20,6 +21,7 @@ export const metadata = {
     language: "tsx",
     filename: "app/projects-projectId.tsx",
     code: `export default function ProjectsProjectIdPage() {
+  // Parsing the URL by hand bypasses App Router conventions and typing.
   const projectId = window.location.pathname.split("/").at(-1);
 
   return <h1>Project {projectId}</h1>;
