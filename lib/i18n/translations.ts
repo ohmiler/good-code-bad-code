@@ -1441,8 +1441,8 @@ export const lessonThaiTranslations = {
     ],
   },
   "sql/schema-keys-constraints": {
-    title: "key และ constraint ที่กันข้อมูลผิด",
-    summary: "ให้ database ช่วยกันข้อมูลซ้ำ ข้อมูลกำพร้า และสถานะที่ผิด ด้วย primary key, foreign key, UNIQUE, NOT NULL และ CHECK.",
+    title: "ให้ database ช่วยกันข้อมูลผิด",
+    summary: "ใช้ key และ constraint ให้ database ช่วยกันข้อมูลซ้ำ ข้อมูลกำพร้า และสถานะที่ผิด เช่น primary key, foreign key, UNIQUE, NOT NULL และ CHECK.",
     takeaways: ["กฎข้อมูลที่แอปพึ่งพาควรมี constraint ใน database ช่วยคุม ไม่ใช่หวังให้โค้ดทุกจุดจำได้."],
     whatToReview: [
       "โค้ดที่ดีบอก id ของแถว, email ที่ห้ามซ้ำ, ความสัมพันธ์ระหว่าง user กับ review, field ที่ต้องมี และ status ที่อนุญาตไว้ใน database ชัดเจน.",
@@ -1454,19 +1454,19 @@ export const lessonThaiTranslations = {
   },
   "sql/explicit-select-columns": {
     title: "ระบุ column ใน SELECT ให้ชัด",
-    summary: "เลือกเฉพาะ column ที่ผู้เรียกใช้ต้องใช้ แทนการ `SELECT *` แล้วพึ่งรูปร่างทั้งหมดของ table.",
+    summary: "เลือกเฉพาะ column ที่โค้ดฝั่งเรียกใช้ต้องใช้ แทนการ `SELECT *` แล้วเอาทุกอย่างจาก table ออกมา.",
     takeaways: ["ผลลัพธ์ของ query คือสัญญากับโค้ดที่เอาไปใช้ (API contract) รูปร่างของมันจึงควรถูกเลือกอย่างตั้งใจ."],
     whatToReview: [
       "โค้ดที่ดีระบุ column และ alias ที่ต้องส่งกลับ ทำให้โค้ดที่อ่านผลลัพธ์รู้แน่ว่าจะได้ field อะไร.",
       "โค้ดที่ควรปรับใช้ `SELECT *` จน column จากหลาย table หลุดออกมา เสี่ยงชื่อ column ชนกัน และพังง่ายเมื่อ schema เปลี่ยน.",
     ],
     reviewNotes: [
-      "`SELECT *` เหมาะกับการลองสำรวจข้อมูล แต่ไม่เหมาะเป็น contract ใน production ตอนรีวิวให้ถามว่าทุก column ที่ส่งกลับจำเป็นจริงไหม และถ้า table เพิ่ม column ใหม่ client จะได้รับผลกระทบหรือเปล่า.",
+      "`SELECT *` เหมาะกับการลองสำรวจข้อมูล แต่ไม่เหมาะเป็น contract ใน production ตอนรีวิวให้ถามว่าทุก column ที่ส่งกลับจำเป็นจริงไหม และถ้า table เพิ่ม column ใหม่ โค้ดที่อ่านผลลัพธ์จะได้รับผลกระทบหรือเปล่า.",
     ],
   },
   "sql/filtering-null-handling": {
-    title: "เงื่อนไข WHERE กับ NULL",
-    summary: "ใช้ `IS NULL` / `IS NOT NULL` และวงเล็บกับ AND/OR ให้ชัด เพื่อให้ filter ตรงกับข้อมูลจริง.",
+    title: "เช็ก NULL ใน WHERE ให้ถูก",
+    summary: "ใช้ `IS NULL` / `IS NOT NULL` แทน `=` หรือ `!=` และใส่วงเล็บกับ AND/OR ให้ชัด เพื่อให้ filter ตรงกับข้อมูลจริง.",
     takeaways: ["NULL ไม่เท่ากับอะไรเลย แม้แต่ NULL ด้วยกัน ดังนั้นเงื่อนไขที่เกี่ยวกับ nullable column ต้องรีวิวละเอียดเป็นพิเศษ."],
     whatToReview: [
       "โค้ดที่ดีใช้ `IS NULL` และครอบ OR ด้วยวงเล็บ ทำให้ row ที่ถูกลบไม่หลุดเข้ามาในผลลัพธ์.",
@@ -1477,12 +1477,12 @@ export const lessonThaiTranslations = {
     ],
   },
   "sql/join-cardinality": {
-    title: "จำนวนแถวหลัง JOIN (cardinality)",
-    summary: "ก่อนเชื่อผลลัพธ์ ให้เช็คว่า JOIN นี้ควรได้หนึ่งแถวต่อหนึ่งสิ่ง หรือจะเพิ่ม/ลดจำนวนแถวได้.",
+    title: "JOIN แล้วจำนวนแถวอาจเปลี่ยน",
+    summary: "ก่อนเชื่อผลลัพธ์ ให้เช็คว่า JOIN นี้ควรได้หนึ่งแถวต่อหนึ่ง review หรือจะทำให้แถวเพิ่ม/หายได้.",
     takeaways: ["JOIN เปลี่ยนจำนวน row ได้ จึงต้องรีวิวความสัมพันธ์ก่อนดู column ที่ SELECT."],
     whatToReview: [
       "โค้ดที่ดีสรุปจำนวน comment ก่อน แล้วใช้ LEFT JOIN เพื่อให้ review ที่ไม่มี comment ยังออกมาหนึ่งแถว.",
-      "โค้ดที่ควรปรับ JOIN ไปที่ table ฝั่ง many ตรง ๆ ทำให้ review หนึ่งรายการซ้ำตามจำนวน comment และ review ที่ไม่มี comment หายไป.",
+      "โค้ดที่ควรปรับ JOIN ไปที่ table ฝั่ง many ตรง ๆ ทำให้ review หนึ่งรายการกลายเป็นหลายแถวตามจำนวน comment และ review ที่ไม่มี comment หายไป.",
     ],
     reviewNotes: [
       "ก่อน approve JOIN ให้ถามก่อนว่าผลลัพธ์ควรมีกี่ row ต่อ review ถ้าหน้าจอคาดหวังหนึ่งแถวต่อหนึ่ง review แต่ query JOIN ฝั่ง many ตรง ๆ นั่นคือจุดที่ควรหยุดดู.",
@@ -1490,7 +1490,7 @@ export const lessonThaiTranslations = {
   },
   "sql/aggregation-grouping": {
     title: "สรุปข้อมูลด้วย GROUP BY ให้ตรงคำถาม",
-    summary: "ก่อน GROUP BY ให้พูดคำถามเป็นภาษาคน เช่น “นับ review รายวันแยกตาม status” แล้ว group ตามมุมนั้น.",
+    summary: "ก่อน GROUP BY ให้พูดคำถามเป็นภาษาคน เช่น “นับ review รายวันแยกตาม status” แล้ว group ตามวันและ status จริง ๆ.",
     takeaways: ["ค่าที่ SELECT แต่ไม่ได้ aggregate ควรเป็นส่วนหนึ่งของคำถามที่ต้องการสรุปผล."],
     whatToReview: [
       "โค้ดที่ดีนับจำนวนตามวันและ status ดังนั้นทั้งวันและ status จึงอยู่ใน SELECT, GROUP BY และ ORDER BY อย่างตั้งใจ.",
@@ -1502,7 +1502,7 @@ export const lessonThaiTranslations = {
   },
   "sql/index-friendly-predicates": {
     title: "เขียน WHERE ให้ database ใช้ index ได้",
-    summary: "หลีกเลี่ยงการครอบ column ที่มี index ด้วย function ถ้าไม่จำเป็น เพราะ database อาจต้องไล่อ่านทุก row.",
+    summary: "หลีกเลี่ยงการเอา function ไปครอบ column ที่มี index ถ้าไม่จำเป็น เพราะ database อาจต้องไล่อ่านทุก row.",
     takeaways: ["query ที่ให้ผลถูกต้องยังควรถูกรีวิว ถ้ามันทำให้ database ใช้ index สำคัญไม่ได้."],
     whatToReview: [
       "โค้ดที่ดีเขียนช่วงเวลาแบบ `>= start` และ `< nextStart` (half-open range) ทำให้ index บน submitted_at ยังช่วยค้นหาได้.",
@@ -1514,19 +1514,19 @@ export const lessonThaiTranslations = {
   },
   "sql/transactions-atomic-workflows": {
     title: "ใช้ transaction กับงานที่ต้องสำเร็จพร้อมกัน",
-    summary: "ครอบการเขียนหลาย step ด้วย transaction เพื่อให้การเปลี่ยนแปลงที่เกี่ยวข้องสำเร็จพร้อมกันหรือล้มพร้อมกัน.",
+    summary: "ครอบการเขียนหลาย step ด้วย transaction เพื่อให้งานที่เกี่ยวข้องกัน เช่น approve review และบันทึก audit log สำเร็จพร้อมกันหรือล้มพร้อมกัน.",
     takeaways: ["ถ้างานหนึ่งเขียนหลาย row เช่น approve review แล้วบันทึก audit log ต้องรีวิวว่า transaction เริ่มและจบตรงไหน."],
     whatToReview: [
       "โค้ดที่ดีมองการเปลี่ยน status และการบันทึก audit event เป็นงานเดียวกัน จึงอยู่ใน transaction เดียวกัน.",
       "โค้ดที่ควรปรับอาจ approve review แล้วบันทึก event ไม่สำเร็จ ทำให้ระบบมี review ที่ approved แต่ไม่มีประวัติอธิบายว่าเกิดอะไรขึ้น.",
     ],
     reviewNotes: [
-      "transaction คือวิธีบอก database ว่างานชุดนี้ต้องสำเร็จหรือล้มเป็นก้อนเดียวกัน ตอนรีวิวให้ถามว่าถ้า statement กลางทาง fail ระบบจะเหลือ state แปลก ๆ อะไรไว้.",
+      "transaction คือวิธีบอก database ว่างานชุดนี้ต้องสำเร็จหรือล้มเป็นก้อนเดียวกัน ตอนรีวิวให้ถามว่าถ้า query กลางทาง fail ระบบจะเหลือข้อมูลครึ่ง ๆ กลาง ๆ อะไรไว้.",
     ],
   },
   "sql/migration-backfills": {
     title: "เติมข้อมูลย้อนหลัง (backfill) ใน migration",
-    summary: "แยกการเปลี่ยน schema, การเติมข้อมูลให้ row เดิม และการใส่ constraint ที่เข้มขึ้นออกเป็น step ที่ปลอดภัย.",
+    summary: "แยกการเปลี่ยน schema, การเติมข้อมูลให้ row เดิม (backfill) และการใส่ constraint ที่เข้มขึ้นออกเป็น step ที่ปลอดภัย.",
     takeaways: ["migration ที่ดีต้องเคารพข้อมูลที่มีอยู่แล้ว ไม่ใช่คิดแค่ข้อมูลใหม่."],
     whatToReview: [
       "โค้ดที่ดีเพิ่ม column ก่อน เติมค่าของ row เดิม (backfill) แล้วค่อยตั้ง NOT NULL เมื่อข้อมูลพร้อม.",
@@ -1538,7 +1538,7 @@ export const lessonThaiTranslations = {
   },
   "sql/parameterized-queries": {
     title: "ใช้ parameterized query แทนการต่อ string",
-    summary: "ส่ง input ของผู้ใช้เป็น parameter ที่ bind แยกจาก SQL text แทนการเอาค่าที่ไม่น่าเชื่อถือไปต่อ string.",
+    summary: "ส่ง input ของผู้ใช้เป็น parameter ที่ bind แยกจาก SQL text แทนการเอาค่าที่ไม่น่าเชื่อถือไปต่อเป็น string SQL.",
     takeaways: ["input ของผู้ใช้ควรเป็นข้อมูลของ query ไม่ใช่กลายเป็นข้อความ SQL."],
     whatToReview: [
       "โค้ดที่ดีทำให้ SQL text คงที่ แล้วส่ง email เป็น parameter ที่ database bind แยกต่างหาก.",
@@ -1549,15 +1549,15 @@ export const lessonThaiTranslations = {
     ],
   },
   "sql/stable-pagination": {
-    title: "pagination ที่หน้าไม่ซ้ำหรือหาย",
-    summary: "ใช้ลำดับที่แน่นอนและ cursor เพื่อให้หน้า 2 ยังนิ่ง แม้มี row ใหม่เพิ่มเข้ามาระหว่างที่ผู้ใช้กำลังเลื่อนดู.",
-    takeaways: ["pagination ต้องมี order ที่ stable ไม่ใช่มีแค่ LIMIT."],
+    title: "แบ่งหน้าให้เลื่อนต่อแล้วรายการไม่ซ้ำ/ไม่หาย",
+    summary: "เวลาโหลดหน้าถัดไป ต้องมีลำดับที่แน่นอนและ cursor บอกตำแหน่งต่อ เพื่อให้รายการไม่ซ้ำหรือหาย แม้มี row ใหม่เพิ่มเข้ามาระหว่างที่ผู้ใช้กำลังเลื่อนดู.",
+    takeaways: ["pagination ต้องมี order ที่แน่นอนและใช้ต่อหน้าเดิมได้ ไม่ใช่มีแค่ LIMIT."],
     whatToReview: [
-      "โค้ดที่ดีใช้ cursor จาก submitted_at และ id ทำให้ database รู้ตำแหน่งต่อที่แน่นอน.",
-      "โค้ดที่ควรปรับใช้ OFFSET กับ order ที่ไม่ unique เมื่อมี row ใหม่ page ก่อนหน้าจะเลื่อน จนรายการในหน้าถัดไปซ้ำหรือหาย.",
+      "โค้ดที่ดีใช้ cursor จาก submitted_at และ id ทำให้ database รู้ว่าหน้าถัดไปต้องเริ่มต่อจากรายการไหน.",
+      "โค้ดที่ควรปรับใช้ OFFSET กับ order ที่ไม่ unique เมื่อมี row ใหม่ page ก่อนหน้าจะเลื่อน ทำให้หน้าถัดไปอาจเห็นรายการเดิมซ้ำหรือข้ามบางรายการไป.",
     ],
     reviewNotes: [
-      "OFFSET pagination อาจพอใช้กับหน้า admin เล็ก ๆ แต่ feed หรือรายการที่เปลี่ยนบ่อยควรถูกรีวิวเข้มกว่า ปกติ order ที่แน่นอนร่วมกับ cursor จะทนกว่า.",
+      "OFFSET pagination อาจพอใช้กับหน้า admin เล็ก ๆ ที่ข้อมูลไม่ค่อยเปลี่ยน แต่ feed หรือรายการที่มีข้อมูลใหม่เข้ามาบ่อยควรถูกรีวิวเข้มกว่า ปกติ order ที่แน่นอนร่วมกับ cursor จะทนกว่า.",
     ],
   },
   "python/naming-and-readability": {
