@@ -1,3 +1,5 @@
+import React from "react";
+
 type BrandWordmarkProps = {
   variant: "header" | "hero";
 };
