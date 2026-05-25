@@ -15,6 +15,7 @@ COPY package.json package-lock.json ./
 RUN npm ci --omit=dev
 COPY server.js ./server.js
 
+# Exec form lets node receive Docker stop signals directly.
 ENTRYPOINT ["node"]
 CMD ["server.js"]`,
   },
@@ -27,6 +28,7 @@ WORKDIR /app
 COPY . .
 RUN npm install
 
+# Shell form wraps the app in a shell, making stop signals harder to handle.
 CMD npm start`,
   },
 };

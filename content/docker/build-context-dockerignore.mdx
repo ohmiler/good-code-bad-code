@@ -8,20 +8,22 @@ export const metadata = {
   goodCode: {
     language: "dockerfile",
     filename: ".dockerignore",
-    code: `node_modules
+    code: `# Send only the files needed to build the image.
+node_modules
 .git
 .env
 .next
 coverage
 dist
 *.log
+# Keep local Docker and Compose files out unless the image needs them.
 Dockerfile*
 compose*.yaml`,
   },
   badCode: {
     language: "dockerfile",
     filename: ".dockerignore",
-    code: `# Everything in the repository is sent to the builder.`,
+    code: `# No ignore rules means Docker sends the whole repository to the builder.`,
   },
 };
 

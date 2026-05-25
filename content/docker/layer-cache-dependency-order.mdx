@@ -11,9 +11,11 @@ export const metadata = {
     code: `FROM node:22-alpine AS app
 WORKDIR /app
 
+# Copy dependency files first so npm ci can stay cached.
 COPY package.json package-lock.json ./
 RUN npm ci
 
+# Source changes happen after dependency install.
 COPY src ./src
 COPY public ./public
 
@@ -25,6 +27,7 @@ RUN npm run build`,
     code: `FROM node:22-alpine AS app
 WORKDIR /app
 
+# Copying everything first makes any source edit break the install cache.
 COPY . .
 RUN npm install
 RUN npm run build`,

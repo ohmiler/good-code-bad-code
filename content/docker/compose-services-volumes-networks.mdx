@@ -16,6 +16,7 @@ export const metadata = {
     depends_on:
       db:
         condition: service_healthy
+    # Only expose the web port the host needs.
     ports:
       - "3000:3000"
     networks:
@@ -26,6 +27,7 @@ export const metadata = {
     environment:
       POSTGRES_DB: reviews
       POSTGRES_USER: reviews
+    # Named volumes keep database data after container restarts.
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -33,6 +35,7 @@ export const metadata = {
       interval: 10s
       timeout: 5s
       retries: 5
+    # Services talk to each other on a private network.
     networks:
       - internal
 
@@ -48,13 +51,16 @@ networks:
     code: `services:
   app:
     build: .
+    # Host networking removes the boundary between container and host.
     network_mode: host
     volumes:
       - .:/app
+      # Mounting / exposes the host filesystem to the container.
       - /:/host
 
   db:
     image: postgres:latest
+    # Opening the database port is often unnecessary for app-only access.
     ports:
       - "5432:5432"`,
   },

@@ -150,7 +150,7 @@ export const trackThaiTranslations = {
   docker: {
     title: "Docker",
     description:
-      "ฝึกรีวิว build context, base image, cache layer, multi-stage build, secret, user, healthcheck และ Compose file.",
+      "ฝึกรีวิว Docker แบบงานจริง: ไฟล์ที่ถูกส่งเข้าไปตอน build, image ตั้งต้น, cache, secret, สิทธิ์ของ container, healthcheck และ Compose file.",
   },
   tailwindcss: {
     title: "Tailwind CSS",
@@ -2611,123 +2611,205 @@ export const lessonThaiTranslations = {
     ],
   },
   "docker/build-context-dockerignore": {
-    title: "build context และ .dockerignore",
-    summary: "ทำให้ Docker build context เล็กและตั้งใจเลือกไฟล์ เพื่อให้ build เร็ว ปลอดภัย และ reproduce ได้ง่ายขึ้น.",
-    takeaways: ["build context คือ input ของ image ดังนั้นต้องรีวิวว่าไฟล์อะไรถูกส่งเข้า builder ได้บ้าง."],
+    codeComments: {
+      goodCode: [
+        "ส่งเข้า Docker เฉพาะไฟล์ที่จำเป็นต่อการ build image",
+        "ตัดไฟล์ของเครื่องเราออก ไม่ให้ปนเข้า image โดยไม่ตั้งใจ",
+      ],
+      badCode: ["ไม่มี rule แปลว่า Docker ส่งทั้งโปรเจกต์เข้า builder"],
+    },
+    title: "ไฟล์ที่ส่งเข้า Docker build (.dockerignore)",
+    summary: "กำหนดให้ชัดว่า Docker ควรเห็นไฟล์อะไรบ้างตอน build image เพื่อให้ build เร็วขึ้นและไม่เผลอส่งไฟล์ลับเข้าไป.",
+    takeaways: ["build context คือชุดไฟล์ที่ Docker ส่งเข้าไปตอน build image จึงต้องรีวิวว่าไฟล์ไหนควรเข้าและไฟล์ไหนควรถูกกันออก."],
     whatToReview: [
-      "โค้ดที่ดี exclude dependency folder, build output, secret, log และ metadata ของ repository ออกจาก build context.",
-      "โค้ดที่ควรปรับส่งทั้ง repository เข้า builder ทำให้ cache invalidation วุ่นวาย และเสี่ยง copy ไฟล์ลับหรือไฟล์ไม่เกี่ยวข้องเข้า image.",
+      "โค้ดที่ดีตัด dependency folder, output จากการ build, secret, log และ metadata ของ repo ออกจากไฟล์ที่ Docker จะส่งเข้า builder.",
+      "โค้ดที่ควรปรับปล่อยให้ Docker ส่งทั้ง repository เข้า builder ทำให้ build ช้า cache พังง่าย และเสี่ยงมีไฟล์ลับติดเข้า image.",
     ],
     reviewNotes: [
-      "เริ่มรีวิว Docker จาก build context ก่อนเสมอ ถ้า .dockerignore หายหรือบางเกินไป Dockerfile ที่ดูสะอาดก็ยังช้า flaky หรือไม่ปลอดภัยได้.",
+      "เวลารีวิว Docker ให้เริ่มจาก .dockerignore ก่อนเสมอ เพราะ Dockerfile ที่ดูดีอาจยัง build ช้า หรือไม่ปลอดภัย ถ้าไฟล์ที่ส่งเข้าไปเยอะและคุมไม่อยู่.",
     ],
   },
   "docker/base-images-and-tag-pinning": {
-    title: "base image และ tag pinning",
-    summary: "เลือก base image ให้แคบและ pin version อย่างตั้งใจ เพื่อไม่ให้ rebuild แล้ว dependency เปลี่ยนเองโดยไม่มีรีวิว.",
-    takeaways: ["base image คือ dependency ชนิดหนึ่ง จึงควรรีวิวด้วยความละเอียดใกล้เคียงกับ package version."],
+    codeComments: {
+      goodCode: [
+        "ระบุ version ของ Node และ Alpine ให้ชัด เพื่อให้ rebuild ได้ผลเดิม",
+        "ติดตั้งเฉพาะ dependency ที่ต้องใช้ตอนรัน production",
+      ],
+      badCode: [
+        "latest อาจเปลี่ยนเป็น Node หรือ OS package คนละชุดในอนาคต",
+        "npm install อาจทำให้ dependency เปลี่ยนตอน build image",
+      ],
+    },
+    title: "image ตั้งต้นและการล็อก version",
+    summary: "เลือก base image ที่เจาะจงและระบุ version ให้ชัด เพื่อไม่ให้ rebuild วันหลังแล้วได้ Node หรือ OS package คนละชุดแบบไม่รู้ตัว.",
+    takeaways: ["base image คือ dependency ตัวแรกของ container จึงควรถูกรีวิวเหมือน package version ตัวหนึ่ง."],
     whatToReview: [
-      "โค้ดที่ดีใช้ runtime base ที่เจาะจง และทำให้การติดตั้ง production dependency ชัดเจน.",
-      "โค้ดที่ควรปรับพึ่ง latest ทำให้ rebuild commit เดิมแล้วได้ Node หรือ OS package คนละชุดแบบเงียบ ๆ.",
+      "โค้ดที่ดีใช้ image ตั้งต้นที่เจาะจง เช่นระบุ version ของ runtime และ OS base แล้วติดตั้งเฉพาะ dependency ที่ใช้ตอนรันจริง.",
+      "โค้ดที่ควรปรับใช้ latest ทำให้ commit เดิมอาจ rebuild แล้วได้ runtime หรือ OS package คนละชุด โดยไม่มีใครเห็นใน review.",
     ],
     reviewNotes: [
-      "pinning ไม่ได้แปลว่าไม่อัปเดต แต่ทำให้อัปเดตกลายเป็น change ที่ CI, security scanner และ reviewer เห็นได้.",
+      "การล็อก version ไม่ได้แปลว่าห้ามอัปเดต แต่ทำให้การอัปเดตเป็นการเปลี่ยนแปลงที่ CI, security scanner และ reviewer มองเห็นได้.",
     ],
   },
   "docker/layer-cache-dependency-order": {
-    title: "layer cache และลำดับ dependency",
-    summary: "เรียง instruction ใน Dockerfile เพื่อให้ dependency layer ใช้ cache ต่อได้เมื่อแก้ source file.",
-    takeaways: ["Docker cache อิงลำดับ instruction ดังนั้นมักควร copy dependency file ก่อน application source."],
+    codeComments: {
+      goodCode: [
+        "copy ไฟล์ dependency ก่อน เพื่อให้ npm ci ใช้ cache เดิมได้",
+        "ค่อย copy source code ทีหลัง เมื่อแก้โค้ดจะไม่ทำให้ install ใหม่หมด",
+      ],
+      badCode: ["copy ทั้งโปรเจกต์ก่อน ทำให้แก้ไฟล์เล็กนิดเดียวก็ทำลาย cache ของ install"],
+    },
+    title: "จัดลำดับ Dockerfile ให้ cache ยังใช้ได้",
+    summary: "วางคำสั่งใน Dockerfile ให้ dependency ถูกติดตั้งก่อน copy source code เพื่อให้แก้โค้ดแล้วไม่ต้อง install ใหม่ทุกครั้ง.",
+    takeaways: ["Docker cache ไล่ตามลำดับคำสั่งใน Dockerfile ถ้าคำสั่งก่อนหน้าเปลี่ยน layer ถัดไปจะต้อง build ใหม่."],
     whatToReview: [
-      "โค้ดที่ดีทำให้ layer ติดตั้ง dependency ยังถูก cache เมื่อเปลี่ยนเฉพาะ source file.",
-      "โค้ดที่ควรปรับ copy ทั้ง project ก่อน install dependency ทำให้ source edit เล็ก ๆ invalidate install layer ราคาแพง.",
+      "โค้ดที่ดี copy เฉพาะ package.json และ lockfile ก่อนติดตั้ง dependency ทำให้แก้ source code แล้ว Docker ยังใช้ cache ของ npm ci ได้.",
+      "โค้ดที่ควรปรับ copy ทั้ง project ก่อน install dependency ทำให้แก้ไฟล์เล็ก ๆ ก็ต้องติดตั้ง dependency ใหม่ทั้งชุด.",
     ],
     reviewNotes: [
-      "Dockerfile ที่เป็นมิตรกับ cache มักเป็นมิตรกับ reviewer ด้วย ให้หา input ที่เล็กและเสถียรก่อน RUN step ที่แพง.",
+      "เวลารีวิวให้มองหา RUN step ที่ใช้เวลานาน เช่น install dependency แล้วดูว่ามีไฟล์ที่เปลี่ยนบ่อยถูก copy มาก่อนหน้านั้นหรือไม่.",
     ],
   },
   "docker/multi-stage-builds": {
-    title: "build แบบ multi-stage",
-    summary: "แยก build tooling ออกจาก runtime image สุดท้าย เพื่อให้ production container มีเฉพาะสิ่งที่ต้องใช้ตอนรัน.",
-    takeaways: ["multi-stage build ลดขนาด final image และแยก build concern ออกจาก runtime concern."],
+    codeComments: {
+      goodCode: [
+        "stage แรกใช้สำหรับติดตั้งและ build เท่านั้น ไม่ต้องถูกส่งไปรันจริง",
+        "stage สุดท้ายรับเฉพาะไฟล์ที่ต้องใช้ตอนรันแอป",
+      ],
+      badCode: ["stage เดียวทำให้ source, dev dependency และ build tool ติดไป production"],
+    },
+    title: "แยกของที่ใช้ build ออกจากของที่ใช้รันจริง",
+    summary: "ใช้ multi-stage build เพื่อให้ image สุดท้ายมีเฉพาะไฟล์และ dependency ที่แอปต้องใช้ตอนรัน production.",
+    takeaways: ["multi-stage build ช่วยลดขนาด image และลดของไม่จำเป็นที่ติดไป production."],
     whatToReview: [
-      "โค้ดที่ดีเก็บ install/build tooling ไว้ใน stage ก่อนหน้า แล้ว copy เฉพาะ runtime artifact ไป final image.",
-      "โค้ดที่ควรปรับ ship source file, dev dependency และ build tool ไปใน image เดียวกับที่รัน production.",
+      "โค้ดที่ดีเก็บเครื่องมือ install/build ไว้ใน stage ก่อนหน้า แล้ว copy เฉพาะไฟล์ที่ต้องใช้ตอนรันเข้า image สุดท้าย.",
+      "โค้ดที่ควรปรับใช้ stage เดียว ทำให้ source file, dev dependency และ build tool ติดไปกับ image ที่รัน production.",
     ],
     reviewNotes: [
-      "สำหรับแอปที่ compile หรือ bundle ได้ ให้ถามว่า final stage ต้องการอะไรจริง ๆ สิ่งที่ใช้แค่ build ควรอยู่นอก runtime stage.",
+      "สำหรับแอปที่ต้อง compile หรือ bundle ให้ถามเสมอว่า image สุดท้ายต้องใช้อะไรจริง ๆ ของที่ใช้แค่ตอน build ไม่ควรติดไปตอนรัน.",
     ],
   },
   "docker/copy-add-and-workdir": {
     title: "COPY, ADD และ WORKDIR",
-    summary: "ใช้ WORKDIR และ COPY อย่างตั้งใจ เพื่อให้ path ชัด และไม่ซ่อน side effect จาก remote content ไว้ใน ADD.",
-    takeaways: ["ควรให้ path และ download/extraction step ชัดเจน แทนการพึ่ง side effect ที่อ่านยากใน Dockerfile."],
+    codeComments: {
+      goodCode: [
+        "WORKDIR ทำให้ path ถัดจากนี้อิงจาก /app ชัดเจน",
+        "copy ไฟล์ที่รู้แน่ก่อน install เพื่อให้รีวิว input ได้ง่าย",
+      ],
+      badCode: [
+        "cd ใน RUN มีผลแค่บรรทัดนั้น ไม่ได้ตั้ง working directory ให้ layer ถัดไป",
+        "ADD อาจดาวน์โหลดหรือแตกไฟล์ให้เอง ทำให้พฤติกรรมซ่อนอยู่ในบรรทัดเดียว",
+      ],
+    },
+    summary: "ใช้ WORKDIR และ COPY ให้ path ชัดเจน และใช้ ADD เฉพาะตอนต้องการความสามารถพิเศษของมันจริง ๆ.",
+    takeaways: ["ทำให้ path, ไฟล์ที่ copy และขั้นตอนดาวน์โหลด/แตกไฟล์ชัดเจน อย่าซ่อนพฤติกรรมสำคัญไว้ใน Dockerfile บรรทัดเดียว."],
     whatToReview: [
-      "โค้ดที่ดีใช้ WORKDIR แบบ absolute, copy ไฟล์ที่รู้แน่ และทำให้ input ของการ install มองเห็นได้.",
-      "โค้ดที่ควรปรับพึ่ง cd ใน RUN แต่ละ layer, ดึง remote content ผ่าน ADD และ copy repository ไป root ของ image.",
+      "โค้ดที่ดีใช้ WORKDIR แบบ absolute และ copy ไฟล์ที่ตั้งใจใช้จริง ทำให้รู้ว่า install อาศัย input อะไรบ้าง.",
+      "โค้ดที่ควรปรับพึ่ง cd ใน RUN แต่ละบรรทัด ดึงไฟล์จากอินเทอร์เน็ตผ่าน ADD และ copy ทั้ง repository ไปไว้ที่ root ของ image.",
     ],
     reviewNotes: [
-      "COPY มักเป็น default ที่อ่านง่ายกว่า ใช้ ADD เมื่อ behavior พิเศษของมันถูกตั้งใจและถูกรีวิวแล้วจริง ๆ.",
+      "โดยทั่วไป COPY อ่านง่ายกว่า ADD เพราะทำหน้าที่ตรงตัวกว่า ใช้ ADD เมื่ออยากได้ความสามารถพิเศษ เช่นแตก archive และควรเห็นเหตุผลนั้นใน review.",
     ],
   },
   "docker/non-root-user-permissions": {
-    title: "non-root user และ permission",
-    summary: "รัน application process ด้วย user ที่ไม่ใช่ root และทำ ownership ของไฟล์ให้ตรงกับ runtime user.",
-    takeaways: ["container ไม่ควรต้องใช้ root ตอน runtime ถ้า application ไม่มีเหตุผลเฉพาะที่ต้องใช้จริง ๆ."],
+    codeComments: {
+      goodCode: [
+        "สร้าง user เฉพาะสำหรับ process ของแอป",
+        "กำหนด owner ของไฟล์ให้ตรงกับ user ที่จะรันจริง",
+        "สลับออกจาก root ก่อนเริ่ม process ของแอป",
+      ],
+      badCode: ["ถ้าไม่กำหนด USER แอปจะรันด้วย root ตามค่า default"],
+    },
+    title: "รัน container ด้วย user ที่ไม่ใช่ root",
+    summary: "สร้าง user สำหรับแอปและกำหนด owner ของไฟล์ให้ถูกต้อง เพื่อไม่ให้ process ใน container มีสิทธิ์มากเกินจำเป็น.",
+    takeaways: ["container ไม่ควรรันแอปด้วย root ถ้าแอปไม่มีเหตุผลชัดเจนว่าจำเป็นต้องใช้สิทธิ์นั้น."],
     whatToReview: [
-      "โค้ดที่ดีสร้าง dedicated user, กำหนด ownership ตอน copy และ switch user ก่อน process เริ่ม.",
-      "โค้ดที่ควรปรับรันด้วย root user ค่า default ทำให้ process ที่ถูก compromise มี privilege มากเกินจำเป็นใน container.",
+      "โค้ดที่ดีสร้าง user เฉพาะของแอป กำหนด owner ตอน copy ไฟล์ และสลับไปใช้ user นั้นก่อนเริ่ม process.",
+      "โค้ดที่ควรปรับปล่อยให้แอปรันด้วย root ตามค่า default ถ้า process ถูกเจาะ สิทธิ์ที่ได้ใน container จะมากเกินจำเป็น.",
     ],
     reviewNotes: [
-      "เมื่อเพิ่ม USER ต้องรีวิว writable directory ด้วย container non-root ที่เขียน cache, temp หรือ upload path ที่ต้องใช้ไม่ได้จะพังตอน runtime.",
+      "เมื่อเพิ่ม USER แล้วต้องรีวิว directory ที่แอปต้องเขียนด้วย เช่น cache, temp หรือ upload path ไม่อย่างนั้น container อาจรันได้แต่พังตอนใช้งานจริง.",
     ],
   },
   "docker/args-env-and-secrets": {
     title: "ARG, ENV และ secret",
-    summary: "แยก build-time argument, runtime environment variable และ secret ออกจากกัน เพื่อไม่ให้ sensitive value ถูก bake เข้า image.",
-    takeaways: ["secret ควรถูกส่งตอน runtime หรือผ่าน secret mount ไม่ใช่ถูกเก็บใน image layer."],
+    codeComments: {
+      goodCode: [
+        "build args ใช้กับตัวเลือกตอน build ไม่ใช่ที่เก็บ secret",
+        "secret ถูก mount ตอน runtime แทนการฝังลงใน image",
+      ],
+      badCode: [
+        "secret ที่ส่งผ่าน ARG อาจติดอยู่ใน build history",
+        "ENV ทำให้ค่าลับกลายเป็นส่วนหนึ่งของ config ใน image",
+      ],
+    },
+    summary: "แยกค่าที่ใช้ตอน build, config ที่ใช้ตอนรัน และค่าลับออกจากกัน เพื่อไม่ให้ secret ถูกฝังเข้าไปใน image.",
+    takeaways: ["secret ควรถูกส่งเข้ามาตอน runtime หรือผ่าน secret mount ไม่ใช่ถูกเก็บไว้ใน image layer, history หรือ config ของ image."],
     whatToReview: [
-      "โค้ดที่ดีแยก build args, runtime env และ secrets เป็นคนละ concern ที่อ่านได้ชัด.",
-      "โค้ดที่ควรปรับส่ง secret ผ่าน ARG แล้วเก็บเป็น ENV ทำให้ค่าลับติด image configuration หรือ build history.",
+      "โค้ดที่ดีแยก build args, runtime env และ secrets ออกจากกัน ทำให้รู้ว่าค่าไหนใช้ตอน build ค่าไหนเป็น config และค่าไหนเป็นความลับ.",
+      "โค้ดที่ควรปรับส่ง secret ผ่าน ARG แล้วเก็บเป็น ENV ทำให้ค่าลับอาจติดอยู่ใน image configuration หรือ build history.",
     ],
     reviewNotes: [
-      "ถ้าค่าเป็น secret ให้สมมติว่า image layer, log และ metadata อาจเปิดเผยได้ ควรใช้ Compose secrets, orchestrator secrets หรือ BuildKit secret mounts.",
+      "ถ้าค่าเป็น secret ให้คิดไว้ก่อนว่า image layer, log, metadata หรือ build history อาจถูกเปิดดูได้ ควรใช้ Compose secrets, orchestrator secrets หรือ BuildKit secret mounts.",
     ],
   },
   "docker/entrypoint-cmd-and-signals": {
     title: "ENTRYPOINT, CMD และ signal",
-    summary: "ใช้คำสั่งแบบ exec form และทำ startup wrapper ให้ปลอดภัยต่อ signal เพื่อให้ container stop ได้อย่าง graceful.",
-    takeaways: ["process ที่ Docker เริ่มควรรับ signal โดยตรงและปิดตัวได้แบบคาดเดาได้."],
+    codeComments: {
+      goodCode: ["exec form ทำให้ node ได้รับสัญญาณหยุดจาก Docker โดยตรง"],
+      badCode: ["shell form ครอบแอปด้วย shell ทำให้รับสัญญาณหยุดยากขึ้น"],
+    },
+    summary: "ใช้คำสั่งแบบ exec form เพื่อให้ process หลักใน container รับสัญญาณหยุดจาก Docker ได้ตรงและปิดตัวได้เรียบร้อย.",
+    takeaways: ["signal คือสัญญาณที่ Docker ส่งมาตอนสั่งหยุด container process หลักควรรับสัญญาณนี้โดยตรง."],
     whatToReview: [
-      "โค้ดที่ดีใช้ exec form ทำให้ application process ได้รับ termination signal โดยตรง.",
-      "โค้ดที่ควรปรับใช้ shell form ทำให้ shell กลายเป็น PID 1 และ signal forwarding หรือ graceful shutdown คาดเดายากขึ้น.",
+      "โค้ดที่ดีใช้ exec form ทำให้ process ของแอปได้รับสัญญาณหยุดจาก Docker โดยตรง.",
+      "โค้ดที่ควรปรับใช้ shell form ทำให้ shell กลายเป็น process หลักของ container แล้วการส่งต่อสัญญาณหยุดไปหาแอปคาดเดายากขึ้น.",
     ],
     reviewNotes: [
-      "ถ้าจำเป็นต้องใช้ entrypoint script ให้เช็กว่าจบด้วย exec \"$@\" เพื่อให้ script เตรียม environment แล้วส่งต่อให้ process จริง.",
+      "ถ้าจำเป็นต้องใช้ entrypoint script ให้เช็กว่าท้าย script ใช้ exec \"$@\" เพื่อให้ script เตรียม environment แล้วส่งต่อไปยัง process จริงของแอป.",
     ],
   },
   "docker/healthchecks-and-runtime-config": {
-    title: "healthcheck และ runtime config",
-    summary: "อธิบาย health และ runtime config ให้ชัด เพื่อให้ operator รู้ว่า container พร้อมและ healthy จริงไหม.",
-    takeaways: ["container ที่ running ไม่ได้แปลว่า application healthy เสมอ ต้องมี health signal ที่มีความหมาย."],
+    codeComments: {
+      goodCode: [
+        "ประกาศ port ที่แอปควรรับ request",
+        "ตรวจ endpoint ของแอปจริง ไม่ใช่แค่เช็กว่า process ยังอยู่",
+      ],
+      badCode: ["EXPOSE บอกแค่ port ที่ตั้งใจใช้ ไม่ได้บอกว่าแอปยังทำงานปกติ"],
+    },
+    title: "healthcheck และ config ตอนรันจริง",
+    summary: "บอกให้ชัดว่า container ต้องรันด้วย config อะไร และมี healthcheck ที่พิสูจน์ว่าแอปรับงานได้จริง.",
+    takeaways: ["container ที่ยัง running อยู่ไม่ได้แปลว่าแอป healthy เสมอ ต้องมี healthcheck ที่ตรวจสิ่งที่ผู้ใช้ต้องพึ่งจริง ๆ."],
     whatToReview: [
-      "โค้ดที่ดีประกาศ runtime default, expose port ที่คาดไว้ และผูก healthcheck กับ endpoint สุขภาพของแอป.",
-      "โค้ดที่ควรปรับอาจ running อยู่แม้แอปไม่สามารถรับ request ได้ ทำให้ operator ได้ signal น้อยตอนมีปัญหา.",
+      "โค้ดที่ดีประกาศค่า default ตอนรันจริง เปิด port ที่คาดไว้ และผูก healthcheck กับ endpoint ที่บอกว่าแอปพร้อมรับ request.",
+      "โค้ดที่ควรปรับอาจยัง running อยู่แม้แอปรับ request ไม่ได้ ทำให้คนดูแลระบบรู้ช้าเมื่อมีปัญหา.",
     ],
     reviewNotes: [
-      "healthcheck ควรถูกและมีความหมาย อย่าเช็กแค่ว่า process อยู่ ถ้า failure mode จริงคือ dependency พังหรือ HTTP server ตาย.",
+      "healthcheck ควรเร็วและมีความหมาย อย่าเช็กแค่ว่า process ยังอยู่ ถ้าปัญหาจริงคือ database พังหรือ HTTP server รับ request ไม่ได้.",
     ],
   },
   "docker/compose-services-volumes-networks": {
-    title: "Compose service, volume และ network",
-    summary: "ใช้ Compose เพื่อกำหนด service boundary, persistent volume และ internal network โดยไม่เปิด port หรือ state เกินจำเป็น.",
-    takeaways: ["Compose file ควรทำให้ความสัมพันธ์ของ service ชัด และทำให้ persistence กับ exposure เป็นเรื่องตั้งใจ."],
+    codeComments: {
+      goodCode: [
+        "เปิดออก host เฉพาะ port ของแอปที่ต้องเรียกจากข้างนอก",
+        "ใช้ named volume เพื่อให้ข้อมูล database ยังอยู่หลัง restart",
+        "ให้ service คุยกันผ่าน network ภายในเท่านั้น",
+      ],
+      badCode: [
+        "host networking ทำให้ boundary ระหว่าง container กับเครื่อง host หายไป",
+        "mount / เปิด filesystem ของเครื่อง host ให้ container เห็น",
+        "เปิด database port ออก host ทั้งที่แอปอาจเป็นคนเดียวที่ต้องใช้",
+      ],
+    },
+    title: "Compose: service, volume และ network",
+    summary: "ใช้ Compose ให้เห็นชัดว่า service ไหนคุยกับใครได้ port ไหนเปิดออกเครื่อง host และข้อมูลไหนต้องอยู่รอดหลัง restart.",
+    takeaways: ["Compose file ที่ดีทำให้ความสัมพันธ์ของ service, การเก็บข้อมูล และการเปิด port เป็นเรื่องที่ตั้งใจ ไม่ใช่เปิดกว้างไว้ก่อน."],
     whatToReview: [
-      "โค้ดที่ดีตั้งชื่อ persistence, เก็บ service ไว้ใน internal network และ expose เฉพาะ app port ที่ host ต้องใช้.",
-      "โค้ดที่ควรปรับใช้ host networking, mount host filesystem และเปิด database port โดยไม่มีเหตุผลชัดเจน.",
+      "โค้ดที่ดีตั้งชื่อ volume สำหรับข้อมูลถาวร ให้ service คุยกันผ่าน network ภายใน และเปิดออก host เฉพาะ port ของแอปที่ต้องใช้.",
+      "โค้ดที่ควรปรับใช้ host networking, mount filesystem ของเครื่อง host และเปิด database port ออกมาทั้งที่ไม่มีเหตุผลชัดเจน.",
     ],
     reviewNotes: [
-      "การรีวิว Compose คือการรีวิว boundary ให้ดูว่า service ไหน host เข้าถึงได้ ข้อมูลไหนรอดหลัง restart และ mount ไหนแก้เครื่อง dev ได้.",
+      "เวลารีวิว Compose ให้ถาม 3 อย่าง: host เข้าถึง service ไหนได้บ้าง, ข้อมูลไหนยังอยู่หลัง restart, และ mount ไหนอาจไปแก้ไฟล์บนเครื่อง dev ได้.",
     ],
   },
   "tailwindcss/utility-composition-readability": {

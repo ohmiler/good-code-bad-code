@@ -10,8 +10,10 @@ export const metadata = {
     filename: "Dockerfile",
     code: `FROM python:3.12-slim
 
+# WORKDIR gives every following path one clear base directory.
 WORKDIR /app
 
+# Copy known inputs before installing dependencies.
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
@@ -24,8 +26,10 @@ CMD ["python", "-m", "app"]`,
     code: `FROM python:latest
 
 RUN mkdir app
+# cd inside RUN does not set the working directory for later layers.
 RUN cd app && pip install flask
 
+# ADD can download or extract content, hiding extra behavior in one line.
 ADD https://example.com/app.tar.gz /app
 COPY . /`,
   },
