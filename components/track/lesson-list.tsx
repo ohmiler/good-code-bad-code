@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { useLanguage } from "@/components/language/language-provider";
+import { InlineMarkdown } from "@/components/typography/inline-markdown";
 import type { TrackSlug } from "@/lib/content/tracks";
 import { getLessonText } from "@/lib/i18n/translations";
 
@@ -44,7 +45,7 @@ export function LessonList({ lessons }: LessonListProps) {
                       {text.title}
                     </h2>
                     <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-400">
-                      {text.summary}
+                      <InlineMarkdown text={text.summary} />
                     </p>
                   </div>
                 </div>

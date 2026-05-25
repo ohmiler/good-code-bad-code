@@ -1,26 +1,9 @@
 "use client";
 
-import type { ReactNode } from "react";
 import { useLanguage } from "@/components/language/language-provider";
+import { InlineMarkdown } from "@/components/typography/inline-markdown";
 import type { ReviewNotesContent } from "@/lib/content/schema";
 import { uiCopy, type LessonThaiTranslation } from "@/lib/i18n/translations";
-
-function renderInlineMarkdown(text: string): ReactNode {
-  return text.split(/(`[^`]+`)/g).map((part, index) => {
-    if (part.startsWith("`") && part.endsWith("`")) {
-      return (
-        <code
-          key={`${index}-${part}`}
-          className="rounded bg-white/10 px-1 py-0.5 font-mono text-[0.9em] text-zinc-100"
-        >
-          {part.slice(1, -1)}
-        </code>
-      );
-    }
-
-    return part;
-  });
-}
 
 function ReviewPoint({
   label,
@@ -40,7 +23,7 @@ function ReviewPoint({
     <article className={`rounded-lg border p-4 ${toneClass}`}>
       <h3 className="text-sm font-semibold">{label}</h3>
       <p className="mt-3 leading-7 text-zinc-300">
-        {renderInlineMarkdown(paragraph)}
+        <InlineMarkdown text={paragraph} />
       </p>
     </article>
   );
@@ -60,7 +43,7 @@ function WhatToReviewGrid({
       <div className="mt-4 max-w-3xl">
         {paragraphs.map((paragraph) => (
           <p key={paragraph} className="mt-4 leading-7 text-zinc-300">
-            {renderInlineMarkdown(paragraph)}
+            <InlineMarkdown text={paragraph} />
           </p>
         ))}
       </div>
@@ -87,7 +70,7 @@ function WhatToReviewGrid({
         <div className="mt-4 max-w-3xl">
           {extraParagraphs.map((paragraph) => (
             <p key={paragraph} className="mt-4 leading-7 text-zinc-300">
-              {renderInlineMarkdown(paragraph)}
+              <InlineMarkdown text={paragraph} />
             </p>
           ))}
         </div>
@@ -133,7 +116,7 @@ function ReviewNoteCallout({
           <h2 className="text-xl font-semibold text-amber-100">{title}</h2>
           {paragraphs.map((paragraph) => (
             <p key={paragraph} className="mt-3 leading-7 text-zinc-200">
-              {renderInlineMarkdown(paragraph)}
+              <InlineMarkdown text={paragraph} />
             </p>
           ))}
         </div>

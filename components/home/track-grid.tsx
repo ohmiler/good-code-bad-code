@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useLanguage } from "@/components/language/language-provider";
 import { TrackIcon } from "@/components/track/track-icon";
+import { InlineMarkdown } from "@/components/typography/inline-markdown";
 import type { TrackSlug } from "@/lib/content/tracks";
 import { getTrackText } from "@/lib/i18n/translations";
 
@@ -41,7 +42,7 @@ export function TrackGrid({ tracks }: { tracks: TrackCard[] }) {
                   </span>
                 </div>
                 <p className="mt-3 text-sm leading-6 text-zinc-400">
-                  {text.description}
+                  <InlineMarkdown text={text.description} />
                 </p>
               </div>
             </div>

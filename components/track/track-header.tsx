@@ -1,6 +1,7 @@
 "use client";
 
 import { useLanguage } from "@/components/language/language-provider";
+import { InlineMarkdown } from "@/components/typography/inline-markdown";
 import type { Track } from "@/lib/content/tracks";
 import { getTrackText, uiCopy } from "@/lib/i18n/translations";
 import { TrackIcon } from "./track-icon";
@@ -26,7 +27,7 @@ export function TrackHeader({ track }: { track: Track }) {
         </div>
       </div>
       <p className="mt-5 max-w-2xl text-lg leading-8 text-zinc-400">
-        {text.description}
+        <InlineMarkdown text={text.description} />
       </p>
     </>
   );

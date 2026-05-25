@@ -1,6 +1,7 @@
 "use client";
 
 import { useLanguage } from "@/components/language/language-provider";
+import { InlineMarkdown } from "@/components/typography/inline-markdown";
 import { uiCopy } from "@/lib/i18n/translations";
 
 export function TakeawayList({
@@ -25,7 +26,7 @@ export function TakeawayList({
             key={takeaway}
             className="rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3 text-zinc-200"
           >
-            {takeaway}
+            <InlineMarkdown text={takeaway} />
           </li>
         ))}
       </ul>

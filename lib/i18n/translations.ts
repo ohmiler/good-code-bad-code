@@ -1109,7 +1109,7 @@ export const lessonThaiTranslations = {
       goodCode: ["Route Handler ตรวจผลลัพธ์และคืน HTTP status ให้ตรงกับกรณี"],
       badCode: ["ผสม API GET กับ page UI ทำให้หน้าที่ของไฟล์ใน App Router ไม่ชัด"],
     },
-    title: "แยก `route.ts` สำหรับ API ออกจาก `page.tsx` สำหรับหน้าเว็บ",
+    title: "แยก route.ts สำหรับ API ออกจาก page.tsx สำหรับหน้าเว็บ",
     summary: "ใช้ `route.ts` เป็นไฟล์ API ของ Next.js แยกจาก `page.tsx` ที่ใช้แสดงหน้า และคืน response/status ให้ชัดว่าเกิดอะไรขึ้น.",
     takeaways: ["Route Handler ควร validate request และคืน `Response` ที่สื่อ status/error ชัดเจน."],
     whatToReview: [

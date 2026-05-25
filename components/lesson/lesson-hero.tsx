@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useLanguage } from "@/components/language/language-provider";
+import { InlineMarkdown } from "@/components/typography/inline-markdown";
 import type { TrackSlug } from "@/lib/content/tracks";
 import { getLessonText, getTrackText, uiCopy } from "@/lib/i18n/translations";
 
@@ -46,7 +47,7 @@ export function LessonHero({ track, lesson }: LessonHeroProps) {
         {lessonText.title}
       </h1>
       <p className="mt-5 max-w-3xl text-lg leading-8 text-zinc-400">
-        {lessonText.summary}
+        <InlineMarkdown text={lessonText.summary} />
       </p>
       <ul className="mt-6 flex flex-wrap gap-2" aria-label="Lesson tags">
         {lesson.tags.map((tag) => (
