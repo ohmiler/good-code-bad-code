@@ -18,6 +18,7 @@ export function ReviewTitleForm({ onCreate }: ReviewTitleFormProps) {
   const [title, setTitle] = useState("");
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    // React state is the single source for validation and reset.
     event.preventDefault();
 
     const trimmedTitle = title.trim();
@@ -53,6 +54,7 @@ type ReviewTitleFormProps = {
 
 export function ReviewTitleForm({ onCreate }: ReviewTitleFormProps) {
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    // DOM queries bypass React's form state and testing surface.
     event.preventDefault();
 
     const input = document.querySelector<HTMLInputElement>("#review-title");

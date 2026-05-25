@@ -319,7 +319,11 @@ function countReviewCommentLines(code: string, track: string): number {
       return trimmedLine.startsWith("/* ") && trimmedLine.endsWith(" */");
     }
 
-    if (track === "javascript" || track === "typescript") {
+    if (
+      track === "javascript" ||
+      track === "typescript" ||
+      track === "react"
+    ) {
       return trimmedLine.startsWith("// ");
     }
 
@@ -602,6 +606,49 @@ test("TypeScript comments have matching Thai translations", async () => {
       for (const [index, comment] of translatedComments.entries()) {
         assert.match(comment, /[\u0e00-\u0e7f]/, `typescript/${slug}.${sampleName}[${index}]`);
         assert.ok(comment.trim().length >= 8, `typescript/${slug}.${sampleName}[${index}]`);
+      }
+    }
+  }
+});
+
+test("React samples include concise review comments", async () => {
+  const lessonsByTrack = await getTrackLessonFiles();
+  const reactLessons = lessonsByTrack.get("react") ?? [];
+
+  assert.equal(reactLessons.length, expectedLessonCounts.react);
+
+  for (const contentPath of reactLessons) {
+    for (const sampleName of ["goodCode", "badCode"] as const) {
+      const code = await readMdxMetadataCodeSample(contentPath, sampleName);
+      const commentCount = countReviewCommentLines(code, "react");
+
+      assert.ok(commentCount >= 1, `${contentPath} ${sampleName}`);
+      assert.ok(commentCount <= 3, `${contentPath} ${sampleName}`);
+    }
+  }
+});
+
+test("React comments have matching Thai translations", async () => {
+  const lessonsByTrack = await getTrackLessonFiles();
+  const reactLessons = lessonsByTrack.get("react") ?? [];
+
+  assert.equal(reactLessons.length, expectedLessonCounts.react);
+
+  for (const contentPath of reactLessons) {
+    const slug = slugFromContentPath(contentPath);
+    const translation = lessonThaiTranslations[`react/${slug}`];
+
+    assert.ok(translation.codeComments, `react/${slug} missing codeComments`);
+
+    for (const sampleName of ["goodCode", "badCode"] as const) {
+      const code = await readMdxMetadataCodeSample(contentPath, sampleName);
+      const commentCount = countReviewCommentLines(code, "react");
+      const translatedComments = translation.codeComments[sampleName] ?? [];
+
+      assert.equal(translatedComments.length, commentCount, `react/${slug}`);
+      for (const [index, comment] of translatedComments.entries()) {
+        assert.match(comment, /[\u0e00-\u0e7f]/, `react/${slug}.${sampleName}[${index}]`);
+        assert.ok(comment.trim().length >= 8, `react/${slug}.${sampleName}[${index}]`);
       }
     }
   }

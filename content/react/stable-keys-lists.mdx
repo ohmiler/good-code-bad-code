@@ -15,6 +15,7 @@ export const metadata = {
 };
 
 export function CommentList({ comments }: { comments: Comment[] }) {
+  // Stable IDs preserve the right item identity across list changes.
   return comments.map((comment) => (
     <article key={comment.id}>
       <h3>{comment.authorName}</h3>
@@ -33,6 +34,7 @@ export function CommentList({ comments }: { comments: Comment[] }) {
 };
 
 export function CommentList({ comments }: { comments: Comment[] }) {
+  // Index keys describe position, not the comment's identity.
   return comments.map((comment, index) => (
     <article key={index}>
       <h3>{comment.authorName}</h3>

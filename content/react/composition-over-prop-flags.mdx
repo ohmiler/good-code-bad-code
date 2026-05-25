@@ -23,6 +23,7 @@ export function Panel({
   actions,
   children,
 }: PanelProps) {
+  // Slots let callers compose the variant-specific UI.
   return (
     <section data-tone={tone}>
       <header>
@@ -68,6 +69,7 @@ export function Panel({
   onDelete,
   children,
 }: PanelProps) {
+  // Boolean flags create combinations the component must police.
   return (
     <section data-mode={mode}>
       <h2>{title}</h2>

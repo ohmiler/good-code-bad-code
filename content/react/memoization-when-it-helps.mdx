@@ -31,6 +31,7 @@ export function ReviewSearch({
   reviews: Review[];
   search: string;
 }) {
+  // Memoization is tied to the expensive list calculation inputs.
   const visibleReviews = useMemo(
     () => reviews.filter((review) => matchesSearch(review, search)),
     [reviews, search],
@@ -67,6 +68,7 @@ export function ReviewSearch({
   reviews: Review[];
   search: string;
 }) {
+  // Empty dependencies freeze the list after the first render.
   const visibleReviews = useMemo(
     () => reviews.filter((review) => matchesSearch(review, search)),
     [],

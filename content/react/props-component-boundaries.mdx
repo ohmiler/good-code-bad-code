@@ -19,6 +19,7 @@ export function ReviewSummary({
   reviewerName,
   status,
 }: ReviewSummaryProps) {
+  // Explicit props make this component easy to move and test.
   return (
     <section>
       <h2>{title}</h2>
@@ -33,6 +34,7 @@ export function ReviewSummary({
     code: `import { useAppState } from "./app-state";
 
 export function ReviewSummary() {
+  // Hidden app-state reads make the component depend on too much.
   const { currentProject, activeReview, viewer } = useAppState();
 
   return (

@@ -19,6 +19,7 @@ export function ReviewerPicker({ reviewers }: { reviewers: Reviewer[] }) {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   function toggleReviewer(id: string) {
+    // Functional updates read the latest state React has queued.
     setSelectedIds((currentIds) =>
       currentIds.includes(id)
         ? currentIds.filter((currentId) => currentId !== id)
@@ -52,6 +53,7 @@ export function ReviewerPicker({ reviewers }: { reviewers: Reviewer[] }) {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   function toggleReviewer(id: string) {
+    // This uses the selectedIds captured by the current render.
     if (selectedIds.includes(id)) {
       setSelectedIds(selectedIds.filter((currentId) => currentId !== id));
       return;

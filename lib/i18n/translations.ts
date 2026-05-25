@@ -801,6 +801,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "react/props-component-boundaries": {
+    codeComments: {
+      goodCode: ["props ที่ชัดทำให้ component ย้ายและ test ได้ง่าย"],
+      badCode: ["อ่าน app-state ที่ซ่อนอยู่ทำให้ component พึ่งพาเยอะเกินไป"],
+    },
     title: "ขอบเขต component ผ่าน props",
     summary: "ให้ component รับข้อมูลที่ต้องใช้ผ่าน props ชัด ๆ แทนการล้วง state ที่ไม่เกี่ยวข้อง.",
     takeaways: ["component ที่ดีควรบอก dependency ผ่าน props ให้เห็นจากด้านนอก."],
@@ -813,6 +817,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "react/stable-keys-lists": {
+    codeComments: {
+      goodCode: ["ID ที่ stable รักษา identity ของ item ตอน list เปลี่ยน"],
+      badCode: ["index key บอกแค่ตำแหน่ง ไม่ใช่ identity ของ comment"],
+    },
     title: "key ใน list ที่ stable",
     summary: "ใช้ id ที่คงที่เป็น key เพื่อให้ React รักษาตัวตนของ item ได้ถูกต้อง.",
     takeaways: ["หลีกเลี่ยงการใช้ index เป็น key เมื่อ list มีการเพิ่ม ลบ เรียง หรือ filter."],
@@ -825,6 +833,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "react/derived-state": {
+    codeComments: {
+      goodCode: ["ค่าที่ derive ได้คำนวณจาก props ปัจจุบันระหว่าง render"],
+      badCode: ["state ที่ซ้ำกันต้องใช้ effect เพื่อ sync ให้ตรง"],
+    },
     title: "derived state ควรคำนวณจากแหล่งจริง",
     summary: "คำนวณค่าที่ derive ได้ระหว่าง render แทนการเก็บ state ซ้ำแล้ว sync ด้วย effect.",
     takeaways: ["อย่าเก็บ state ซ้ำถ้าคำนวณจาก props หรือ state เดิมได้."],
@@ -837,6 +849,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "react/updating-state-from-previous-state": {
+    codeComments: {
+      goodCode: ["functional update อ่าน state ล่าสุดที่ React queue ไว้"],
+      badCode: ["โค้ดนี้ใช้ selectedIds ที่ถูก capture จาก render ปัจจุบัน"],
+    },
     title: "อัปเดต state จากค่าก่อนหน้า",
     summary: "ใช้ functional update เมื่อค่า state ใหม่ต้องคำนวณจาก state ปัจจุบัน.",
     takeaways: ["ถ้า next state อ้างอิง previous state ให้ส่ง function เข้า setter."],
@@ -849,6 +865,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "react/controlled-form-inputs": {
+    codeComments: {
+      goodCode: ["React state เป็น source เดียวสำหรับ validate และ reset"],
+      badCode: ["query DOM ข้าม form state และพื้นที่ test ของ React"],
+    },
     title: "controlled form input ที่ชัดเจน",
     summary: "ให้ค่าของ form อยู่ใน React state เมื่อ UI ต้อง validate, reset หรือ submit ด้วย logic ของเรา.",
     takeaways: ["controlled input ทำให้ค่าที่เห็นและค่าที่ submit มาจากแหล่งเดียวกัน."],
@@ -861,6 +881,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "react/effect-dependencies": {
+    codeComments: {
+      goodCode: ["effect ตาม reviewId และ cancel network work ที่ stale"],
+      badCode: ["dependency ว่างทำให้ค้างกับ reviewId แรกที่ render เห็น"],
+    },
     title: "dependency ของ effect ต้องครบ",
     summary: "ใส่ dependency ให้ครบและ cleanup งาน async เมื่อ input เปลี่ยน.",
     takeaways: ["effect ควรประกาศสิ่งที่พึ่งพาให้ครบ และ cleanup เมื่อเลิกใช้."],
@@ -873,6 +897,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "react/async-effect-cleanup": {
+    codeComments: {
+      goodCode: ["cleanup กัน response เก่ามา update หน้าปัจจุบัน"],
+      badCode: ["request เก่ายังชนะ race และเขียนทับ state ได้"],
+    },
     title: "cleanup งาน async ใน effect",
     summary: "ป้องกัน response เก่าจาก async effect ไม่ให้มาเขียนทับหน้าจอปัจจุบัน.",
     takeaways: ["effect ที่เริ่มงาน async ควร cleanup เมื่อ input เปลี่ยนหรือ component unmount."],
@@ -885,6 +913,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "react/context-boundaries": {
+    codeComments: {
+      goodCode: ["context แคบไว้ ส่วน review data ส่งผ่าน props ชัดเจน"],
+      badCode: ["app context ที่กว้างทำให้ card subscribe state ที่ไม่เกี่ยว"],
+    },
     title: "ขอบเขตของ context",
     summary: "ใช้ context กับข้อมูลร่วมที่เป็น ambient จริง ๆ ไม่ใช่ทางลัดเลี่ยง props ทุกอย่าง.",
     takeaways: ["context ที่แคบช่วยให้ component ไม่ subscribe state ที่ไม่เกี่ยวข้อง."],
@@ -897,6 +929,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "react/memoization-when-it-helps": {
+    codeComments: {
+      goodCode: ["memoization ผูกกับ input ของการคำนวณ list ที่แพง"],
+      badCode: ["dependency ว่าง freeze list หลัง render แรก"],
+    },
     title: "memoization เมื่อช่วยจริง",
     summary: "ใช้ memoization เมื่อมีงานแพงที่ต้องเลี่ยงซ้ำ พร้อม dependency ที่ถูกต้อง.",
     takeaways: ["memoization ควรมีเหตุผลด้าน cost และ dependency list ต้องครบ."],
@@ -909,6 +945,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "react/composition-over-prop-flags": {
+    codeComments: {
+      goodCode: ["slot ให้ caller compose UI เฉพาะ variant เอง"],
+      badCode: ["boolean flag สร้าง combination ที่ component ต้องคุมเอง"],
+    },
     title: "composition แทน prop flag",
     summary: "ใช้ children หรือ slot สำหรับ UI หลายรูปแบบ แทนการเพิ่ม boolean prop ไปเรื่อย ๆ.",
     takeaways: ["composition ช่วยลด prop combination ที่ผิดพลาดง่ายใน component ที่มีหลาย variant."],

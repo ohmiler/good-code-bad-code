@@ -33,6 +33,7 @@ export function ReviewDetails({ reviewId }: { reviewId: string }) {
   );
 
   useEffect(() => {
+    // Cleanup prevents stale responses from updating the current screen.
     let cancelled = false;
 
     setStatus("loading");
@@ -85,6 +86,7 @@ export function ReviewDetails({ reviewId }: { reviewId: string }) {
   const [review, setReview] = useState<Review | null>(null);
 
   useEffect(() => {
+    // Older requests can still win the race and overwrite state.
     fetchReview(reviewId).then(setReview);
   }, [reviewId]);
 

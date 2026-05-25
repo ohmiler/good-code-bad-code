@@ -20,6 +20,7 @@ export function ReviewComments({ reviewId }: { reviewId: string }) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // The effect follows reviewId and cancels stale network work.
     const controller = new AbortController();
 
     async function loadComments() {
@@ -66,6 +67,7 @@ export function ReviewComments({ reviewId }: { reviewId: string }) {
   const [comments, setComments] = useState<Comment[]>([]);
 
   useEffect(() => {
+    // Empty dependencies freeze the first reviewId this render saw.
     fetch("/api/reviews/" + reviewId + "/comments")
       .then((response) => response.json())
       .then(setComments);
