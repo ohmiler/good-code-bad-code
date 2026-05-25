@@ -10,6 +10,7 @@ export const metadata = {
     filename: "src/Billing/InvoiceTotal.php",
     code: `<?php declare(strict_types=1);
 
+// Strict types make cents stay integers at the function boundary.
 function invoiceTotalCents(int $subtotalCents, int $taxCents): int
 {
     if ($subtotalCents < 0 || $taxCents < 0) {
@@ -24,6 +25,7 @@ function invoiceTotalCents(int $subtotalCents, int $taxCents): int
     filename: "invoice.php",
     code: `<?php
 
+// Untyped request values let PHP coerce strings during math.
 function invoiceTotal($subtotal, $tax)
 {
     return $subtotal + $tax;

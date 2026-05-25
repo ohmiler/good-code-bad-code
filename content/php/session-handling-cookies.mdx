@@ -10,6 +10,7 @@ export const metadata = {
     filename: "src/Auth/Session.php",
     code: `<?php declare(strict_types=1);
 
+// Cookie flags are configured before the session starts.
 session_set_cookie_params([
     'lifetime' => 0,
     'path' => '/',
@@ -35,6 +36,7 @@ session_start();
 
 if ($_POST['password'] === $user['password']) {
     $_SESSION['user_id'] = $user['id'];
+    // Request-controlled roles should not become authorization state.
     $_SESSION['role'] = $_GET['role'];
 }`,
   },

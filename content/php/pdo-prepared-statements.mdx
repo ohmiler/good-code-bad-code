@@ -16,6 +16,7 @@ final class UserRepository
 
     public function findActiveByEmail(string $email): ?array
     {
+        // Placeholders keep SQL structure separate from user data.
         $stmt = $this->pdo->prepare(
             'SELECT id, email, name FROM users WHERE email = :email AND active = 1'
         );
@@ -32,6 +33,7 @@ final class UserRepository
     code: `<?php
 
 $email = $_GET['email'];
+// Interpolating request data makes the query boundary unsafe.
 $sql = "SELECT * FROM users WHERE email = '$email' AND active = 1";
 $user = $pdo->query($sql)->fetch();`,
   },

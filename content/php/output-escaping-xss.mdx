@@ -10,6 +10,7 @@ export const metadata = {
     filename: "templates/profile.php",
     code: `<?php declare(strict_types=1);
 
+// Escape text before it becomes HTML output.
 function e(string $value): string
 {
     return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
@@ -23,6 +24,7 @@ function e(string $value): string
     language: "php",
     filename: "templates/profile.php",
     code: `<?php
+// Direct output treats user content as trusted HTML.
 ?>
 
 <h1><?= $user['name'] ?></h1>

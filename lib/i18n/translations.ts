@@ -1778,6 +1778,10 @@ export const lessonThaiTranslations = {
     reviewNotes: [
       "เวลารีวิวฟังก์ชัน PHP สำคัญ ให้ดูจาก signature ก่อนว่าอ่านรู้ไหมว่ารับอะไร คืนอะไร แล้วค่อยดู validation ใน body.",
     ],
+    codeComments: {
+      goodCode: ["strict types ทำให้ค่า cents ยังเป็น int ที่ขอบฟังก์ชัน."],
+      badCode: ["ค่าจาก request ที่ไม่ typed เปิดทางให้ PHP แปลง string ตอนคำนวณ."],
+    },
   },
   "php/input-validation-filtering": {
     title: "ตรวจ $_GET/$_POST ก่อนใช้ต่อ",
@@ -1790,6 +1794,10 @@ export const lessonThaiTranslations = {
     reviewNotes: [
       "ให้ถามว่าค่านี้มาจาก user หรือไม่ ถ้าใช่ควรเห็น check ใกล้จุดรับ request ว่า missing, invalid และ valid แยกกันชัด.",
     ],
+    codeComments: {
+      goodCode: ["ตรวจและแปลงค่าที่ขอบระบบก่อนนำไปใช้ต่อ."],
+      badCode: ["ค่า $_GET ดิบทำให้ missing, invalid และ empty ปนกัน."],
+    },
   },
   "php/output-escaping-xss": {
     title: "escape ตอน echo เพื่อกัน XSS",
@@ -1802,6 +1810,10 @@ export const lessonThaiTranslations = {
     reviewNotes: [
       "ดูตำแหน่งที่ค่าถูกใส่ลง HTML ด้วย: text ใช้ htmlspecialchars, attribute ต้อง escape ให้เหมาะกับ attribute และ JavaScript context ต้องใช้วิธีอีกแบบ.",
     ],
+    codeComments: {
+      goodCode: ["escape ข้อความก่อนให้ browser ตีความเป็น HTML."],
+      badCode: ["การ echo ตรง ๆ เท่ากับเชื่อว่า user content เป็น HTML ที่ปลอดภัย."],
+    },
   },
   "php/pdo-prepared-statements": {
     title: "ใช้ PDO prepared statement แทนต่อ SQL เอง",
@@ -1814,6 +1826,10 @@ export const lessonThaiTranslations = {
     reviewNotes: [
       "ตอนรีวิว query ให้มองหา placeholder เช่น :email และดูว่า execute ส่งค่าเข้าไปเป็น data หรือไม่ ถ้าเห็น '$email' อยู่ใน SQL string ให้ระวังทันที.",
     ],
+    codeComments: {
+      goodCode: ["placeholder แยกโครง SQL ออกจากข้อมูลของผู้ใช้."],
+      badCode: ["การต่อค่าจาก request เข้า SQL ทำให้ขอบ query ไม่น่าไว้ใจ."],
+    },
   },
   "php/password-hashing-verification": {
     title: "ใช้ password_hash/password_verify กับรหัสผ่าน",
@@ -1826,6 +1842,10 @@ export const lessonThaiTranslations = {
     reviewNotes: [
       "การรีวิว password ควรน่าเบื่อ ถ้าเจอ custom salt, md5, sha1, manual compare หรือ logic อัปเกรดเอง ให้หยุดถามเหตุผลก่อน.",
     ],
+    codeComments: {
+      goodCode: ["ให้ PHP เลือก algorithm และ cost ที่เหมาะกับ password ปัจจุบัน."],
+      badCode: ["md5 เร็วเกินไปและไม่ได้ออกแบบมาเพื่อเก็บรหัสผ่าน."],
+    },
   },
   "php/session-handling-cookies": {
     title: "ตั้ง session cookie และเปลี่ยน session id ตอน login",
@@ -1838,6 +1858,10 @@ export const lessonThaiTranslations = {
     reviewNotes: [
       "ตอนรีวิว login/logout ให้ดู 3 จุด: cookie flag, การ rotate session id และค่าที่เขียนลง $_SESSION มาจากแหล่งที่เชื่อถือได้หรือไม่.",
     ],
+    codeComments: {
+      goodCode: ["ตั้งค่า cookie flag ก่อนเริ่ม session เสมอ."],
+      badCode: ["role ที่ user ส่งมากับ request ไม่ควรถูกใช้เป็นสิทธิ์ใน session."],
+    },
   },
   "php/error-handling-exceptions": {
     title: "จับ error ชั้นนอกสุด แล้วไม่โชว์ error ดิบ",
@@ -1850,6 +1874,10 @@ export const lessonThaiTranslations = {
     reviewNotes: [
       "อย่าจับ error ลึกจนกลบสาเหตุ และอย่าโชว์ raw exception ให้ browser เห็น ถ้าจะจับที่ index/front controller ให้ log ให้พอ debug ได้.",
     ],
+    codeComments: {
+      goodCode: ["log รายละเอียดให้ developer แต่ตอบผู้ใช้ด้วยข้อความปลอดภัย."],
+      badCode: ["request เลือกไฟล์ที่จะ include ได้ และ error ดิบถูกโชว์ออกไป."],
+    },
   },
   "php/autoloading-and-namespaces": {
     title: "ใช้ namespace/autoload แทนไล่ require_once",
@@ -1862,6 +1890,10 @@ export const lessonThaiTranslations = {
     reviewNotes: [
       "ถ้าคนรีวิวต้องไล่เปิด require_once หลายไฟล์เพื่อรู้ว่าฟังก์ชันมาจากไหน โครงสร้างยังช่วยไม่พอ.",
     ],
+    codeComments: {
+      goodCode: ["namespace และ constructor injection ทำให้เห็นเจ้าของโค้ดและ dependency."],
+      badCode: ["manual include กับ global ซ่อนว่า dependency มาจากไหน."],
+    },
   },
   "php/configuration-and-secrets": {
     title: "เก็บ secret ไว้ใน environment",
@@ -1874,6 +1906,10 @@ export const lessonThaiTranslations = {
     reviewNotes: [
       "รีวิว config ด้วยสองคำถาม: ค่านี้มาจากแหล่งที่ควบคุมได้ไหม และ user input เปลี่ยนค่าระดับระบบได้หรือเปล่า.",
     ],
+    codeComments: {
+      goodCode: ["secret ที่จำเป็นควร fail เร็วเมื่อ environment ไม่มีค่า."],
+      badCode: ["credential ใน code และ config ที่เปลี่ยนด้วย request ไม่ปลอดภัยทั้งคู่."],
+    },
   },
   "php/separating-logic-from-templates": {
     title: "แยก logic ออกจาก template",
@@ -1886,6 +1922,10 @@ export const lessonThaiTranslations = {
     reviewNotes: [
       "PHP เขียนปน HTML ได้ง่าย แต่ตอนรีวิวให้ถามว่าไฟล์นี้กำลังรับ request, ดึงข้อมูล หรือแสดงผล ถ้าทำครบสามอย่างควรแยก.",
     ],
+    codeComments: {
+      goodCode: ["controller เตรียมข้อมูลก่อนให้ template แสดงผล."],
+      badCode: ["request input, SQL และ output ถูกผสมอยู่ใน template เดียว."],
+    },
   },
   "java/null-handling-and-optional-boundaries": {
     title: "บอกกรณีหาไม่เจอด้วย Optional หรือ exception",

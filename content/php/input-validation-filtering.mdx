@@ -10,6 +10,7 @@ export const metadata = {
     filename: "public/orders.php",
     code: `<?php declare(strict_types=1);
 
+// Validate and normalize the boundary value before using it.
 $orderId = filter_input(
     INPUT_GET,
     'order_id',
@@ -30,6 +31,7 @@ $order = $orders->findById($orderId);`,
     filename: "public/orders.php",
     code: `<?php
 
+// Raw $_GET values mix missing, invalid, and empty cases.
 $orderId = $_GET['order_id'];
 
 if (!$orderId) {

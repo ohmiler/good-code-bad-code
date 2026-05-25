@@ -16,6 +16,7 @@ final class ProfileController
 
     public function show(int $userId): array
     {
+        // The controller prepares data before the template renders it.
         $user = $this->users->findProfile($userId);
 
         return [
@@ -30,6 +31,7 @@ final class ProfileController
     filename: "profile.php",
     code: `<?php
 
+// Request input, SQL, and output are mixed in one template file.
 $userId = $_GET['id'];
 $user = $pdo->query("SELECT * FROM users WHERE id = $userId")->fetch();
 ?>

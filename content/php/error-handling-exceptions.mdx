@@ -14,6 +14,7 @@ try {
     $response = $router->dispatch($request);
     $response->send();
 } catch (Throwable $error) {
+    // Log details for developers but send users a safe response.
     $logger->error('Unhandled request failure', [
         'path' => $request->path(),
         'exception' => $error,
@@ -29,6 +30,7 @@ try {
     code: `<?php
 
 try {
+    // This lets the request choose a file and exposes raw failures.
     include $_GET['page'] . '.php';
 } catch (Exception $error) {
     die($error->getMessage());
