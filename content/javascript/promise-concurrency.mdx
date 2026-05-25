@@ -9,6 +9,7 @@ export const metadata = {
     language: "javascript",
     filename: "review-sidebar.js",
     code: `async function loadReviewSidebar(pullRequestId) {
+  // Independent requests start together and fail as one group.
   const [checks, comments, reviewers] = await Promise.all([
     fetchChecks(pullRequestId),
     fetchComments(pullRequestId),
@@ -22,6 +23,7 @@ export const metadata = {
     language: "javascript",
     filename: "review-sidebar.js",
     code: `async function loadReviewSidebar(pullRequestId) {
+  // Sequential awaits add latency without a data dependency.
   const checks = await fetchChecks(pullRequestId);
   const comments = await fetchComments(pullRequestId);
   const reviewers = await fetchReviewers(pullRequestId);

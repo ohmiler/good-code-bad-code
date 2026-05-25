@@ -13,3 +13,11 @@ test("Thai mode uses IBM Plex Sans Thai while preserving the default sans font",
   assert.match(globals, /var\(--font-ibm-plex-sans-thai\)/);
   assert.match(globals, /var\(--font-geist-sans\)/);
 });
+
+test("code samples render operators without programming ligatures", async () => {
+  const globals = await readFile("app/globals.css", "utf8");
+
+  assert.match(globals, /font-variant-ligatures:\s*none/);
+  assert.match(globals, /"liga"\s+0/);
+  assert.match(globals, /"calt"\s+0/);
+});

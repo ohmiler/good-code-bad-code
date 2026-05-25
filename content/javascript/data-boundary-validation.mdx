@@ -9,6 +9,7 @@ export const metadata = {
     language: "javascript",
     filename: "review-payload.js",
     code: `function normalizeReviewPayload(payload) {
+  // Validate the boundary before reading nested fields.
   if (!payload || typeof payload !== "object") {
     return { ok: false, error: "Invalid payload." };
   }
@@ -36,6 +37,7 @@ export const metadata = {
     language: "javascript",
     filename: "review-payload.js",
     code: `function normalizeReviewPayload(payload) {
+  // This trusts external shape before proving it exists.
   return {
     ok: true,
     value: {

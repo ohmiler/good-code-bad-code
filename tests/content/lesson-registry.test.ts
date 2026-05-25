@@ -319,6 +319,10 @@ function countReviewCommentLines(code: string, track: string): number {
       return trimmedLine.startsWith("/* ") && trimmedLine.endsWith(" */");
     }
 
+    if (track === "javascript") {
+      return trimmedLine.startsWith("// ");
+    }
+
     return false;
   }).length;
 }
@@ -506,6 +510,52 @@ test("CSS comments have matching Thai translations", async () => {
       for (const [index, comment] of translatedComments.entries()) {
         assert.match(comment, /[\u0e00-\u0e7f]/, `css/${slug}.${sampleName}[${index}]`);
         assert.ok(comment.trim().length >= 8, `css/${slug}.${sampleName}[${index}]`);
+      }
+    }
+  }
+});
+
+test("JavaScript samples include concise review comments", async () => {
+  const lessonsByTrack = await getTrackLessonFiles();
+  const javascriptLessons = lessonsByTrack.get("javascript") ?? [];
+
+  assert.equal(javascriptLessons.length, expectedLessonCounts.javascript);
+
+  for (const contentPath of javascriptLessons) {
+    for (const sampleName of ["goodCode", "badCode"] as const) {
+      const code = await readMdxMetadataCodeSample(contentPath, sampleName);
+      const commentCount = countReviewCommentLines(code, "javascript");
+
+      assert.ok(commentCount >= 1, `${contentPath} ${sampleName}`);
+      assert.ok(commentCount <= 3, `${contentPath} ${sampleName}`);
+    }
+  }
+});
+
+test("JavaScript comments have matching Thai translations", async () => {
+  const lessonsByTrack = await getTrackLessonFiles();
+  const javascriptLessons = lessonsByTrack.get("javascript") ?? [];
+
+  assert.equal(javascriptLessons.length, expectedLessonCounts.javascript);
+
+  for (const contentPath of javascriptLessons) {
+    const slug = slugFromContentPath(contentPath);
+    const translation = lessonThaiTranslations[`javascript/${slug}`];
+
+    assert.ok(
+      translation.codeComments,
+      `javascript/${slug} missing codeComments`,
+    );
+
+    for (const sampleName of ["goodCode", "badCode"] as const) {
+      const code = await readMdxMetadataCodeSample(contentPath, sampleName);
+      const commentCount = countReviewCommentLines(code, "javascript");
+      const translatedComments = translation.codeComments[sampleName] ?? [];
+
+      assert.equal(translatedComments.length, commentCount, `javascript/${slug}`);
+      for (const [index, comment] of translatedComments.entries()) {
+        assert.match(comment, /[\u0e00-\u0e7f]/, `javascript/${slug}.${sampleName}[${index}]`);
+        assert.ok(comment.trim().length >= 8, `javascript/${slug}.${sampleName}[${index}]`);
       }
     }
   }

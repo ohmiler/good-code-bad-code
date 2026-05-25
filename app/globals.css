@@ -113,6 +113,10 @@ a {
   max-width: none;
   background: transparent !important;
   font-family: var(--font-geist-mono), Consolas, monospace;
+  font-feature-settings:
+    "liga" 0,
+    "calt" 0;
+  font-variant-ligatures: none;
   line-height: 1.7;
 }
 

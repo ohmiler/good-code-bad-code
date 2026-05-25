@@ -481,6 +481,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "javascript/strict-equality-nullish-checks": {
+    codeComments: {
+      goodCode: ["strict equality กัน coercion ที่ซ่อนค่าผิดรูป"],
+      badCode: ["loose equality และ || ทำให้ missing data ปนกับ falsy ที่ตั้งใจ"],
+    },
     title: "strict equality และ nullish check",
     summary: "เปรียบเทียบค่าแบบตั้งใจ และไม่ทำให้ค่าที่เป็น falsy แต่มีความหมายถูกแทนด้วย default ผิด ๆ.",
     takeaways: ["ใช้ strict equality สำหรับการเทียบค่า และใช้ ?? เมื่อควร fallback เฉพาะ null หรือ undefined."],
@@ -493,6 +497,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "javascript/data-boundary-validation": {
+    codeComments: {
+      goodCode: ["validate ที่ boundary ก่อนอ่าน field ซ้อนด้านใน"],
+      badCode: ["โค้ดนี้เชื่อ shape จากภายนอกก่อนพิสูจน์ว่ามีจริง"],
+    },
     title: "ตรวจข้อมูลที่ขอบเขตระบบ",
     summary: "ตรวจข้อมูลจากภายนอกก่อนให้ส่วนที่เหลือของ function เชื่อว่ารูปทรงข้อมูลถูกต้อง.",
     takeaways: ["ข้อมูลจาก API, storage หรือ message ควรถูก validate ที่ boundary ก่อนอ่าน field ด้านใน."],
@@ -505,6 +513,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "javascript/array-transformations": {
+    codeComments: {
+      goodCode: ["pipeline คืน summary object ใหม่แทนการแก้ input"],
+      badCode: ["sort และเติม churn ทำให้ data ที่โค้ดอื่นถืออยู่ถูก mutate"],
+    },
     title: "แปลง array ให้อ่านเป็นขั้นตอน",
     summary: "ใช้ array methods เพื่อบอกการเปลี่ยนรูปข้อมูลให้ชัด และเลี่ยงการ mutate input โดยไม่ตั้งใจ.",
     takeaways: ["ใช้ filter, map และ reduce เมื่อมันอธิบายการแปลงข้อมูลได้โดยไม่ต้องแก้ object หรือ array ต้นทาง."],
@@ -517,6 +529,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "javascript/promise-concurrency": {
+    codeComments: {
+      goodCode: ["request ที่ไม่พึ่งกันเริ่มพร้อมกันและ fail เป็นกลุ่มเดียว"],
+      badCode: ["await ทีละขั้นเพิ่ม latency ทั้งที่ไม่มี data dependency"],
+    },
     title: "รัน promise พร้อมกันเมื่อไม่ขึ้นต่อกัน",
     summary: "งาน async ที่ไม่พึ่งผลลัพธ์กันควรถูกเริ่มพร้อมกัน แทนการ await ทีละคำขอ.",
     takeaways: ["ใช้ Promise.all กับงานที่จำเป็นและเป็นอิสระต่อกัน ส่วน await แบบเรียงลำดับควรใช้เมื่อมี dependency จริง."],
@@ -529,6 +545,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "javascript/event-listener-cleanup": {
+    codeComments: {
+      goodCode: ["handler reference ที่ stable ทำให้ caller remove listener ได้ภายหลัง"],
+      badCode: ["anonymous listener ทำให้ caller remove ออกไม่ได้"],
+    },
     title: "การ cleanup event listener",
     summary: "ทุก listener ควรมีทางถอดออก เพื่อไม่ให้ setup ซ้ำแล้วพฤติกรรมซ้อนกัน.",
     takeaways: ["เก็บ handler reference ให้ stable และคืน cleanup function เมื่อติด event listener."],
@@ -541,6 +561,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "javascript/module-boundaries-globals": {
+    codeComments: {
+      goodCode: ["storage เป็น dependency ไม่ใช่ global state ที่ซ่อนอยู่"],
+      badCode: ["global read/write เปิดทางให้โค้ดอื่น bypass module API"],
+    },
     title: "ขอบเขต module และ global state",
     summary: "เก็บ behavior ที่ใช้ร่วมกันไว้หลัง module API แทนการกระจาย mutable global state.",
     takeaways: ["เปิดเผย function เล็ก ๆ จาก module และส่ง dependency เข้ามาเมื่อ code ต้องใช้ storage, network หรือ browser API."],
@@ -553,6 +577,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "javascript/dates-time-zones": {
+    codeComments: {
+      goodCode: ["locale และ time zone เป็น input ชัดเจนของการ format"],
+      badCode: ["format เองจะพึ่ง local time zone ของ runtime"],
+    },
     title: "วันที่และ time zone",
     summary: "format วันที่ด้วย locale และ time zone ที่ตั้งใจ แทนการประกอบวันที่เองจากค่า runtime.",
     takeaways: ["ใช้ Intl สำหรับ date formatting และส่ง time zone ให้ชัดเมื่อวันที่ที่แสดงมีความสำคัญ."],
@@ -565,6 +593,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "javascript/guard-clauses": {
+    codeComments: {
+      goodCode: ["guard clause แยกเคสที่ถูกปฏิเสธออกจาก path หลัก"],
+      badCode: ["branch ที่ซ้อนกันทำให้ reviewer ต้องจำทุกเงื่อนไขพร้อมกัน"],
+    },
     title: "guard clause ลดความซ้อน",
     summary: "คืนค่าเร็วเมื่อข้อมูลไม่พร้อม เพื่อให้ path หลักอ่านตรงและสั้นลง.",
     takeaways: ["ใช้ early return เพื่อให้เคสปกติอ่านเป็นเส้นตรง."],
@@ -577,6 +609,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "javascript/async-error-handling": {
+    codeComments: {
+      goodCode: ["เช็ก HTTP status ก่อน parse และ catch transport failure"],
+      badCode: ["happy path parsing ทำให้ failure กลายเป็น unhandled exception"],
+    },
     title: "จัดการ error ใน async ให้ครบ",
     summary: "ตรวจ response และจัดการ failure ก่อนสมมติว่าทุกอย่างเป็น JSON ที่ถูกต้อง.",
     takeaways: ["async code ควรมี path สำหรับ failure ที่อ่านได้ชัดเจน."],
@@ -589,6 +625,10 @@ export const lessonThaiTranslations = {
     ],
   },
   "javascript/naming-side-effects": {
+    codeComments: {
+      goodCode: ["ชื่อบอก caller ชัดว่า array จะถูก mutate"],
+      badCode: ["ชื่อฟังเหมือน immutable แต่กลับ mutate input array"],
+    },
     title: "ตั้งชื่อให้เห็น side effect",
     summary: "ชื่อ function ควรบอกว่ามีการ mutate หรือเปลี่ยน state ไม่ใช่ดูเหมือนแค่อ่านค่า.",
     takeaways: ["ถ้า function เปลี่ยนข้อมูล ชื่อควรบอกให้คนเรียกรู้ทันที."],

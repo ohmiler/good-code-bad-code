@@ -44,6 +44,22 @@ test("replaceCodeCommentLines translates CSS comments without changing rules", (
   );
 });
 
+test("replaceCodeCommentLines translates JavaScript line comments without changing code", () => {
+  assert.equal(
+    replaceCodeCommentLines(
+      `function readValue(options) {
+  // Nullish fallback preserves valid falsy values.
+  return options.count ?? 3;
+}`,
+      ["nullish fallback รักษา falsy value ที่ตั้งใจไว้"],
+    ),
+    `function readValue(options) {
+  // nullish fallback รักษา falsy value ที่ตั้งใจไว้
+  return options.count ?? 3;
+}`,
+  );
+});
+
 test("replaceCodeCommentLines leaves extra or missing translations safe", () => {
   assert.equal(
     replaceCodeCommentLines("# Review staged work.\ngit diff --staged", []),

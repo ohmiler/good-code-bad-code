@@ -9,6 +9,7 @@ export const metadata = {
     language: "javascript",
     filename: "review-access.js",
     code: `function canStartReview(user, pullRequest) {
+  // Guard clauses keep rejected cases out of the main path.
   if (!user) {
     return false;
   }
@@ -28,6 +29,7 @@ export const metadata = {
     language: "javascript",
     filename: "review-access.js",
     code: `function canStartReview(user, pullRequest) {
+  // Nested branches make reviewers carry every condition at once.
   if (user) {
     if (!pullRequest.isDraft) {
       if (pullRequest.reviewers.includes(user.id)) {

@@ -11,6 +11,7 @@ export const metadata = {
     code: `const FILTER_STORAGE_KEY = "review-filters";
 
 export function readReviewFilters(storage) {
+  // Storage is a dependency, not hidden global state.
   const rawValue = storage.getItem(FILTER_STORAGE_KEY);
 
   if (!rawValue) {
@@ -30,6 +31,7 @@ export function saveReviewFilters(storage, filters) {
     code: `window.reviewFilters = { status: "open" };
 
 function readReviewFilters() {
+  // Global reads and writes let callers bypass the module API.
   return JSON.parse(localStorage.reviewFilters || "{}");
 }
 

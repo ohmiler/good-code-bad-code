@@ -9,6 +9,7 @@ export const metadata = {
     language: "javascript",
     filename: "reviewers.js",
     code: `function addReviewerInPlace(reviewers, reviewer) {
+  // The name warns callers that the array will mutate.
   reviewers.push(reviewer);
   return reviewers;
 }
@@ -20,6 +21,7 @@ addReviewerInPlace(reviewers, "Lin");`,
     language: "javascript",
     filename: "reviewers.js",
     code: `function withReviewer(reviewers, reviewer) {
+  // The name sounds immutable while mutating the input array.
   reviewers.push(reviewer);
   return reviewers;
 }

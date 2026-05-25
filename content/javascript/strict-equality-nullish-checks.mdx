@@ -9,6 +9,7 @@ export const metadata = {
     language: "javascript",
     filename: "review-options.js",
     code: `function formatReviewState(state) {
+  // Strict equality avoids coercion hiding unexpected values.
   if (state === "approved") {
     return "Approved";
   }
@@ -28,6 +29,7 @@ function getRetryCount(options) {
     language: "javascript",
     filename: "review-options.js",
     code: `function formatReviewState(state) {
+  // Loose equality and || blur missing data with valid falsy values.
   if (state == "approved") {
     return "Approved";
   }

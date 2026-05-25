@@ -18,7 +18,9 @@ export function replaceCodeCommentLines(
             !trimmedStart.startsWith("/* ") ||
             !trimmedStart.endsWith(" */")
           ) {
-            return line;
+            if (!trimmedStart.startsWith("// ")) {
+              return line;
+            }
           }
         }
       }
@@ -34,6 +36,10 @@ export function replaceCodeCommentLines(
 
       if (trimmedStart.startsWith("# ")) {
         return `${indentation}# ${translatedComment}`;
+      }
+
+      if (trimmedStart.startsWith("// ")) {
+        return `${indentation}// ${translatedComment}`;
       }
 
       if (trimmedStart.startsWith("/* ")) {

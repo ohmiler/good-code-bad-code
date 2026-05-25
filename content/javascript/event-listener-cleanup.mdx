@@ -9,6 +9,7 @@ export const metadata = {
     language: "javascript",
     filename: "keyboard-shortcut.js",
     code: `function attachSaveShortcut(target, onSave) {
+  // A stable handler reference lets callers remove the listener later.
   function handleKeydown(event) {
     if ((event.ctrlKey || event.metaKey) && event.key === "s") {
       event.preventDefault();
@@ -27,6 +28,7 @@ export const metadata = {
     language: "javascript",
     filename: "keyboard-shortcut.js",
     code: `function attachSaveShortcut(target, onSave) {
+  // Anonymous listeners cannot be removed by the caller.
   target.addEventListener("keydown", (event) => {
     if ((event.ctrlKey || event.metaKey) && event.key === "s") {
       event.preventDefault();

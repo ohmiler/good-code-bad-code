@@ -9,6 +9,7 @@ export const metadata = {
     language: "javascript",
     filename: "release-date.js",
     code: `function formatReleaseDate(isoDate, locale, timeZone) {
+  // Locale and time zone are explicit formatting inputs.
   const formatter = new Intl.DateTimeFormat(locale, {
     dateStyle: "medium",
     timeZone,
@@ -23,6 +24,7 @@ formatReleaseDate("2026-05-24T00:00:00Z", "en-US", "UTC");`,
     language: "javascript",
     filename: "release-date.js",
     code: `function formatReleaseDate(dateString) {
+  // Manual formatting depends on the runtime's local time zone.
   const date = new Date(dateString);
 
   return (

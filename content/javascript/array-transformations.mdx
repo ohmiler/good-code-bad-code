@@ -9,6 +9,7 @@ export const metadata = {
     language: "javascript",
     filename: "changed-files.js",
     code: `function summarizeChangedFiles(files) {
+  // The pipeline returns new summary objects instead of changing input.
   return files
     .filter((file) => file.status !== "deleted")
     .map((file) => ({
@@ -22,6 +23,7 @@ export const metadata = {
     language: "javascript",
     filename: "changed-files.js",
     code: `function summarizeChangedFiles(files) {
+  // Sorting and assigning churn mutate data other code may still use.
   files.sort((left, right) => right.additions - left.additions);
 
   const summary = [];

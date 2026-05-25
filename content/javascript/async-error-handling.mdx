@@ -9,6 +9,7 @@ export const metadata = {
     language: "javascript",
     filename: "load-profile.js",
     code: `async function loadProfile(userId) {
+  // Check HTTP status before parsing and catch transport failures.
   try {
     const response = await fetch("/api/users/" + userId);
 
@@ -27,6 +28,7 @@ export const metadata = {
     language: "javascript",
     filename: "load-profile.js",
     code: `async function loadProfile(userId) {
+  // Happy-path parsing turns failures into unhandled exceptions.
   const response = await fetch("/api/users/" + userId);
   const profile = await response.json();
 
