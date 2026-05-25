@@ -642,28 +642,28 @@ export const lessonThaiTranslations = {
   },
   "typescript/type-inference-boundaries": {
     codeComments: {
-      goodCode: ["type ที่ boundary บอกชัดว่า caller ต้องส่งอะไร"],
-      badCode: ["annotation ใน local variable ป้องกัน input boundary ที่เป็น any ไม่ได้"],
+      goodCode: ["type ที่ boundary บอกชัดว่า caller ต้องส่งข้อมูลแบบไหน"],
+      badCode: ["ใส่ type ให้ตัวแปรข้างใน แต่ปล่อย input เป็น any ก็ยังไม่ปลอดภัย"],
     },
-    title: "type inference และ boundary ที่ชัด",
-    summary: "ปล่อยให้ TypeScript infer ค่าภายในได้ แต่ระบุ type ที่ขอบเขตซึ่ง code อื่นต้องพึ่งพา.",
+    title: "ให้ TypeScript infer ข้างใน แต่กำหนด type ที่ขอบระบบ",
+    summary: "ปล่อยให้ TypeScript infer ค่าภายในได้ แต่ระบุ type ให้ชัดตรงจุดที่โค้ดอื่นต้องเรียกใช้.",
     takeaways: ["ใส่ type ให้ input, return contract และ exported API ส่วนค่าภายในปล่อยให้ infer จาก implementation ได้."],
     whatToReview: [
       "โค้ดที่ดีระบุ type ที่ input boundary และปล่อยให้ค่าภายในกับ object ที่ return infer จากค่าจริง.",
       "โค้ดที่ควรปรับใส่ type ให้ตัวแปรภายใน แต่ปล่อย public input เป็น any ทำให้จุดที่สำคัญที่สุดยังไม่น่าเชื่อถือ.",
     ],
     reviewNotes: [
-      "เวลารีวิวให้ดูว่ามี annotation อยู่ผิดที่ไหม Type มีค่าที่สุดตรงจุดที่ code ข้าม boundary เช่น exported function, API adapter, callback contract และข้อมูลจากภายนอก module.",
+      "เวลารีวิวให้ดูว่ามี annotation อยู่ผิดที่ไหม Type มีค่าที่สุดตรงจุดที่โค้ดข้าม boundary เช่น exported function, API adapter, callback contract และข้อมูลจากภายนอก module.",
     ],
   },
   "typescript/unsafe-assertions": {
     codeComments: {
-      goodCode: ["runtime check พิสูจน์ค่าก่อนเปิดเป็น Session"],
-      badCode: ["assertion เปลี่ยน unknown เป็น Session โดยไม่มีหลักฐาน"],
+      goodCode: ["runtime check พิสูจน์ค่าก่อนยอมรับว่าเป็น Session"],
+      badCode: ["assertion บอกว่า unknown เป็น Session โดยไม่มีหลักฐาน"],
     },
     title: "เลี่ยง assertion ที่ไม่ปลอดภัย",
     summary: "ใช้ check ที่พิสูจน์รูปร่างของข้อมูล แทน assertion ที่แค่ทำให้ compiler เงียบ.",
-    takeaways: ["ใช้ as เป็นทางเลือกท้าย ๆ ที่ boundary ที่เชื่อถือได้ ไม่ใช่ทางลัดเพื่อข้าม validation."],
+    takeaways: ["ใช้ as เป็นทางเลือกท้าย ๆ ใน boundary ที่เชื่อถือได้ ไม่ใช่ทางลัดเพื่อข้าม validation."],
     whatToReview: [
       "โค้ดที่ดีสร้างความน่าเชื่อถือด้วยการตรวจ runtime shape ก่อนคืนค่าเป็น application data ที่มี type.",
       "โค้ดที่ควรปรับบอก TypeScript ให้เชื่อ value ว่าเป็น Session โดยไม่พิสูจน์อะไรเลย ทำให้ข้อมูลผิดรูปไหลผ่านระบบได้.",
@@ -674,14 +674,14 @@ export const lessonThaiTranslations = {
   },
   "typescript/exhaustive-never-checks": {
     codeComments: {
-      goodCode: ["assign เป็น never ทำให้ union case ที่ตกหล่นเป็น compile error"],
-      badCode: ["fallback กว้าง ๆ ซ่อน state ที่โค้ดลืม handle"],
+      goodCode: ["assign เป็น never ทำให้ union case ที่ตกหล่นกลายเป็น compile error"],
+      badCode: ["fallback กว้าง ๆ ซ่อน state ที่โค้ดลืมจัดการ"],
     },
     title: "ตรวจ case ให้ครบด้วย never",
-    summary: "ทำให้ union ทุกกรณีถูก handle ครบ เพื่อให้ state ใหม่เตือนเราตั้งแต่ตอนพัฒนา.",
-    takeaways: ["ใช้ never ใน branch สุดท้ายเพื่อให้ missing union case กลายเป็น type error."],
+    summary: "ทำให้ union ทุกกรณีถูกจัดการครบ เพื่อให้ state ใหม่เตือนเราตั้งแต่ตอนพัฒนา.",
+    takeaways: ["ใช้ never ใน branch สุดท้ายเพื่อให้ union case ที่ขาดไปกลายเป็น type error."],
     whatToReview: [
-      "โค้ดที่ดีทำให้ branch สุดท้ายเป็นไปไม่ได้เมื่อ handle union ครบทุกกรณี และเตือนทันทีเมื่อเพิ่ม state ใหม่.",
+      "โค้ดที่ดีทำให้ branch สุดท้ายเป็นไปไม่ได้เมื่อจัดการ union ครบทุกกรณี และเตือนทันทีเมื่อเพิ่ม state ใหม่.",
       "โค้ดที่ควรปรับซ่อน case ที่ขาดไว้หลัง fallback กว้าง ๆ ทำให้ state ใหม่แสดงเป็น Unknown แทนที่จะบังคับให้เขียน behavior จริง.",
     ],
     reviewNotes: [
@@ -690,11 +690,11 @@ export const lessonThaiTranslations = {
   },
   "typescript/optional-vs-nullable": {
     codeComments: {
-      goodCode: ["null หมายถึง avatar ว่างโดยตั้งใจ ไม่ใช่แค่หายไป"],
-      badCode: ["optional ปน null ทำให้ caller ต้องเดา absence เอง"],
+      goodCode: ["null หมายถึง avatar ว่างโดยตั้งใจ ไม่ใช่แค่ field หายไป"],
+      badCode: ["optional ปน null ทำให้ caller ต้องเดาเองว่าค่าว่างหมายถึงอะไร"],
     },
     title: "optional property กับ nullable value",
-    summary: "ใช้ optional และ nullable เพื่อสื่อ absence คนละแบบให้ชัดเจน.",
+    summary: "ใช้ optional และ nullable ให้แยกกันชัด เพราะทั้งสองแบบสื่อการไม่มีค่าคนละความหมาย.",
     takeaways: ["ใช้ ? เมื่อ property อาจไม่มีอยู่ และใช้ null เมื่อ property มีอยู่แต่ตั้งใจให้ว่าง."],
     whatToReview: [
       "โค้ดที่ดีแยก field ที่ยังไม่ถูกกรอกออกจาก field ที่ตั้งใจไม่มี avatar อย่างชัดเจน.",
@@ -706,7 +706,7 @@ export const lessonThaiTranslations = {
   },
   "typescript/generic-constraints": {
     codeComments: {
-      goodCode: ["constraint เก็บ field ที่จำเป็นไว้ใน contract"],
+      goodCode: ["constraint บอก field ที่ function จำเป็นต้องใช้ไว้ใน contract"],
       badCode: ["any ซ่อน constraint ที่หายไปจนกว่าจะพังตอน runtime"],
     },
     title: "generic constraints ที่ปลอดภัย",
@@ -722,15 +722,15 @@ export const lessonThaiTranslations = {
   },
   "typescript/utility-types-api-boundaries": {
     codeComments: {
-      goodCode: ["Pick เปิดเผยเฉพาะ field ที่ boundary นี้ promise"],
-      badCode: ["คืน domain object ทำให้ field ภายในรั่วออกไป"],
+      goodCode: ["Pick เปิดเผยเฉพาะ field ที่ boundary นี้สัญญาว่าจะให้ใช้"],
+      badCode: ["คืน domain object ทั้งก้อนทำให้ field ภายในรั่วออกไป"],
     },
-    title: "utility types ที่ API boundary",
+    title: "ใช้ utility types ที่ API boundary",
     summary: "สร้าง request หรือ view type ที่เฉพาะเจาะจงจาก domain type โดยไม่เปิดเผย field เกินจำเป็น.",
     takeaways: ["ใช้ Pick, Omit, Partial และ Readonly เพื่ออธิบาย contract เฉพาะ boundary จาก type ที่มีอยู่."],
     whatToReview: [
       "โค้ดที่ดีเปิดเผยเฉพาะ field ที่ list API ต้องใช้ และยังผูก response type กับ domain model เดิม.",
-      "โค้ดที่ควรปรับคืน domain object ทั้งก้อน รวมถึง field ภายในที่ boundary ไม่ควร promise ให้ caller ภายนอก.",
+      "โค้ดที่ควรปรับคืน domain object ทั้งก้อน รวมถึง field ภายในที่ boundary ไม่ควรสัญญากับ caller ภายนอก.",
     ],
     reviewNotes: [
       "Utility types มีประโยชน์เมื่อทำให้ boundary เล็กและชัดขึ้น มันควรสื่อ product contract ไม่ใช่แค่ย่อ type ซับซ้อนให้ดูสั้น.",
@@ -739,9 +739,9 @@ export const lessonThaiTranslations = {
   "typescript/type-only-imports-module-boundaries": {
     codeComments: {
       goodCode: ["import type กัน PullRequest ออกจาก runtime dependency graph"],
-      badCode: ["value import ทำให้ type-only กับ runtime dependency ปนกัน"],
+      badCode: ["value import ทำให้ dependency ตอน compile กับตอน runtime ปนกัน"],
     },
-    title: "type-only import และ module boundary",
+    title: "type-only import และขอบเขตของ module",
     summary: "แยก type dependency ออกจาก runtime dependency เพื่อให้ module เบาและขอบเขตชัด.",
     takeaways: ["ใช้ import type เมื่อ module ต้องการแค่ type และใช้ import ปกติเมื่อจำเป็นต้องใช้ runtime value."],
     whatToReview: [
@@ -754,11 +754,11 @@ export const lessonThaiTranslations = {
   },
   "typescript/discriminated-unions": {
     codeComments: {
-      goodCode: ["field status เลือก shape ที่ valid ของแต่ละ branch"],
+      goodCode: ["field status เลือก shape ที่ถูกต้องของแต่ละ branch"],
       badCode: ["optional field เปิดทางให้ combination ที่เป็นไปไม่ได้ compile ผ่าน"],
     },
-    title: "discriminated union สำหรับผลลัพธ์",
-    summary: "ใช้ field แยกสถานะให้ TypeScript ช่วยบอกว่า data ไหนใช้ได้เมื่อไร.",
+    title: "ใช้ discriminated union กับผลลัพธ์",
+    summary: "ใช้ field แยกสถานะให้ TypeScript ช่วยบอกว่าข้อมูลไหนใช้ได้ในกรณีใด.",
     takeaways: ["ทำให้ invalid state เขียนยากด้วย union ที่แยกกรณีชัดเจน."],
     whatToReview: [
       "โค้ดที่ดีมี field กลางสำหรับบอกสถานะ ทำให้ branch แต่ละแบบรู้ข้อมูลที่ใช้ได้แน่นอน.",
@@ -771,7 +771,7 @@ export const lessonThaiTranslations = {
   "typescript/narrowing-unknown": {
     codeComments: {
       goodCode: ["type guard สร้างความน่าเชื่อถือก่อนคืน Settings"],
-      badCode: ["double cast ข้าม runtime proof ที่ unknown ต้องการ"],
+      badCode: ["double cast ข้ามการพิสูจน์ runtime ที่ unknown ต้องการ"],
     },
     title: "narrow unknown ก่อนใช้งาน",
     summary: "ตรวจรูปทรงข้อมูลจากภายนอกก่อนใช้ แทนการ cast เป็น any แล้วหวังว่าถูก.",
@@ -787,11 +787,11 @@ export const lessonThaiTranslations = {
   "typescript/precise-function-types": {
     codeComments: {
       goodCode: ["callback type จำกัด action และ argument ที่จำเป็น"],
-      badCode: ["Function รับ call shape อะไรก็ได้ ทำให้ invalid call compile ผ่าน"],
+      badCode: ["Function รับ call shape อะไรก็ได้ ทำให้การเรียกผิด compile ผ่าน"],
     },
     title: "function type ที่เจาะจง",
     summary: "ระบุ signature ของ callback ให้ชัด แทนการใช้ Function กว้าง ๆ.",
-    takeaways: ["callback type ที่แคบทำให้เรียกผิดยากขึ้นและรีวิว intent ง่ายขึ้น."],
+    takeaways: ["callback type ที่แคบทำให้เรียกผิดยากขึ้นและรีวิวเจตนาได้ง่ายขึ้น."],
     whatToReview: [
       "โค้ดที่ดีบอก parameter และ return type ของ callback ชัดเจน.",
       "โค้ดที่ควรปรับใช้ Function ทำให้ใครส่งอะไรก็ได้ และ compiler ช่วยจับผิดไม่ได้.",
