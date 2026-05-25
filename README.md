@@ -12,6 +12,8 @@ The first version is an **Example Library**, not a quiz platform or interactive 
 
 ## Screenshots
 
+Current UI snapshots from the example library:
+
 Home page:
 
 ![Good Code Bad Code home page](public/screenshots/home.png)
@@ -22,7 +24,7 @@ Track page:
 
 Lesson page:
 
-![Good Code and Bad Code lesson comparison](public/screenshots/lesson-comparison.png)
+![Lesson page with Good Code and Bad Code review notes](public/screenshots/lesson-comparison.png)
 
 ## Features
 

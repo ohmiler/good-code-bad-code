@@ -35,7 +35,13 @@ export type LessonMetadata = {
 
 export type LessonRecord = LessonMetadata & {
   slug: string;
+  source: string;
   Component: ComponentType;
+};
+
+export type ReviewNotesContent = {
+  whatToReview: string[];
+  reviewNotes: string[];
 };
 
 const codeLanguages = new Set<CodeLanguage>([

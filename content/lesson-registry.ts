@@ -1639,5 +1639,6 @@ const rawLessons: RawLesson[] = [
 export const lessonSources: LessonRecord[] = rawLessons.map((lesson) => ({
   ...validateLessonMetadata(lesson.metadata, lesson.source),
   slug: lesson.slug,
+  source: lesson.source,
   Component: lesson.Component,
 }));

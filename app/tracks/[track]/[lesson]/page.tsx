@@ -50,7 +50,6 @@ export default async function LessonPage({
   const lessonNavigation = getLessonNavigation(track.slug, lesson.slug);
   const lessonTranslation = getLessonThaiTranslation(track.slug, lesson.slug);
   const highlightedLesson = await highlightLesson(lesson, lessonTranslation);
-  const LessonNotes = highlightedLesson.Component;
 
   if (!lessonNavigation || !lessonTranslation) notFound();
 
@@ -75,9 +74,10 @@ export default async function LessonPage({
         />
       </section>
 
-      <ReviewNotes translation={lessonTranslation}>
-        <LessonNotes />
-      </ReviewNotes>
+      <ReviewNotes
+        englishNotes={highlightedLesson.reviewNotes}
+        translation={lessonTranslation}
+      />
       <TakeawayList
         takeaways={highlightedLesson.takeaways}
         translatedTakeaways={lessonTranslation.takeaways}

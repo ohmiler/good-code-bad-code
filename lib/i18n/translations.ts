@@ -62,7 +62,7 @@ export const uiCopy = {
     notFoundSummary: "ยังไม่มีตัวอย่างรีวิวโค้ดนี้ในคลัง.",
     backToLibrary: "กลับไปหน้ารวม",
     whatToReview: "ควรรีวิวอะไร",
-    reviewNotesSection: "โน้ตรีวิว",
+    reviewNotesSection: "ข้อควรสังเกตตอนรีวิว",
   },
 } as const satisfies Record<Language, Record<string, string>>;
 
