@@ -90,7 +90,7 @@ export const trackThaiTranslations = {
   react: {
     title: "React",
     description:
-      "ฝึกรีวิวขอบเขต component, state, effect และการ render ที่คาดเดาได้.",
+      "ฝึกรีวิวขอบเขต component, ข้อมูลที่เก็บใน state, effect และการวาดหน้าจอ (render) ที่คาดเดาได้.",
   },
   nextjs: {
     title: "Next.js",
@@ -802,15 +802,15 @@ export const lessonThaiTranslations = {
   },
   "react/props-component-boundaries": {
     codeComments: {
-      goodCode: ["props ที่ชัดเจนทำให้ component ย้ายและทดสอบได้ง่าย"],
-      badCode: ["การดึง state กว้าง ๆ จากแอปทำให้ component ผูกกับหลายอย่างเกินไป"],
+      goodCode: ["props ที่ชัดเจนบอกว่า component ต้องใช้ข้อมูลอะไรบ้าง"],
+      badCode: ["การดึง state กว้าง ๆ จากแอปทำให้ component ผูกกับหลายเรื่องเกินไป"],
     },
     title: "ส่งข้อมูลผ่าน props ให้ชัด",
-    summary: "ให้ component รับเฉพาะข้อมูลที่ต้องใช้ผ่าน props แทนการไปดึง state กว้าง ๆ เอง.",
-    takeaways: ["component ที่ดีควรเห็นข้อมูลที่ต้องใช้จาก props โดยไม่ต้องเดาจากข้างใน."],
+    summary: "ให้ component รับเฉพาะข้อมูลที่ต้องใช้ผ่าน props แทนการไปดึง state กว้าง ๆ จากทั้งแอปเอง.",
+    takeaways: ["component ที่ดีควรเห็นข้อมูลที่ต้องใช้จาก props โดยไม่ต้องเดาว่าข้างในไปหยิบอะไรจากที่อื่น."],
     whatToReview: [
       "โค้ดที่ดีทำให้ component รับข้อมูลเท่าที่ต้องใช้ อ่านง่าย และทดสอบแยกได้.",
-      "โค้ดที่ควรปรับให้ component ไปอ่าน state นอกขอบเขตของตัวเอง ทำให้นำไปใช้ซ้ำและ debug ยาก.",
+      "โค้ดที่ควรปรับให้ component ไปอ่าน state นอกขอบเขตของตัวเอง ทำให้นำไปใช้ซ้ำและไล่บั๊กยาก.",
     ],
     reviewNotes: [
       "ตอนรีวิว React ให้ดูว่า component นี้รู้มากเกินหน้าที่หรือไม่. ถ้าข้อมูลที่ใช้ถูกส่งผ่าน props ชัดเจน component จะย้ายที่ ใช้ซ้ำ และทดสอบได้ง่ายขึ้น.",
@@ -818,11 +818,11 @@ export const lessonThaiTranslations = {
   },
   "react/stable-keys-lists": {
     codeComments: {
-      goodCode: ["id ที่คงที่ช่วยให้ React จำ item เดิมได้เมื่อ list เปลี่ยน"],
-      badCode: ["index key บอกแค่ตำแหน่ง ไม่ได้บอกว่าเป็น comment ตัวไหน"],
+      goodCode: ["id ที่คงที่ช่วยให้ React จำ item เดิมได้แม้ list เปลี่ยนลำดับ"],
+      badCode: ["index key บอกแค่ตำแหน่ง ไม่ได้บอกว่าเป็น comment ตัวไหนจริง ๆ"],
     },
-    title: "ใช้ key ที่ไม่เปลี่ยนใน list",
-    summary: "ใช้ id ของ item เป็น key เพื่อให้ React จำได้ว่า item ไหนคืออันเดิมเมื่อ list เปลี่ยน.",
+    title: "ใช้ key ที่ชี้ item เดิมได้เสมอ",
+    summary: "ใช้ id ของ item เป็น key เพื่อให้ React จำได้ว่า item ไหนคืออันเดิมเมื่อ list มีการเพิ่ม ลบ หรือเรียงใหม่.",
     takeaways: ["หลีกเลี่ยงการใช้ index เป็น key เมื่อ list มีการเพิ่ม ลบ เรียงลำดับ หรือกรองข้อมูล."],
     whatToReview: [
       "โค้ดที่ดีใช้ id ของ comment เป็น key ทำให้ React จับคู่ DOM และ state กับ item เดิมได้.",
@@ -835,27 +835,27 @@ export const lessonThaiTranslations = {
   "react/derived-state": {
     codeComments: {
       goodCode: ["ค่าที่คำนวณได้จาก props ปัจจุบันไม่จำเป็นต้องเก็บเป็น state"],
-      badCode: ["state ที่ซ้ำกับข้อมูลเดิมต้องใช้ effect มาคอย sync"],
+      badCode: ["state ที่ซ้ำกับข้อมูลเดิมต้องใช้ effect มาคอยทำให้ตรงกัน"],
     },
     title: "อย่าเก็บ state ซ้ำถ้าคำนวณได้",
-    summary: "ค่าที่คำนวณจาก props หรือ state เดิมได้ ให้คำนวณตอน render แทนการเก็บซ้ำแล้ว sync ด้วย effect.",
+    summary: "ค่าที่คำนวณจาก props หรือ state เดิมได้ ให้คำนวณตอน React วาดหน้าจอ (render) แทนการเก็บซ้ำแล้วคอย sync ด้วย effect.",
     takeaways: ["อย่าเก็บ state ซ้ำถ้าคำนวณจาก props หรือ state เดิมได้."],
     whatToReview: [
       "โค้ดที่ดีคำนวณค่าจากข้อมูลปัจจุบัน ทำให้ไม่ต้องมี state สองชุดให้คอยทำให้ตรงกัน.",
       "โค้ดที่ควรปรับเก็บค่าซ้ำใน useState แล้วใช้ effect ตามแก้ ซึ่งเปิดทางให้ข้อมูลคลาดกัน.",
     ],
     reviewNotes: [
-      "เวลาเห็น useEffect ที่มีไว้แค่ sync state จาก props หรือ state อื่น ให้ถามว่าคำนวณตรง ๆ ได้ไหม. การลด state ที่ไม่จำเป็นทำให้โค้ด React ง่ายขึ้นและมี bug น้อยลง.",
+      "เวลาเห็น useEffect ที่มีไว้แค่ทำให้ state สองชุดตรงกัน ให้ถามว่าคำนวณตรง ๆ ตอน render ได้ไหม. การลด state ที่ไม่จำเป็นทำให้โค้ด React ง่ายขึ้นและมี bug น้อยลง.",
     ],
   },
   "react/updating-state-from-previous-state": {
     codeComments: {
-      goodCode: ["functional update ให้ React ส่ง state ล่าสุดเข้ามาก่อนคำนวณ"],
-      badCode: ["โค้ดนี้ใช้ selectedIds ที่จำไว้จาก render รอบนี้ ซึ่งอาจเก่าแล้ว"],
+      goodCode: ["functional update ให้ React ส่ง state ล่าสุดเข้ามาก่อนคำนวณค่าใหม่"],
+      badCode: ["โค้ดนี้ใช้ selectedIds จากรอบ render เดิม ซึ่งอาจเก่าแล้ว"],
     },
     title: "อัปเดต state จากค่าล่าสุด",
-    summary: "ถ้าค่า state ใหม่ต้องอ้างอิงค่าเดิม ให้ใช้ functional update เพื่อให้ React ส่งค่าล่าสุดมาให้.",
-    takeaways: ["ถ้าค่าใหม่ต้องอ้างอิงค่าเดิม ให้ส่ง function เข้า setter แทนการอ่าน state ที่อาจเก่าแล้ว."],
+    summary: "ถ้าค่า state ใหม่ต้องใช้ค่าเดิมในการคำนวณ ให้ใช้ functional update เพื่อให้ React ส่งค่าล่าสุดมาให้.",
+    takeaways: ["ถ้าค่าใหม่ต้องอ้างอิงค่าเดิม ให้ส่ง function เข้า setter แทนการอ่าน state จาก render รอบที่อาจเก่าแล้ว."],
     whatToReview: [
       "โค้ดที่ดีให้ React ส่งค่า state ล่าสุดเข้ามาก่อนคำนวณ selected ids ชุดใหม่.",
       "โค้ดที่ควรปรับคำนวณจาก selectedIds ที่ถูกจำไว้ตอน render ทำให้ update บางครั้งหายได้.",
@@ -866,11 +866,11 @@ export const lessonThaiTranslations = {
   },
   "react/controlled-form-inputs": {
     codeComments: {
-      goodCode: ["React state เป็นแหล่งข้อมูลหลักสำหรับ validate และ reset"],
-      badCode: ["การ query DOM ทำให้ข้อมูลของ form หลุดจาก flow ของ React"],
+      goodCode: ["React state เป็นแหล่งข้อมูลหลักสำหรับ validate, submit และ reset"],
+      badCode: ["การ query DOM ทำให้ค่าของ form หลุดจาก flow ของ React"],
     },
     title: "คุมค่า form ด้วย React state",
-    summary: "ถ้า form ต้อง validate, reset หรือ submit ด้วย logic ของเรา ให้ React state เป็นแหล่งข้อมูลหลัก.",
+    summary: "ถ้า form ต้อง validate, reset หรือ submit ด้วย logic ของเรา ให้ React state เป็นแหล่งข้อมูลหลักของค่าที่ผู้ใช้กรอก.",
     takeaways: ["controlled input ทำให้ค่าที่ผู้ใช้เห็นและค่าที่ submit มาจากแหล่งเดียวกัน."],
     whatToReview: [
       "โค้ดที่ดีผูก input กับ state และใช้ค่าเดียวกันตอน validate, submit และ reset.",
@@ -882,15 +882,15 @@ export const lessonThaiTranslations = {
   },
   "react/effect-dependencies": {
     codeComments: {
-      goodCode: ["effect ทำงานตาม reviewId และยกเลิก request เก่าที่ไม่ใช้แล้ว"],
-      badCode: ["dependency ว่างทำให้ effect ค้างกับ reviewId แรกที่เห็น"],
+      goodCode: ["effect ทำงานตาม reviewId ล่าสุด และยกเลิก request เก่าที่ไม่ใช้แล้ว"],
+      badCode: ["dependency ว่างทำให้ effect จำ reviewId แรกไว้และไม่ตามค่าที่เปลี่ยน"],
     },
-    title: "ใส่ dependency ของ effect ให้ครบ",
-    summary: "ถ้า effect ใช้ค่าใด ให้ใส่ค่านั้นใน dependency และ cleanup งาน async เมื่อค่านั้นเปลี่ยน.",
-    takeaways: ["effect ควรบอกค่าที่พึ่งพาให้ครบ และ cleanup งานที่ไม่ต้องใช้แล้ว."],
+    title: "บอกค่าที่ effect พึ่งพาให้ครบ",
+    summary: "ถ้า effect ใช้ค่าใด ให้ใส่ค่านั้นในรายการ dependency และยกเลิกงานเก่า (cleanup) เมื่อค่านั้นเปลี่ยน.",
+    takeaways: ["effect ควรบอกค่าที่พึ่งพา (dependency) ให้ครบ และ cleanup งานที่ไม่ต้องใช้แล้ว."],
     whatToReview: [
-      "โค้ดที่ดีใส่ dependency ที่ใช้จริงและยกเลิก request เก่าเมื่อค่าเปลี่ยน.",
-      "โค้ดที่ควรปรับปล่อย dependency ว่าง ทั้งที่ใช้ค่าจาก props ทำให้ข้อมูลที่แสดงอาจเก่า.",
+      "โค้ดที่ดีใส่ค่าที่ effect ใช้จริงใน dependency array และยกเลิก request เก่าเมื่อค่าเปลี่ยน.",
+      "โค้ดที่ควรปรับปล่อย dependency array ว่าง ทั้งที่ใช้ค่าจาก props ทำให้ข้อมูลที่แสดงอาจค้างอยู่กับค่าเก่า.",
     ],
     reviewNotes: [
       "ตอนรีวิว effect ให้ดูทั้ง dependency array และ cleanup. ถ้า effect ใช้ค่าใดใน scope ค่านั้นควรอยู่ใน dependency หรือมีเหตุผลที่ชัดเจนว่าทำไมไม่อยู่.",
@@ -898,12 +898,12 @@ export const lessonThaiTranslations = {
   },
   "react/async-effect-cleanup": {
     codeComments: {
-      goodCode: ["cleanup กัน response เก่ากลับมาแก้ state ของหน้าปัจจุบัน"],
-      badCode: ["request เก่าอาจตอบกลับทีหลังและเขียนทับ state ใหม่"],
+      goodCode: ["cleanup กัน response เก่ากลับมาแก้ state ของหน้าจอปัจจุบัน"],
+      badCode: ["request เก่าอาจตอบกลับช้ากว่าและเขียนทับ state ใหม่"],
     },
-    title: "cleanup งาน async ใน effect",
-    summary: "กัน request เก่ากลับมาเขียนทับ state ของหน้าจอใหม่หลัง input เปลี่ยนหรือ component ถูกถอด.",
-    takeaways: ["effect ที่เริ่มงาน async ควร cleanup เมื่อ input เปลี่ยนหรือเมื่อ component ถูกถอดออก."],
+    title: "ยกเลิกงาน async เก่าใน effect",
+    summary: "กัน request เก่าที่ตอบกลับช้ากลับมาเขียนทับ state ของหน้าจอใหม่ หลัง input เปลี่ยนหรือ component ถูกถอด.",
+    takeaways: ["effect ที่เริ่มงาน async ควรมี cleanup เมื่อ input เปลี่ยนหรือเมื่อ component ถูกถอดออก."],
     whatToReview: [
       "โค้ดที่ดีตั้ง flag cleanup เพื่อไม่ให้ promise เก่าแก้ state หลังหน้าจอเปลี่ยนไปแล้ว.",
       "โค้ดที่ควรปรับเริ่ม request ใหม่ทุกครั้งแต่ยังปล่อยให้ response เก่ากลับมาเขียน state ได้.",
@@ -914,15 +914,15 @@ export const lessonThaiTranslations = {
   },
   "react/context-boundaries": {
     codeComments: {
-      goodCode: ["จำกัด context ให้แคบ และส่ง review data ผ่าน props ชัดเจน"],
+      goodCode: ["จำกัด context ให้แคบ และส่งข้อมูล review ผ่าน props ที่เห็นชัด"],
       badCode: ["context ที่กว้างเกินไปทำให้ card ผูกกับ state ที่ไม่เกี่ยว"],
     },
     title: "จำกัดขอบเขตของ context",
-    summary: "ใช้ context กับข้อมูลที่หลายส่วนต้องรู้จริง ๆ อย่าใช้แทน props ทุกอย่างจน component ผูกกับทั้งแอป.",
-    takeaways: ["context ที่แคบช่วยให้ component ไม่ต้องรับรู้ state ที่ไม่เกี่ยวข้อง."],
+    summary: "ใช้ context กับข้อมูลที่หลายส่วนต้องรู้จริง ๆ อย่าใช้แทน props ทุกอย่างจน component ผูกกับ state ทั้งแอป.",
+    takeaways: ["context ที่แคบช่วยให้ component ไม่ต้องรับรู้ state ที่ไม่เกี่ยวข้องกับหน้าที่ของตัวเอง."],
     whatToReview: [
       "โค้ดที่ดีใช้ context เฉพาะ viewer และส่งข้อมูล review ผ่าน props ที่ชัดเจน.",
-      "โค้ดที่ควรปรับใส่ state ทั้งแอปใน context เดียว ทำให้ component รู้เยอะและ rerender เกินจำเป็น.",
+      "โค้ดที่ควรปรับใส่ state ทั้งแอปใน context เดียว ทำให้ component รู้เยอะและวาดใหม่ (rerender) เกินจำเป็น.",
     ],
     reviewNotes: [
       "ตอนรีวิว component ที่ใช้ context ให้เทียบว่ามันรับข้อมูลมากแค่ไหนกับสิ่งที่ render จริง. context กว้างเกินไปทำให้ใช้ซ้ำยากและ performance คาดเดายาก.",
@@ -931,11 +931,11 @@ export const lessonThaiTranslations = {
   "react/memoization-when-it-helps": {
     codeComments: {
       goodCode: ["จำผลลัพธ์ไว้ใช้ซ้ำเฉพาะการคำนวณ list ที่หนักจริง"],
-      badCode: ["dependency ว่างทำให้ list ค้างอยู่ที่ค่าแรกหลัง render"],
+      badCode: ["dependency ว่างทำให้ list ค้างอยู่กับค่าแรกหลัง render"],
     },
-    title: "ใช้ memoization ให้คุ้มจริง",
-    summary: "จำผลลัพธ์ไว้ใช้ซ้ำเฉพาะตอนที่การคำนวณหนักจริง และใส่ dependencies ให้ครบ.",
-    takeaways: ["memoization ควรมีเหตุผลเรื่องความเร็วจริง ๆ และต้องใส่ dependencies ให้ครบ."],
+    title: "จำผลลัพธ์ไว้ใช้ซ้ำเมื่อช่วยจริง",
+    summary: "ใช้ memoization เพื่อจำผลลัพธ์ไว้ใช้ซ้ำเฉพาะตอนที่การคำนวณหนักจริง และต้องใส่ dependencies ให้ครบ.",
+    takeaways: ["memoization ควรมีเหตุผลเรื่องความเร็วจริง ๆ และต้องบอกค่าที่พึ่งพา (dependencies) ให้ครบ."],
     whatToReview: [
       "โค้ดที่ดีจำผลลัพธ์การ filter ที่ขึ้นกับ reviews และ search อย่างชัดเจน.",
       "โค้ดที่ควรปรับใช้ dependency ว่างจนข้อมูลที่แสดงเก่า และ memoize ข้อความง่าย ๆ โดยไม่จำเป็น.",
@@ -946,11 +946,11 @@ export const lessonThaiTranslations = {
   },
   "react/composition-over-prop-flags": {
     codeComments: {
-      goodCode: ["slot ให้ผู้เรียกประกอบ UI ของแต่ละกรณีเอง"],
-      badCode: ["boolean flag หลายตัวสร้างชุดค่าที่ component ต้องคุมเอง"],
+      goodCode: ["slot เปิดให้ผู้เรียกประกอบ UI ของแต่ละกรณีเอง"],
+      badCode: ["prop true/false หลายตัวสร้างชุดค่าที่ component ต้องคุมเอง"],
     },
-    title: "ใช้ composition แทน prop flag",
-    summary: "ให้ผู้เรียกประกอบ UI ผ่าน children หรือ slot แทนการเพิ่ม boolean prop หลายตัวจนกรณีซับซ้อน.",
+    title: "ให้ผู้เรียกประกอบ UI เอง แทน prop true/false หลายตัว",
+    summary: "ใช้ composition ให้ผู้เรียกประกอบ UI ผ่าน children หรือ slot แทนการเพิ่ม prop แบบ true/false หลายตัวจนกรณีซับซ้อน.",
     takeaways: ["composition ช่วยลดชุด prop ที่ผสมกันผิดพลาดง่ายใน component ที่มีหลายรูปแบบ."],
     whatToReview: [
       "โค้ดที่ดีให้ผู้เรียกส่ง action และ content เข้ามาประกอบ panel ตาม use case.",
