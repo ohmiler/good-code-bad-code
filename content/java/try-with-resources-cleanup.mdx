@@ -11,6 +11,7 @@ export const metadata = {
     code: `public Optional<User> findByEmail(String email) throws SQLException {
     String sql = "select id, email, name from users where email = ?";
 
+    // try-with-resources owns cleanup for every closeable here.
     try (
         Connection connection = dataSource.getConnection();
         PreparedStatement statement = connection.prepareStatement(sql)
@@ -38,6 +39,7 @@ export const metadata = {
 
     ResultSet rows = statement.executeQuery();
     if (!rows.next()) {
+        // Early returns skip manual cleanup.
         return null;
     }
 

@@ -20,6 +20,7 @@ public final class UserService {
     }
 
     public UserProfile register(CreateUserCommand command) {
+        // The service owns the business flow and calls dependencies.
         User user = users.save(User.create(command.email(), command.displayName()));
         welcomeEmail.sendTo(user);
         return UserProfile.from(user);
@@ -31,6 +32,7 @@ public final class UserService {
     filename: "src/main/java/UserController.java",
     code: `public class UserController {
     public ResponseEntity<?> register(HttpServletRequest request) throws SQLException {
+        // HTTP, SQL, connection management, and email are mixed together.
         String email = request.getParameter("email");
         Connection connection = DriverManager.getConnection(databaseUrl);
         Statement statement = connection.createStatement();

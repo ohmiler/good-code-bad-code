@@ -11,6 +11,7 @@ export const metadata = {
     code: `public record OrderSnapshot(OrderId id, List<LineItem> items) {
     public OrderSnapshot {
         Objects.requireNonNull(id, "id");
+        // Copy the incoming list so outside code cannot mutate this snapshot.
         items = List.copyOf(items);
     }
 
@@ -28,6 +29,7 @@ export const metadata = {
     private final List<LineItem> items;
 
     public OrderSnapshot(List<LineItem> items) {
+        // This keeps the caller's mutable list reference.
         this.items = items;
     }
 

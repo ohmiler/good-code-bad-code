@@ -10,6 +10,7 @@ export const metadata = {
     filename: "src/main/java/dev/review/api/CreateUserRequest.java",
     code: `public record CreateUserRequest(String email, String displayName) {
     public CreateUserRequest {
+        // The request shape validates itself before reaching the service.
         if (email == null || email.isBlank()) {
             throw new IllegalArgumentException("email is required");
         }
@@ -24,6 +25,7 @@ export const metadata = {
     language: "java",
     filename: "src/main/java/UserController.java",
     code: `public UserResponse create(Map<String, Object> body) {
+    // String keys and casts hide request-shape mistakes until runtime.
     String email = (String) body.get("email");
     String name = (String) body.get("name");
 

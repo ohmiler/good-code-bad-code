@@ -16,6 +16,7 @@ export const metadata = {
             UserProfile profile = users.profileFor(new UserId(id));
             return ResponseEntity.ok(UserResponse.from(profile));
         } catch (UserNotFoundException exception) {
+            // Translate the domain exception at the HTTP boundary.
             return ResponseEntity.notFound().build();
         }
     }
@@ -29,6 +30,7 @@ export const metadata = {
         try {
             return users.profileFor(id);
         } catch (Exception exception) {
+            // Catching everything hides the original failure path.
             exception.printStackTrace();
             return null;
         }

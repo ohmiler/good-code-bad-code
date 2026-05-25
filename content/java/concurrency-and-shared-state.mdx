@@ -13,6 +13,7 @@ export const metadata = {
     private final UserService users;
 
     public UserProfile get(UserId id) {
+        // computeIfAbsent makes load-and-store one atomic cache step.
         return profiles.computeIfAbsent(id, users::loadProfile);
     }
 }`,
@@ -24,6 +25,7 @@ export const metadata = {
     private final Map<String, UserProfile> profiles = new HashMap<>();
 
     public UserProfile get(String id) {
+        // containsKey then put is a race on a shared HashMap.
         if (!profiles.containsKey(id)) {
             profiles.put(id, users.loadProfile(id));
         }

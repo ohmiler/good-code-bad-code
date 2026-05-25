@@ -9,6 +9,7 @@ export const metadata = {
     language: "java",
     filename: "src/main/java/dev/review/orders/OrderSummaryIndex.java",
     code: `public final class OrderSummaryIndex {
+    // The type says each owner can have many summaries.
     public Map<UserId, List<OrderSummary>> groupByOwner(List<OrderSummary> orders) {
         return orders.stream()
             .collect(Collectors.groupingBy(OrderSummary::ownerId));
@@ -29,6 +30,7 @@ export const metadata = {
     public Map groupByOwner(List orders) {
         Map index = new HashMap();
         for (Object item : orders) {
+            // Raw collections push type errors to runtime casts.
             OrderSummary order = (OrderSummary) item;
             index.put(order.ownerId().toString(), order);
         }

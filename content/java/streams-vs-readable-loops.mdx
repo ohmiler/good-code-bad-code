@@ -11,6 +11,7 @@ export const metadata = {
     code: `public Money discountFor(List<OrderLine> lines) {
     Money discount = Money.zero();
 
+    // A loop gives the branch and accumulator clear names.
     for (OrderLine line : lines) {
         if (!line.isDiscountable()) {
             continue;
@@ -31,6 +32,7 @@ export const metadata = {
 
     lines.stream()
         .filter(line -> line.isDiscountable())
+        // Side effects inside streams make the pipeline harder to reason about.
         .peek(line -> audit.log(line.id()))
         .map(line -> policy.discountFor(line))
         .forEach(value -> discount.set(discount.get().plus(value)));

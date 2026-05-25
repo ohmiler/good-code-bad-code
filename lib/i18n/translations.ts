@@ -1938,6 +1938,10 @@ export const lessonThaiTranslations = {
     reviewNotes: [
       "เวลารีวิว Java ให้ถามเสมอว่า “ไม่พบข้อมูล” เป็นกรณีปกติหรือเป็น error ถ้าเป็นกรณีปกติควรเห็น Optional ถ้าเป็น error ควรเห็น exception ที่ตั้งชื่อชัด.",
     ],
+    codeComments: {
+      goodCode: ["Optional ทำให้ path กรณีไม่พบ user เห็นชัด."],
+      badCode: ["user ที่อาจเป็น null มักไปพังทีหลังเป็น NullPointerException."],
+    },
   },
   "java/immutable-data-and-defensive-copies": {
     title: "copy List เพื่อให้ object ไม่เปลี่ยนทีหลัง",
@@ -1950,6 +1954,10 @@ export const lessonThaiTranslations = {
     reviewNotes: [
       "ให้ดู constructor และ getter ที่รับหรือคืน collection เป็นพิเศษ เพราะ bug แบบ List ถูกแก้จากข้างนอกมักตามยากมากในระบบจริง.",
     ],
+    codeComments: {
+      goodCode: ["copy List ที่รับเข้ามา เพื่อไม่ให้โค้ดข้างนอกแก้ snapshot นี้ได้."],
+      badCode: ["โค้ดนี้เก็บ reference ของ List ที่ caller ยังแก้ได้อยู่."],
+    },
   },
   "java/equals-hashcode-and-value-objects": {
     title: "ให้ equals/hashCode ตรงกับ id ที่แท้จริง",
@@ -1962,6 +1970,10 @@ export const lessonThaiTranslations = {
     reviewNotes: [
       "เวลาเห็น equals ให้ถามว่า “สอง object นี้ถือว่าเท่ากันเพราะอะไร” ถ้าคำตอบคือ id ให้พิจารณาแยกเป็น value object หรือ record เล็ก ๆ.",
     ],
+    codeComments: {
+      goodCode: ["record ทำให้ equals และ hashCode ผูกกับค่านี้โดยตรง."],
+      badCode: ["displayName ไม่ใช่ตัวตนที่มั่นคง และยังไม่มี hashCode คู่กัน."],
+    },
   },
   "java/exception-handling-boundaries": {
     title: "แปลง exception เป็น HTTP response ที่ controller",
@@ -1974,6 +1986,10 @@ export const lessonThaiTranslations = {
     reviewNotes: [
       "ให้ถามว่า catch block อยู่ชั้นที่ถูกไหม ถ้าจับลึกเกินไปมักกลบ bug แต่ถ้าจับที่ controller จะช่วยแปล error เป็น response โดยไม่ทิ้งความหมาย.",
     ],
+    codeComments: {
+      goodCode: ["แปลง domain exception เป็น HTTP response ที่ขอบ controller."],
+      badCode: ["การ catch ทุกอย่างทำให้ path ของ error จริงถูกซ่อนไว้."],
+    },
   },
   "java/try-with-resources-cleanup": {
     title: "ปิด resource ด้วย try-with-resources",
@@ -1986,6 +2002,10 @@ export const lessonThaiTranslations = {
     reviewNotes: [
       "resource leak มักดูไม่ออกจากทางที่สำเร็จ ให้ไล่ทุก return และจุดที่อาจ throw แล้วดูว่า closeable แต่ละตัวถูกปิดแน่ไหม.",
     ],
+    codeComments: {
+      goodCode: ["try-with-resources เป็นเจ้าของ cleanup ของ closeable ทุกตัวตรงนี้."],
+      badCode: ["return ก่อนกำหนดทำให้การ close แบบ manual ถูกข้าม."],
+    },
   },
   "java/generics-and-collection-types": {
     title: "ระบุชนิดใน List/Map ให้ compiler ช่วย",
@@ -1998,6 +2018,10 @@ export const lessonThaiTranslations = {
     reviewNotes: [
       "ถ้าเห็น raw collection ใน Java สมัยใหม่ ให้ถือเป็นกลิ่นที่ควรถาม เพราะเหมือนปิดตา compiler แล้วให้คนไล่ type ด้วยตาแทน.",
     ],
+    codeComments: {
+      goodCode: ["type บอกชัดว่า owner หนึ่งคนมี summary ได้หลายรายการ."],
+      badCode: ["raw collection ผลัก type error ไปเจอตอน cast ระหว่างรัน."],
+    },
   },
   "java/streams-vs-readable-loops": {
     title: "เลือก stream หรือ loop ตามความอ่านง่าย",
@@ -2010,6 +2034,10 @@ export const lessonThaiTranslations = {
     reviewNotes: [
       "stream ไม่ได้ดีกว่า loop อัตโนมัติ ใช้ stream เมื่อ map/filter/collect ตรงไปตรงมา และใช้ loop เมื่อกฎงานต้องการชื่อและลำดับที่อ่านง่าย.",
     ],
+    codeComments: {
+      goodCode: ["loop ทำให้ branch และตัวสะสมค่ามีชื่อที่อ่านตามได้."],
+      badCode: ["side effect ใน stream ทำให้ pipeline ตามเหตุผลยากขึ้น."],
+    },
   },
   "java/concurrency-and-shared-state": {
     title: "กัน race เมื่อหลาย thread ใช้ค่าเดียวกัน",
@@ -2022,6 +2050,10 @@ export const lessonThaiTranslations = {
     reviewNotes: [
       "เวลารีวิว state ที่ใช้ร่วมกัน ให้ถามว่าอะไรป้องกันการชนกัน ถ้าคำตอบคือ “ปกติคงไม่เกิดพร้อมกัน” แปลว่าควรใช้ data structure ที่ปลอดภัยกว่า.",
     ],
+    codeComments: {
+      goodCode: ["computeIfAbsent ทำให้ load และเก็บ cache เป็นขั้นตอน atomic เดียว."],
+      badCode: ["containsKey แล้วค่อย put เป็น race บน HashMap ที่ถูกใช้ร่วมกัน."],
+    },
   },
   "java/records-and-dto-boundaries": {
     title: "ใช้ record/DTO แทน Map ของ request",
@@ -2034,6 +2066,10 @@ export const lessonThaiTranslations = {
     reviewNotes: [
       "ถ้า request สำคัญพอให้ service ใช้ต่อ มักสำคัญพอให้มี type ชัด ไม่ควรฝากความถูกต้องไว้กับ string key ใน Map.",
     ],
+    codeComments: {
+      goodCode: ["รูป request ตรวจความถูกต้องเองก่อนถึง service."],
+      badCode: ["string key กับ cast ทำให้ความผิดของ request shape ไปโผล่ตอน runtime."],
+    },
   },
   "java/package-service-boundaries": {
     title: "แยก controller, service และ repository",
@@ -2046,6 +2082,10 @@ export const lessonThaiTranslations = {
     reviewNotes: [
       "เวลารีวิว flow หนึ่งอย่าง ให้ไล่ว่า request เข้า controller แล้วงานย้ายไป service/repository ชัดไหม ถ้า controller ตัดสินใจทุกอย่าง ควรแยกก่อนเพิ่ม feature ใหม่.",
     ],
+    codeComments: {
+      goodCode: ["service เป็นเจ้าของ flow ของงาน และเรียก dependency ที่ต้องใช้."],
+      badCode: ["HTTP, SQL, การเปิด connection และ email ถูกผสมไว้ใน controller เดียว."],
+    },
   },
   "git/status-before-work": {
     codeComments: {

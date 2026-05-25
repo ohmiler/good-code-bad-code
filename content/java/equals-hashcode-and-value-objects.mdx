@@ -10,6 +10,7 @@ export const metadata = {
     filename: "src/main/java/dev/review/user/UserId.java",
     code: `public record UserId(UUID value) {
     public UserId {
+        // Record equality and hashCode stay tied to this value.
         Objects.requireNonNull(value, "value");
     }
 
@@ -27,6 +28,7 @@ export const metadata = {
 
     @Override
     public boolean equals(Object other) {
+        // Display names are not stable identity, and hashCode is missing.
         if (!(other instanceof User user)) {
             return false;
         }
