@@ -70,92 +70,92 @@ export const trackThaiTranslations = {
   html: {
     title: "HTML",
     description:
-      "ฝึกรีวิวโครงสร้างหน้า, semantic tags, ฟอร์ม และ accessibility (การเข้าถึง) พื้นฐาน.",
+      "ฝึกรีวิวว่าโครงหน้าใช้แท็กถูกหน้าที่ไหม ฟอร์มอ่านออกไหม และผู้ใช้ที่ใช้ keyboard หรือ screen reader ยังใช้งานได้หรือเปล่า.",
   },
   css: {
     title: "CSS",
     description:
-      "ฝึกรีวิวการจัดวาง (layout), responsive style, contrast และ selector ที่ดูแลต่อได้ง่าย.",
+      "ฝึกรีวิว layout, responsive, สี และ selector ว่าอ่านง่าย แก้ต่อได้ และไม่พังเมื่อหน้าจอหรือ state เปลี่ยน.",
   },
   javascript: {
     title: "JavaScript",
     description:
-      "ฝึกรีวิว flow การทำงาน (control flow), งาน async, การตั้งชื่อ และผลข้างเคียง (side effect) ที่อาจทำให้คนอ่านเข้าใจผิด.",
+      "ฝึกรีวิวลำดับการทำงาน งาน async การตั้งชื่อ และผลข้างเคียงที่ทำให้คนอ่านเข้าใจผิดหรือ debug ยาก.",
   },
   typescript: {
     title: "TypeScript",
     description:
-      "ฝึกรีวิวจุดรับข้อมูล (boundary), การตรวจ unknown, union และ function type ที่ช่วยกัน bug ก่อนรันจริง.",
+      "ฝึกรีวิวจุดที่ข้อมูลเข้าออกฟังก์ชันหรือ API ว่า type ชัดพอไหม และโค้ดเช็กข้อมูลที่ยังไม่น่าเชื่อถือก่อนใช้หรือเปล่า.",
   },
   react: {
     title: "React",
     description:
-      "ฝึกรีวิว props, state, key, effect, context, memoization และ component ที่แยกหน้าที่ชัดเจน.",
+      "ฝึกรีวิว component ว่าส่ง props ชัดไหม เก็บ state เท่าที่จำเป็นไหม และ effect/context ถูกใช้ในขอบเขตที่ควบคุมได้หรือเปล่า.",
   },
   nextjs: {
     title: "Next.js",
     description:
-      "ฝึกรีวิว App Router, Server/Client Components, การดึงข้อมูล, cache, metadata และไฟล์ API route.",
+      "ฝึกรีวิว App Router ว่าไฟล์วางถูกที่ไหม งานไหนควรรันบน server หรือ browser และการดึงข้อมูล/cache อธิบายเจตนาชัดหรือเปล่า.",
   },
   nodejs: {
     title: "Node.js",
     description:
-      "ฝึกรีวิวไฟล์เริ่มระบบ, งาน I/O แบบ async, ลำดับของ HTTP request, log ที่ค้นหาได้ และการปิด process ให้ปลอดภัย.",
+      "ฝึกรีวิวโค้ดฝั่ง server ว่าเริ่มระบบถูกจุดไหม งานอ่านเขียนไฟล์/network ไม่บล็อกกัน และปิด process โดยไม่ทำ request ค้าง.",
   },
   express: {
     title: "Express",
     description:
-      "ฝึกรีวิวการสร้าง app, router แยกตามกลุ่มงาน, ลำดับ middleware, การตรวจ request, auth และ error handler.",
+      "ฝึกรีวิว Express app ว่าแยก router ตามงานจริงไหม middleware เรียงถูกทางของ request ไหม และ error/auth อยู่จุดที่ควรอยู่หรือเปล่า.",
   },
   sql: {
     title: "SQL",
     description:
-      "ฝึกรีวิว schema, SELECT, WHERE, JOIN, index, transaction, migration และ query ที่ปลอดภัยต่อข้อมูล.",
+      "ฝึกรีวิว query และ schema ว่าคืนข้อมูลตรงคำถามไหม ใช้ index ได้ไหม และงานที่แตะหลายตารางปลอดภัยด้วย transaction หรือเปล่า.",
   },
   python: {
     title: "Python",
     description:
-      "ฝึกรีวิวชื่อฟังก์ชัน, การเช็ก None, default list/dict, error handling, dataclass, type hint, test double และ async/await.",
+      "ฝึกรีวิว Python ให้ชื่ออ่านรู้เรื่อง แยก None จากค่าว่าง ระวัง default list/dict และทำให้ error, type และ test มองเห็นได้ชัด.",
   },
   php: {
     title: "PHP",
     description:
-      "ฝึกรีวิว PHP งานจริง: strict_types, การตรวจ $_GET/$_POST, escaping กัน XSS, PDO prepared statement, password_hash, session cookie, config secret และการแยก logic ออกจาก template.",
+      "ฝึกรีวิว PHP ที่รับ request จริง: ตรวจ $_GET/$_POST, escape ตอนแสดงผล, query ด้วย PDO, เก็บ password/session ให้ปลอดภัย และไม่ยัด logic ไว้ใน template.",
   },
   java: {
     title: "Java",
     description:
-      "ฝึกรีวิว Java งานจริง: Optional, defensive copy, equals/hashCode, exception, try-with-resources, generics, stream, ConcurrentHashMap, record/DTO และการแยก controller/service/repository.",
+      "ฝึกรีวิว Java ว่าจัดการ null ชัดไหม object ถูกแก้จากข้างนอกไม่ได้ไหม resource ถูกปิดแน่ไหม และแยก controller/service/repository อ่านง่ายหรือเปล่า.",
   },
   git: {
     title: "Git",
     description:
-      "ฝึกรีวิว Git งานจริง: เช็ก branch/status, stage เฉพาะส่วน, commit ที่เล่าเรื่องเดียว, branch/upstream, fetch/rebase, diff ก่อน push, แก้ conflict, revert/reset, .gitignore/secret และ tag release.",
+      "ฝึกรีวิวการใช้ Git ก่อนส่งงาน: ดู status, stage เฉพาะเรื่อง, เขียน commit เล่าเหตุผล, ดู diff ก่อน push และแก้ conflict โดยไม่กวาดทั้งไฟล์.",
   },
   fastapi: {
     title: "FastAPI",
     description:
-      "ฝึกรีวิว FastAPI แบบงานจริง: ลำดับ route, Pydantic model, response_model, Depends, auth, async handler, HTTPException, database session, test override และการแยก router.",
+      "ฝึกรีวิว FastAPI ว่า route ไม่ชนกัน request/response มี model ชัด งาน async ไม่บล็อก และ database session เปิดปิดตามอายุของ request.",
   },
   django: {
     title: "Django",
     description:
-      "ฝึกรีวิว Django แบบงานจริง: ลำดับ URL, model/constraint, QuerySet, manager, Form/ModelForm, class-based view, CSRF, settings, transaction และ view test.",
+      "ฝึกรีวิว Django ว่า URL จับคู่ถูกลำดับ model กันข้อมูลผิดได้ QuerySet ไม่ยิง SQL เกินจำเป็น และ form/view/settings แยกหน้าที่ชัด.",
   },
   go: {
     title: "Go",
     description:
-      "ฝึกรีวิว Go แบบงานจริง: package/API, exported name, error wrapping, context, interface, zero value, goroutine/channel, defer cleanup, table-driven test และ HTTP handler.",
+      "ฝึกรีวิว Go ว่า package ใช้งานจากข้างนอกอ่านดีไหม error ยังบอกสาเหตุเดิมไหม context ถูกส่งต่อ และ goroutine/resource มีทางหยุดหรือปิดชัดเจน.",
   },
   docker: {
     title: "Docker",
     description:
-      "ฝึกรีวิว Docker แบบงานจริง: ไฟล์ที่ถูกส่งเข้าไปตอน build, image ตั้งต้น, cache, secret, สิทธิ์ของ container, healthcheck และ Compose file.",
+      "ฝึกรีวิว Docker ว่า build ส่งไฟล์เท่าที่จำเป็น image ล็อก version พอควร secret ไม่ติด image และ container มี user/healthcheck ที่ใช้ได้จริง.",
   },
   tailwindcss: {
     title: "Tailwind CSS",
     description:
-      "ฝึกรีวิว Tailwind CSS แบบงานจริง: จัด class ให้อ่านง่าย, responsive, hover/focus/disabled, ระยะห่าง, theme token, dark mode, การ reuse, arbitrary value, accessibility และ class ที่ชนกัน.",
+      "ฝึกรีวิว Tailwind ว่า class เรียงเป็นระบบ responsive/state ครบ สีและระยะใช้ค่ากลางร่วมกัน และ class ตามเงื่อนไขไม่ชนกัน.",
   },
 } as const satisfies Record<TrackSlug, TrackTranslation>;
 
