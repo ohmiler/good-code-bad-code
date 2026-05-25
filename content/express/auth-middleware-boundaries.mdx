@@ -15,6 +15,7 @@ export async function requireUser(
   res: Response,
   next: NextFunction,
 ) {
+  // Middleware turns credentials into a small trusted user context.
   const session = await sessions.findFromHeader(req.get("authorization"));
 
   if (!session) {
@@ -33,6 +34,7 @@ export async function requireUser(
     language: "typescript",
     filename: "src/reviews/router.ts",
     code: `router.post("/:id/approve", async (req, res) => {
+  // Auth, authorization, and approval logic are mixed together.
   const token = req.get("authorization");
   const session = await sessions.findFromHeader(token);
 

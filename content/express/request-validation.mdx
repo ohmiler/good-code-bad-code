@@ -15,6 +15,7 @@ export function createReviewsRouter(service: ReviewsService) {
   const router = Router();
 
   router.post("/", async (req, res) => {
+    // Validate at the route edge before calling business logic.
     const result = parseCreateReviewBody(req.body);
 
     if (!result.ok) {
@@ -38,6 +39,7 @@ export function createReviewsRouter(service: ReviewsService) {
   const router = Router();
 
   router.post("/", async (req, res) => {
+    // Raw body fields reach the service without shape checks.
     const review = await service.createReview({
       title: req.body.title,
       reviewerIds: req.body.reviewerIds,

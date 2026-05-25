@@ -12,6 +12,7 @@ export const metadata = {
 import { createReviewsRouter } from "./reviews/router";
 
 export function createApp() {
+  // Tests can import this factory without opening a port.
   const app = express();
 
   app.use(express.json());
@@ -30,6 +31,7 @@ const app = express();
 
 app.use(express.json());
 app.use("/reviews", createReviewsRouter());
+// Importing this module starts listening as a side effect.
 app.listen(process.env.PORT || 3000);
 
 export default app;`,

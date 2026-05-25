@@ -10,6 +10,7 @@ export const metadata = {
     filename: "src/http/respond.ts",
     code: `import type { Response } from "express";
 
+// Small helpers keep response envelopes consistent.
 export function ok<T>(res: Response, data: T) {
   return res.json({ data });
 }
@@ -26,6 +27,7 @@ export function fail(res: Response, status: number, message: string) {
     language: "typescript",
     filename: "src/reviews/router.ts",
     code: `router.get("/", async (_req, res) => {
+  // Neighboring routes now need different client parsing rules.
   res.json(await service.listOpenReviews());
 });
 

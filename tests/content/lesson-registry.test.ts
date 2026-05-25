@@ -324,7 +324,8 @@ function countReviewCommentLines(code: string, track: string): number {
       track === "typescript" ||
       track === "react" ||
       track === "nextjs" ||
-      track === "nodejs"
+      track === "nodejs" ||
+      track === "express"
     ) {
       return trimmedLine.startsWith("// ");
     }
@@ -737,6 +738,49 @@ test("Node.js comments have matching Thai translations", async () => {
       for (const [index, comment] of translatedComments.entries()) {
         assert.match(comment, /[\u0e00-\u0e7f]/, `nodejs/${slug}.${sampleName}[${index}]`);
         assert.ok(comment.trim().length >= 8, `nodejs/${slug}.${sampleName}[${index}]`);
+      }
+    }
+  }
+});
+
+test("Express samples include concise review comments", async () => {
+  const lessonsByTrack = await getTrackLessonFiles();
+  const expressLessons = lessonsByTrack.get("express") ?? [];
+
+  assert.equal(expressLessons.length, expectedLessonCounts.express);
+
+  for (const contentPath of expressLessons) {
+    for (const sampleName of ["goodCode", "badCode"] as const) {
+      const code = await readMdxMetadataCodeSample(contentPath, sampleName);
+      const commentCount = countReviewCommentLines(code, "express");
+
+      assert.ok(commentCount >= 1, `${contentPath} ${sampleName}`);
+      assert.ok(commentCount <= 3, `${contentPath} ${sampleName}`);
+    }
+  }
+});
+
+test("Express comments have matching Thai translations", async () => {
+  const lessonsByTrack = await getTrackLessonFiles();
+  const expressLessons = lessonsByTrack.get("express") ?? [];
+
+  assert.equal(expressLessons.length, expectedLessonCounts.express);
+
+  for (const contentPath of expressLessons) {
+    const slug = slugFromContentPath(contentPath);
+    const translation = lessonThaiTranslations[`express/${slug}`];
+
+    assert.ok(translation.codeComments, `express/${slug} missing codeComments`);
+
+    for (const sampleName of ["goodCode", "badCode"] as const) {
+      const code = await readMdxMetadataCodeSample(contentPath, sampleName);
+      const commentCount = countReviewCommentLines(code, "express");
+      const translatedComments = translation.codeComments[sampleName] ?? [];
+
+      assert.equal(translatedComments.length, commentCount, `express/${slug}`);
+      for (const [index, comment] of translatedComments.entries()) {
+        assert.match(comment, /[\u0e00-\u0e7f]/, `express/${slug}.${sampleName}[${index}]`);
+        assert.ok(comment.trim().length >= 8, `express/${slug}.${sampleName}[${index}]`);
       }
     }
   }

@@ -12,6 +12,7 @@ export const metadata = {
 import type { ReviewsService } from "./service";
 
 export function createReviewsRouter(service: ReviewsService) {
+  // The router owns review endpoints and receives its dependency.
   const router = Router();
 
   router.get("/", async (_req, res) => {
@@ -35,6 +36,7 @@ import { reviewService, userService, billingService } from "./services";
 
 const app = express();
 
+// Unrelated resources pile into app.ts and share global services.
 app.get("/reviews", async (_req, res) => {
   res.json(await reviewService.listOpenReviews());
 });

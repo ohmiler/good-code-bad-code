@@ -11,6 +11,7 @@ export const metadata = {
     code: `import type { ErrorRequestHandler } from "express";
 
 export const errorHandler: ErrorRequestHandler = (error, _req, res, next) => {
+  // Never write a second response after headers were sent.
   if (res.headersSent) {
     next(error);
     return;
@@ -33,6 +34,7 @@ export const errorHandler: ErrorRequestHandler = (error, _req, res, next) => {
     const review = await service.createReview(req.body);
     res.json(review);
   } catch (error) {
+    // Each route invents its own error shape and status code.
     console.error(error);
     res.status(500).send("Something broke");
   }

@@ -16,6 +16,7 @@ import { createReviewsRouter } from "./reviews/router";
 export function createApp() {
   const app = express();
 
+  // Parsing and auth run before routes; 404 and errors run after.
   app.use(express.json());
   app.use("/reviews", requireUser, createReviewsRouter());
   app.use(notFoundHandler);
@@ -35,6 +36,7 @@ import { createReviewsRouter } from "./reviews/router";
 export function createApp() {
   const app = express();
 
+  // Earlier middleware cannot handle routes that run before it.
   app.use(errorHandler);
   app.use("/reviews", createReviewsRouter());
   app.use(requireUser);

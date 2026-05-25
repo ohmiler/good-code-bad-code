@@ -9,6 +9,7 @@ export const metadata = {
     language: "typescript",
     filename: "src/reviews/router.ts",
     code: `router.post("/:id/approve", async (req, res) => {
+  // The route only translates HTTP data into a workflow call.
   const review = await reviewWorkflow.approve({
     reviewId: req.params.id,
     approverId: res.locals.user.id,
@@ -21,6 +22,7 @@ export const metadata = {
     language: "typescript",
     filename: "src/reviews/router.ts",
     code: `router.post("/:id/approve", async (req, res) => {
+  // Database writes, rules, and notifications are hidden here.
   const review = await db.review.findUnique({ where: { id: req.params.id } });
 
   if (!review || review.status !== "pending") {
