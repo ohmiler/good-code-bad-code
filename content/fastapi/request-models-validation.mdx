@@ -19,6 +19,7 @@ class CreateReviewRequest(BaseModel):
     author_id: int
 
 
+# Pydantic validates the body before route logic runs.
 @router.post("/reviews")
 async def create_review(payload: CreateReviewRequest):
     return {
@@ -36,6 +37,7 @@ router = APIRouter()
 
 @router.post("/reviews")
 async def create_review(request: Request):
+    # Manual JSON parsing moves validation into the handler.
     payload = await request.json()
     return {
         "title": payload["title"],

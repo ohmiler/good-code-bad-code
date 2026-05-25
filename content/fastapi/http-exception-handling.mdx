@@ -17,6 +17,7 @@ router = APIRouter()
 async def get_review(review_id: int):
     review = await reviews.find(review_id)
     if review is None:
+        # Use HTTP status codes for expected missing-resource cases.
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Review not found",
@@ -35,6 +36,7 @@ router = APIRouter()
 async def get_review(review_id: int):
     review = await reviews.find(review_id)
     if review is None:
+        # Returning 200 for an error makes clients trust the wrong status.
         return {"ok": False, "error": "Review not found"}
     return {"ok": True, "review": review}`,
   },

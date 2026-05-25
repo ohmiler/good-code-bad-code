@@ -20,6 +20,7 @@ class ReviewResponse(BaseModel):
     status: str
 
 
+# response_model keeps the public response shape explicit.
 @router.get("/reviews/{review_id}", response_model=ReviewResponse)
 async def get_review(review_id: int):
     review = await reviews.find(review_id)
@@ -36,6 +37,7 @@ router = APIRouter()
 @router.get("/reviews/{review_id}")
 async def get_review(review_id: int):
     review = await reviews.find(review_id)
+    # __dict__ can leak internal fields into the API.
     return review.__dict__`,
   },
 };

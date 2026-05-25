@@ -19,11 +19,13 @@ def fake_current_user():
 
 
 def test_approve_review():
+    # Replace real auth with a fake user for this test.
     app.dependency_overrides[current_user] = fake_current_user
     client = TestClient(app)
 
     response = client.post("/reviews/10/approve")
 
+    # Clear overrides so later tests do not inherit this setup.
     app.dependency_overrides = {}
     assert response.status_code == 200`,
   },
@@ -40,6 +42,7 @@ client = TestClient(app)
 def test_approve_review():
     response = client.post(
         "/reviews/10/approve",
+        # Production-like tokens make the test depend on real auth behavior.
         headers={"Authorization": "Bearer production-token"},
     )
 

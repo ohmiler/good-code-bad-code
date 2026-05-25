@@ -15,6 +15,7 @@ router = APIRouter()
 
 @router.get("/reports/{report_id}")
 async def get_report(report_id: int):
+    # Await async I/O so the event loop can serve other requests.
     report = await report_service.fetch_report(report_id)
     audit = await audit_service.record_view(report_id)
     return {"report": report, "audit_id": audit.id}`,
@@ -30,7 +31,9 @@ router = APIRouter()
 
 @router.get("/reports/{report_id}")
 async def get_report(report_id: int):
+    # requests.get blocks the event loop inside an async route.
     response = requests.get(f"https://api.example.com/reports/{report_id}")
+    # Missing await can leave side effects unfinished.
     audit_service.record_view(report_id)
     return response.json()`,
   },

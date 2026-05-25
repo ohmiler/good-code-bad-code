@@ -135,7 +135,7 @@ export const trackThaiTranslations = {
   fastapi: {
     title: "FastAPI",
     description:
-      "ฝึกรีวิว route, Pydantic model, dependency, auth, async handler, database session และ API test.",
+      "ฝึกรีวิว FastAPI แบบงานจริง: ลำดับ route, Pydantic model, response_model, Depends, auth, async handler, HTTPException, database session, test override และการแยก router.",
   },
   django: {
     title: "Django",
@@ -2086,123 +2086,172 @@ export const lessonThaiTranslations = {
     ],
   },
   "fastapi/path-operation-order": {
-    title: "ลำดับของ path operation",
-    summary: "ประกาศ route ที่เฉพาะเจาะจงก่อน dynamic path parameter เพื่อให้ FastAPI match request ตามที่ตั้งใจ.",
-    takeaways: ["FastAPI evaluate path operation ตามลำดับ ดังนั้นลำดับ route คือ behavior."],
+    codeComments: {
+      goodCode: ["วาง path ที่เป็นคำตายตัวไว้ก่อน path ที่รับค่า"],
+      badCode: ["path รับค่าที่อยู่ก่อนจะจับคำอย่าง /me ไปเป็น user_id"],
+    },
+    title: "วาง route เฉพาะก่อน route รับค่า",
+    summary: "ถ้ามี `/me` และ `/{user_id}` ให้ประกาศ `/me` ก่อน เพราะ FastAPI อ่าน route จากบนลงล่างและจับคู่ตัวแรกที่ตรง.",
+    takeaways: ["ลำดับ route มีผลต่อ behavior: path แบบคำตายตัวควรมาก่อน path ที่รับค่าอย่าง `/{id}`."],
     whatToReview: [
-      "โค้ดที่ดีประกาศ route /me ที่เป็น fixed path ก่อน route /{user_id} ที่เป็น dynamic.",
-      "โค้ดที่ควรปรับทำให้ /{user_id} match /me ก่อน FastAPI จึงพยายาม parse me เป็น integer และคืน validation error.",
+      "โค้ดที่ดีวาง route `/me` ก่อน `/{user_id}` ทำให้คำว่า me ไม่ถูกตีความเป็นเลข user_id.",
+      "โค้ดที่ควรปรับวาง `/{user_id}` ก่อน `/me` FastAPI จึงลองแปลง `me` เป็น integer แล้วคืน validation error.",
     ],
     reviewNotes: [
-      "เวลารีวิว routing ของ FastAPI ให้อ่านไฟล์จากบนลงล่าง route ที่เป็นคำตายตัวหรือเฉพาะเจาะจงควรมาก่อน route ที่กว้างกว่า.",
+      "เวลารีวิว routing ให้อ่านจากบนลงล่างก่อนเสมอ ถ้า route กว้างกว่าอยู่ก่อน route เฉพาะ อาจแย่ง request ไปก่อน.",
     ],
   },
   "fastapi/request-models-validation": {
-    title: "request model และ validation",
-    summary: "ใช้ Pydantic request model เพื่อให้ FastAPI parse, validate, document และ type request body ได้.",
-    takeaways: ["request body ควรข้าม API boundary มาเป็น model ที่ validate แล้ว ไม่ใช่ raw dictionary."],
+    codeComments: {
+      goodCode: ["Pydantic ตรวจ body ก่อน logic ของ route ทำงาน"],
+      badCode: ["การแกะ JSON เองทำให้ validation ไปกองอยู่ใน handler"],
+    },
+    title: "ใช้ Pydantic model ตรวจ request body",
+    summary: "ให้ FastAPI รับ body ผ่าน Pydantic model เพื่อเช็ก field, type และ validation rule ก่อน logic ของ route ทำงาน.",
+    takeaways: ["ข้อมูลจาก request ควรเข้ามาเป็น model ที่ตรวจแล้ว ไม่ใช่ dict ดิบที่ route ต้องค่อยแกะเอง."],
     whatToReview: [
-      "โค้ดที่ดีให้ FastAPI และ Pydantic validate shape, type และความยาว title ก่อน business logic ทำงาน.",
-      "โค้ดที่ควรปรับดึง raw JSON จาก request แล้วแปลงค่าเอง ทำให้ missing key, invalid type และ docs drift กลายเป็นปัญหาใน handler.",
+      "โค้ดที่ดีให้ `CreateReviewRequest` บอกชัดว่า body ต้องมี `title` และ `author_id` พร้อมกฎความยาวของ title.",
+      "โค้ดที่ควรปรับดึง JSON ดิบแล้วแปลงค่าเอง ถ้า key หายหรือ type ผิด ปัญหาจะไปแตกใน handler และเอกสาร API อาจไม่ตรง.",
     ],
     reviewNotes: [
-      "ใน FastAPI function signature คือ API contract ถ้า body สำคัญพอให้รับเข้ามา ก็มักสำคัญพอให้สร้าง model.",
+      "ใน FastAPI function signature คือสัญญาหน้า API ถ้า route รับ body ที่สำคัญ ควรมี model ชัด ๆ ให้ทั้งคนและ docs อ่านได้.",
     ],
   },
   "fastapi/response-models-contracts": {
-    title: "response model เป็น contract",
-    summary: "คืน response model ที่บอก public API shape และกรอง field ภายในออก.",
-    takeaways: ["response model เป็นทั้ง documentation และ guardrail ของข้อมูลที่ออกจาก service."],
+    codeComments: {
+      goodCode: ["response_model ระบุรูปข้อมูลที่ client จะได้รับ"],
+      badCode: ["__dict__ อาจพา field ภายในหลุดออกไปใน response"],
+    },
+    title: "กำหนด response_model ให้ชัด",
+    summary: "ใช้ `response_model` เพื่อบอกว่า API จะส่ง field อะไรกลับ และกัน field ภายในหรือข้อมูลลับหลุดออกไป.",
+    takeaways: ["`response_model` เป็นทั้งเอกสารให้ client และตัวกรองข้อมูลก่อนออกจาก API."],
     whatToReview: [
-      "โค้ดที่ดีประกาศ response shape ที่เป็น public contract และให้ FastAPI serialize เฉพาะ field ที่ควรออกไป.",
-      "โค้ดที่ควรปรับคืน object internals ทำให้ private field, database state หรือ attribute ที่ไม่คาดคิด leak ไปใน API ได้.",
+      "โค้ดที่ดีประกาศ `ReviewResponse` ชัดเจน client จึงรู้ว่าจะได้ `id`, `title`, `status` เท่านั้น.",
+      "โค้ดที่ควรปรับคืน `review.__dict__` ทำให้ field ภายใน, state ของ database หรือ attribute ที่ไม่ได้ตั้งใจอาจหลุดออกไป.",
     ],
     reviewNotes: [
-      "ตอนรีวิว response ของ FastAPI ให้ถามว่า client contract คืออะไร ถ้าคำตอบคืออะไรก็ตามที่ object ตอนนี้มี API นั้นยัง accidental เกินไป.",
+      "ตอนรีวิว response ให้ถามว่า client ควรเห็น field ไหน ถ้าคำตอบคือ object มีอะไรตอนนี้ก็ส่งหมด API ยังเสี่ยงเกินไป.",
     ],
   },
   "fastapi/dependencies-boundaries": {
-    title: "dependency เป็น boundary",
-    summary: "ใช้ Depends เพื่อแชร์ request parsing, context และ collaborator โดยไม่ซ่อน setup ไว้ใน handler.",
-    takeaways: ["FastAPI dependency ทำให้ request setup ที่ซ้ำกัน explicit, reuse ได้ และเห็นใน OpenAPI."],
+    codeComments: {
+      goodCode: ["Depends ทำให้ pagination ใช้ซ้ำและมี validation ในที่เดียว"],
+      badCode: ["แกะ query params เองทำให้ default และ validation กระจาย"],
+    },
+    title: "ใช้ Depends แยกงานเตรียม request ที่ใช้ซ้ำ",
+    summary: "`Depends` เหมาะกับงานเตรียมข้อมูลก่อนเข้า route เช่น pagination, user ปัจจุบัน หรือ database session เพื่อไม่ให้ handler ต้องแกะซ้ำเอง.",
+    takeaways: ["dependency ที่ดีทำให้ validation, default และการใช้ซ้ำอยู่จุดเดียว และยังไปแสดงใน OpenAPI ได้."],
     whatToReview: [
-      "โค้ดที่ดีทำ pagination เป็น dependency ที่ reuse ได้ พร้อม validation และ documentation.",
-      "โค้ดที่ควรปรับ parse query parameter เองใน route ทำให้ validation, default และ reuse กระจายไปตาม handler.",
+      "โค้ดที่ดีแยก pagination เป็น dependency ที่ใช้ซ้ำได้ และให้ `Query(le=100)` จำกัดค่าไว้ตรงจุดเดียว.",
+      "โค้ดที่ควรปรับ parse query parameter เองใน route ทำให้ default, validation และ logic ใช้ซ้ำกระจายไปตาม handler.",
     ],
     reviewNotes: [
-      "dependency ควรทำให้ boundary ชัด ไม่ใช่ซ่อน business logic ถ้าเห็น parsing หรือ setup ซ้ำใน route ให้พิจารณาแยกเป็น dependency ที่โฟกัส.",
+      "ใช้ dependency เพื่อทำให้ขอบเขตงานของ route ชัด แต่ไม่ควรยัด business logic หนักเข้าไปซ่อนใน dependency.",
     ],
   },
   "fastapi/auth-security-dependencies": {
-    title: "auth ด้วย security dependency",
-    summary: "ใช้ FastAPI security dependency เพื่อให้ auth ถูกประกาศใน route contract และ OpenAPI schema.",
-    takeaways: ["auth ควรเป็น dependency boundary ไม่ใช่การ parse header ซ้ำในทุก route."],
+    codeComments: {
+      goodCode: ["ตัวนี้อ่าน Bearer token และบอก OpenAPI ว่า route ใช้ auth"],
+      badCode: ["parse header เองทุก route ทำให้ auth หลุดมาตรฐานได้"],
+    },
+    title: "ประกาศ auth ด้วย security dependency",
+    summary: "ใช้ security dependency เช่น `OAuth2PasswordBearer` เพื่อให้การอ่าน token, ตรวจ user และเอกสาร OpenAPI อยู่ในทางเดียวกัน.",
+    takeaways: ["auth ควรอยู่ในจุดกลางที่ route ต่าง ๆ เรียกใช้ ไม่ใช่ให้แต่ละ route parse header เอง."],
     whatToReview: [
-      "โค้ดที่ดีรวมการดึง token และจัดการ invalid credential ไว้ใน security dependency.",
-      "โค้ดที่ควรปรับ parse header เองใน route และ assume ว่ามี user ทำให้ auth drift ทีละ endpoint และ docs ไม่แสดง security scheme.",
+      "โค้ดที่ดีรวมการอ่าน Bearer token และการจัดการ token ไม่ถูกต้องไว้ใน `current_user` จุดเดียว.",
+      "โค้ดที่ควรปรับ parse header เองใน route และเดาว่าต้องมี user เสมอ ทำให้แต่ละ endpoint มีพฤติกรรม auth ไม่เหมือนกัน.",
     ],
     reviewNotes: [
-      "FastAPI แสดง security dependency ใน OpenAPI ได้ ตอนรีวิวให้ prefer auth boundary เดียวที่ route ต่าง ๆ depend ได้.",
+      "ตอนรีวิวให้มองหา endpoint ที่ตรวจ token เอง ถ้ามีหลายแบบในโปรเจกต์เดียวกัน docs, error และ security behavior จะ drift ง่าย.",
     ],
   },
   "fastapi/async-handler-boundaries": {
-    title: "boundary ของ async handler",
-    summary: "ทำให้ async route handler ไม่ block event loop และ await async collaborator โดยตรง.",
-    takeaways: ["route ที่เป็น async def ไม่ควรซ่อน blocking I/O ไว้ใน event loop."],
+    codeComments: {
+      goodCode: ["await งาน I/O เพื่อคืนคิวให้ event loop ระหว่างรอ"],
+      badCode: [
+        "requests.get เป็น blocking call จึงค้าง event loop ได้",
+        "ลืม await ทำให้งานบันทึก audit อาจไม่เสร็จตามที่คิด",
+      ],
+    },
+    title: "อย่าให้ async route ไป block event loop",
+    summary: "ใน `async def` ให้ใช้ async client และ `await` งาน I/O ให้ครบ เพื่อไม่ให้ request อื่นติดคิวรอนานโดยไม่จำเป็น.",
+    takeaways: ["`async def` ไม่ได้ทำให้โค้ด non-blocking อัตโนมัติ งาน I/O ข้างในต้องเป็น async และถูก `await` ด้วย."],
     whatToReview: [
-      "โค้ดที่ดี await async collaborator เพื่อให้ I/O yield control กลับไปที่ event loop.",
-      "โค้ดที่ควรปรับเรียก HTTP client แบบ blocking ใน async route และลืม await งาน audit.",
+      "โค้ดที่ดี `await` service ที่ทำ I/O ทำให้ event loop ไปดูแล request อื่นได้ระหว่างรอผลลัพธ์.",
+      "โค้ดที่ควรปรับใช้ `requests.get` ใน async route ซึ่งเป็น blocking call และยังลืม `await` งาน audit.",
     ],
     reviewNotes: [
-      "FastAPI รองรับทั้ง def และ async def ตอนรีวิวให้เช็กว่า handler และ collaborator ตกลงกันชัดเจนเรื่อง blocking หรือ non-blocking work.",
+      "FastAPI ใช้ได้ทั้ง `def` และ `async def` ตอนรีวิวให้ดูให้ตรงกัน: ถ้า handler เป็น async งานที่เรียกต่อควรไม่ block หรือมีเหตุผลชัดเจน.",
     ],
   },
   "fastapi/http-exception-handling": {
-    title: "การจัดการ HTTPException",
-    summary: "raise HTTPException สำหรับ expected client-facing failure แทนการคืน success และ error shape ปนกัน.",
-    takeaways: ["API failure ที่คาดไว้ควรมี HTTP status code และ response shape ที่ชัดเจน."],
+    codeComments: {
+      goodCode: ["ไม่เจอข้อมูลคือ 404 จริง ไม่ใช่ response สำเร็จ"],
+      badCode: ["คืน 200 พร้อม error ทำให้ client อ่านสถานะผิดได้"],
+    },
+    title: "ใช้ HTTPException กับ error ที่คาดไว้",
+    summary: "กรณีอย่างหา resource ไม่เจอหรือไม่มีสิทธิ์ ควร `raise HTTPException` พร้อม status code ที่ถูก แทนการคืน 200 แล้วใส่ error ใน body.",
+    takeaways: ["client, log และ monitoring ควรเชื่อ HTTP status ได้ว่า request สำเร็จหรือล้มเหลว."],
     whatToReview: [
-      "โค้ดที่ดีคืน 404 จริงพร้อม detail ชัดเจนเมื่อ resource ไม่มีอยู่.",
-      "โค้ดที่ควรปรับคืน error envelope พร้อม HTTP success status ทำให้ client, log และ monitoring อ่าน failure ผิดได้.",
+      "โค้ดที่ดีใช้ 404 จริงพร้อม `detail` ชัดเจนเมื่อ review ที่ขอไม่มีอยู่.",
+      "โค้ดที่ควรปรับคืน `{ ok: false }` แต่ HTTP status ยังสำเร็จ ทำให้ client, log และ monitoring อ่านสถานะผิด.",
     ],
     reviewNotes: [
-      "ใช้ exception สำหรับ expected HTTP failure ที่ route boundary และแยก success response กับ error response ให้ client เชื่อ status code ได้.",
+      "แยก success response กับ error response ให้ชัด ถ้าเป็น failure ที่คาดไว้ในระดับ HTTP ให้ status code เล่าเรื่องแทน boolean ใน body.",
     ],
   },
   "fastapi/database-session-lifecycle": {
-    title: "lifecycle ของ database session",
-    summary: "ส่ง database session ผ่าน dependency เพื่อให้แต่ละ request มี unit of work ที่ชัด.",
-    takeaways: ["database session ต้องมี ownership, cleanup และ transaction intent ตาม request ที่เห็นได้ชัด."],
+    codeComments: {
+      goodCode: [
+        "dependency นี้สร้าง session ต่อ request และปิดให้เมื่อจบงาน",
+        "commit/refresh อยู่ใน flow ที่รีวิวเห็นได้",
+      ],
+      badCode: ["session global ถูกใช้ร่วมกันหลาย request และ cleanup ไม่ชัด"],
+    },
+    title: "เปิดและปิด database session ตาม request",
+    summary: "ส่ง database session ผ่าน dependency เพื่อให้แต่ละ request มี session ของตัวเอง ปิด resource ได้ และเห็นจุด commit ชัด.",
+    takeaways: ["DB session ไม่ควรเป็น global ที่ใช้ร่วมกันหลาย request ควรเห็นว่าใครสร้าง ใครปิด และ commit ตอนไหน."],
     whatToReview: [
-      "โค้ดที่ดีให้แต่ละ request ได้ session ผ่าน dependency และทำ commit/refresh เป็นส่วนหนึ่งของ workflow.",
-      "โค้ดที่ควรปรับใช้ module-level session ร่วมกันหลาย request ทำให้ cleanup, transaction boundary และ concurrency ไม่ชัด.",
+      "โค้ดที่ดีให้แต่ละ request ได้ session ผ่าน `get_session` และทำ `commit/refresh` ใน flow ที่คนรีวิวมองเห็น.",
+      "โค้ดที่ควรปรับสร้าง session ระดับ module แล้วใช้ร่วมกันหลาย request ทำให้การปิด session, transaction และ concurrency ไม่ชัด.",
     ],
     reviewNotes: [
-      "database dependency ควรมี lifecycle ที่มองเห็นได้ ตอนรีวิวให้หา module-level session, hidden commit และ handler ที่ test ด้วย replacement session ยาก.",
+      "ตอนรีวิวให้ระวัง module-level session, commit ที่ซ่อนอยู่ใน helper และ handler ที่ใส่ test session แทนได้ยาก.",
     ],
   },
   "fastapi/testing-dependency-overrides": {
-    title: "test ด้วย dependency override",
-    summary: "override dependency ใน test แทนการเรียก external service หรือ patch internals ลึก ๆ.",
-    takeaways: ["FastAPI dependency override ทำให้ API test แบบ integration เร็วและโฟกัส behavior."],
+    codeComments: {
+      goodCode: [
+        "แทน current_user จริงด้วย fake user สำหรับ test นี้",
+        "ล้าง override เพื่อไม่ให้กระทบ test ถัดไป",
+      ],
+      badCode: ["ใช้ token เหมือน production ทำให้ test ไปผูกกับ auth จริง"],
+    },
+    title: "แทน dependency จริงด้วย fake ใน test",
+    summary: "ใช้ `app.dependency_overrides` เพื่อแทน auth, database หรือ external service ด้วยของปลอมใน test แล้วล้าง override หลังจบ.",
+    takeaways: ["dependency override ทำให้ API test วิ่งเร็วและควบคุมเงื่อนไขได้ โดยไม่ต้องเรียก service จริง."],
     whatToReview: [
-      "โค้ดที่ดีแทน auth dependency ด้วย test implementation และ reset override หลัง assertion.",
-      "โค้ดที่ควรปรับพึ่ง production-like token และ auth service จริง ทำให้ test ช้า flaky และ reason ยาก.",
+      "โค้ดที่ดีแทน `current_user` จริงด้วย fake user ที่ test ควบคุมได้ แล้วล้าง override หลัง assertion.",
+      "โค้ดที่ควรปรับใช้ production-like token และ auth service จริง ทำให้ test ช้า flaky และหาสาเหตุยากเมื่อพัง.",
     ],
     reviewNotes: [
-      "FastAPI มี app.dependency_overrides สำหรับ test ตอนรีวิวให้ prefer override dependency มากกว่า patch internals ลึก ๆ หรือเรียก external service จริง.",
+      "ถ้า test ต้องพึ่ง token จริงหรือ service จริง ให้ถามว่าควร override dependency แทนไหม test ที่ดีควรล้มเพราะ behavior ของ endpoint ไม่ใช่เพราะระบบข้างนอกแกว่ง.",
     ],
   },
   "fastapi/app-structure-routers": {
-    title: "โครงสร้าง app และ router",
-    summary: "จัด feature router ให้เป็น module และให้ app creation โฟกัสการ wiring แทนการยัด route implementation ทั้งหมดไว้ที่เดียว.",
-    takeaways: ["FastAPI app ควร wire router และ middleware ส่วน behavior ของ feature ควรอยู่ใน module ที่โฟกัส."],
+    codeComments: {
+      goodCode: ["main.py มีหน้าที่ประกอบ router จาก feature ต่าง ๆ"],
+      badCode: ["route และ logic เริ่มไหลมากองใน main.py"],
+    },
+    title: "ให้ main.py ประกอบ app ไม่ใช่รวมทุก logic",
+    summary: "แยก route เป็น router ตาม feature แล้วให้ `main.py` มีหน้าที่สร้าง app และ include router ไม่ใช่ใส่ handler ทุกอย่างไว้ในไฟล์เดียว.",
+    takeaways: ["`main.py` ควรเป็นจุดประกอบ app ส่วน logic ของ users, reviews หรือ health ควรอยู่ใน module ของตัวเอง."],
     whatToReview: [
-      "โค้ดที่ดีทำให้ app creation เป็น composition point และเก็บ route ของแต่ละ feature ไว้ใน module ของตัวเอง.",
-      "โค้ดที่ควรปรับทำให้ main.py ปน app setup, route definition, business flow และ side effect จนอ่าน ownership ยาก.",
+      "โค้ดที่ดีให้ `main.py` สร้าง app และ include router จาก `health`, `users`, `reviews` โดยไม่ต้องรู้ logic ข้างในแต่ละ feature.",
+      "โค้ดที่ควรปรับทำให้ `main.py` ปน app setup, route handler, business flow และ side effect จนไฟล์เดียวเริ่มรับผิดชอบทั้งระบบ.",
     ],
     reviewNotes: [
-      "FastAPI เริ่มในไฟล์เดียวได้ง่ายมาก ตอนรีวิวให้จับจังหวะที่ไฟล์นั้นไม่ใช่ app entry point แล้ว แต่กลายเป็นทั้ง application.",
+      "FastAPI เริ่มไฟล์เดียวได้ง่าย แต่เมื่อไฟล์เริ่มมีหลาย feature ให้แยก router ก่อนที่ `main.py` จะกลายเป็นไฟล์รวมทั้งระบบ.",
     ],
   },
   "django/url-pattern-order": {

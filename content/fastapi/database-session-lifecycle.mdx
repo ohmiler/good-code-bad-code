@@ -14,6 +14,7 @@ from fastapi import Depends
 from sqlmodel import Session
 
 
+# Yield creates one session per request and closes it afterward.
 def get_session():
     with Session(engine) as session:
         yield session
@@ -26,6 +27,7 @@ SessionDep = Annotated[Session, Depends(get_session)]
 def create_review(payload: ReviewCreate, session: SessionDep):
     review = Review.model_validate(payload)
     session.add(review)
+    # The route makes the write and commit visible.
     session.commit()
     session.refresh(review)
     return review`,
@@ -35,6 +37,7 @@ def create_review(payload: ReviewCreate, session: SessionDep):
     filename: "api/reviews.py",
     code: `from sqlmodel import Session
 
+# A module-level session is shared across requests.
 session = Session(engine)
 
 
