@@ -5,6 +5,7 @@ import {
   IBM_Plex_Sans_Thai,
 } from "next/font/google";
 import { LanguageProvider } from "@/components/language/language-provider";
+import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { createPageMetadata, getSiteUrl, siteConfig } from "@/lib/seo";
 import "./globals.css";
@@ -61,10 +62,11 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${ibmPlexSansThai.variable} h-full antialiased`}
     >
-      <body className="min-h-full bg-[#070b12] text-zinc-100">
+      <body className="flex min-h-full flex-col bg-[#070b12] text-zinc-100">
         <LanguageProvider>
           <SiteHeader />
-          {children}
+          <div className="flex-1">{children}</div>
+          <SiteFooter />
         </LanguageProvider>
       </body>
     </html>
