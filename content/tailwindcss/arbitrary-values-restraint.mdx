@@ -9,6 +9,7 @@ export const metadata = {
     language: "tsx",
     filename: "CommandRow.tsx",
     code: `export function CommandRow({ label, shortcut }: CommandRowProps) {
+  // One arbitrary grid template captures the real layout constraint.
   return (
     <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-md px-3 py-2 text-sm hover:bg-slate-100">
       <span className="truncate text-slate-800">{label}</span>
@@ -23,6 +24,7 @@ export const metadata = {
     language: "tsx",
     filename: "CommandRow.tsx",
     code: `export function CommandRow({ label, shortcut }) {
+  // Bracket values everywhere make the component drift from the shared scale.
   return (
     <div className="grid grid-cols-[417px_68px] items-center gap-[11px] rounded-[7px] px-[13px] py-[9px] text-[13.5px] hover:bg-[#f1f5f9]">
       <span className="max-w-[391px] truncate text-[#1f2937]">{label}</span>

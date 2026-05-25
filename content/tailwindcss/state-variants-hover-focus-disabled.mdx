@@ -9,6 +9,7 @@ export const metadata = {
     language: "tsx",
     filename: "SubmitButton.tsx",
     code: `export function SubmitButton({ isSaving }: { isSaving: boolean }) {
+  // The button covers hover, keyboard focus, and disabled states together.
   return (
     <button
       type="submit"
@@ -24,6 +25,7 @@ export const metadata = {
     language: "tsx",
     filename: "SubmitButton.tsx",
     code: `export function SubmitButton({ isSaving }) {
+  // outline-none removes keyboard focus without a replacement.
   return (
     <button
       disabled={isSaving}

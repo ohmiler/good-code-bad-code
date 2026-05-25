@@ -9,6 +9,7 @@ export const metadata = {
     language: "tsx",
     filename: "LessonGrid.tsx",
     code: `export function LessonGrid({ lessons }: { lessons: Lesson[] }) {
+  // Base classes describe mobile layout; sm/lg add columns as space grows.
   return (
     <section className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -26,6 +27,7 @@ export const metadata = {
     language: "tsx",
     filename: "LessonGrid.tsx",
     code: `export function LessonGrid({ lessons }) {
+  // Fixed desktop sizing can overflow or squeeze smaller screens.
   return (
     <section className="mx-auto w-[960px] px-[32px] py-[40px]">
       <div className="grid grid-cols-3 gap-[18px]">

@@ -9,6 +9,7 @@ export const metadata = {
     language: "tsx",
     filename: "CopyLinkButton.tsx",
     code: `export function CopyLinkButton() {
+  // Contrast, focus ring, and sr-only text make an icon-only button usable.
   return (
     <button
       type="button"
@@ -24,6 +25,7 @@ export const metadata = {
     language: "tsx",
     filename: "CopyLinkButton.tsx",
     code: `export function CopyLinkButton() {
+  // No label and outline-none make this icon-only button hard to use.
   return (
     <button className="h-9 w-9 rounded-md bg-slate-200 text-slate-300 outline-none hover:bg-slate-300">
       <LinkIcon className="mx-auto h-4 w-4" />

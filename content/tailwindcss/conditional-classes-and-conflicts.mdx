@@ -11,6 +11,7 @@ export const metadata = {
     code: `import clsx from "clsx";
 
 export function SegmentedOption({ selected, disabled, children }: SegmentedOptionProps) {
+  // selected and unselected styles are separate paths, so backgrounds do not conflict.
   return (
     <button
       type="button"
@@ -30,6 +31,7 @@ export function SegmentedOption({ selected, disabled, children }: SegmentedOptio
     language: "tsx",
     filename: "SegmentedOption.tsx",
     code: `export function SegmentedOption({ selected, disabled, children }) {
+  // Multiple conditions can emit conflicting bg, text, and opacity utilities.
   const className = [
     "rounded-md px-3 py-1.5 text-sm font-medium",
     "bg-white text-slate-700 hover:bg-slate-50",

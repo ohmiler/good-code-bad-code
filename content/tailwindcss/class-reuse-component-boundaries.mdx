@@ -9,12 +9,14 @@ export const metadata = {
     language: "tsx",
     filename: "ReviewStatusBadge.tsx",
     code: `const statusClasses = {
+  // One map owns the color variants for every status.
   passed: "bg-emerald-50 text-emerald-700 ring-emerald-200",
   failed: "bg-rose-50 text-rose-700 ring-rose-200",
   pending: "bg-amber-50 text-amber-700 ring-amber-200",
 } as const;
 
 export function ReviewStatusBadge({ status }: { status: keyof typeof statusClasses }) {
+  // The badge shape lives in one component instead of every caller.
   return (
     <span className={["inline-flex rounded-md px-2 py-1 text-xs font-medium ring-1", statusClasses[status]].join(" ")}>
       {status}
@@ -26,6 +28,7 @@ export function ReviewStatusBadge({ status }: { status: keyof typeof statusClass
     language: "tsx",
     filename: "ReviewList.tsx",
     code: `export function ReviewList({ reviews }) {
+  // Each branch repeats the same badge structure and can drift.
   return (
     <ul>
       {reviews.map((review) => (

@@ -155,7 +155,7 @@ export const trackThaiTranslations = {
   tailwindcss: {
     title: "Tailwind CSS",
     description:
-      "ฝึกรีวิว utility class, responsive variant, state, theme token, dark mode, component boundary, accessibility และ class conflict.",
+      "ฝึกรีวิว Tailwind CSS แบบงานจริง: จัด class ให้อ่านง่าย, responsive, hover/focus/disabled, ระยะห่าง, theme token, dark mode, การ reuse, arbitrary value, accessibility และ class ที่ชนกัน.",
   },
 } as const satisfies Record<TrackSlug, TrackTranslation>;
 
@@ -2813,123 +2813,170 @@ export const lessonThaiTranslations = {
     ],
   },
   "tailwindcss/utility-composition-readability": {
-    title: "การจัด utility ให้อ่านง่าย",
-    summary: "จัดกลุ่ม Tailwind utility ตามหน้าที่ เพื่อให้ reviewer เห็น layout, color, state และ motion โดยไม่ต้องแกะ string ยาว ๆ.",
-    takeaways: ["class list แบบ utility-first ก็ยังต้องมีโครงสร้าง การจัดกลุ่มที่อ่านง่ายทำให้ design intent ถูกรีวิวได้."],
+    codeComments: {
+      goodCode: [
+        "กลุ่มนี้คุมโครงสร้างและขนาดของปุ่ม",
+        "กลุ่มนี้คุมสี เงา และสีตอน hover",
+        "กลุ่มนี้คุม focus และ disabled state",
+      ],
+      badCode: ["className ยาวก้อนเดียวทำให้ layout, สี และ state ปนกัน"],
+    },
+    title: "จัดกลุ่ม Tailwind class ให้อ่านง่าย",
+    summary: "แยก class ตามหน้าที่ เช่น โครงสร้าง สี และสถานะ เพื่อให้รีวิว className ยาว ๆ ได้โดยไม่ต้องไล่เดาทีละคำ.",
+    takeaways: ["ถึง Tailwind จะเป็น utility-first แต่ className ที่ใช้ซ้ำก็ควรจัดกลุ่มให้เห็นเจตนาของ UI ชัดเจน."],
     whatToReview: [
-      "โค้ดที่ดีแยก base structure, visual tone และ interaction state ทำให้มองหา utility ซ้ำหรือขัดกันได้เร็ว.",
-      "โค้ดที่ควรปรับรวมทุก concern ไว้ใน class string เดียว และมี rounded value ซ้ำซ้อน แม้ UI render ได้ แต่ intent รีวิวได้ยาก.",
+      "โค้ดที่ดีแยก class กลุ่มโครงสร้าง กลุ่มสี และกลุ่มสถานะการโต้ตอบ ทำให้หา class ซ้ำหรือ class ที่ชนกันได้เร็ว.",
+      "โค้ดที่ควรปรับยัดทุกอย่างไว้ใน className ก้อนเดียว และมี rounded ซ้ำกัน ทำให้ UI แสดงผลได้แต่คนรีวิวอ่านเจตนาได้ยาก.",
     ],
     reviewNotes: [
-      "Tailwind ไม่ได้ทำให้เราเลิกตั้งชื่อ เวลา class list กลายเป็น decision ที่ใช้ซ้ำ ให้จัดกลุ่มตาม concern หรือดึงเป็น constant ระดับ component.",
+      "Tailwind ไม่ได้แปลว่าต้องเลิกตั้งชื่อทั้งหมด ถ้า class ชุดหนึ่งกลายเป็นรูปแบบ UI ที่ใช้ซ้ำ ให้จัดกลุ่มหรือดึงเป็น constant ระดับ component เพื่อให้รีวิวได้ง่าย.",
     ],
   },
   "tailwindcss/responsive-breakpoints": {
-    title: "breakpoint แบบ responsive",
-    summary: "ใช้ breakpoint ของ Tailwind เป็น mobile-first override แทนการล็อก layout ไว้ที่ความกว้าง desktop.",
-    takeaways: ["responsive utility ควรบอกว่า layout จอเล็กเติบโตอย่างไร ไม่ใช่บอกว่า layout desktop ถูกบีบลงอย่างไร."],
+    codeComments: {
+      goodCode: ["เริ่มจาก layout จอเล็ก แล้วค่อยเพิ่มคอลัมน์เมื่อจอกว้างขึ้น"],
+      badCode: ["ล็อกขนาด desktop ทำให้จอเล็กต้องเลื่อนหรือถูกบีบ"],
+    },
+    title: "เริ่มจากจอเล็ก แล้วค่อยเพิ่ม breakpoint",
+    summary: "ให้ class พื้นฐานรองรับมือถือก่อน แล้วใช้ sm/lg เพิ่ม layout สำหรับจอใหญ่ แทนการล็อกหน้าจอไว้ที่ขนาด desktop.",
+    takeaways: ["responsive ใน Tailwind ควรเริ่มจาก layout ที่ใช้ได้บนจอเล็ก แล้วค่อยเพิ่ม class สำหรับจอที่กว้างขึ้น."],
     whatToReview: [
-      "โค้ดที่ดีเริ่มจากหนึ่งคอลัมน์ แล้วเพิ่มคอลัมน์ที่ sm และ lg พร้อม container ที่กว้างยืดหยุ่นและมี max width.",
-      "โค้ดที่ควรปรับล็อก desktop width และจำนวนคอลัมน์ ทำให้จอเล็ก overflow หรือถูกบีบโดยที่โค้ดไม่ได้อธิบาย intent.",
+      "โค้ดที่ดีเริ่มจากหนึ่งคอลัมน์บนจอเล็ก แล้วเพิ่มเป็นสอง/สามคอลัมน์ด้วย sm และ lg พร้อม container ที่ยืดหยุ่น.",
+      "โค้ดที่ควรปรับล็อกความกว้างและจำนวนคอลัมน์แบบ desktop ทำให้จอเล็ก overflow หรือถูกบีบโดยไม่มี class อธิบายพฤติกรรม responsive.",
     ],
     reviewNotes: [
-      "เวลารีวิว responsive Tailwind ให้อ่านจากซ้ายไปขวา: base utility ก่อน แล้วค่อย breakpoint override ถ้า base ใช้บนมือถือไม่ได้ แปลว่า stack อาจกลับด้าน.",
+      "เวลารีวิว responsive Tailwind ให้อ่าน class พื้นฐานก่อน แล้วค่อยดู sm/md/lg ถ้า class พื้นฐานใช้บนมือถือไม่ได้ แปลว่าโค้ดอาจคิดจาก desktop ก่อนแล้วค่อยบีบลง.",
     ],
   },
   "tailwindcss/state-variants-hover-focus-disabled": {
-    title: "state variant สำหรับ hover focus disabled",
-    summary: "รีวิว interactive utility เป็น state ครบชุด ไม่ใช่ดูแค่ hover ที่สวยตอนใช้เมาส์.",
-    takeaways: ["button และ link ควรมี hover, focus-visible และ disabled state ที่ตั้งใจพอ ๆ กับ default style."],
+    codeComments: {
+      goodCode: ["ปุ่มบอกครบทั้ง hover, keyboard focus และ disabled state"],
+      badCode: ["outline-none ลบ focus ของ keyboard แต่ไม่มี style ใหม่มาทดแทน"],
+    },
+    title: "style ของปุ่มในแต่ละสถานะ",
+    summary: "รีวิวปุ่มและ link ให้ครบทั้ง hover, focus-visible และ disabled ไม่ใช่ดูแค่ตอนเอาเมาส์ชี้แล้วสวย.",
+    takeaways: ["ปุ่มและ link ควรมี style ชัดเจนทั้งตอนปกติ hover, keyboard focus และ disabled."],
     whatToReview: [
-      "โค้ดที่ดีมี keyboard focus ที่เห็นชัด และ disabled style ที่เปลี่ยนทั้ง pointer behavior กับ visual affordance.",
-      "โค้ดที่ควรปรับมีแค่ hover และลบ outline โดยไม่มี focus replacement ทำให้ผู้ใช้ keyboard หลงตำแหน่งได้.",
+      "โค้ดที่ดีมี focus ring ที่เห็นชัดสำหรับผู้ใช้ keyboard และมี disabled style ที่บอกว่าปุ่มกดไม่ได้จริง.",
+      "โค้ดที่ควรปรับมีแค่ hover และลบ outline โดยไม่มี focus style ใหม่ ทำให้ผู้ใช้ keyboard ไม่รู้ว่าตอนนี้ focus อยู่ตรงไหน.",
     ],
     reviewNotes: [
-      "ถ้าเห็น hover: ในรีวิว ให้มองหา focus-visible: และ disabled: ด้วยเมื่อ element นั้น interactive state ที่หายไปมักเป็น UX bug ที่ซ่อนอยู่.",
+      "ถ้าเห็น hover: ใน element ที่กดได้ ให้มองหา focus-visible: และ disabled: ด้วย state ที่หายไปมักกลายเป็น UX bug ตอนใช้งานจริง.",
     ],
   },
   "tailwindcss/spacing-layout-consistency": {
-    title: "spacing และ layout ที่สม่ำเสมอ",
-    summary: "ใช้ spacing scale และ layout rhythm ที่สม่ำเสมอ แทน one-off nudge ที่ทำให้แก้ในอนาคตเปราะ.",
-    takeaways: ["utility ระยะห่างที่ซ้ำควรเผย rhythm ของ layout ถ้ามีค่าประหลาดหลายจุด มักเป็นการ patch ภาพเฉพาะหน้า."],
+    codeComments: {
+      goodCode: ["ใช้ spacing scale เดียวกัน ทำให้ระยะใน panel อ่านเป็นระบบ"],
+      badCode: ["ค่าระยะเฉพาะจุดหลายตัวมักเกิดจากการขยับให้เหมือน screenshot"],
+    },
+    title: "ระยะห่างที่เป็นระบบ",
+    summary: "ใช้ spacing scale ของโปรเจกต์ให้สม่ำเสมอ แทนการใส่ค่าพิกเซลเฉพาะจุดหลายตัวที่ทำให้แก้ต่อยาก.",
+    takeaways: ["ระยะห่างใน component ควรดูเป็นระบบ ถ้ามีค่าประหลาดหลายจุดมักแปลว่าโค้ดถูกขยับตามภาพเฉพาะหน้า."],
     whatToReview: [
-      "โค้ดที่ดีใช้ padding ของ container และ space-y เพื่อทำให้จังหวะ vertical ชัดเจน.",
-      "โค้ดที่ควรปรับใช้ pixel arbitrary เกือบทุก gap เป็นสัญญาณว่า code ถูกปรับจาก screenshot เดียว ไม่ใช่ reusable layout.",
+      "โค้ดที่ดีใช้ padding ของ container และ space-y เพื่อให้ระยะห่างแนวตั้งอ่านง่ายและเปลี่ยนพร้อมกันได้.",
+      "โค้ดที่ควรปรับใช้ค่าพิกเซลในวงเล็บเหลี่ยมเกือบทุก gap เป็นสัญญาณว่า layout ถูกจูนตาม screenshot เดียวมากกว่าวางเป็นระบบ.",
     ],
     reviewNotes: [
-      "arbitrary value หนึ่งจุดอาจสมเหตุสมผล แต่ถ้ามาเป็นกลุ่มใน component เดียว ให้ถามว่าควรกลับไปใช้ project spacing scale หรือไม่.",
+      "ค่ากำหนดเองหนึ่งจุดอาจสมเหตุสมผล แต่ถ้ามาเป็นกลุ่มใน component เดียว ให้ถามว่าควรกลับไปใช้ spacing scale ของโปรเจกต์หรือไม่.",
     ],
   },
   "tailwindcss/theme-tokens-and-custom-values": {
-    title: "theme token และ custom value",
-    summary: "ใช้ named theme token สำหรับ decision ที่แชร์กัน และเก็บ custom value ไว้สำหรับ exception เฉพาะจุดจริง ๆ.",
-    takeaways: ["สี ระยะ หรือ radius ที่ใช้ซ้ำมักควรถูกยกระดับเป็น token เพื่อให้ reviewer คุยกันด้วยชื่อเดียวกัน."],
+    codeComments: {
+      goodCode: ["ใช้ชื่อจาก theme ทำให้สีแบรนด์เปลี่ยนและรีวิวได้จากจุดกลาง"],
+      badCode: ["hex และ pixel value ซ่อนค่าสำคัญไว้ใน component เดียว"],
+    },
+    title: "ค่ากลางของดีไซน์ (theme tokens)",
+    summary: "สี ระยะ หรือขนาดที่ใช้ซ้ำควรมีชื่อกลางใน theme ส่วนค่าที่เขียนเองเฉพาะจุดควรใช้เฉพาะตอนมีเหตุผลจริง ๆ.",
+    takeaways: ["ถ้าค่าสี ระยะ หรือ radius ถูกใช้ซ้ำหลายที่ มักควรตั้งเป็น token เพื่อให้ทั้งทีมเรียกและรีวิวด้วยชื่อเดียวกัน."],
     whatToReview: [
-      "โค้ดที่ดีใช้ brand utility ที่ตั้งชื่อแล้ว ทำให้ design decision ที่ซ้ำถูกเปลี่ยนและรีวิวผ่าน theme ได้.",
-      "โค้ดที่ควรปรับฝัง design system ไว้ใน component เดียวด้วย hex color, custom shadow และ pixel value ซึ่งมักถูก copy ต่อแบบไม่ตรงกัน.",
+      "โค้ดที่ดีใช้ utility ที่ตั้งชื่อจาก theme เช่นสีแบรนด์ ทำให้ค่าที่ใช้ซ้ำถูกเปลี่ยนและรีวิวจากจุดกลางได้.",
+      "โค้ดที่ควรปรับฝังสี hex, shadow และ pixel value ไว้ใน component เดียว ทำให้มีโอกาสถูก copy ไปใช้ต่อแบบไม่ตรงกัน.",
     ],
     reviewNotes: [
-      "custom value ของ Tailwind มีประโยชน์ แต่ custom value ที่ซ้ำคือ design token ที่กำลังขอชื่อ เวลารีวิวให้ถามว่าค่านี้เป็นของ component หรือของ theme.",
+      "custom value ของ Tailwind มีประโยชน์ แต่ถ้าค่าเดิมซ้ำหลายที่ มันอาจเป็น theme token ที่ยังไม่มีชื่อ เวลารีวิวให้ถามว่าค่านี้ควรเป็นค่าของ component นี้เท่านั้น หรือควรเป็นค่ากลางของระบบ.",
     ],
   },
   "tailwindcss/dark-mode-variants": {
-    title: "variant สำหรับ dark mode",
-    summary: "วาง dark mode style คู่กับ base style เพื่อให้ทั้งสอง theme ถูกรีวิวได้ใน component เดียวกัน.",
-    takeaways: ["dark mode ควรครอบคลุม background, text, border และ state color ไม่ใช่เปลี่ยนเฉพาะ foreground ที่เห็นชัดที่สุด."],
+    codeComments: {
+      goodCode: ["จับคู่สี light/dark ของพื้น ขอบ ตัวอักษร และ link ไว้ในที่เดียว"],
+      badCode: ["เปลี่ยนเฉพาะหัวข้อ แต่พื้น card และข้อความส่วนอื่นยังเป็นชุดสีสว่าง"],
+    },
+    title: "dark mode ที่ครบทั้ง component",
+    summary: "จับคู่ style โหมดสว่างและโหมดมืดไว้ใน component เดียวกัน ทั้งพื้น ขอบ ตัวอักษร และ state ของ link.",
+    takeaways: ["dark mode ไม่ควรเปลี่ยนแค่ตัวอักษรที่เห็นชัด แต่ต้องดูพื้นหลัง ขอบ ข้อความรอง และ state สีด้วย."],
     whatToReview: [
-      "โค้ดที่ดีจับคู่ light และ dark value สำหรับ surface, border, text hierarchy และ link state.",
-      "โค้ดที่ควรปรับเปลี่ยนเฉพาะ heading ใน dark mode ทำให้ card ยังสว่างหรือ body text contrast ต่ำเมื่อทั้งหน้ามืด.",
+      "โค้ดที่ดีจับคู่ค่าสีโหมดสว่างและโหมดมืดให้ครบทั้งพื้น card, border, ลำดับข้อความ และ link state.",
+      "โค้ดที่ควรปรับเปลี่ยนเฉพาะ heading ใน dark mode ทำให้ card ยังสว่างหรือข้อความรองอ่านยากเมื่อทั้งหน้ากลายเป็นโหมดมืด.",
     ],
     reviewNotes: [
-      "รีวิว dark mode ไม่ใช่แค่ค้นหา dark: แต่ต้องดูว่าทุก layer ที่มีผลต่อ contrast มี dark variant ที่ตั้งใจแล้วหรือยัง.",
+      "รีวิว dark mode ไม่ใช่แค่ค้นหา dark: แต่ต้องดูว่าชั้นที่มีผลต่อ contrast เช่นพื้น ขอบ ข้อความ และ link มีค่าของโหมดมืดครบหรือยัง.",
     ],
   },
   "tailwindcss/class-reuse-component-boundaries": {
-    title: "reuse class และ component boundary",
-    summary: "แยก class decision ที่ใช้ซ้ำไว้ที่ component boundary แทนการ copy class string ยาว ๆ หลายจุด.",
-    takeaways: ["Tailwind string ที่ซ้ำก็คือ duplication เหมือนกัน ให้ extract เมื่อมันแทน UI concept เดียวกัน."],
+    codeComments: {
+      goodCode: [
+        "map จุดเดียวเป็นเจ้าของสีของแต่ละสถานะ",
+        "โครง badge อยู่ใน component เดียว ไม่ต้อง copy หลายที่",
+      ],
+      badCode: ["แต่ละ branch copy โครง badge เดิม ทำให้แก้ style แล้วหลุดง่าย"],
+    },
+    title: "แยก class ที่ใช้ซ้ำไว้ใน component",
+    summary: "ถ้า class ชุดเดิมแทน UI แบบเดียวกัน ให้ย้ายไปอยู่ใน component หรือ map จุดเดียว แทนการ copy className ยาว ๆ หลายที่.",
+    takeaways: ["Tailwind string ที่ซ้ำกันก็คือ duplication ให้ดึงออกเมื่อมันแทน UI concept เดียวกันจริง ๆ."],
     whatToReview: [
-      "โค้ดที่ดีให้ badge มี component boundary และเก็บ variant class ไว้ใน typed map จุดเดียว.",
-      "โค้ดที่ควรปรับทำซ้ำ structural utility ในหลาย branch เปลี่ยนหน้าตาเล็กน้อยครั้งเดียวจึงต้องแก้หลายที่และหวังว่าจะไม่หลุด.",
+      "โค้ดที่ดีให้ badge component เป็นเจ้าของโครงสร้างของ badge และเก็บ class ของแต่ละสถานะไว้ใน map จุดเดียว.",
+      "โค้ดที่ควรปรับ copy class โครงสร้าง badge ซ้ำในหลาย branch ทำให้เปลี่ยนหน้าตาเล็กน้อยครั้งเดียวต้องแก้หลายจุดและเสี่ยงหลุด.",
     ],
     reviewNotes: [
-      "extract เมื่อ duplication แทน UI concept เดียวกัน ไม่ต้อง extract ทุก class list โดยอัตโนมัติ ให้ดูว่าคอมเมนต์รีวิวจะใช้ร่วมกันทุก copy หรือไม่.",
+      "ไม่ต้องดึงทุก className ออกมาเสมอ ให้ดึงเมื่อ class ที่ซ้ำแทน UI เรื่องเดียวกัน และถ้า reviewer จะคอมเมนต์เหมือนกันทุกจุด นั่นคือสัญญาณว่าควรรวมไว้ที่เดียว.",
     ],
   },
   "tailwindcss/arbitrary-values-restraint": {
-    title: "การใช้ arbitrary value อย่างพอดี",
-    summary: "ใช้ arbitrary value สำหรับ constraint เฉพาะจริง ๆ ไม่ใช่ใช้แทน design scale ของโปรเจกต์.",
-    takeaways: ["arbitrary value คือเครื่องมือ precision ถ้าใช้เกินไป design system จะหายไปจากสายตา reviewer."],
+    codeComments: {
+      goodCode: ["ใช้ arbitrary value จุดเดียวเพื่อบอกคอลัมน์ที่ต้องยืดหยุ่นจริง ๆ"],
+      badCode: ["ค่ากำหนดเองเต็ม component ทำให้หลุดจาก scale กลางของโปรเจกต์"],
+    },
+    title: "ใช้ค่ากำหนดเอง (arbitrary value) เท่าที่จำเป็น",
+    summary: "ใช้ arbitrary value เช่น w-[417px] เฉพาะตอน layout ต้องการค่าพิเศษจริง ๆ ไม่ใช่ใช้แทน scale กลางของโปรเจกต์.",
+    takeaways: ["arbitrary value เหมาะกับข้อจำกัดเฉพาะจุด ถ้าใช้เต็ม component ระบบ design จะหายไปจากสายตาคนรีวิว."],
     whatToReview: [
-      "โค้ดที่ดีใช้ arbitrary grid template เพียงจุดเดียว เพราะ layout ต้องการ text column ที่ยืดหยุ่นคู่กับ shortcut column แบบ auto.",
-      "โค้ดที่ควรปรับใช้ arbitrary value เกือบทุก decision ทำให้ component จัดแนวกับ UI อื่นได้ยาก.",
+      "โค้ดที่ดีใช้ arbitrary grid template เพียงจุดเดียว เพราะ layout ต้องการคอลัมน์ข้อความที่ยืดหยุ่นคู่กับคอลัมน์ shortcut แบบ auto.",
+      "โค้ดที่ควรปรับใช้ค่ากำหนดเองเกือบทุกอย่าง ทั้ง gap, radius, padding, font size และสี ทำให้ component จัดแนวกับ UI อื่นได้ยาก.",
     ],
     reviewNotes: [
-      "ถามว่า arbitrary value แต่ละตัวมีเหตุผลอะไร ถ้าคำตอบคือดูแล้วใกล้เคียง ให้กลับไปใช้ scale ของ spacing, color, size หรือ radius.",
+      "เวลาเจอค่ากำหนดเองในวงเล็บเหลี่ยม ให้ถามว่ามีเหตุผลเฉพาะอะไร ถ้าคำตอบคือแค่ดูใกล้เคียง ควรกลับไปใช้ scale ของ spacing, color, size หรือ radius.",
     ],
   },
   "tailwindcss/accessibility-contrast-focus": {
-    title: "contrast และ focus สำหรับ accessibility",
-    summary: "รีวิว Tailwind styling ให้มี focus ที่เห็นชัด contrast ที่อ่านได้ และ label ที่เข้าถึงได้สำหรับ icon-only control.",
-    takeaways: ["utility class ทำให้ accessibility ชัดขึ้นได้ เมื่อ contrast, focus และ label อยู่ใน class list หรือ markup ให้เห็นตรง call site."],
+    codeComments: {
+      goodCode: ["ปุ่มไอคอนต้องมี contrast, focus ring และชื่อที่ screen reader อ่านได้"],
+      badCode: ["ไม่มี label และลบ outline ทำให้ปุ่มไอคอนใช้งานยากขึ้น"],
+    },
+    title: "contrast, focus และ label ที่เข้าถึงได้",
+    summary: "รีวิวปุ่มไอคอนให้มีสีที่อ่านออก, focus ring ที่เห็นชัด และข้อความซ่อนสำหรับ screen reader.",
+    takeaways: ["Tailwind ช่วยให้ accessibility เห็นได้ตรงหน้า เมื่อ contrast, focus และ label อยู่ใน className หรือ markup ที่รีวิวได้."],
     whatToReview: [
-      "โค้ดที่ดีให้ icon-only button มี accessible text label, contrast เพียงพอ และ keyboard focus ring ที่เด่นชัด.",
-      "โค้ดที่ควรปรับลบ outline ใช้ foreground contrast อ่อน และปล่อยให้ icon เป็นชื่อเดียวของ control.",
+      "โค้ดที่ดีให้ปุ่มที่มีแต่ไอคอนมี label สำหรับ screen reader, contrast ที่อ่านได้ และ focus ring ที่เห็นชัดเมื่อใช้ keyboard.",
+      "โค้ดที่ควรปรับลบ outline ใช้สีไอคอนที่จางเกินไป และไม่มีข้อความบอกว่าปุ่มนี้ทำอะไร.",
     ],
     reviewNotes: [
-      "Tailwind ทำให้ accessibility รีวิวได้ง่ายขึ้น เพราะ focus ring, contrast choice และ sr-only label มองเห็นได้ตรง call site.",
+      "Tailwind ทำให้ accessibility รีวิวได้ง่ายขึ้น เพราะ focus ring, สีที่เลือก และ sr-only label อยู่ในโค้ดจุดที่เรียกใช้ component ให้เห็นเลย.",
     ],
   },
   "tailwindcss/conditional-classes-and-conflicts": {
-    title: "conditional class และ conflict",
-    summary: "สร้าง conditional class list ให้ state ที่ควร exclusive กันไม่สามารถปล่อย utility ที่ชนกันออกมาพร้อมกันโดยไม่ตั้งใจ.",
-    takeaways: ["conditional Tailwind ควรทำให้ variant precedence ชัด ถ้ามี utility ขัดกัน การรีวิว state จะกลายเป็นการเดา."],
+    codeComments: {
+      goodCode: ["selected กับ unselected ถูกเลือกคนละทาง จึงไม่ปล่อยสีพื้นชนกัน"],
+      badCode: ["เงื่อนไขหลายตัวอาจปล่อย bg/text/opacity ที่ชนกันใน className เดียว"],
+    },
+    title: "กัน class ตามเงื่อนไขไม่ให้ชนกัน",
+    summary: "เขียน conditional class ให้สถานะที่ไม่ควรเกิดพร้อมกัน เช่น selected/unselected หรือ enabled/disabled ไม่ปล่อย class ที่ขัดกันออกมาพร้อมกัน.",
+    takeaways: ["class ตามเงื่อนไขควรทำให้รู้ชัดว่าสถานะไหนชนะ ถ้ามี utility ที่ชนกัน คนรีวิวจะต้องเดาผลลัพธ์จากลำดับ class."],
     whatToReview: [
-      "โค้ดที่ดีทำให้ selected และ unselected style exclusive กัน แล้วค่อย layer disabled behavior อย่างตั้งใจ.",
-      "โค้ดที่ควรปรับสามารถปล่อย background, text และ opacity utility ที่ขัดกันใน string เดียว ผลลัพธ์จึงขึ้นกับลำดับมากกว่า state logic.",
+      "โค้ดที่ดีแยก selected กับ unselected ออกจากกันชัดเจน แล้วค่อยเพิ่ม disabled state ทับอย่างตั้งใจ.",
+      "โค้ดที่ควรปรับอาจปล่อย class สีพื้น สีตัวอักษร และ opacity ที่ขัดกันอยู่ใน className เดียว ทำให้ผลลัพธ์ขึ้นกับลำดับมากกว่าเงื่อนไขที่อ่านเข้าใจ.",
     ],
     reviewNotes: [
-      "เวลารีวิว conditional Tailwind ให้หา pair ที่ไม่ควรอยู่ร่วมกัน เช่น background สองค่า opacity สองค่า หรือ disabled state ที่ยังเก็บ hover styling ไว้.",
+      "เวลารีวิว conditional Tailwind ให้หาคู่ที่ไม่ควรอยู่พร้อมกัน เช่น background สองค่า, opacity สองค่า หรือ disabled แล้วแต่ยังมี hover style เหมือนกดได้.",
     ],
   },
 } as const satisfies Record<string, LessonThaiTranslation>;
