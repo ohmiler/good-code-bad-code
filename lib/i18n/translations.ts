@@ -322,31 +322,31 @@ export const lessonThaiTranslations = {
   },
   "css/flex-layout-boundaries": {
     codeComments: {
-      goodCode: ["container เป็นเจ้าของ spacing ส่วน status เป็นข้อยกเว้นเรื่อง alignment"],
-      badCode: ["child selector ทำให้ item ทุกตัวรับ layout rule โดยไม่ชัดเจน"],
+      goodCode: ["container คุมระยะห่างเอง ส่วน status แยกจัดตำแหน่งเฉพาะจุด"],
+      badCode: ["selector ของ child ทำให้ทุก item ได้กฎ layout โดยไม่ตั้งใจ"],
     },
-    title: "ขอบเขตของ flex layout",
-    summary: "กำหนด layout ใน container ให้ชัด แทนการกระจาย margin ไปทั่วลูก.",
-    takeaways: ["ให้ container คุม spacing ด้วย gap มากกว่าผลักลูกทีละตัว."],
+    title: "ให้ flex container คุม layout",
+    summary: "ให้ container เป็นคนจัด layout และระยะห่าง แทนการกระจาย margin ไปไว้ตาม child หลายตัว.",
+    takeaways: ["ให้ container คุมระยะห่างด้วย gap มากกว่าดันระยะจาก child ทีละตัว."],
     whatToReview: [
-      "โค้ดที่ดีให้ flex container เป็นเจ้าของ layout และใช้ gap เพื่อคุมระยะห่าง.",
-      "โค้ดที่ควรปรับพึ่ง selector กว้าง ๆ กับ margin ของ child ทำให้เปลี่ยนโครงสร้างแล้ว layout พังง่าย.",
+      "โค้ดที่ดีให้ flex container เป็นเจ้าของ layout และใช้ gap เพื่อคุมระยะห่างอย่างชัดเจน.",
+      "โค้ดที่ควรปรับพึ่ง selector กว้าง ๆ กับ margin ของ child ทำให้เปลี่ยนโครงสร้างแล้ว layout เพี้ยนง่าย.",
     ],
     reviewNotes: [
-      "ตอนรีวิว CSS ให้ดูว่า spacing เป็นความรับผิดชอบของ container หรือกระจายอยู่ใน child หลายจุด. ขอบเขตที่ชัดทำให้ย้าย component และเพิ่ม item ได้มั่นใจกว่า.",
+      "ตอนรีวิว CSS ให้ดูว่าระยะห่างเป็นความรับผิดชอบของ container หรือกระจายอยู่ใน child หลายจุด. ขอบเขตที่ชัดทำให้ย้าย component และเพิ่ม item ได้มั่นใจกว่า.",
     ],
   },
   "css/color-contrast-states": {
     codeComments: {
-      goodCode: ["สีพื้นฐานและสีของ state ยังรักษา contrast ให้อ่านได้"],
-      badCode: ["state ที่ contrast ต่ำทำให้รับรู้หรืออ่านได้ยาก"],
+      goodCode: ["สีพื้นฐานและสีของแต่ละ state ยังมี contrast พอให้อ่านได้"],
+      badCode: ["state ที่ contrast ต่ำทำให้มองเห็นหรืออ่านข้อความได้ยาก"],
     },
-    title: "contrast และ state ของสี",
-    summary: "ทำ hover/focus ให้เห็นชัดและมี contrast พอ ไม่พึ่งสีจางอย่างเดียว.",
-    takeaways: ["state สำคัญต้องเห็นชัดทั้งด้วย contrast และ focus style."],
+    title: "contrast ของสีในแต่ละ state",
+    summary: "ทำ hover และ focus ให้เห็นชัด มี contrast เพียงพอ และไม่พึ่งสีจาง ๆ เพียงอย่างเดียว.",
+    takeaways: ["state สำคัญต้องมองเห็นชัด ทั้งจาก contrast และ focus style."],
     whatToReview: [
       "โค้ดที่ดีระบุ hover และ focus state ที่เห็นได้จริง พร้อม focus ring สำหรับ keyboard.",
-      "โค้ดที่ควรปรับเปลี่ยนแค่สีอ่อนมาก ๆ จนผู้ใช้แยก state ได้ยาก.",
+      "โค้ดที่ควรปรับเปลี่ยนแค่สีอ่อนมาก ๆ จนผู้ใช้แยก state ไม่ออก.",
     ],
     reviewNotes: [
       "อย่ารีวิวแค่ว่าสีสวยไหม ให้ลองคิดว่าผู้ใช้มองเห็น state ได้ชัดหรือเปล่า โดยเฉพาะปุ่มและลิงก์ที่เป็น action สำคัญ.",
@@ -354,15 +354,15 @@ export const lessonThaiTranslations = {
   },
   "css/responsive-units": {
     codeComments: {
-      goodCode: ["ค่าที่มีขอบเขตช่วย scale ตาม component โดยยังอ่านง่าย"],
-      badCode: ["ขนาดตัวอักษรตาม viewport อาจอ่านยากนอกขนาดจอนี้"],
+      goodCode: ["ค่าที่มีขอบเขตช่วยให้ขนาดยืดหยุ่นแต่ยังอ่านง่าย"],
+      badCode: ["ผูกขนาดตัวอักษรกับ viewport ตรง ๆ อาจอ่านยากบนบางจอ"],
     },
-    title: "หน่วย responsive ที่อ่านง่าย",
-    summary: "ใช้ clamp และ spacing ที่ยืดหยุ่น แทนการผูกขนาดตัวอักษรกับ viewport ตรง ๆ.",
-    takeaways: ["อย่าให้ body text โตหรือเล็กตาม viewport จนอ่านยาก."],
+    title: "หน่วย responsive ที่ยังอ่านง่าย",
+    summary: "ใช้ clamp และ spacing ที่ยืดหยุ่น แทนการผูกขนาดตัวอักษรกับขนาด viewport ตรง ๆ.",
+    takeaways: ["อย่าให้ body text โตหรือเล็กตาม viewport จนเสียความอ่านง่าย."],
     whatToReview: [
-      "โค้ดที่ดีใช้ clamp เพื่อกำหนดขอบเขตขนาดที่เหมาะสมในหลายหน้าจอ.",
-      "โค้ดที่ควรปรับใช้ vw กับตัวอักษรหลัก ทำให้จอเล็กอ่านยากและจอใหญ่ตัวโตเกิน.",
+      "โค้ดที่ดีใช้ clamp เพื่อกำหนดขนาดต่ำสุดและสูงสุดที่เหมาะกับหลายหน้าจอ.",
+      "โค้ดที่ควรปรับใช้ vw กับตัวอักษรหลัก ทำให้จอเล็กอ่านยากและจอใหญ่ตัวโตเกินไป.",
     ],
     reviewNotes: [
       "เวลาเจอ responsive CSS ให้ดูว่ามีขอบบนขอบล่างของขนาดหรือไม่. Responsive ที่ดีควรปรับตามพื้นที่ แต่ยังรักษาความอ่านง่ายไว้.",
@@ -370,62 +370,62 @@ export const lessonThaiTranslations = {
   },
   "css/box-model-sizing": {
     codeComments: {
-      goodCode: ["border-box ทำให้ขนาดที่ประกาศรวม padding และ border อย่างตรงไปตรงมา"],
-      badCode: ["width ไม่รวม padding กับ border ทำให้พื้นที่จริงกว้างกว่าที่เห็นในโค้ด"],
+      goodCode: ["border-box ทำให้ width ที่ประกาศรวม padding และ border แล้ว"],
+      badCode: ["width ไม่รวม padding กับ border ทำให้กล่องจริงกว้างกว่าที่คิด"],
     },
-    title: "ขนาดกล่องและ box model",
-    summary: "ทำให้ width, padding และ border คาดเดาได้ ด้วย box-sizing และขนาดที่ไม่ดัน layout ล้น.",
+    title: "ขนาดกล่องใน box model",
+    summary: "ทำให้ width, padding และ border คาดเดาได้ ด้วย box-sizing ที่ไม่ดัน layout ให้ล้น.",
     takeaways: ["ตั้ง box-sizing: border-box เพื่อให้ขนาด component ไม่ล้นเพราะ padding หรือ border."],
     whatToReview: [
       "โค้ดที่ดีทำให้ขนาดของการ์ดรวม padding และ border อยู่ในกรอบเดียวกัน จึงย้ายไปหลาย container ได้ง่าย.",
-      "โค้ดที่ควรปรับกำหนด width คงที่แล้วเติม padding เพิ่ม ทำให้พื้นที่จริงกว้างกว่าที่คนอ่านคาด.",
+      "โค้ดที่ควรปรับกำหนด width คงที่แล้วเติม padding เพิ่ม ทำให้พื้นที่จริงกว้างกว่าที่คนอ่านคาดไว้.",
     ],
     reviewNotes: [
-      "เวลารีวิว layout ให้ดูว่าความกว้างที่ประกาศคือความกว้างจริงของ component หรือยังต้องบวก padding และ border ในหัวอีกชั้นหนึ่ง.",
+      "เวลารีวิว layout ให้ดูว่าความกว้างที่ประกาศคือความกว้างจริงของ component หรือยังต้องบวก padding และ border เพิ่มในหัวอีกชั้นหนึ่ง.",
     ],
   },
   "css/cascade-specificity": {
     codeComments: {
-      goodCode: ["class ของ component ที่ specificity ต่ำทำให้เห็น ownership ชัด"],
-      badCode: ["selector นี้ชนะด้วยแรง specificity แทนที่จะบอก intent ของ component"],
+      goodCode: ["class ของ component ที่ specificity ต่ำทำให้เห็นเจ้าของ rule ชัด"],
+      badCode: ["selector นี้ชนะด้วย specificity สูง แต่ไม่ได้บอกเจตนาของ component"],
     },
-    title: "cascade และ specificity",
-    summary: "เลือก selector ให้เฉพาะเท่าที่จำเป็น เพื่อให้ override ได้ตั้งใจและดูแลต่อได้ง่าย.",
+    title: "cascade และ specificity ที่คุมได้",
+    summary: "เลือก selector ให้เฉพาะเท่าที่จำเป็น เพื่อให้ override ได้อย่างตั้งใจและดูแลต่อได้ง่าย.",
     takeaways: ["เริ่มจาก class ที่มีขอบเขตชัด แล้วใช้ modifier แทน selector ยาวหรือ !important."],
     whatToReview: [
       "โค้ดที่ดีใช้ class ของ component และ modifier ทำให้เห็นชัดว่า rule ไหนรับผิดชอบ state ไหน.",
-      "โค้ดที่ควรปรับพึ่ง selector ลึก, id และ !important จน reusable component ถูกผูกกับโครงสร้างหน้าเดียว.",
+      "โค้ดที่ควรปรับพึ่ง selector ลึก, id และ !important จน component ที่ควรใช้ซ้ำได้ถูกผูกกับโครงสร้างหน้าเดียว.",
     ],
     reviewNotes: [
-      "ตอนรีวิวให้ถามว่า selector นี้สื่อ ownership หรือแค่ชนะ specificity เฉย ๆ selector ที่ชนะวันนี้อาจทำให้การแก้ครั้งถัดไปยากขึ้นมาก.",
+      "ตอนรีวิวให้ถามว่า selector นี้บอกว่าใครเป็นเจ้าของ style หรือแค่พยายามชนะ specificity เฉย ๆ selector ที่ชนะวันนี้อาจทำให้การแก้ครั้งถัดไปยากขึ้นมาก.",
     ],
   },
   "css/grid-layout-tracks": {
     codeComments: {
-      goodCode: ["grid อธิบายกฎ column responsive ไว้จุดเดียว"],
-      badCode: ["float และ nth-child margin ฝังการคำนวณแถวที่เปราะบาง"],
+      goodCode: ["grid อธิบายกฎคอลัมน์ responsive ไว้จุดเดียว"],
+      badCode: ["float และ nth-child ฝังการคำนวณแถวที่เปราะบางไว้ใน CSS"],
     },
     title: "grid tracks ที่ยืดหยุ่น",
-    summary: "ใช้ CSS Grid อธิบายคอลัมน์ responsive แทนการคำนวณความกว้างและ margin เอง.",
+    summary: "ใช้ CSS Grid อธิบายคอลัมน์ responsive แทนการคำนวณความกว้างและ margin เองด้วยมือ.",
     takeaways: ["ให้ grid จัด track ด้วย minmax และ gap แทน float, percentage และ nth-child ที่เปราะบาง."],
     whatToReview: [
       "โค้ดที่ดีประกาศกติกา layout ครั้งเดียวว่า card ควรกว้างอย่างน้อยเท่าไร และเพิ่มคอลัมน์เมื่อพื้นที่พอ.",
-      "โค้ดที่ควรปรับจำลองคอลัมน์ด้วย float และ positional selector ทำให้เปลี่ยนจำนวนคอลัมน์หรือ gap แล้วพังง่าย.",
+      "โค้ดที่ควรปรับจำลองคอลัมน์ด้วย float และ selector ตามตำแหน่ง ทำให้เปลี่ยนจำนวนคอลัมน์หรือ gap แล้วพังง่าย.",
     ],
     reviewNotes: [
-      "เวลาเจอ CSS ที่คำนวณแถวและคอลัมน์ด้วยมือ ให้ลองถามว่ากติกานั้นเขียนตรง ๆ ด้วย grid ได้ไหม โค้ดจะอ่านง่ายและมีเลขลับน้อยลง.",
+      "เวลาเจอ CSS ที่คำนวณแถวและคอลัมน์ด้วยมือ ให้ลองถามว่ากติกานั้นเขียนตรง ๆ ด้วย grid ได้ไหม โค้ดจะอ่านง่ายขึ้นและมีเลขลับน้อยลง.",
     ],
   },
   "css/focus-visible-states": {
     codeComments: {
-      goodCode: ["hover focus และ selected state มีสัญญาณภาพแยกกัน"],
-      badCode: ["ลบ outline โดยไม่มีตัวแทนทำให้ผู้ใช้ keyboard ไม่เห็นตำแหน่ง"],
+      goodCode: ["hover focus และ selected มีสัญญาณภาพแยกกันชัดเจน"],
+      badCode: ["ลบ outline โดยไม่มี style แทน ทำให้ผู้ใช้ keyboard ไม่เห็นตำแหน่ง"],
     },
     title: "state selector และ focus-visible",
-    summary: "แยก hover, active, selected และ keyboard focus ให้เป็นพฤติกรรมที่รีวิวได้ชัด.",
+    summary: "แยก hover, active, selected และ keyboard focus ให้ชัด เพื่อให้รีวิวพฤติกรรมแต่ละแบบได้ง่าย.",
     takeaways: ["ใช้ :focus-visible สำหรับ keyboard focus และอย่าลบ outline ถ้ายังไม่มี style ทดแทนที่เห็นชัด."],
     whatToReview: [
-      "โค้ดที่ดีแยก state ของเมาส์, keyboard และ selected ออกจากกัน ทำให้แต่ละ interaction มีสัญญาณที่ชัด.",
+      "โค้ดที่ดีแยก state ของเมาส์ keyboard และ selected ออกจากกัน ทำให้แต่ละ interaction มีสัญญาณที่ชัด.",
       "โค้ดที่ควรปรับลบ outline แล้วรวม focus กับ hover จนผู้ใช้ keyboard มองตำแหน่งปัจจุบันได้ยาก.",
     ],
     reviewNotes: [
@@ -434,28 +434,28 @@ export const lessonThaiTranslations = {
   },
   "css/logical-properties": {
     codeComments: {
-      goodCode: ["logical properties สื่อ spacing และ edge ตาม flow ของภาษา"],
-      badCode: ["ค่า left/right แบบ physical ทำให้รองรับ writing direction ยากขึ้น"],
+      goodCode: ["logical properties บอกระยะและขอบตามทิศทางการอ่าน"],
+      badCode: ["left/right แบบตายตัวทำให้รองรับทิศทางภาษาอื่นยากขึ้น"],
     },
     title: "logical properties สำหรับหลายภาษา",
-    summary: "ใช้ spacing และ border ตามแกน block/inline เมื่อ style ควรปรับตามทิศทางภาษา.",
+    summary: "ใช้ spacing และ border ตามแกน block/inline เมื่อ style ควรปรับตามทิศทางการอ่านของภาษา.",
     takeaways: ["เลือก inline และ block properties เมื่อเจตนาจริงไม่ใช่ซ้าย ขวา บน หรือล่างแบบตายตัว."],
     whatToReview: [
-      "โค้ดที่ดีบอกว่าเส้น accent อยู่ด้านเริ่มต้นของข้อความ และ spacing อยู่ตามแกน block หรือ inline.",
+      "โค้ดที่ดีบอกว่าเส้น accent อยู่ด้านเริ่มต้นของข้อความ และระยะห่างอยู่ตามแกน block หรือ inline.",
       "โค้ดที่ควรปรับ hard-code left/right ทั้งที่เจตนาคือ start/end ทำให้รองรับภาษาและ layout อื่นยากขึ้น.",
     ],
     reviewNotes: [
-      "ตอนรีวิวให้ถามว่าทิศทาง physical จำเป็นจริงไหม ถ้าดีไซน์หมายถึงจุดเริ่มข้อความหรือระยะบนล่าง logical properties จะสื่อเจตนาได้ตรงกว่า.",
+      "ตอนรีวิวให้ถามว่าต้องระบุซ้ายขวาแบบตายตัวจริงไหม ถ้าดีไซน์หมายถึงจุดเริ่มข้อความหรือระยะบนล่าง logical properties จะสื่อเจตนาได้ตรงกว่า.",
     ],
   },
   "css/custom-properties-tokens": {
     codeComments: {
-      goodCode: ["token ที่ตั้งชื่อทำให้ design decision ที่ใช้ร่วมกันรีวิวได้"],
-      badCode: ["ค่าดิบที่ซ้ำกันซ่อนว่า decision ไหนควรเป็น shared token"],
+      goodCode: ["token ที่ตั้งชื่อทำให้ decision ของดีไซน์รีวิวร่วมกันได้"],
+      badCode: ["ค่าดิบที่ซ้ำกันซ่อนว่าค่าไหนควรเป็น token กลาง"],
     },
-    title: "custom properties เป็น design tokens",
-    summary: "ตั้งชื่อค่า design ที่ใช้ซ้ำด้วย custom properties แทนการกระจาย magic values.",
-    takeaways: ["ตั้งชื่อสี spacing radius และ accent ที่ใช้ซ้ำ เพื่อให้เปลี่ยนระบบดีไซน์ได้ง่ายขึ้น."],
+    title: "ใช้ custom properties เป็น design tokens",
+    summary: "ตั้งชื่อค่าดีไซน์ที่ใช้ซ้ำด้วย custom properties แทนการกระจายเลขและสีแบบไม่มีชื่อ.",
+    takeaways: ["ตั้งชื่อสี ระยะห่าง radius และ accent ที่ใช้ซ้ำ เพื่อให้เปลี่ยนระบบดีไซน์ได้ง่ายขึ้น."],
     whatToReview: [
       "โค้ดที่ดีตั้งชื่อค่ากลางและให้ variant เปลี่ยนเฉพาะ token ที่ตัวเองเป็นเจ้าของ.",
       "โค้ดที่ควรปรับกระจายเลขและสีซ้ำหลายจุด ทำให้ดีไซน์เปลี่ยนทีต้องค้นหาและแก้หลายที่.",
@@ -466,15 +466,15 @@ export const lessonThaiTranslations = {
   },
   "css/reduced-motion": {
     codeComments: {
-      goodCode: ["motion ที่ผูกกับ state สามารถย่อให้ผู้ใช้ reduced motion ได้"],
-      badCode: ["animation รันกับทุกคนและไม่มีทางลด motion ตาม preference"],
+      goodCode: ["motion ที่ผูกกับ state สามารถลดลงตาม preference ของผู้ใช้"],
+      badCode: ["animation รันกับทุกคนและไม่มีทางลด motion ให้ผู้ใช้ที่ต้องการ"],
     },
-    title: "motion และ reduced motion",
-    summary: "ทำ animation ให้มีเหตุผล และเคารพผู้ใช้ที่ตั้งค่าให้ลดการเคลื่อนไหว.",
-    takeaways: ["ทุก UI ที่เคลื่อนไหวควรมี prefers-reduced-motion path ที่ยังสื่อ state ได้ชัด."],
+    title: "motion และการลดการเคลื่อนไหว",
+    summary: "ทำ animation ให้มีเหตุผล และเคารพผู้ใช้ที่ตั้งค่าให้ลดการเคลื่อนไหวในระบบ.",
+    takeaways: ["ทุก UI ที่เคลื่อนไหวควรมีทางเลือกสำหรับ prefers-reduced-motion ที่ยังสื่อ state ได้ชัด."],
     whatToReview: [
       "โค้ดที่ดีทำให้ state เปลี่ยนชัดเหมือนเดิม แต่ลดระยะเวลาการเคลื่อนไหวเมื่อผู้ใช้ขอลด motion.",
-      "โค้ดที่ควรปรับบังคับ animation แบบเดียวกับทุกคน และซ่อน state ไว้ใน animation ที่ไม่ตอบสนอง preference.",
+      "โค้ดที่ควรปรับบังคับ animation แบบเดียวกับทุกคน และซ่อนความหมายของ state ไว้ในการเคลื่อนไหวที่ลดไม่ได้.",
     ],
     reviewNotes: [
       "ตอนรีวิวให้ถามว่า motion สื่ออะไร และเมื่อปิดหรือลด motion แล้วยังเข้าใจ state ไหม animation ที่ดีควรช่วยอธิบาย ไม่ใช่เป็นทางเดียวที่ทำให้เข้าใจ.",
