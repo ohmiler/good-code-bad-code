@@ -36,6 +36,14 @@ html[lang="th"] body {
     "Segoe UI", Arial, Helvetica, sans-serif;
 }
 
+html[data-language-pending="true"]:not([data-language-ready="true"]) body {
+  opacity: 0;
+}
+
+html[data-language-pending="true"] body {
+  transition: opacity 120ms ease;
+}
+
 a {
   text-decoration: none;
 }

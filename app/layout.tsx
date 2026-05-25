@@ -4,6 +4,7 @@ import {
   Geist_Mono,
   IBM_Plex_Sans_Thai,
 } from "next/font/google";
+import { LanguageBootstrapScript } from "@/components/language/language-bootstrap-script";
 import { LanguageProvider } from "@/components/language/language-provider";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -71,9 +72,11 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} ${ibmPlexSansThai.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-[#070b12] text-zinc-100">
+        <LanguageBootstrapScript />
         <LanguageProvider>
           <SiteHeader />
           <div className="flex-1">{children}</div>

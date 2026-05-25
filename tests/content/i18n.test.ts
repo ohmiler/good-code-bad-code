@@ -10,6 +10,15 @@ import {
 import { tracks } from "../../lib/content/tracks";
 
 const registryPath = path.join(process.cwd(), "content", "lesson-registry.ts");
+const layoutPath = path.join(process.cwd(), "app", "layout.tsx");
+const languageProviderPath = path.join(
+  process.cwd(),
+  "components",
+  "language",
+  "language-provider.tsx",
+);
+const languageModulePath = path.join(process.cwd(), "lib", "i18n", "language.ts");
+const globalsCssPath = path.join(process.cwd(), "app", "globals.css");
 
 type RegisteredLesson = {
   slug: string;
@@ -124,4 +133,45 @@ test("Thai lesson translations cover every lesson", async () => {
       assertReadableThai(paragraph, `${lesson.slug}.reviewNotes[${index}]`);
     }
   }
+});
+
+test("language preference bootstraps without breaking static export", async () => {
+  const [layoutSource, providerSource, languageSource, globalsCssSource] =
+    await Promise.all([
+      readFile(layoutPath, "utf8"),
+      readFile(languageProviderPath, "utf8"),
+      readFile(languageModulePath, "utf8"),
+      readFile(globalsCssPath, "utf8"),
+    ]);
+
+  assert.match(
+    languageSource,
+    /languageCookieName/,
+    "language cookie name must be shared by the server layout and client provider",
+  );
+  assert.doesNotMatch(
+    layoutSource,
+    /next\/headers|cookies\(/,
+    "static export must not use request-time cookies in the app layout",
+  );
+  assert.match(
+    layoutSource,
+    /LanguageBootstrapScript/,
+    "app layout must run the language bootstrap script before hydration",
+  );
+  assert.match(
+    layoutSource,
+    /<html\s+lang="en"/,
+    "static HTML must keep a deterministic default language",
+  );
+  assert.match(
+    providerSource,
+    /document\.cookie/,
+    "language provider must persist language changes to a cookie",
+  );
+  assert.match(
+    globalsCssSource,
+    /data-language-pending/,
+    "global styles must prevent a visible wrong-language flash while language hydrates",
+  );
 });
