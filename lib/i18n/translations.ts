@@ -80,7 +80,7 @@ export const trackThaiTranslations = {
   javascript: {
     title: "JavaScript",
     description:
-      "ฝึกรีวิว control flow, async, การตั้งชื่อ และ side effect ที่อ่านแล้วไม่หลอกเรา.",
+      "ฝึกรีวิว flow การทำงาน (control flow), งาน async, การตั้งชื่อ และผลข้างเคียง (side effect) ที่อาจทำให้คนอ่านเข้าใจผิด.",
   },
   typescript: {
     title: "TypeScript",
@@ -482,60 +482,60 @@ export const lessonThaiTranslations = {
   },
   "javascript/strict-equality-nullish-checks": {
     codeComments: {
-      goodCode: ["strict equality กันการแปลงค่าอัตโนมัติที่ทำให้ผลลัพธ์ผิด"],
-      badCode: ["loose equality และ || ทำให้ค่าที่หายจริงปนกับค่า falsy ที่ตั้งใจใช้"],
+      goodCode: ["ใช้ === เพื่อไม่ให้ JavaScript แปลงค่าก่อนเทียบจนผลผิด"],
+      badCode: ["== และ || ทำให้ค่าที่ไม่มีจริงปนกับค่าอย่าง 0 หรือ false ที่ตั้งใจใช้"],
     },
-    title: "เทียบค่าให้ชัด และ fallback ให้ถูกกรณี",
-    summary: "เทียบค่าด้วยเจตนาชัดเจน และอย่าให้ค่า falsy ที่ยังมีความหมายถูกแทนด้วย default ผิด ๆ.",
-    takeaways: ["ใช้ strict equality สำหรับการเทียบค่า และใช้ ?? เมื่อต้อง fallback เฉพาะ null หรือ undefined."],
+    title: "เทียบค่าให้ชัด และใช้ค่าสำรองให้ถูกกรณี",
+    summary: "ใช้ === เมื่ออยากเทียบค่าแบบตรงตัว และใช้ ?? เมื่ออยากใส่ค่าสำรองเฉพาะตอนค่าเป็น null หรือ undefined.",
+    takeaways: ["อย่าใช้ || แทน default ถ้า 0, false หรือ empty string ยังเป็นค่าที่ถูกต้องของระบบ."],
     whatToReview: [
-      "โค้ดที่ดีเทียบค่าตรงตัวและ fallback เฉพาะตอน retryCount ไม่มีค่าจริง ๆ ทำให้ 0 ยังเป็นค่าที่ตั้งใจได้.",
-      "โค้ดที่ควรปรับพึ่งการแปลงค่าอัตโนมัติและใช้ || จนค่าอย่าง 0 ถูกมองว่าไม่มีค่า ทั้งที่อาจเป็น config ที่ถูกต้อง.",
+      "โค้ดที่ดีเทียบค่าตรงตัว และให้ retryCount ใช้ค่าสำรองเฉพาะตอนไม่มีค่าจริง ๆ จึงไม่ทำให้ 0 หายไป.",
+      "โค้ดที่ควรปรับปล่อยให้ JavaScript แปลงค่าตอนเทียบ และใช้ || จนค่าอย่าง 0 ถูกมองว่าไม่มีค่า ทั้งที่อาจเป็น config ที่ถูกต้อง.",
     ],
     reviewNotes: [
-      "เวลารีวิวให้ดู loose equality กับ fallback logic คู่กัน เพราะมักซ่อน bug ที่แยกไม่ออกว่าข้อมูลหายจริงหรือผู้ใช้ตั้งค่า falsy ไว้เอง.",
+      "เวลารีวิวให้ถามว่าไม่มีค่าหมายถึง null/undefined เท่านั้น หรือรวม 0/false/empty string ด้วย ถ้าคำตอบไม่เหมือนกัน ควรใช้ ?? แทน ||.",
     ],
   },
   "javascript/data-boundary-validation": {
     codeComments: {
-      goodCode: ["ตรวจข้อมูลที่ขอบระบบก่อนอ่าน field ซ้อนด้านใน"],
-      badCode: ["โค้ดนี้เชื่อ shape จากภายนอกก่อนพิสูจน์ว่ามีจริง"],
+      goodCode: ["ตรวจข้อมูลจากภายนอกที่จุดรับเข้า ก่อนอ่าน field ข้างใน"],
+      badCode: ["เชื่อหน้าตาข้อมูล (shape) ก่อนตรวจว่ามีจริง"],
     },
-    title: "ตรวจข้อมูลตรงขอบระบบ",
-    summary: "ตรวจข้อมูลจากภายนอกก่อนให้ส่วนที่เหลือของ function เชื่อว่ารูปแบบข้อมูลถูกต้อง.",
-    takeaways: ["ข้อมูลจาก API, storage หรือ message ควรถูกตรวจที่ boundary ก่อนอ่าน field ด้านใน."],
+    title: "ตรวจข้อมูลจากภายนอกก่อนใช้",
+    summary: "ข้อมูลจาก API, storage หรือ message อาจไม่ตรงที่คิด ให้ตรวจที่จุดรับเข้า (boundary) ก่อนส่งต่อให้ logic ด้านในใช้.",
+    takeaways: ["ทำให้ข้อมูลน่าเชื่อถือที่ boundary ก่อนอ่าน field ซ้อนหรือส่งต่อให้โค้ดส่วนอื่น."],
     whatToReview: [
-      "โค้ดที่ดีถือว่า payload ภายนอกยังไม่น่าเชื่อถือ และคืน failure ที่อ่านเข้าใจก่อนแตะ field ซ้อน.",
-      "โค้ดที่ควรปรับสมมติว่า shape ถูกต้องเสมอ ทำให้ข้อมูลผิดรูปกลายเป็น runtime error ที่เดายาก.",
+      "โค้ดที่ดีถือว่า payload จากข้างนอกยังไม่น่าเชื่อถือ และคืน error ที่อ่านเข้าใจก่อนแตะ field ซ้อน.",
+      "โค้ดที่ควรปรับสมมติว่าหน้าตาข้อมูลถูกต้องเสมอ ทำให้ข้อมูลผิดรูปกลายเป็น runtime error ที่เดายาก.",
     ],
     reviewNotes: [
-      "ตอนรีวิวให้หาบรรทัดแรกที่ข้อมูลภายนอกเข้าระบบ จุดนั้นคือที่เหมาะสุดในการจัดการความไม่แน่นอน ไม่ใช่ปล่อยให้ caller ทุกจุดต้องเดาเอง.",
+      "ตอนรีวิวให้หาบรรทัดแรกที่ข้อมูลจากข้างนอกเข้าระบบ จุดนั้นควรเป็นที่จัดการความไม่แน่นอน ไม่ใช่ปล่อยให้ caller ทุกจุดต้องเดาเองว่าข้อมูลปลอดภัยหรือยัง.",
     ],
   },
   "javascript/array-transformations": {
     codeComments: {
-      goodCode: ["pipeline คืน object ใหม่ แทนการแก้ input เดิม"],
-      badCode: ["sort และการเติม field ทำให้ข้อมูลที่โค้ดอื่นถืออยู่ถูกแก้ไปด้วย"],
+      goodCode: ["แปลงข้อมูลเป็นลำดับขั้น และคืน object ใหม่แทนการแก้ของเดิม"],
+      badCode: ["sort และเติม field ลงของเดิม ทำให้โค้ดอื่นที่ถือข้อมูลชุดเดียวกันถูกกระทบ"],
     },
     title: "แปลง array ให้อ่านเป็นขั้นตอน",
-    summary: "ใช้ array methods เพื่ออธิบายการแปลงข้อมูลให้ชัด และเลี่ยงการแก้ input เดิมโดยไม่ตั้งใจ.",
-    takeaways: ["ใช้ filter, map และ reduce เมื่อมันอธิบายการแปลงข้อมูลได้โดยไม่ต้องแก้ object หรือ array ต้นทาง."],
+    summary: "ใช้ array methods เพื่อให้เห็นขั้นตอนว่า กรองอะไร แปลงอะไร และเรียงผลอย่างไร โดยไม่แก้ input เดิมแบบไม่ตั้งใจ.",
+    takeaways: ["ใช้ filter, map และ reduce เมื่อมันทำให้การแปลงข้อมูลอ่านเป็นลำดับ และไม่ต้องแก้ object หรือ array ต้นทาง."],
     whatToReview: [
       "โค้ดที่ดีอ่านเหมือน pipeline: กรองไฟล์ที่ไม่ต้องการ แปลงรูปร่างข้อมูล แล้วค่อยเรียงผลลัพธ์ใหม่.",
-      "โค้ดที่ควรปรับ sort array เดิมและเติม field ลง object เดิม ทำให้โค้ดอื่นที่ถือ reference เดียวกันถูกกระทบ.",
+      "โค้ดที่ควรปรับ sort array เดิมและเติม field ลง object เดิม ทำให้โค้ดอื่นที่ถือ reference เดียวกันเห็นข้อมูลเปลี่ยนตามไปด้วย.",
     ],
     reviewNotes: [
-      "เวลารีวิว logic ที่จัดการ collection ให้ถามว่าฟังก์ชันนี้เปลี่ยน input เดิมหรือคืนข้อมูลชุดใหม่. การ mutate ที่ซ่อนอยู่ใน loop มักดูไม่อันตรายตอนแรก.",
+      "เวลารีวิว logic ที่จัดการ collection ให้ถามว่าฟังก์ชันนี้เปลี่ยน input เดิมหรือคืนข้อมูลชุดใหม่. การ mutate ที่ซ่อนอยู่ใน loop มักดูไม่อันตรายตอนแรก แต่ทำให้ bug ไล่ยากเมื่อมีคนถือข้อมูลชุดเดิมอยู่.",
     ],
   },
   "javascript/promise-concurrency": {
     codeComments: {
-      goodCode: ["request ที่ไม่พึ่งกันเริ่มพร้อมกันและล้มเหลวเป็นชุดเดียว"],
+      goodCode: ["request ที่ไม่พึ่งกันถูกเริ่มพร้อมกัน แล้วรอผลรวมครั้งเดียว"],
       badCode: ["await ทีละขั้นเพิ่มเวลารอ ทั้งที่ข้อมูลไม่ได้พึ่งกัน"],
     },
-    title: "รัน promise พร้อมกันเมื่อไม่พึ่งกัน",
-    summary: "งาน async ที่ไม่ต้องรอผลลัพธ์ของกันและกันควรถูกเริ่มพร้อมกัน แทนการ await ทีละคำขอ.",
-    takeaways: ["ใช้ Promise.all กับงานที่จำเป็นและเป็นอิสระต่อกัน ส่วน await แบบเรียงลำดับควรใช้เมื่อมี dependency จริง."],
+    title: "รันงาน async พร้อมกันเมื่อไม่พึ่งกัน",
+    summary: "ถ้า request หลายตัวไม่ต้องใช้ผลลัพธ์ของกันและกัน ให้เริ่มพร้อมกัน แล้วค่อยรอด้วย Promise.all.",
+    takeaways: ["ใช้ Promise.all กับงานที่เป็นอิสระต่อกัน และใช้ await แบบเรียงลำดับเฉพาะเมื่อขั้นถัดไปต้องใช้ผลของขั้นก่อนจริง ๆ."],
     whatToReview: [
       "โค้ดที่ดีเริ่ม request อิสระหลายตัวพร้อมกัน แล้วรอผลรวมครั้งเดียว.",
       "โค้ดที่ควรปรับทำให้ request แต่ละตัวรอตัวก่อนหน้า ทั้งที่ไม่มีตัวไหนใช้ผลของกันและกัน ทำให้หน้าช้าลงโดยไม่จำเป็น.",
@@ -546,79 +546,79 @@ export const lessonThaiTranslations = {
   },
   "javascript/event-listener-cleanup": {
     codeComments: {
-      goodCode: ["handler ที่มี reference คงที่ทำให้ถอด listener ภายหลังได้"],
-      badCode: ["anonymous listener ทำให้ caller ถอดออกทีหลังไม่ได้"],
+      goodCode: ["เก็บ function handler ไว้ชัดเจน ทำให้ remove listener ทีหลังได้"],
+      badCode: ["ใช้ anonymous listener แล้วไม่มี reference สำหรับถอดออก"],
     },
-    title: "การ cleanup event listener",
-    summary: "ทุก listener ควรมีทางถอดออก เพื่อไม่ให้ setup ซ้ำแล้วพฤติกรรมทำงานซ้อนกัน.",
-    takeaways: ["เก็บ handler reference ให้คงที่ และคืน cleanup function เมื่อติด event listener."],
+    title: "ถอด event listener ให้ครบ",
+    summary: "ทุก listener ควรมีทางถอดออก เพื่อไม่ให้ setup ซ้ำแล้ว event เดิมทำงานซ้อนกันหลายรอบ.",
+    takeaways: ["เก็บ reference ของ handler ให้คงที่ และคืน cleanup function เมื่อติด event listener."],
     whatToReview: [
-      "โค้ดที่ดีเก็บ reference ของ handler และคืน function สำหรับ remove listener เมื่อ UI ถูกถอด.",
+      "โค้ดที่ดีเก็บ reference ของ handler และคืน function สำหรับ remove listener เมื่อ UI ถูกถอดหรือเลิกใช้งาน.",
       "โค้ดที่ควรปรับใช้ anonymous listener แล้ว caller ไม่มีทางถอดออกได้จริง ทำให้ shortcut หรือ handler ซ้ำหลัง setup หลายรอบ.",
     ],
     reviewNotes: [
-      "เวลาเห็น listener, subscription, timer หรือ observer ให้ถามคำเดียวกันเสมอว่า cleanup อยู่ตรงไหน ถ้าตอบไม่ได้ behavior อาจเพิ่มขึ้นเรื่อย ๆ.",
+      "เวลาเห็น listener, subscription, timer หรือ observer ให้ถามเหมือนกันเสมอว่า cleanup อยู่ตรงไหน ถ้าตอบไม่ได้ behavior อาจเพิ่มขึ้นเรื่อย ๆ ทุกครั้งที่ setup ใหม่.",
     ],
   },
   "javascript/module-boundaries-globals": {
     codeComments: {
-      goodCode: ["storage เป็น dependency ที่ส่งเข้ามา ไม่ใช่ global state ที่ซ่อนอยู่"],
-      badCode: ["การอ่านเขียน global เปิดทางให้โค้ดอื่นข้าม module API"],
+      goodCode: ["ส่ง storage เข้ามาเป็น dependency แทนการหยิบ global state เอง"],
+      badCode: ["อ่านเขียน global โดยตรง ทำให้โค้ดอื่นข้าม API ของ module ได้"],
     },
-    title: "ขอบเขต module และ global state",
-    summary: "เก็บ behavior ที่ใช้ร่วมกันไว้หลัง module API แทนการกระจาย global state ที่แก้ได้จากหลายที่.",
+    title: "คุมขอบเขต module และ global state",
+    summary: "ให้ module บอกชัดว่าคนอื่นควรเรียกใช้อย่างไร แทนการให้หลายไฟล์อ่านเขียนค่ากลาง (global state) ได้เอง.",
     takeaways: ["เปิดเผย function เล็ก ๆ จาก module และส่ง dependency เข้ามาเมื่อโค้ดต้องใช้ storage, network หรือ browser API."],
     whatToReview: [
-      "โค้ดที่ดีซ่อน storage key ใน module และรับ storage เป็น dependency ทำให้ทดสอบและใช้ซ้ำง่ายขึ้น.",
-      "โค้ดที่ควรปรับเขียนลง window และ localStorage ตรง ๆ ทำให้โค้ดที่ไม่เกี่ยวข้องเปลี่ยน state ได้โดยไม่ผ่าน API ชัดเจน.",
+      "โค้ดที่ดีซ่อน storage key ไว้ใน module และรับ storage เป็น dependency ทำให้ทดสอบและใช้ซ้ำง่ายขึ้น.",
+      "โค้ดที่ควรปรับเขียนลง window และ localStorage ตรง ๆ ทำให้โค้ดที่ไม่เกี่ยวข้องเปลี่ยน state ได้โดยไม่ผ่าน API ที่ชัดเจน.",
     ],
     reviewNotes: [
-      "global ไม่ได้ผิดเสมอ แต่ควรตั้งใจใช้ ขอบเขต module ที่ดีควรบอก caller ว่าต้องใช้งานอย่างไร โดยไม่ต้องรู้ว่าค่าทุกอย่างถูกเก็บไว้ที่ไหน.",
+      "global ไม่ได้ผิดเสมอ แต่ควรตั้งใจใช้ ขอบเขต module ที่ดีควรบอก caller ว่าต้องเรียก function ไหน โดยไม่ต้องรู้ว่าค่าข้างในถูกเก็บไว้ที่ window, localStorage หรือที่อื่น.",
     ],
   },
   "javascript/dates-time-zones": {
     codeComments: {
-      goodCode: ["locale และ time zone เป็น input ชัดเจนของการ format"],
-      badCode: ["ประกอบวันที่เองทำให้พึ่ง time zone ของ runtime แบบไม่รู้ตัว"],
+      goodCode: ["ส่ง locale และ time zone เข้าไปชัดเจนก่อนจัดรูปแบบวันที่"],
+      badCode: ["ประกอบวันที่เอง ทำให้ผลลัพธ์ผูกกับ time zone ของเครื่องที่รันแบบไม่รู้ตัว"],
     },
-    title: "วันที่และ time zone",
-    summary: "format วันที่ด้วย locale และ time zone ที่ตั้งใจ แทนการประกอบวันที่เองจากค่า runtime.",
-    takeaways: ["ใช้ Intl สำหรับการ format วันที่ และส่ง time zone ให้ชัดเมื่อวันที่ที่แสดงมีความสำคัญ."],
+    title: "วันที่และเขตเวลา (time zone)",
+    summary: "จัดรูปแบบวันที่ด้วย locale และ time zone ที่ตั้งใจ แทนการต่อวันเดือนปีเองจากสภาพแวดล้อมตอนรัน (runtime).",
+    takeaways: ["ใช้ Intl สำหรับการจัดรูปแบบวันที่ และส่ง time zone ให้ชัดเมื่อวันที่ที่แสดงมีผลกับผู้ใช้."],
     whatToReview: [
-      "โค้ดที่ดีทำให้ locale และ time zone เป็นส่วนหนึ่งของการตัดสินใจ จึงแสดง timestamp เดียวกันได้สอดคล้องกับกลุ่มผู้ใช้.",
-      "โค้ดที่ควรปรับประกอบวันที่เองด้วย local time zone ของเครื่อง ทำให้วันที่อาจเลื่อนสำหรับผู้ใช้คนละภูมิภาค.",
+      "โค้ดที่ดีทำให้ locale และ time zone เป็น input ชัดเจน จึงแสดง timestamp เดียวกันได้ถูกต้องตามกลุ่มผู้ใช้.",
+      "โค้ดที่ควรปรับต่อวันที่เองด้วย time zone ของเครื่องที่รัน ทำให้วันที่อาจเลื่อนสำหรับผู้ใช้คนละประเทศหรือคนละเขตเวลา.",
     ],
     reviewNotes: [
-      "วันที่ควรถูกรีวิวด้วยความระวังเป็นพิเศษ เพราะมักใช้ได้บนเครื่องเราแต่พังที่ขอบวัน ขอบเดือน หรือ time zone การ format แบบ explicit ปลอดภัยกว่า default ที่ซ่อนอยู่.",
+      "วันที่ควรถูกรีวิวด้วยความระวังเป็นพิเศษ เพราะมักใช้ได้บนเครื่องเราแต่พังตอนข้ามวัน ข้ามเดือน หรือเจอผู้ใช้คนละ time zone การระบุ locale/time zone ชัดเจนปลอดภัยกว่า default ที่ซ่อนอยู่.",
     ],
   },
   "javascript/guard-clauses": {
     codeComments: {
-      goodCode: ["guard clause แยกเคสที่ใช้ไม่ได้ออกจาก path หลัก"],
-      badCode: ["branch ที่ซ้อนกันทำให้ reviewer ต้องจำหลายเงื่อนไขพร้อมกัน"],
+      goodCode: ["guard clause แยกเคสที่ใช้ไม่ได้ออกจากทางหลักของ function"],
+      badCode: ["if ที่ซ้อนกันทำให้ reviewer ต้องจำหลายเงื่อนไขพร้อมกัน"],
     },
-    title: "ใช้ guard clause ลดความซ้อน",
-    summary: "คืนค่าเร็วเมื่อข้อมูลไม่พร้อม เพื่อให้ path หลักอ่านตรงและสั้นลง.",
-    takeaways: ["ใช้ early return เพื่อให้เคสปกติอ่านเป็นเส้นตรง."],
+    title: "ใช้ guard clause ลด if ซ้อน",
+    summary: "คืนค่าเร็วเมื่อข้อมูลไม่พร้อม เพื่อให้ทางหลักของ function อ่านเป็นเส้นตรงและสั้นลง.",
+    takeaways: ["ใช้ early return เพื่อให้เคสปกติอยู่ในระดับ indentation ที่อ่านง่าย."],
     whatToReview: [
       "โค้ดที่ดีจัดการเคสที่ใช้ไม่ได้ตั้งแต่ต้น แล้วปล่อยให้ logic หลักอยู่ในระดับ indentation เดียว.",
       "โค้ดที่ควรปรับซ้อน if หลายชั้น ทำให้คนรีวิวต้องจำเงื่อนไขในหัวตลอดเวลา.",
     ],
     reviewNotes: [
-      "เวลารีวิว control flow ให้มองหา path ที่สำคัญที่สุดของ function. ถ้า path นั้นถูกฝังอยู่ใน if หลายชั้น guard clause อาจช่วยให้เจตนาชัดขึ้นมาก.",
+      "เวลารีวิว flow การทำงาน (control flow) ให้มองหาทางหลักของ function. ถ้าทางหลักถูกฝังอยู่ใน if หลายชั้น guard clause มักช่วยให้เจตนาชัดขึ้นมาก.",
     ],
   },
   "javascript/async-error-handling": {
     codeComments: {
-      goodCode: ["เช็ก HTTP status ก่อน parse และ catch ความล้มเหลวของ request"],
-      badCode: ["parse แบบคิดว่าจะสำเร็จเสมอ ทำให้ failure กลายเป็น exception ที่ไม่ถูกจัดการ"],
+      goodCode: ["เช็ก HTTP status ก่อน parse และมีทางจัดการ request ที่ล้มเหลว"],
+      badCode: ["parse แบบคิดว่าจะสำเร็จเสมอ ทำให้ error หลุดโดยไม่มีทางจัดการ"],
     },
-    title: "จัดการ error ใน async ให้ครบ",
-    summary: "ตรวจ response และจัดการ failure ก่อนสมมติว่าทุกอย่างเป็น JSON ที่ถูกต้อง.",
-    takeaways: ["async code ควรมี path สำหรับ failure ที่อ่านได้ชัดเจน."],
+    title: "จัดการ error ของงาน async ให้ครบ",
+    summary: "ตรวจ response และเตรียมทางกรณี request ล้มเหลว ก่อนสมมติว่าทุกอย่างเป็น JSON ที่ถูกต้อง.",
+    takeaways: ["async code ควรมีทางสำหรับกรณีสำเร็จและกรณีล้มเหลวที่อ่านได้ชัดเจน."],
     whatToReview: [
       "โค้ดที่ดีตรวจสถานะ response และแยก error path ก่อนใช้ข้อมูล.",
-      "โค้ดที่ควรปรับ assume ว่า request สำเร็จเสมอ ทำให้ bug โผล่ตอน network หรือ server มีปัญหา.",
+      "โค้ดที่ควรปรับสมมติว่า request สำเร็จเสมอ ทำให้ bug โผล่ตอน network หรือ server มีปัญหา.",
     ],
     reviewNotes: [
       "ตอนรีวิว async function ให้ถามว่าเกิดอะไรขึ้นเมื่อ request ล้ม, response ไม่ ok หรือ payload ไม่ตรงที่คิด. โค้ดที่ดีไม่ควรทำให้ error กลายเป็นปริศนา.",
@@ -626,18 +626,18 @@ export const lessonThaiTranslations = {
   },
   "javascript/naming-side-effects": {
     codeComments: {
-      goodCode: ["ชื่อบอก caller ชัดว่า array เดิมจะถูกแก้"],
+      goodCode: ["ชื่อบอกคนเรียกชัดว่า array เดิมจะถูกแก้"],
       badCode: ["ชื่อฟังเหมือนคืนค่าใหม่ แต่จริง ๆ แก้ input array เดิม"],
     },
-    title: "ตั้งชื่อให้เห็น side effect",
-    summary: "ชื่อ function ควรบอกว่ามีการแก้ข้อมูลหรือเปลี่ยน state ไม่ใช่ดูเหมือนแค่อ่านค่า.",
-    takeaways: ["ถ้า function เปลี่ยนข้อมูลเดิม ชื่อควรบอกให้คนเรียกรู้ทันที."],
+    title: "ตั้งชื่อให้เห็นผลข้างเคียง (side effect)",
+    summary: "ชื่อ function ควรบอกให้รู้ว่ามีการแก้ข้อมูลหรือเปลี่ยน state ไม่ใช่ทำเหมือนแค่อ่านค่า.",
+    takeaways: ["ถ้า function เปลี่ยนข้อมูลเดิม ชื่อควรบอกให้คนเรียกรู้ทันที ไม่ให้เดาว่าได้ข้อมูลใหม่ที่ปลอดภัย."],
     whatToReview: [
       "โค้ดที่ดีใช้ชื่อที่บอกว่ามีการเปลี่ยนแปลงข้อมูล เช่น update หรือ apply.",
       "โค้ดที่ควรปรับใช้ชื่อที่ดูปลอดภัยเหมือนอ่านค่า แต่จริง ๆ ไปแก้ input เดิม.",
     ],
     reviewNotes: [
-      "เวลารีวิวชื่อ function ให้ดู body ด้วยว่ามี side effect ไหม. ชื่อที่ไม่ตรงกับพฤติกรรมทำให้ bug เกิดจากความคาดหวังผิด ๆ ได้ง่าย.",
+      "เวลารีวิวชื่อ function ให้ดู body ด้วยว่ามี side effect ไหม. ชื่อที่ไม่ตรงกับพฤติกรรมทำให้คนเรียกคาดหวังผิด และเกิด bug ได้ง่าย.",
     ],
   },
   "typescript/type-inference-boundaries": {
