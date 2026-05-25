@@ -13,6 +13,7 @@ export const metadata = {
     if err != nil {
         return err
     }
+    // Put cleanup next to the successful open.
     defer file.Close()
 
     scanner := bufio.NewScanner(file)
@@ -41,6 +42,7 @@ export const metadata = {
         }
     }
 
+    // Early returns above skip this cleanup.
     file.Close()
     return scanner.Err()
 }`,

@@ -9,6 +9,7 @@ export const metadata = {
     language: "go",
     filename: "reviews/client.go",
     code: `func (c *Client) FetchReview(ctx context.Context, id string) (Review, error) {
+    // Tie the outbound request to the caller's timeout/cancel signal.
     req, err := http.NewRequestWithContext(
         ctx,
         http.MethodGet,
@@ -36,6 +37,7 @@ export const metadata = {
     language: "go",
     filename: "reviews/client.go",
     code: `func (c *Client) FetchReview(id string) (Review, error) {
+    // http.Get has no caller-controlled lifetime.
     resp, err := http.Get(c.baseURL + "/reviews/" + id)
     if err != nil {
         return Review{}, err

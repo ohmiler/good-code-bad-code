@@ -145,7 +145,7 @@ export const trackThaiTranslations = {
   go: {
     title: "Go",
     description:
-      "ฝึกรีวิว package, exported API, error, context, interface, goroutine, cleanup, test และ HTTP handler ของ Go.",
+      "ฝึกรีวิว Go แบบงานจริง: package/API, exported name, error wrapping, context, interface, zero value, goroutine/channel, defer cleanup, table-driven test และ HTTP handler.",
   },
   docker: {
     title: "Docker",
@@ -2433,123 +2433,181 @@ export const lessonThaiTranslations = {
     ],
   },
   "go/package-and-file-organization": {
-    title: "การจัด package และไฟล์",
-    summary: "จัด package ให้เล็ก ชัด และตั้งชื่อตามสิ่งที่ caller ต้องใช้ ไม่ใช่ตาม layer ทางเทคนิคภายใน.",
-    takeaways: ["package ของ Go คือ API boundary ต้องรีวิวว่าชื่อและ exported surface บอกขอบเขตได้ชัดไหม."],
+    codeComments: {
+      goodCode: ["รับ dependency ผ่าน constructor ทำให้คนเรียกเห็นว่าต้องใช้อะไร"],
+      badCode: ["database global ซ่อน dependency ที่ caller ต้องพึ่ง"],
+    },
+    title: "จัด package ให้บอกหน้าที่ของโค้ด",
+    summary: "package ควรเล็กและชื่อควรบอกว่าโค้ดชุดนี้ทำเรื่องอะไรให้คนเรียกใช้ ไม่ใช่รวม helper ทุกอย่างไว้ใน `utils`.",
+    takeaways: ["ใน Go ชื่อ package จะโผล่ใน call site เสมอ จึงควรทำให้คนอ่านเดาได้ว่า package นี้รับผิดชอบอะไร."],
     whatToReview: [
-      "โค้ดที่ดีใช้ชื่อ package ตาม domain ทำ dependency ให้ explicit และ export service boundary ที่เล็ก.",
-      "โค้ดที่ควรปรับซ่อน behavior ไว้ใน utils พร้อม global database state ทำให้ caller ไม่รู้ว่า package นี้เป็นเจ้าของอะไร.",
+      "โค้ดที่ดีใช้ package `reviews`, ส่ง `Repository` เข้ามาชัดเจน และ export แค่ `Service` กับ method ที่ caller ต้องใช้.",
+      "โค้ดที่ควรปรับซ่อนงาน publish review ไว้ใน `utils` และใช้ database global ทำให้ caller ไม่รู้ว่า function นี้แตะอะไรบ้าง.",
     ],
     reviewNotes: [
-      "ใน Go ชื่อ package โผล่ที่ call site เสมอ ควรเลือกชื่อที่อ่านแล้วเป็นธรรมชาติ และหลีกเลี่ยง package รวม helper ไม่เกี่ยวกัน.",
+      "เวลารีวิว package ให้ลองอ่านจากฝั่ง caller ถ้าเห็น `utils.PublishReview()` แล้วไม่รู้ว่า utils เป็นเจ้าของอะไร นั่นคือสัญญาณว่าควรตั้ง package ให้เฉพาะเรื่องขึ้น.",
     ],
   },
   "go/naming-and-exported-api": {
-    title: "การตั้งชื่อและ exported API",
-    summary: "export เฉพาะชื่อที่ caller ต้องใช้ และอย่าใส่ชื่อ package ซ้ำใน exported identifier โดยไม่จำเป็น.",
-    takeaways: ["ชื่อที่ export คือสัญญาของ package จึงควรน้อย ชัด และมองจากมุม caller."],
+    codeComments: {
+      goodCode: ["caller จะเห็นชื่อนี้เป็น reviews.Repository"],
+      badCode: ["ชื่อ exported ซ้ำคำที่ package name บอกไปแล้ว"],
+    },
+    title: "ตั้งชื่อ exported API ให้สั้นและไม่ซ้ำ package",
+    summary: "ใน Go ชื่อที่ขึ้นต้นตัวใหญ่คือชื่อที่ package อื่นเรียกได้ ควร export เท่าที่จำเป็น และไม่ใส่คำที่ชื่อ package บอกอยู่แล้วซ้ำอีก.",
+    takeaways: ["ชื่อ exported คือสัญญาที่ package เปิดให้คนอื่นใช้ จึงควรน้อย ชัด และอ่านดีจากฝั่ง caller."],
     whatToReview: [
-      "โค้ดที่ดีใช้ชื่อ package ช่วยให้ caller อ่านเป็น reviews.Repository, reviews.Review และ reviews.Status ได้ชัด.",
-      "โค้ดที่ควรปรับใส่คำว่า review และรายละเอียด implementation ซ้ำในทุกชื่อ ทำให้ API เสียงดังและเปลี่ยนยาก.",
+      "โค้ดที่ดีทำให้ caller อ่านเป็น `reviews.Repository`, `reviews.Review` และ `reviews.Status` ได้สั้นและชัด.",
+      "โค้ดที่ควรปรับใช้ชื่ออย่าง `ReviewsRepositoryInterface` และ `ReviewObject` ที่ซ้ำคำว่า review จน API ยาวและอ่านรก.",
     ],
     reviewNotes: [
-      "เวลารีวิว Go API ให้อ่านจากฝั่ง caller ถ้า call site ฟังดูซ้ำหรือยาวเกินไป exported name อาจแบกคำที่ package name บอกอยู่แล้ว.",
+      "เวลารีวิว Go API ให้อ่าน call site จริง ถ้าชื่อฟังดูซ้ำ เช่น `reviews.ReviewObject` หรือยาวเพราะเล่า implementation มากไป ชื่อนั้นอาจควรสั้นลง.",
     ],
   },
   "go/error-handling-wrapping": {
-    title: "การจัดการ error และ wrapping",
-    summary: "คืน error พร้อม context ที่ช่วย debug และ wrap underlying error เมื่อ caller ควร inspect ต่อได้.",
-    takeaways: ["error ใน Go เป็น value ต้องรีวิวทั้งข้อความสำหรับคนอ่านและ wrapping contract สำหรับ caller."],
+    codeComments: {
+      goodCode: [
+        "sentinel error ช่วยให้ caller เช็กกรณี not found ได้",
+        "%w เก็บสาย error ไว้ให้ errors.Is/errors.As เช็กต่อ",
+      ],
+      badCode: ["เหตุผลจริงหายไปหลัง error กว้าง ๆ"],
+    },
+    title: "คืน error ที่บอกเหตุผลและยังเช็กต่อได้",
+    summary: "error ควรบอกว่างานไหนพัง และถ้า caller ต้องแยกเคสต่อ ให้ wrap ด้วย `%w` เพื่อให้ใช้ `errors.Is` หรือ `errors.As` ได้.",
+    takeaways: ["อย่าทำ error เดิมหายด้วยคำว่า `failed` เฉย ๆ คนอ่านและ caller ต้องรู้พอจะตัดสินใจต่อได้."],
     whatToReview: [
-      "โค้ดที่ดีเพิ่ม context ของ operation และเก็บ error chain ให้ caller ใช้ errors.Is หรือ errors.As ได้.",
-      "โค้ดที่ควรปรับ log แล้วแทน error เดิมด้วยข้อความกว้าง ๆ ทำให้ caller เสียเหตุผลจริงและตัดสินใจต่อไม่ได้.",
+      "โค้ดที่ดีแปลง not found จาก store เป็น `ErrReviewNotFound` ที่ caller เช็กได้ และใส่ `find review <id>` เพื่อช่วย debug.",
+      "โค้ดที่ควรปรับ log error เดิมแล้วคืน `errors.New(\"failed\")` ทำให้ caller ไม่รู้ว่าเป็น not found, timeout หรือ error อื่น.",
     ],
     reviewNotes: [
-      "อย่า wrap ทุก error แบบอัตโนมัติ ให้ wrap เมื่อการเปิดเผย error ต้นทางเป็นส่วนหนึ่งของ contract และไม่ทำให้รายละเอียดภายในรั่วเกินไป.",
+      "ไม่จำเป็นต้อง wrap ทุก error เสมอ ให้ wrap เมื่อ caller ควรรู้ชนิด error เดิมเพื่อจัดการต่อ และไม่ทำให้รายละเอียดภายในรั่วเกินไป.",
     ],
   },
   "go/context-cancellation": {
-    title: "context และ cancellation",
-    summary: "รับ context ที่ API boundary และส่งต่อไปยัง I/O เพื่อให้ cancellation, deadline และ request scope ทำงานได้จริง.",
-    takeaways: ["context ควรอยู่กับงานที่ block, รอ หรือออกไปนอก process."],
+    codeComments: {
+      goodCode: ["ผูก HTTP request ขาออกกับ timeout/cancel ของ caller"],
+      badCode: ["http.Get ไม่มีอายุงานที่ caller ควบคุมได้"],
+    },
+    title: "ส่ง context ต่อไปถึงงาน I/O",
+    summary: "รับ `context.Context` จาก caller แล้วส่งต่อให้ HTTP, database หรือ goroutine เพื่อให้ timeout และ cancel หยุดงานทั้งสายได้.",
+    takeaways: ["context คือสัญญาณว่า caller ยังรออยู่ไหม ไม่ใช่ถุงใส่ option ทั่วไป."],
     whatToReview: [
-      "โค้ดที่ดีรับ context จาก caller และผูกกับ outbound HTTP request เพื่อให้ timeout หรือ cancel หยุดงานทั้งสายได้.",
-      "โค้ดที่ควรปรับสร้าง request แบบไม่มี lifetime จาก caller เมื่อ caller timeout หรือ disconnect งานอาจยังวิ่งต่อ.",
+      "โค้ดที่ดีรับ `ctx` และใช้ `http.NewRequestWithContext` ทำให้ timeout หรือ cancel จาก caller ไปถึง request ขาออก.",
+      "โค้ดที่ควรปรับใช้ `http.Get` ตรง ๆ ถ้า caller timeout หรือ disconnect งานอาจยังวิ่งต่อโดยไม่มีใครรอผล.",
     ],
     reviewNotes: [
-      "context ไม่ใช่ถุงใส่ optional parameter ตอนรีวิวให้หา database call, HTTP call, lock และ goroutine ที่ควรหยุดเมื่อ caller เลิกสนใจ.",
+      "ตอนรีวิวให้มองหา HTTP call, database call, lock และ goroutine ที่ควรหยุดเมื่อ caller เลิกสนใจ ถ้าไม่มี context ต่อไปถึงจุดนั้น งานอาจค้างโดยเปล่าประโยชน์.",
     ],
   },
   "go/interfaces-at-boundaries": {
-    title: "interface ที่ boundary",
-    summary: "นิยาม interface เล็ก ๆ ตรงฝั่งที่ consume behavior แทนการบังคับให้ producer ต้องรองรับ contract ใหญ่.",
-    takeaways: ["interface ใน Go มีค่ามากเมื่อมันอธิบายสิ่งที่ caller ต้องใช้ในจุดนั้นจริง ๆ."],
+    codeComments: {
+      goodCode: ["service ต้องการ behavior เดียวคือส่งอีเมล"],
+      badCode: ["บังคับ caller ที่ส่งอีเมลให้พึ่ง behavior ที่ไม่เกี่ยว"],
+    },
+    title: "ประกาศ interface เล็กตรงฝั่งที่ใช้งาน",
+    summary: "ให้ฝั่งที่เรียกใช้ประกาศ interface เฉพาะ method ที่ต้องใช้จริง เช่น service ต้องส่ง email ก็รับแค่ `Mailer.Send`.",
+    takeaways: ["interface ใน Go ควรอธิบายสิ่งที่ caller ต้องใช้ตอนนั้น ไม่ใช่บังคับให้ทุก implementation รองรับชุดใหญ่เกินจำเป็น."],
     whatToReview: [
-      "โค้ดที่ดีตั้งชื่อ behavior เดียวที่ service ต้องใช้ ทำให้ production client และ test fake ทำตามได้ง่าย.",
-      "โค้ดที่ควรปรับทำให้ caller ที่ต้องส่ง email ต้อง depend กับ SMS, Slack และ lifecycle method ไปด้วย.",
+      "โค้ดที่ดีให้ service พึ่งแค่ `Mailer` ที่มี `Send` method เดียว ทำให้ production client และ test fake ทำตามได้ง่าย.",
+      "โค้ดที่ควรปรับบังคับให้ function ที่ส่ง email ต้องรู้จัก SMS, Slack และ `Close()` ทั้งที่ไม่ได้ใช้.",
     ],
     reviewNotes: [
-      "interface เล็กทำให้ package boundary ยืดหยุ่น ถ้า function เรียกแค่ method เดียวแต่รับ interface สี่ method มักเป็นกลิ่น coupling.",
+      "ถ้า function เรียก method เดียวแต่รับ interface สี่ method ให้ถามว่ากำลังผูก dependency กว้างเกินไปไหม interface เล็กมัก test และเปลี่ยนง่ายกว่า.",
     ],
   },
   "go/struct-validation-zero-values": {
-    title: "struct validation และ zero value",
-    summary: "ออกแบบ struct ให้ zero value ใช้ได้จริง หรือ validate ก่อนที่ value จะข้าม boundary สำคัญ.",
-    takeaways: ["zero value เป็นจุดแข็งของ Go ได้ แต่ domain object ยังต้องมีกฎ validity ที่ชัดเจน."],
+    codeComments: {
+      goodCode: ["constructor ตรวจ field ที่ห้ามว่างตั้งแต่ต้น"],
+      badCode: ["ID และ title ว่างอาจกลายเป็น Review ที่ดูเหมือน valid"],
+    },
+    title: "กันค่าว่างที่ไม่ควรเป็น Review",
+    summary: "`zero value` คือค่าเริ่มต้นของ type เช่น string ว่าง ถ้า domain object ห้ามว่าง ให้ validate ก่อนปล่อย value เข้าไปในระบบ.",
+    takeaways: ["zero value มีประโยชน์กับหลาย type แต่ object ธุรกิจอย่าง Review ยังต้องมีกฎชัดว่า field ไหนห้ามว่าง."],
     whatToReview: [
-      "โค้ดที่ดีทำให้ invalid construction มองเห็นได้ และคืน error ก่อนปล่อย value เข้าไปในระบบ.",
-      "โค้ดที่ควรปรับยอมให้ ID และ title ว่างไหลผ่าน codebase เหมือนเป็น review ที่ valid.",
+      "โค้ดที่ดีใช้ `NewReview` trim title และคืน error ถ้า id หรือ title ว่าง ก่อนสร้าง `Review` ให้ส่วนอื่นใช้.",
+      "โค้ดที่ควรปรับสร้าง `Review` ได้ทันทีแม้ id/title ว่าง ทำให้ค่าที่ไม่ valid ไหลผ่าน codebase เหมือนถูกต้อง.",
     ],
     reviewNotes: [
-      "zero value เหมาะกับ infrastructure type หลายแบบ แต่สำหรับ domain type ต้องรีวิวว่า zero value valid จริงไหม และ enforce ที่ไหน.",
+      "ตอนรีวิว struct ให้ถามว่า zero value ใช้งานได้จริงไหม ถ้าไม่ได้ ต้องเห็นจุด validate ที่ชัด เช่น constructor, parser หรือ boundary ก่อน save.",
     ],
   },
   "go/goroutines-and-channel-ownership": {
-    title: "goroutine และ channel ownership",
-    summary: "ทำ lifetime ของ goroutine และ ownership ของการ close channel ให้ explicit เพื่อให้ concurrent code หยุดได้สะอาด.",
-    takeaways: ["โค้ดที่เริ่ม goroutine ควรทำให้เห็น stop condition และ channel ownership ชัดเจน."],
+    codeComments: {
+      goodCode: [
+        "goroutine ฝั่งส่งเป็นเจ้าของการ close output channel",
+        "context cancellation ทำให้ goroutine หยุดได้สะอาด",
+      ],
+      badCode: [
+        "ไม่มีทาง cancel จึงต้องหวังว่า jobs จะถูก close",
+        "close channel จากข้างนอกอาจชนกับ sender ที่กำลังส่งอยู่",
+      ],
+    },
+    title: "บอกให้ชัดว่า goroutine หยุดยังไงและใคร close channel",
+    summary: "โค้ด concurrent ควรเห็นว่าใคร start goroutine, หยุดด้วยเงื่อนไขไหน และใครมีสิทธิ์ close channel แต่ละตัว.",
+    takeaways: ["คนที่ส่งค่าเข้า channel มักควรเป็นคน close channel และ goroutine ควรมีทางหยุดเมื่อ context ถูก cancel."],
     whatToReview: [
-      "โค้ดที่ดีบอกชัดว่าใครอ่าน ใครเขียน ใคร close output channel และ goroutine ออกเมื่อ context ถูก cancel อย่างไร.",
-      "โค้ดที่ควรปรับปล่อย lifetime ให้ implicit และให้ function อื่น close channel ที่ตัวเองไม่ได้ own.",
+      "โค้ดที่ดีใช้ทิศทาง channel (`<-chan`, `chan<-`), close `results` จาก goroutine ที่ส่งค่า และออกเมื่อ `ctx.Done()` หรือ `jobs` ถูกปิด.",
+      "โค้ดที่ควรปรับไม่มีทาง cancel และมี `StopWorker` ที่ close `results` จากข้างนอก ทั้งที่อาจยังมี goroutine ส่งค่าอยู่.",
     ],
     reviewNotes: [
-      "ตอนรีวิว concurrency ใน Go ให้ถามว่าใคร start goroutine นี้ ใคร stop มัน ใคร close channel แต่ละตัว และถ้า receiver เลิกอ่านจะเกิดอะไร.",
+      "ตอนรีวิว concurrency ให้ถามสี่ข้อ: ใคร start goroutine, ใคร stop, ใคร close channel, และถ้า receiver เลิกอ่านจะเกิดอะไร.",
     ],
   },
   "go/defer-resource-cleanup": {
-    title: "defer และ resource cleanup",
-    summary: "ใช้ defer close เพื่อให้ cleanup อยู่ใกล้จุด acquire resource และครอบคลุมทุก return path.",
-    takeaways: ["cleanup ควรอยู่ใกล้ acquisition เพื่อให้ reviewer เห็นว่าทุก path ปล่อย resource จริง."],
+    codeComments: {
+      goodCode: ["วาง cleanup ไว้ติดกับจุดเปิดไฟล์สำเร็จ"],
+      badCode: ["return ก่อนหน้านี้จะข้าม cleanup ตรงท้าย function"],
+    },
+    title: "วาง defer close ทันทีหลังเปิด resource สำเร็จ",
+    summary: "เมื่อเปิดไฟล์หรือ resource สำเร็จ ให้วาง `defer Close()` ใกล้จุดนั้น เพื่อให้ทุก return path ปิด resource ได้.",
+    takeaways: ["cleanup ควรอยู่ใกล้จุดเปิดไฟล์/connection เพื่อให้ reviewer เห็นทันทีว่า early return ก็ไม่รั่ว."],
     whatToReview: [
-      "โค้ดที่ดี defer cleanup ทันทีหลังเปิดไฟล์สำเร็จ ทำให้ early return ยังปิด resource ได้.",
-      "โค้ดที่ควรปรับ close เฉพาะ happy path ถ้า import line fail file handle จะ leak จน process cleanup เอง.",
+      "โค้ดที่ดี `defer file.Close()` ทันทีหลัง `os.Open` สำเร็จ ทำให้ error กลาง loop ก็ยังปิดไฟล์.",
+      "โค้ดที่ควรปรับเรียก `file.Close()` แค่ท้าย function ถ้า `importLine` fail แล้ว return ก่อน file handle จะรั่วจน process จัดการเอง.",
     ],
     reviewNotes: [
-      "defer แข็งแรงที่สุดเมื่อวางหลัง acquire สำเร็จทันที ตอนรีวิวให้ไล่ early return แล้วดูว่า cleanup ไม่ได้ขึ้นกับการวิ่งถึงท้าย function.",
+      "`defer` แข็งแรงที่สุดเมื่อวางหลังเปิด resource สำเร็จทันที ตอนรีวิวให้ไล่ early return แล้วดูว่า cleanup ไม่ได้พึ่งการวิ่งถึงท้าย function.",
     ],
   },
   "go/table-driven-tests": {
-    title: "test แบบ table-driven",
-    summary: "ใช้ table-driven test เพื่อทำให้เคสที่เกี่ยวข้องกันชัด โดยแต่ละเคสยังมีชื่อและ debug ได้ง่าย.",
-    takeaways: ["test table ควรเพิ่ม coverage และ readability ไม่ใช่ซ่อนว่าเคสไหน fail."],
+    codeComments: {
+      goodCode: [
+        "แต่ละ row ตั้งชื่อ variation หนึ่งของ behavior เดียวกัน",
+        "subtest ทำให้ failure ชี้ไปที่เคสที่พัง",
+      ],
+      badCode: ["assert ซ้ำ ๆ ให้ failure message กว้างเกินไป"],
+    },
+    title: "ทำ table-driven test ให้รู้ว่าเคสไหนพัง",
+    summary: "ใช้ table-driven test เมื่อหลายเคสเป็น variation ของ behavior เดียวกัน และตั้งชื่อแต่ละเคสให้ failure อ่านแล้วรู้ทันทีว่าอะไรพัง.",
+    takeaways: ["test table ควรช่วยเพิ่ม coverage และความอ่านง่าย ไม่ใช่ซ่อนว่า row ไหน fail."],
     whatToReview: [
-      "โค้ดที่ดีตั้งชื่อแต่ละเคส ใช้ subtest และให้ failure output พอรู้ input กับ expected value.",
-      "โค้ดที่ควรปรับ assert ซ้ำ ๆ พร้อมข้อความกว้าง ๆ เมื่อ fail ต้องย้อนอ่านเองว่าเคสไหนพัง.",
+      "โค้ดที่ดีตั้งชื่อแต่ละเคส ใช้ `t.Run` และให้ failure message บอก input, actual และ expected value.",
+      "โค้ดที่ควรปรับ assert ซ้ำ ๆ ด้วยข้อความ `bad slug` เมื่อ fail ต้องย้อนอ่านเองว่า input ไหนพัง.",
     ],
     reviewNotes: [
-      "table-driven test เหมาะเมื่อทุก row เป็น variation ของ behavior เดียว ถ้า setup หรือ assertion ต่างกันมาก ให้แยก test ดีกว่า.",
+      "table-driven test เหมาะเมื่อทุก row เป็น variation ของ behavior เดียว ถ้า setup หรือ assertion ของแต่ละ row ต่างกันมาก แยก test จะอ่านง่ายกว่า.",
     ],
   },
   "go/json-http-handler-boundaries": {
-    title: "boundary ของ JSON HTTP handler",
-    summary: "ให้ HTTP handler โฟกัส method check, JSON decoding, validation, service call และ response shape ที่ชัด.",
-    takeaways: ["HTTP handler ใน Go ควรทำ request parsing และ response writing ให้ explicit ที่ edge."],
+    codeComments: {
+      goodCode: [
+        "ปฏิเสธ field แปลก ๆ ใน JSON แทนที่จะรับ typo เงียบ ๆ",
+        "ส่ง request context ต่อให้ service เพื่อให้ cancel ได้",
+      ],
+      badCode: [
+        "ละเลย error ตอนอ่าน/แปลง JSON ทำให้ input พังกลายเป็นข้อมูลปกติ",
+        "Background context ทำให้ timeout/disconnect จาก request หายไป",
+      ],
+    },
+    title: "ให้ HTTP handler อ่าน request และตอบ response ชัด",
+    summary: "HTTP handler ควรเช็ก method, decode JSON, validate, ส่ง `r.Context()` เข้า service และตอบ status/JSON ให้ชัด.",
+    takeaways: ["handler คือด่านหน้าของระบบ จึงควรทำให้ request parsing, error และ response status อ่านได้ตรงไปตรงมา."],
     whatToReview: [
-      "โค้ดที่ดีเช็ก method, close body, decode เข้า request type, reject unknown field, ส่ง r.Context และตั้ง status ชัด.",
-      "โค้ดที่ควรปรับ ignore decode error ใช้ map หลวม ๆ ทิ้ง request cancellation และเขียน response เหมือน success เสมอ.",
+      "โค้ดที่ดีเช็ก POST, ปิด body, decode เข้า `createReviewRequest`, reject field แปลก, ส่ง `r.Context()` และตอบ `201 Created`.",
+      "โค้ดที่ควรปรับ ignore error จาก `ReadAll`/`Unmarshal`, ใช้ `map[string]string` หลวม ๆ, ใช้ `context.Background()` และตอบเหมือน success เสมอ.",
     ],
     reviewNotes: [
-      "HTTP handler คือ edge code ให้รีวิว method gate, request size, decoding, validation, context propagation, service boundary และ status consistency.",
+      "ตอนรีวิว handler ให้ไล่ flow จากขอบระบบ: method ถูกไหม, body ถูกปิดไหม, JSON ผิดแล้วตอบอะไร, context ไปถึง service ไหม และ status ตรงกับผลลัพธ์ไหม.",
     ],
   },
   "docker/build-context-dockerignore": {

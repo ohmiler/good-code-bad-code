@@ -14,6 +14,7 @@ type Service struct {
     repo Repository
 }
 
+// Constructor injection makes the dependency visible.
 func NewService(repo Repository) *Service {
     return &Service{repo: repo}
 }
@@ -33,6 +34,7 @@ func (s *Service) Publish(ctx context.Context, id string) error {
     filename: "utils/review_helpers.go",
     code: `package utils
 
+// A global database hides what callers depend on.
 var ReviewDB *sql.DB
 
 func PublishReview(id string) error {

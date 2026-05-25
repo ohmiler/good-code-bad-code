@@ -8,7 +8,8 @@ export const metadata = {
   goodCode: {
     language: "go",
     filename: "reviews/notifier.go",
-    code: `type Mailer interface {
+    code: `// The service only needs one behavior: send email.
+type Mailer interface {
     Send(ctx context.Context, message Message) error
 }
 
@@ -26,7 +27,8 @@ func (s *Service) RequestReview(ctx context.Context, review Review) error {
   badCode: {
     language: "go",
     filename: "notifications/client.go",
-    code: `type NotificationClient interface {
+    code: `// This forces email callers to depend on unrelated behavior.
+type NotificationClient interface {
     SendEmail(ctx context.Context, to string, subject string, body string) error
     SendSMS(ctx context.Context, phone string, body string) error
     SendSlack(ctx context.Context, channel string, body string) error

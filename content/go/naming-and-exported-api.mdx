@@ -10,6 +10,7 @@ export const metadata = {
     filename: "reviews/repository.go",
     code: `package reviews
 
+// Callers see this as reviews.Repository.
 type Repository interface {
     Find(ctx context.Context, id string) (Review, error)
     Save(ctx context.Context, review Review) error
@@ -28,6 +29,7 @@ type Status string`,
     filename: "reviews/repository.go",
     code: `package reviews
 
+// The exported name repeats words the package already says.
 type ReviewsRepositoryInterface interface {
     GetReviewObjectFromReviewID(ctx context.Context, reviewID string) (ReviewObject, error)
     SaveReviewObjectToDatabase(ctx context.Context, reviewObject ReviewObject) error

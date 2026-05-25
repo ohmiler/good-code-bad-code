@@ -14,6 +14,7 @@ export const metadata = {
     Body  string
 }
 
+// Constructor validates the fields that cannot be empty.
 func NewReview(id string, title string, body string) (Review, error) {
     title = strings.TrimSpace(title)
     if id == "" {
@@ -35,6 +36,7 @@ func NewReview(id string, title string, body string) (Review, error) {
     Body  string
 }
 
+// Empty ID and title can become a "valid" Review.
 func CreateReview(id string, title string, body string) Review {
     return Review{
         ID:    id,

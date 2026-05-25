@@ -9,6 +9,7 @@ export const metadata = {
     language: "go",
     filename: "reviews/slug_test.go",
     code: `func TestSlugify(t *testing.T) {
+    // Each row names one variation of the same behavior.
     tests := []struct {
         name string
         in   string
@@ -19,6 +20,7 @@ export const metadata = {
     }
 
     for _, tt := range tests {
+        // Subtests make failures point to the exact case.
         t.Run(tt.name, func(t *testing.T) {
             got := Slugify(tt.in)
             if got != tt.want {
@@ -32,6 +34,7 @@ export const metadata = {
     language: "go",
     filename: "reviews/slug_test.go",
     code: `func TestSlugify(t *testing.T) {
+    // Repeated assertions give vague failures.
     if Slugify("Code Review") != "code-review" {
         t.Fatal("bad slug")
     }

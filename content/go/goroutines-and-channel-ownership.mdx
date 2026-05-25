@@ -10,11 +10,13 @@ export const metadata = {
     filename: "reviews/worker.go",
     code: `func StartWorker(ctx context.Context, jobs <-chan Job, results chan<- Result) {
     go func() {
+        // The sending goroutine owns closing the output channel.
         defer close(results)
 
         for {
             select {
             case <-ctx.Done():
+                // Context cancellation gives the goroutine a clean stop.
                 return
             case job, ok := <-jobs:
                 if !ok {
@@ -31,6 +33,7 @@ export const metadata = {
     filename: "reviews/worker.go",
     code: `func StartWorker(jobs chan Job, results chan Result) {
     go func() {
+        // No cancel path means this goroutine depends on jobs closing.
         for job := range jobs {
             results <- process(job)
         }
@@ -38,6 +41,7 @@ export const metadata = {
 }
 
 func StopWorker(results chan Result) {
+    // Closing a channel from the outside can race with senders.
     close(results)
 }`,
   },

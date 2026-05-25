@@ -8,11 +8,13 @@ export const metadata = {
   goodCode: {
     language: "go",
     filename: "reviews/repository.go",
-    code: `var ErrReviewNotFound = errors.New("review not found")
+    code: `// Sentinel error lets callers check the not-found case.
+var ErrReviewNotFound = errors.New("review not found")
 
 func (r *Repository) Find(ctx context.Context, id string) (Review, error) {
     review, err := r.store.FindReview(ctx, id)
     if errors.Is(err, store.ErrNotFound) {
+        // %w preserves an error chain for errors.Is/errors.As.
         return Review{}, fmt.Errorf("find review %s: %w", id, ErrReviewNotFound)
     }
     if err != nil {
@@ -29,6 +31,7 @@ func (r *Repository) Find(ctx context.Context, id string) (Review, error) {
     review, err := r.store.FindReview(ctx, id)
     if err != nil {
         log.Println("find review failed", err)
+        // The original reason is lost behind a vague error.
         return Review{}, errors.New("failed")
     }
 
