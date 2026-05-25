@@ -90,7 +90,7 @@ export const trackThaiTranslations = {
   react: {
     title: "React",
     description:
-      "ฝึกรีวิวขอบเขต component, ข้อมูลที่เก็บใน state, effect และการวาดหน้าจอ (render) ที่คาดเดาได้.",
+      "ฝึกรีวิว props, state, key, effect, context, memoization และ component ที่แยกหน้าที่ชัดเจน.",
   },
   nextjs: {
     title: "Next.js",
@@ -803,17 +803,17 @@ export const lessonThaiTranslations = {
   "react/props-component-boundaries": {
     codeComments: {
       goodCode: ["props ที่ชัดเจนบอกว่า component ต้องใช้ข้อมูลอะไรบ้าง"],
-      badCode: ["การดึง state กว้าง ๆ จากแอปทำให้ component ผูกกับหลายเรื่องเกินไป"],
+      badCode: ["component ไปหยิบข้อมูลจาก store/context ทั้งก้อน ทำให้ผูกกับหลายเรื่องเกินไป"],
     },
     title: "ส่งข้อมูลผ่าน props ให้ชัด",
-    summary: "ให้ component รับเฉพาะข้อมูลที่ต้องใช้ผ่าน props แทนการไปดึง state กว้าง ๆ จากทั้งแอปเอง.",
-    takeaways: ["component ที่ดีควรเห็นข้อมูลที่ต้องใช้จาก props โดยไม่ต้องเดาว่าข้างในไปหยิบอะไรจากที่อื่น."],
+    summary: "ให้ component รับข้อมูลที่ต้องใช้ผ่าน props ให้เห็นตรงหน้า แทนการไปหยิบข้อมูลจาก store หรือ context ทั้งก้อนเอง.",
+    takeaways: ["component ที่ดีควรเห็นข้อมูลที่ต้องใช้จาก props โดยไม่ต้องเดาว่าข้างในไปหยิบข้อมูลจากที่อื่น."],
     whatToReview: [
       "โค้ดที่ดีทำให้ component รับข้อมูลเท่าที่ต้องใช้ อ่านง่าย และทดสอบแยกได้.",
-      "โค้ดที่ควรปรับให้ component ไปอ่าน state นอกขอบเขตของตัวเอง ทำให้นำไปใช้ซ้ำและไล่บั๊กยาก.",
+      "โค้ดที่ควรปรับให้ component ไปอ่าน state นอกขอบเขตของตัวเอง เช่น store/context ทั้งก้อน ทำให้นำไปใช้ซ้ำและไล่บั๊กยาก.",
     ],
     reviewNotes: [
-      "ตอนรีวิว React ให้ดูว่า component นี้รู้มากเกินหน้าที่หรือไม่. ถ้าข้อมูลที่ใช้ถูกส่งผ่าน props ชัดเจน component จะย้ายที่ ใช้ซ้ำ และทดสอบได้ง่ายขึ้น.",
+      "ตอนรีวิว React ให้ดูว่า component นี้รู้มากเกินหน้าที่หรือไม่. ถ้าข้อมูลที่ใช้ถูกส่งผ่าน props ชัดเจน component จะย้ายที่ ใช้ซ้ำ และทดสอบได้ง่ายขึ้น เพราะไม่ต้องพึ่งข้อมูลที่ซ่อนอยู่ใน store/context.",
     ],
   },
   "react/stable-keys-lists": {
@@ -835,10 +835,10 @@ export const lessonThaiTranslations = {
   "react/derived-state": {
     codeComments: {
       goodCode: ["ค่าที่คำนวณได้จาก props ปัจจุบันไม่จำเป็นต้องเก็บเป็น state"],
-      badCode: ["state ที่ซ้ำกับข้อมูลเดิมต้องใช้ effect มาคอยทำให้ตรงกัน"],
+      badCode: ["state ที่ซ้ำกับข้อมูลเดิมต้องใช้ effect มาคอยตามแก้ให้ตรงกัน"],
     },
     title: "อย่าเก็บ state ซ้ำถ้าคำนวณได้",
-    summary: "ค่าที่คำนวณจาก props หรือ state เดิมได้ ให้คำนวณตอน React วาดหน้าจอ (render) แทนการเก็บซ้ำแล้วคอย sync ด้วย effect.",
+    summary: "ค่าที่คำนวณจาก props หรือ state เดิมได้ ให้คำนวณตอน React วาดหน้าจอ (render) แทนการเก็บซ้ำแล้วคอยทำให้ตรงกันด้วย effect.",
     takeaways: ["อย่าเก็บ state ซ้ำถ้าคำนวณจาก props หรือ state เดิมได้."],
     whatToReview: [
       "โค้ดที่ดีคำนวณค่าจากข้อมูลปัจจุบัน ทำให้ไม่ต้องมี state สองชุดให้คอยทำให้ตรงกัน.",
@@ -853,7 +853,7 @@ export const lessonThaiTranslations = {
       goodCode: ["functional update ให้ React ส่ง state ล่าสุดเข้ามาก่อนคำนวณค่าใหม่"],
       badCode: ["โค้ดนี้ใช้ selectedIds จากรอบ render เดิม ซึ่งอาจเก่าแล้ว"],
     },
-    title: "อัปเดต state จากค่าล่าสุด",
+    title: "อัปเดต state จากค่าก่อนหน้าอย่างปลอดภัย",
     summary: "ถ้าค่า state ใหม่ต้องใช้ค่าเดิมในการคำนวณ ให้ใช้ functional update เพื่อให้ React ส่งค่าล่าสุดมาให้.",
     takeaways: ["ถ้าค่าใหม่ต้องอ้างอิงค่าเดิม ให้ส่ง function เข้า setter แทนการอ่าน state จาก render รอบที่อาจเก่าแล้ว."],
     whatToReview: [
@@ -861,103 +861,103 @@ export const lessonThaiTranslations = {
       "โค้ดที่ควรปรับคำนวณจาก selectedIds ที่ถูกจำไว้ตอน render ทำให้ update บางครั้งหายได้.",
     ],
     reviewNotes: [
-      "เวลาเห็น setState ที่ใช้ state ตัวเดิมมาประกอบค่าใหม่ ให้พิจารณา functional update. เรื่องนี้สำคัญเมื่อมี event หลายครั้งติดกัน, batching หรือ callback ที่รันทีหลัง.",
+      "เวลาเห็น setState ที่ใช้ state ตัวเดิมมาประกอบค่าใหม่ ให้พิจารณา functional update. เรื่องนี้สำคัญเมื่อมี event หลายครั้งติดกัน, React รวมหลาย update เข้าด้วยกัน (batching) หรือ callback ที่รันทีหลัง.",
     ],
   },
   "react/controlled-form-inputs": {
     codeComments: {
       goodCode: ["React state เป็นแหล่งข้อมูลหลักสำหรับ validate, submit และ reset"],
-      badCode: ["การ query DOM ทำให้ค่าของ form หลุดจาก flow ของ React"],
+      badCode: ["การ query DOM ทำให้ค่าฟอร์มไม่ผ่าน React state"],
     },
-    title: "คุมค่า form ด้วย React state",
-    summary: "ถ้า form ต้อง validate, reset หรือ submit ด้วย logic ของเรา ให้ React state เป็นแหล่งข้อมูลหลักของค่าที่ผู้ใช้กรอก.",
+    title: "คุมค่าฟอร์มด้วย React state",
+    summary: "ถ้าฟอร์มต้อง validate, reset หรือ submit ด้วย logic ของเรา ให้ค่าที่ผู้ใช้กรอกอยู่ใน React state เป็นแหล่งข้อมูลหลัก.",
     takeaways: ["controlled input ทำให้ค่าที่ผู้ใช้เห็นและค่าที่ submit มาจากแหล่งเดียวกัน."],
     whatToReview: [
       "โค้ดที่ดีผูก input กับ state และใช้ค่าเดียวกันตอน validate, submit และ reset.",
-      "โค้ดที่ควรปรับ query DOM เพื่ออ่านและแก้ input เอง ทำให้ flow ของข้อมูลหลุดจาก React.",
+      "โค้ดที่ควรปรับ query DOM เพื่ออ่านและแก้ input เอง ทำให้ validate, reset และ submit ใช้ข้อมูลคนละทางกับ React state.",
     ],
     reviewNotes: [
-      "ตอนรีวิว form ให้ดูว่าค่านี้มี logic มากกว่า submit ปกติไหม. ถ้ามี validation, disabled state หรือ error message การเก็บค่าใน React จะดูแลง่ายกว่า.",
+      "ตอนรีวิวฟอร์ม ให้ดูว่าค่านี้มี logic มากกว่า submit ปกติไหม. ถ้ามี validation, disabled state หรือ error message การเก็บค่าใน React state จะดูแลง่ายกว่า.",
     ],
   },
   "react/effect-dependencies": {
     codeComments: {
       goodCode: ["effect ทำงานตาม reviewId ล่าสุด และยกเลิก request เก่าที่ไม่ใช้แล้ว"],
-      badCode: ["dependency ว่างทำให้ effect จำ reviewId แรกไว้และไม่ตามค่าที่เปลี่ยน"],
+      badCode: ["ใส่ [] ทำให้ effect จำ reviewId แรกไว้และไม่ตามค่าที่เปลี่ยน"],
     },
-    title: "บอกค่าที่ effect พึ่งพาให้ครบ",
-    summary: "ถ้า effect ใช้ค่าใด ให้ใส่ค่านั้นในรายการ dependency และยกเลิกงานเก่า (cleanup) เมื่อค่านั้นเปลี่ยน.",
-    takeaways: ["effect ควรบอกค่าที่พึ่งพา (dependency) ให้ครบ และ cleanup งานที่ไม่ต้องใช้แล้ว."],
+    title: "ใส่ dependency ของ effect ให้ครบ",
+    summary: "ถ้า effect อ่านค่าอย่าง `reviewId` ให้ใส่ค่านั้นใน dependency array และยกเลิกงานเก่า (cleanup) เมื่อค่านั้นเปลี่ยน.",
+    takeaways: ["dependency array คือรายชื่อค่าที่ effect ต้องตามให้ทัน และ cleanup คือการยกเลิกงานเก่าที่ไม่ต้องใช้แล้ว."],
     whatToReview: [
       "โค้ดที่ดีใส่ค่าที่ effect ใช้จริงใน dependency array และยกเลิก request เก่าเมื่อค่าเปลี่ยน.",
-      "โค้ดที่ควรปรับปล่อย dependency array ว่าง ทั้งที่ใช้ค่าจาก props ทำให้ข้อมูลที่แสดงอาจค้างอยู่กับค่าเก่า.",
+      "โค้ดที่ควรปรับใส่ `[]` ทั้งที่ใช้ค่าจาก props ทำให้ข้อมูลที่แสดงอาจค้างอยู่กับค่าแรก.",
     ],
     reviewNotes: [
-      "ตอนรีวิว effect ให้ดูทั้ง dependency array และ cleanup. ถ้า effect ใช้ค่าใดใน scope ค่านั้นควรอยู่ใน dependency หรือมีเหตุผลที่ชัดเจนว่าทำไมไม่อยู่.",
+      "ตอนรีวิว effect ให้ดูทั้ง dependency array และ cleanup. ถ้า effect ใช้ค่าใดจาก props, state หรือ function ใน component ค่านั้นควรอยู่ใน dependency หรือมีเหตุผลที่ชัดเจนว่าทำไมไม่อยู่.",
     ],
   },
   "react/async-effect-cleanup": {
     codeComments: {
-      goodCode: ["cleanup กัน response เก่ากลับมาแก้ state ของหน้าจอปัจจุบัน"],
+      goodCode: ["cleanup กัน response เก่าไม่ให้กลับมาแก้ state ของหน้าจอปัจจุบัน"],
       badCode: ["request เก่าอาจตอบกลับช้ากว่าและเขียนทับ state ใหม่"],
     },
-    title: "ยกเลิกงาน async เก่าใน effect",
-    summary: "กัน request เก่าที่ตอบกลับช้ากลับมาเขียนทับ state ของหน้าจอใหม่ หลัง input เปลี่ยนหรือ component ถูกถอด.",
-    takeaways: ["effect ที่เริ่มงาน async ควรมี cleanup เมื่อ input เปลี่ยนหรือเมื่อ component ถูกถอดออก."],
+    title: "กัน request เก่าเขียนทับหน้าจอใหม่",
+    summary: "เมื่อ input เปลี่ยนหรือ component ถูกถอด ต้องกัน response เก่าที่ตอบกลับช้ากลับมาเขียน state ของหน้าจอปัจจุบัน.",
+    takeaways: ["effect ที่เริ่มงาน async ควรมี cleanup เพื่อยกเลิกงานเก่าเมื่อ input เปลี่ยนหรือ component ถูกถอดออก."],
     whatToReview: [
-      "โค้ดที่ดีตั้ง flag cleanup เพื่อไม่ให้ promise เก่าแก้ state หลังหน้าจอเปลี่ยนไปแล้ว.",
+      "โค้ดที่ดีตั้ง flag ใน cleanup เพื่อไม่ให้ promise เก่าแก้ state หลังหน้าจอเปลี่ยนไปแล้ว.",
       "โค้ดที่ควรปรับเริ่ม request ใหม่ทุกครั้งแต่ยังปล่อยให้ response เก่ากลับมาเขียน state ได้.",
     ],
     reviewNotes: [
-      "ตอนรีวิว async effect ให้ลองคิดกรณีผู้ใช้กดเปลี่ยนหน้าเร็ว ๆ หรือ request ตอบกลับคนละลำดับ. dependency ครบอย่างเดียวอาจยังไม่พอถ้าไม่มี cleanup.",
+      "ตอนรีวิว async effect ให้ลองคิดกรณีผู้ใช้กดเปลี่ยนหน้าเร็ว ๆ หรือ request ตอบกลับคนละลำดับ. dependency ครบอย่างเดียวอาจยังไม่พอถ้าไม่มี cleanup กัน response เก่า.",
     ],
   },
   "react/context-boundaries": {
     codeComments: {
       goodCode: ["จำกัด context ให้แคบ และส่งข้อมูล review ผ่าน props ที่เห็นชัด"],
-      badCode: ["context ที่กว้างเกินไปทำให้ card ผูกกับ state ที่ไม่เกี่ยว"],
+      badCode: ["context ที่ใส่ state ทั้งแอปทำให้ card ผูกกับข้อมูลที่ไม่เกี่ยว"],
     },
     title: "จำกัดขอบเขตของ context",
-    summary: "ใช้ context กับข้อมูลที่หลายส่วนต้องรู้จริง ๆ อย่าใช้แทน props ทุกอย่างจน component ผูกกับ state ทั้งแอป.",
-    takeaways: ["context ที่แคบช่วยให้ component ไม่ต้องรับรู้ state ที่ไม่เกี่ยวข้องกับหน้าที่ของตัวเอง."],
+    summary: "ใช้ context กับข้อมูลที่หลายส่วนต้องรู้จริง ๆ เช่น viewer/theme อย่าใช้แทน props ทุกอย่างจน component ผูกกับ state ทั้งแอป.",
+    takeaways: ["context ที่แคบช่วยให้ component ไม่ต้องรับรู้หรือวาดใหม่เพราะ state ที่ไม่เกี่ยวกับหน้าที่ของตัวเอง."],
     whatToReview: [
       "โค้ดที่ดีใช้ context เฉพาะ viewer และส่งข้อมูล review ผ่าน props ที่ชัดเจน.",
-      "โค้ดที่ควรปรับใส่ state ทั้งแอปใน context เดียว ทำให้ component รู้เยอะและวาดใหม่ (rerender) เกินจำเป็น.",
+      "โค้ดที่ควรปรับใส่ state ทั้งแอปใน context เดียว ทำให้ component รู้เยอะและอาจวาดใหม่ (rerender) เมื่อข้อมูลที่ไม่เกี่ยวเปลี่ยน.",
     ],
     reviewNotes: [
-      "ตอนรีวิว component ที่ใช้ context ให้เทียบว่ามันรับข้อมูลมากแค่ไหนกับสิ่งที่ render จริง. context กว้างเกินไปทำให้ใช้ซ้ำยากและ performance คาดเดายาก.",
+      "ตอนรีวิว component ที่ใช้ context ให้เทียบว่ามันรับข้อมูลมากแค่ไหนกับสิ่งที่ render จริง. context กว้างเกินไปทำให้ใช้ซ้ำยาก และทำให้จำนวนครั้งที่ component วาดใหม่คาดเดายาก.",
     ],
   },
   "react/memoization-when-it-helps": {
     codeComments: {
-      goodCode: ["จำผลลัพธ์ไว้ใช้ซ้ำเฉพาะการคำนวณ list ที่หนักจริง"],
-      badCode: ["dependency ว่างทำให้ list ค้างอยู่กับค่าแรกหลัง render"],
+      goodCode: ["useMemo จำผลลัพธ์ไว้ใช้ซ้ำเฉพาะการคำนวณ list ที่หนักจริง"],
+      badCode: ["ใส่ [] ทำให้ list ค้างอยู่กับค่าแรกหลัง render"],
     },
-    title: "จำผลลัพธ์ไว้ใช้ซ้ำเมื่อช่วยจริง",
-    summary: "ใช้ memoization เพื่อจำผลลัพธ์ไว้ใช้ซ้ำเฉพาะตอนที่การคำนวณหนักจริง และต้องใส่ dependencies ให้ครบ.",
-    takeaways: ["memoization ควรมีเหตุผลเรื่องความเร็วจริง ๆ และต้องบอกค่าที่พึ่งพา (dependencies) ให้ครบ."],
+    title: "ใช้ memoization เมื่อช่วยลดงานจริง",
+    summary: "ใช้ `useMemo` หรือ `useCallback` เมื่อมีงานคำนวณหนัก หรือต้องส่ง reference เดิมให้ child/memoized component จริง ๆ และต้องใส่ dependencies ให้ครบ.",
+    takeaways: ["memoization ควรมีเหตุผลชัดว่าเลี่ยงงานแพงอะไร และต้องบอกค่าที่พึ่งพา (dependencies) ให้ครบ."],
     whatToReview: [
-      "โค้ดที่ดีจำผลลัพธ์การ filter ที่ขึ้นกับ reviews และ search อย่างชัดเจน.",
-      "โค้ดที่ควรปรับใช้ dependency ว่างจนข้อมูลที่แสดงเก่า และ memoize ข้อความง่าย ๆ โดยไม่จำเป็น.",
+      "โค้ดที่ดีใช้ `useMemo` กับการ filter list ที่ขึ้นกับ reviews และ search อย่างชัดเจน.",
+      "โค้ดที่ควรปรับใส่ `[]` จนข้อมูลที่แสดงเก่า และ memoize ข้อความง่าย ๆ ที่คำนวณใหม่ได้ถูกกว่า.",
     ],
     reviewNotes: [
-      "ตอนรีวิว useMemo หรือ useCallback ให้ถามว่ามันช่วยเรื่อง performance ตรงไหน และใส่ dependencies ครบไหม. memo ที่ผิดอาจทำให้โค้ดดูเหมือนเร็วขึ้น แต่จริง ๆ แล้วค้างอยู่กับข้อมูลเก่า.",
+      "ตอนรีวิว `useMemo` หรือ `useCallback` ให้ถามว่ามันช่วยลดงานแพงตรงไหน และใส่ dependencies ครบไหม. memo ที่ผิดอาจทำให้โค้ดดูเหมือนเร็วขึ้น แต่จริง ๆ แล้วค้างอยู่กับข้อมูลเก่า.",
     ],
   },
   "react/composition-over-prop-flags": {
     codeComments: {
-      goodCode: ["slot เปิดให้ผู้เรียกประกอบ UI ของแต่ละกรณีเอง"],
+      goodCode: ["Panel รับปุ่มและเนื้อหาจาก component ที่เอาไปใช้"],
       badCode: ["prop true/false หลายตัวสร้างชุดค่าที่ component ต้องคุมเอง"],
     },
-    title: "ให้ผู้เรียกประกอบ UI เอง แทน prop true/false หลายตัว",
-    summary: "ใช้ composition ให้ผู้เรียกประกอบ UI ผ่าน children หรือ slot แทนการเพิ่ม prop แบบ true/false หลายตัวจนกรณีซับซ้อน.",
-    takeaways: ["composition ช่วยลดชุด prop ที่ผสมกันผิดพลาดง่ายใน component ที่มีหลายรูปแบบ."],
+    title: "ส่งปุ่มและเนื้อหาผ่าน children/actions",
+    summary: "ถ้า component มีหลายรูปแบบ ให้ component ที่เอาไปใช้ส่งปุ่ม เนื้อหา หรือ action เข้ามาผ่าน children หรือ prop อย่าง actions แทนการเพิ่ม prop true/false หลายตัว.",
+    takeaways: ["composition คือการให้ component ที่เอาไปใช้ส่ง UI บางส่วนเข้ามาเอง ช่วยลดชุด prop ที่ผสมกันผิดพลาดง่าย."],
     whatToReview: [
-      "โค้ดที่ดีให้ผู้เรียกส่ง action และ content เข้ามาประกอบ panel ตาม use case.",
-      "โค้ดที่ควรปรับมี mode และ boolean หลายตัว ทำให้เกิดชุดค่าที่ component ไม่ได้ตั้งใจรองรับ.",
+      "โค้ดที่ดีให้ component ที่เอา Panel ไปใช้ส่ง action และ content เข้ามาตามกรณีที่ต้องใช้.",
+      "โค้ดที่ควรปรับมี mode และ prop true/false หลายตัว ทำให้เกิดชุดค่าที่ component ไม่ได้ตั้งใจรองรับ เช่น showFooter=false แต่ showDeleteButton=true.",
     ],
     reviewNotes: [
-      "ถ้าทุก requirement ใหม่ทำให้ component ต้องเพิ่ม flag อีกตัว ให้ลองมองหา composition. API แบบ slot ช่วยให้ผู้เรียกสร้าง UI ที่ต้องการ โดยไม่บังคับให้ component รู้ทุกกรณี.",
+      "ถ้าความต้องการใหม่ทุกครั้งทำให้ component ต้องเพิ่ม prop true/false อีกตัว ให้ลองมองหา composition. children หรือ prop อย่าง actions ช่วยให้ component ที่เอาไปใช้ส่ง UI ที่ต้องการเข้ามา โดยไม่บังคับให้ component หลักรู้ทุกกรณีล่วงหน้า.",
     ],
   },
   "nextjs/app-router-file-conventions": {
