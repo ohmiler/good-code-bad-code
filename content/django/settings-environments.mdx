@@ -10,10 +10,12 @@ export const metadata = {
     filename: "config/settings.py",
     code: `import os
 
+# Required secrets fail at startup when missing.
 SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
 DEBUG = os.environ.get("DJANGO_DEBUG") == "1"
 ALLOWED_HOSTS = os.environ["DJANGO_ALLOWED_HOSTS"].split(",")
 
+# Host and CSRF rules come from each environment.
 CSRF_TRUSTED_ORIGINS = [
     origin
     for origin in os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",")
@@ -23,7 +25,8 @@ CSRF_TRUSTED_ORIGINS = [
   badCode: {
     language: "python",
     filename: "config/settings.py",
-    code: `SECRET_KEY = "dev-secret"
+    code: `# Wildcard settings are too open for production.
+SECRET_KEY = "dev-secret"
 DEBUG = True
 ALLOWED_HOSTS = ["*"]
 CSRF_TRUSTED_ORIGINS = ["https://*"]`,

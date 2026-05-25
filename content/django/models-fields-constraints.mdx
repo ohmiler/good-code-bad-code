@@ -29,6 +29,7 @@ class Review(models.Model):
     published_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
+        # Database constraints protect rules even outside this code path.
         constraints = [
             models.UniqueConstraint(
                 fields=["author", "slug"],
@@ -47,6 +48,7 @@ class Review(models.Model):
 
 
 class Review(models.Model):
+    # Loose nullable fields move data rules out of the model.
     title = models.TextField(null=True, blank=True)
     slug = models.CharField(max_length=255, null=True, blank=True)
     status = models.CharField(max_length=255, null=True, blank=True)

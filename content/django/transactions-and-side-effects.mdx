@@ -13,6 +13,7 @@ export const metadata = {
 
 def approve_review(review_id, moderator):
     with transaction.atomic():
+        # Lock the row while this approval is being saved.
         review = Review.objects.select_for_update().get(pk=review_id)
         review.approve(moderator=moderator)
         review.save(update_fields=["status", "approved_by", "approved_at"])
@@ -23,6 +24,7 @@ def approve_review(review_id, moderator):
             review=review,
         )
 
+        # Send email only after the transaction commits.
         transaction.on_commit(
             lambda: send_review_approved_email(review.pk)
         )
@@ -37,6 +39,7 @@ def approve_review(review_id, moderator):
     review.approve(moderator=moderator)
     review.save()
 
+    # Email can be sent before the database work fully succeeds.
     send_review_approved_email(review.pk)
 
     AuditLog.objects.create(

@@ -16,6 +16,7 @@ from .models import Review
 
 class ReviewForm(forms.ModelForm):
     class Meta:
+        # ModelForm owns which fields can be submitted.
         model = Review
         fields = ["title", "body"]
 
@@ -34,6 +35,7 @@ def create_review(request):
         review.save()
         return redirect("reviews:detail", pk=review.pk)
 
+    # Invalid POST returns the form with validation errors.
     return render(request, "reviews/form.html", {"form": form})`,
   },
   badCode: {
@@ -46,6 +48,7 @@ from .models import Review
 
 def create_review(request):
     if request.method == "POST":
+        # Direct request.POST access skips form validation.
         review = Review.objects.create(
             title=request.POST["title"],
             body=request.POST["body"],

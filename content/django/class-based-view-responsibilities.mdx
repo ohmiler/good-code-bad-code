@@ -21,6 +21,7 @@ class ReviewListView(LoginRequiredMixin, ListView):
     paginate_by = 20
 
     def get_queryset(self):
+        # The override only customizes the list query.
         return Review.objects.visible_to(self.request.user).with_author()`,
   },
   badCode: {
@@ -33,6 +34,7 @@ from django.shortcuts import render
 class ReviewDashboardView(View):
     def get(self, request):
         reviews = Review.objects.all()
+        # GET now sends email and builds reports, not just a response.
         for review in reviews:
             if review.needs_digest:
                 send_digest_email(review.author)

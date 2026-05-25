@@ -8,7 +8,8 @@ export const metadata = {
   goodCode: {
     language: "python",
     filename: "reviews/selectors.py",
-    code: `def recent_reviews():
+    code: `# Build the QuerySet before evaluating it.
+def recent_reviews():
     return (
         Review.objects.filter(status=Review.Status.PUBLISHED)
         .select_related("author")
@@ -18,6 +19,7 @@ export const metadata = {
 
 
 def review_cards():
+    # Related rows are already loaded before this loop runs.
     return [
         {
             "title": review.title,
@@ -38,6 +40,7 @@ def review_cards():
         rows.append(
             {
                 "title": review.title,
+                # Relationship access in the loop can create N+1 queries.
                 "author": review.author.username,
                 "comment_count": review.comments.count(),
             }

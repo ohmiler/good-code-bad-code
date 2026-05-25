@@ -15,6 +15,7 @@ from . import views
 app_name = "reviews"
 
 urlpatterns = [
+    # Put reserved paths before broad slug captures.
     path("settings/", views.review_settings, name="settings"),
     path("<slug:username>/", views.reviewer_profile, name="profile"),
 ]`,
@@ -29,6 +30,7 @@ from . import views
 app_name = "reviews"
 
 urlpatterns = [
+    # Broad slug captures can swallow reserved paths.
     path("<slug:username>/", views.reviewer_profile, name="profile"),
     path("settings/", views.review_settings, name="settings"),
 ]`,

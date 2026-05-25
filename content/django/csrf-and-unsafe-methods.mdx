@@ -18,6 +18,7 @@ from .models import Review
 @require_POST
 @login_required
 def publish_review(request, pk):
+    # POST plus login keeps this state change protected.
     review = get_object_or_404(Review, pk=pk, author=request.user)
     review.publish()
     return redirect("reviews:detail", pk=review.pk)`,
@@ -33,6 +34,7 @@ from .models import Review
 
 @csrf_exempt
 def publish_review(request, pk):
+    # csrf_exempt removes a major browser-side protection.
     review = Review.objects.get(pk=pk)
     review.publish()
     return JsonResponse({"ok": True})`,

@@ -12,6 +12,7 @@ export const metadata = {
 
 
 class ReviewQuerySet(models.QuerySet):
+    # Name the visibility rule once so views do not copy filters.
     def visible_to(self, user):
         base = self.filter(deleted_at__isnull=True)
         if user.is_staff:
@@ -19,6 +20,7 @@ class ReviewQuerySet(models.QuerySet):
         return base.filter(status=Review.Status.PUBLISHED)
 
     def with_author(self):
+        # Keep relationship loading behind a readable query name.
         return self.select_related("author")
 
 
@@ -33,7 +35,8 @@ def review_list(request):
   badCode: {
     language: "python",
     filename: "reviews/views.py",
-    code: `def review_list(request):
+    code: `# Duplicated filters drift when the rule changes.
+def review_list(request):
     reviews = Review.objects.filter(
         deleted_at__isnull=True,
         status="published",
