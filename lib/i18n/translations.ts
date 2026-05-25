@@ -70,7 +70,7 @@ export const trackThaiTranslations = {
   html: {
     title: "HTML",
     description:
-      "ฝึกรีวิวโครงสร้างหน้า ความหมายของแท็ก ฟอร์ม และพื้นฐาน accessibility.",
+      "ฝึกรีวิวโครงสร้างหน้า, semantic tags, ฟอร์ม และ accessibility (การเข้าถึง) พื้นฐาน.",
   },
   css: {
     title: "CSS",
@@ -162,34 +162,34 @@ export const trackThaiTranslations = {
 export const lessonThaiTranslations = {
   "html/document-language-metadata": {
     codeComments: {
-      goodCode: ["metadata ช่วยให้ browser และเครื่องมือช่วยอ่านเริ่มจากข้อมูลที่ถูกต้อง"],
-      badCode: ["ไม่ประกาศภาษาและ viewport ทำให้ browser ต้องเดาค่าเริ่มต้นเอง"],
+      goodCode: ["metadata บอกข้อมูลเริ่มต้นให้ browser และ screen reader"],
+      badCode: ["ขาด lang และ viewport ทำให้ browser ต้องเดาเอง"],
     },
-    title: "ภาษาและ metadata ของหน้าเว็บ",
-    summary: "ประกาศภาษา charset viewport และ title ตั้งแต่ต้น เพื่อให้ browser และเครื่องมือช่วยอ่านเข้าใจหน้าได้ถูกต้อง.",
-    takeaways: ["ทุกหน้าควรมี lang, charset, viewport และ title ที่บอกบริบทของหน้าอย่างชัดเจน."],
+    title: "ข้อมูลพื้นฐานของหน้าเว็บ (metadata)",
+    summary: "บอกภาษา ชุดตัวอักษร (charset), ขนาดหน้าจอ (viewport) และชื่อหน้า (title) ไว้ใน <head> เพื่อให้ browser จัดหน้าและ screen reader อ่านได้ถูกต้อง.",
+    takeaways: ["ทุกหน้าควรมี lang, charset, viewport และ title เพราะนี่คือข้อมูลพื้นฐานที่ browser ใช้เข้าใจหน้าเว็บ."],
     whatToReview: [
-      "โค้ดที่ดีบอกภาษา การเข้ารหัส ขนาด viewport และชื่อหน้าให้ browser เข้าใจก่อนเริ่ม render เนื้อหา.",
-      "โค้ดที่ควรปรับปล่อยค่าพื้นฐานสำคัญให้ browser เดาเอง ทำให้การอ่านออกเสียงและตัวตนของหน้าอาจผิดไป.",
+      "โค้ดที่ดีบอกภาษา, charset, viewport และ title ตั้งแต่ใน <head> ทำให้ browser รู้วิธีจัดหน้าและรู้ว่าหน้านี้ชื่ออะไร.",
+      "โค้ดที่ควรปรับปล่อยให้ browser เดาภาษาและขนาดหน้าจอเอง ทำให้การแสดงผลหรือการอ่านออกเสียงอาจไม่ตรงกับที่ตั้งใจ.",
     ],
     reviewNotes: [
-      "เวลารีวิว HTML ให้เริ่มจากส่วนหัวของเอกสารก่อนเสมอ เพราะ body ที่เขียนดีอาจยังใช้งานยากได้ถ้า lang, charset, viewport หรือ title ไม่ชัด.",
+      "เวลารีวิว HTML ให้เริ่มจาก <head> ก่อนเสมอ เพราะเนื้อหาใน body จะดีแค่ไหนก็ยังใช้งานยากได้ ถ้า lang, charset, viewport หรือ title ไม่ชัดตั้งแต่ต้น.",
     ],
   },
   "html/semantic-document-structure": {
     codeComments: {
-      goodCode: ["main และ article ทำให้เห็นโครงสร้างหน้าได้จาก HTML"],
-      badCode: ["div ทั่วไปทำให้ความหมายของเนื้อหาถูกซ่อนไว้"],
+      goodCode: ["semantic tags ทำให้รู้ว่าส่วนนี้คือเนื้อหาหลักและบทความ"],
+      badCode: ["div ทั่วไปบอกไม่ได้ว่าส่วนนี้ทำหน้าที่อะไร"],
     },
-    title: "โครงสร้าง HTML ที่มีความหมาย",
-    summary: "ใช้ landmark และ heading เพื่อให้คนอ่านโค้ด browser และเครื่องมือช่วยอ่านเข้าใจโครงสร้างหน้า.",
-    takeaways: ["เลือกแท็กที่สื่อความหมายก่อนใช้ div ครอบทุกอย่าง."],
+    title: "โครงสร้างหน้าด้วย semantic tags",
+    summary: "ใช้แท็กอย่าง main, nav, article และ heading เพื่อบอกว่าส่วนไหนคือเมนู เนื้อหาหลัก หรือบทความ (landmark/structure).",
+    takeaways: ["เลือก semantic tag ที่บอกหน้าที่ของเนื้อหาก่อนใช้ div ครอบทุกอย่าง."],
     whatToReview: [
-      "โค้ดที่ดีทำให้โครงสร้างของหน้าเห็นได้จาก HTML เลย ไม่ต้องเดาจาก CSS.",
-      "โค้ดที่ควรปรับอาจแสดงผลเหมือนกัน แต่ซ่อนความหมายของเนื้อหาไว้ใน div ทั่วไป.",
+      "โค้ดที่ดีทำให้เห็นโครงสร้างหน้าได้จาก HTML เลย เช่น รู้ว่าส่วนไหนคือ main content และส่วนไหนคือ article.",
+      "โค้ดที่ควรปรับอาจแสดงผลเหมือนกันบนหน้าจอ แต่ใช้ div ทั่วไปจน browser และ screen reader ไม่รู้ความหมายของแต่ละส่วน.",
     ],
     reviewNotes: [
-      "เวลารีวิว ให้ถามว่า browser คนอ่านโค้ด และเครื่องมือช่วยอ่านเข้าใจหน้าได้ไหมโดยไม่ต้องดู style. Semantic HTML คือโครงสร้างของ interface ไม่ใช่แค่เรื่องความสวย.",
+      "เวลารีวิว ให้ถามว่าถ้าไม่ดู CSS เรายังเข้าใจหน้าไหมว่าอะไรคือเมนู เนื้อหาหลัก หรือบทความ Semantic HTML ช่วยให้ทั้งคนอ่านโค้ดและ screen reader เข้าใจโครงสร้างเดียวกัน.",
     ],
   },
   "html/heading-hierarchy": {
@@ -258,18 +258,18 @@ export const lessonThaiTranslations = {
   },
   "html/form-help-errors": {
     codeComments: {
-      goodCode: ["aria-describedby เชื่อมคำแนะนำและข้อความ error เข้ากับ field"],
-      badCode: ["ข้อความที่อยู่ใกล้กันทางหน้าจอไม่ได้แปลว่าเชื่อมกันจริง"],
+      goodCode: ["aria-describedby ผูกคำแนะนำและ error กับช่องกรอกนี้โดยตรง"],
+      badCode: ["ข้อความที่อยู่ใกล้ช่องกรอกไม่ได้แปลว่า screen reader รู้ว่าเกี่ยวกัน"],
     },
-    title: "คำแนะนำและ error ของฟอร์ม",
-    summary: "เชื่อมข้อความช่วยเหลือและข้อความ error เข้ากับ field เพื่อให้ feedback ถูกอ่านพร้อม input.",
-    takeaways: ["ใช้ aria-describedby และ aria-invalid เพื่อผูกคำแนะนำและสถานะผิดพลาดกับ input."],
+    title: "คำแนะนำและ error ของช่องกรอก",
+    summary: "เชื่อมคำแนะนำและข้อความผิดพลาด (error) เข้ากับช่องกรอก (field) เพื่อให้ผู้ใช้และ screen reader รู้ว่าข้อความนั้นอธิบายช่องไหน.",
+    takeaways: ["ใช้ aria-describedby และ aria-invalid เพื่อผูกคำแนะนำและสถานะผิดพลาดเข้ากับ input ที่เกี่ยวข้องจริง ๆ."],
     whatToReview: [
-      "โค้ดที่ดีทำให้ input รู้ว่าข้อความช่วยเหลือและ error ไหนเกี่ยวข้องกับมัน และบอกสถานะผิดพลาดชัดเจน.",
-      "โค้ดที่ควรปรับวางข้อความใกล้ input แค่ทางสายตา แต่ไม่ได้เชื่อมความสัมพันธ์ไว้ใน accessibility tree.",
+      "โค้ดที่ดีทำให้ input รู้ว่าคำแนะนำและ error ข้อไหนเป็นของมัน และบอกสถานะผิดพลาดด้วย aria-invalid.",
+      "โค้ดที่ควรปรับวางข้อความไว้ใกล้ input แค่ทางสายตา แต่ screen reader อาจไม่รู้ว่าข้อความนั้นเป็นของช่องกรอกไหน.",
     ],
     reviewNotes: [
-      "ในการรีวิวฟอร์ม ความใกล้บนหน้าจอไม่พอ ให้เช็กว่า field, help text และ error state ถูกเชื่อมกันจริง ไม่ใช่แค่ดูเหมือนอยู่ด้วยกัน.",
+      "ในการรีวิวฟอร์ม ความใกล้บนหน้าจอไม่พอ ให้เช็กว่า input, help text และ error message ถูกเชื่อมกันจริงด้วย id/aria ไม่ใช่แค่ดูเหมือนอยู่ด้วยกัน.",
     ],
   },
   "html/interactive-elements": {
@@ -277,47 +277,47 @@ export const lessonThaiTranslations = {
       goodCode: ["button จริงมี keyboard และ focus behavior มาให้แล้ว"],
       badCode: ["div ที่คลิกได้ต้องสร้างพฤติกรรมแบบ button เองทั้งหมด"],
     },
-    title: "element สำหรับการโต้ตอบ",
-    summary: "ใช้ element ที่ออกแบบมาเพื่อการกด เช่น button แทน div ที่ใส่ onClick เอง.",
-    takeaways: ["ถ้าเป็น action ให้เริ่มจาก button หรือ element native ที่เหมาะสม."],
+    title: "ใช้ element ให้ตรงกับการกระทำ",
+    summary: "ถ้าเป็นการกดหรือสั่งงาน ให้ใช้ button หรือ native element ที่มีพฤติกรรมมาให้ แทน div ที่ใส่ onClick เอง.",
+    takeaways: ["ถ้าเป็น action ให้เริ่มจาก button หรือ native element ที่เหมาะสมก่อน."],
     whatToReview: [
       "โค้ดที่ดีใช้ button ทำให้ keyboard, focus และ role ทำงานตาม browser ให้ทันที.",
       "โค้ดที่ควรปรับทำ div ให้เหมือนปุ่ม ซึ่งมักต้องเขียนพฤติกรรมสำคัญเพิ่มเองและพลาดง่าย.",
     ],
     reviewNotes: [
-      "เวลาเห็น div ที่คลิกได้ ให้ถามว่าทำไมไม่ใช้ button. ถ้าไม่มีเหตุผลชัดเจน การใช้ native element มักปลอดภัยและอ่านง่ายกว่า.",
+      "เวลาเห็น div ที่คลิกได้ ให้ถามว่าทำไมไม่ใช้ button. ถ้าไม่มีเหตุผลชัดเจน native element มักปลอดภัยกว่า เพราะ browser ให้ keyboard, focus และ role มาพร้อมแล้ว.",
     ],
   },
   "html/tables-tabular-data": {
     codeComments: {
       goodCode: ["caption และ scope ช่วยเชื่อม header กับ cell ให้ถูกต้อง"],
-      badCode: ["CSS ทำให้ div ดูเหมือนตารางได้ แต่ให้ความหมายแบบ table ไม่ได้"],
+      badCode: ["CSS ทำให้ div หน้าตาเหมือนตารางได้ แต่ browser ไม่รู้ความสัมพันธ์ของข้อมูล"],
     },
-    title: "ใช้ table กับข้อมูลตาราง",
-    summary: "เมื่อข้อมูลเป็นแถวและคอลัมน์ ให้ใช้ table markup เพื่อรักษาความสัมพันธ์ระหว่างหัวข้อกับค่า.",
-    takeaways: ["ถ้าเนื้อหาเป็นข้อมูลแบบ row/column ให้ใช้ table, caption, th และ scope ก่อนสร้างด้วย div."],
+    title: "ใช้ table จริงกับข้อมูลแบบตาราง",
+    summary: "เมื่อข้อมูลเป็นแถวและคอลัมน์ ให้ใช้แท็ก table จริง เพื่อให้ browser รู้ว่าหัวตาราง (header) เชื่อมกับค่าช่องไหน.",
+    takeaways: ["ถ้าเนื้อหาเป็นข้อมูลแบบ row/column ให้ใช้ table, caption, th และ scope ก่อนสร้างหน้าตาตารางด้วย div."],
     whatToReview: [
       "โค้ดที่ดีเก็บความสัมพันธ์ระหว่าง header และ cell ไว้ใน HTML พร้อม caption ที่บอกว่าตารางนี้เกี่ยวกับอะไร.",
-      "โค้ดที่ควรปรับทำให้ div ดูเหมือนตาราง แต่ความสัมพันธ์ของข้อมูลอยู่แค่ใน CSS และตำแหน่งบนหน้าจอ.",
+      "โค้ดที่ควรปรับทำให้ div ดูเหมือนตาราง แต่ความสัมพันธ์ของข้อมูลมีอยู่แค่จาก CSS และตำแหน่งบนหน้าจอ.",
     ],
     reviewNotes: [
-      "ให้ถามว่าผู้ใช้เข้าใจ cell หนึ่งช่องได้ไหมถ้าไม่ได้เห็น layout ถ้าต้องพึ่งตำแหน่งคอลัมน์อย่างเดียว ควรใช้ semantic table.",
+      "ให้ถามว่าผู้ใช้ยังเข้าใจ cell หนึ่งช่องได้ไหมถ้าไม่ได้เห็น layout ถ้าต้องพึ่งตำแหน่งคอลัมน์บนหน้าจออย่างเดียว ควรใช้ table ที่มีความหมายจริง (semantic table).",
     ],
   },
   "html/aria-restraint": {
     codeComments: {
-      goodCode: ["button จริงมี role อยู่แล้ว ARIA แค่เติม label ที่ขาด"],
-      badCode: ["role และ state ของ ARIA ขัดกับพฤติกรรมจริงของ element"],
+      goodCode: ["button มี role อยู่แล้ว ARIA แค่เติม label ที่ขาด"],
+      badCode: ["ARIA ที่ใส่ผิดบอก screen reader ไม่ตรงกับพฤติกรรมจริง"],
     },
     title: "ใช้ ARIA เท่าที่จำเป็น",
-    summary: "เริ่มจาก HTML native ก่อน แล้วใช้ ARIA เฉพาะเมื่อช่วยอธิบายสิ่งที่ HTML บอกเองไม่ได้.",
-    takeaways: ["เลือก semantic HTML ก่อนเสมอ ARIA ควรช่วยทำให้ชัด ไม่ใช่ซ่อม element ที่เลือกผิด."],
+    summary: "เริ่มจากแท็ก HTML ที่มีความหมายและพฤติกรรมมาให้ (native element) ก่อน แล้วใช้ ARIA เฉพาะตอนต้องเติมข้อมูลที่ HTML บอกเองไม่ได้.",
+    takeaways: ["เลือก semantic HTML ก่อนเสมอ ARIA ควรใช้เติมความหมาย ไม่ใช่ใช้ซ่อมแท็กที่เลือกผิด."],
     whatToReview: [
-      "โค้ดที่ดีใช้ element native ที่มี role และพฤติกรรม keyboard มาให้ แล้วเติม ARIA เฉพาะจุดที่จำเป็นจริง.",
-      "โค้ดที่ควรปรับใส่ role หรือ state ที่ไม่ตรงกับพฤติกรรมจริง ทำให้ assistive technology รับข้อมูลผิด.",
+      "โค้ดที่ดีใช้ native element ที่มี role และพฤติกรรม keyboard มาให้ แล้วเติม ARIA เฉพาะจุดที่จำเป็นจริง.",
+      "โค้ดที่ควรปรับใส่ role หรือ state ที่ไม่ตรงกับพฤติกรรมจริง ทำให้ screen reader และเครื่องมือช่วยอ่านรับข้อมูลผิด.",
     ],
     reviewNotes: [
-      "ARIA มีพลังมากแต่ไม่ใช่ทางลัดแทน semantic HTML เวลารีวิวให้ถามก่อนว่า element native ทำสิ่งนี้ให้เราอยู่แล้วหรือยัง.",
+      "ARIA ช่วยได้มากเมื่อใช้ถูก แต่ถ้าใช้ผิดจะทำให้ผู้ใช้เครื่องมือช่วยอ่านได้ข้อมูลผิด เวลารีวิวให้ถามก่อนว่า native element ทำสิ่งนี้ให้เราอยู่แล้วหรือยัง.",
     ],
   },
   "css/flex-layout-boundaries": {
