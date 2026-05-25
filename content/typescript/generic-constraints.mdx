@@ -13,6 +13,7 @@ export const metadata = {
 };
 
 function sortByUpdatedAt<T extends HasUpdatedAt>(items: T[]): T[] {
+  // The constraint keeps the required field in the contract.
   return [...items].sort((left, right) =>
     right.updatedAt.localeCompare(left.updatedAt),
   );
@@ -22,6 +23,7 @@ function sortByUpdatedAt<T extends HasUpdatedAt>(items: T[]): T[] {
     language: "typescript",
     filename: "sort-by-updated.ts",
     code: `function sortByUpdatedAt<T>(items: T[]): T[] {
+  // any hides the missing constraint until runtime.
   return [...items].sort((left, right) =>
     (right as any).updatedAt.localeCompare((left as any).updatedAt),
   );

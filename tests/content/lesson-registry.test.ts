@@ -319,7 +319,7 @@ function countReviewCommentLines(code: string, track: string): number {
       return trimmedLine.startsWith("/* ") && trimmedLine.endsWith(" */");
     }
 
-    if (track === "javascript") {
+    if (track === "javascript" || track === "typescript") {
       return trimmedLine.startsWith("// ");
     }
 
@@ -556,6 +556,52 @@ test("JavaScript comments have matching Thai translations", async () => {
       for (const [index, comment] of translatedComments.entries()) {
         assert.match(comment, /[\u0e00-\u0e7f]/, `javascript/${slug}.${sampleName}[${index}]`);
         assert.ok(comment.trim().length >= 8, `javascript/${slug}.${sampleName}[${index}]`);
+      }
+    }
+  }
+});
+
+test("TypeScript samples include concise review comments", async () => {
+  const lessonsByTrack = await getTrackLessonFiles();
+  const typescriptLessons = lessonsByTrack.get("typescript") ?? [];
+
+  assert.equal(typescriptLessons.length, expectedLessonCounts.typescript);
+
+  for (const contentPath of typescriptLessons) {
+    for (const sampleName of ["goodCode", "badCode"] as const) {
+      const code = await readMdxMetadataCodeSample(contentPath, sampleName);
+      const commentCount = countReviewCommentLines(code, "typescript");
+
+      assert.ok(commentCount >= 1, `${contentPath} ${sampleName}`);
+      assert.ok(commentCount <= 3, `${contentPath} ${sampleName}`);
+    }
+  }
+});
+
+test("TypeScript comments have matching Thai translations", async () => {
+  const lessonsByTrack = await getTrackLessonFiles();
+  const typescriptLessons = lessonsByTrack.get("typescript") ?? [];
+
+  assert.equal(typescriptLessons.length, expectedLessonCounts.typescript);
+
+  for (const contentPath of typescriptLessons) {
+    const slug = slugFromContentPath(contentPath);
+    const translation = lessonThaiTranslations[`typescript/${slug}`];
+
+    assert.ok(
+      translation.codeComments,
+      `typescript/${slug} missing codeComments`,
+    );
+
+    for (const sampleName of ["goodCode", "badCode"] as const) {
+      const code = await readMdxMetadataCodeSample(contentPath, sampleName);
+      const commentCount = countReviewCommentLines(code, "typescript");
+      const translatedComments = translation.codeComments[sampleName] ?? [];
+
+      assert.equal(translatedComments.length, commentCount, `typescript/${slug}`);
+      for (const [index, comment] of translatedComments.entries()) {
+        assert.match(comment, /[\u0e00-\u0e7f]/, `typescript/${slug}.${sampleName}[${index}]`);
+        assert.ok(comment.trim().length >= 8, `typescript/${slug}.${sampleName}[${index}]`);
       }
     }
   }

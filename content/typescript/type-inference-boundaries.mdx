@@ -15,6 +15,7 @@ export const metadata = {
 };
 
 export function createReviewSummary(input: ReviewSummaryInput) {
+  // Boundary type documents what callers must provide.
   const label = input.title + " (" + input.commentCount + ")";
 
   return {
@@ -27,6 +28,7 @@ export function createReviewSummary(input: ReviewSummaryInput) {
     language: "typescript",
     filename: "review-summary.ts",
     code: `export function createReviewSummary(input: any) {
+  // Local annotations do not protect an any input boundary.
   const label: string = input.title + " (" + input.comments.length + ")";
   const isClosed: boolean = input.closed;
 

@@ -13,6 +13,7 @@ export const metadata = {
   | { status: "failed"; message: string };
 
 function renderSaveResult(result: SaveResult) {
+  // The status field selects the only valid shape for each branch.
   if (result.status === "saved") {
     return "Saved draft " + result.id;
   }
@@ -30,6 +31,7 @@ function renderSaveResult(result: SaveResult) {
 };
 
 function renderSaveResult(result: SaveResult) {
+  // Optional fields allow impossible combinations to compile.
   if (result.saved) {
     return "Saved draft " + result.id;
   }

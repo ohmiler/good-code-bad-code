@@ -12,6 +12,7 @@ export const metadata = {
 type ReviewHandler = (action: ReviewAction, comment: string) => void;
 
 function submitReview(handleReview: ReviewHandler) {
+  // The callback type limits actions and required arguments.
   handleReview("approve", "Ready to merge.");
 }`,
   },
@@ -19,6 +20,7 @@ function submitReview(handleReview: ReviewHandler) {
     language: "typescript",
     filename: "review-actions.ts",
     code: `function submitReview(handleReview: Function) {
+  // Function accepts any call shape, so invalid calls compile.
   handleReview("approve");
   handleReview("delete-branch", 42, true);
 }`,

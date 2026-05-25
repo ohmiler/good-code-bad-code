@@ -14,6 +14,7 @@ export const metadata = {
 };
 
 function renderAvatar(profile: ProfileDraft) {
+  // null means avatar is intentionally empty, not merely missing.
   if (profile.avatarUrl === null) {
     return "Use default avatar";
   }
@@ -30,6 +31,7 @@ function renderAvatar(profile: ProfileDraft) {
 };
 
 function renderAvatar(profile: ProfileDraft) {
+  // Mixing optional and null forces callers to guess absence.
   return profile.avatarUrl || "Use default avatar";
 }`,
   },

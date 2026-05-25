@@ -22,6 +22,7 @@ function isSettings(value: unknown): value is Settings {
 }
 
 function readSettings(value: unknown): Settings {
+  // The type guard earns trust before returning Settings.
   if (!isSettings(value)) {
     return { theme: "light" };
   }
@@ -37,6 +38,7 @@ function readSettings(value: unknown): Settings {
 };
 
 function readSettings(value: unknown): Settings {
+  // Double casting skips the runtime proof unknown requires.
   return value as any as Settings;
 }`,
   },

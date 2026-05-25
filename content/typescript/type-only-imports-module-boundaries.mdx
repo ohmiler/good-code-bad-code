@@ -12,6 +12,7 @@ export const metadata = {
 import { formatAuthorName } from "./authors";
 
 export function getReviewCardTitle(pullRequest: PullRequest) {
+  // import type keeps PullRequest out of the runtime dependency graph.
   return pullRequest.title + " by " + formatAuthorName(pullRequest.authorId);
 }`,
   },
@@ -22,6 +23,7 @@ export function getReviewCardTitle(pullRequest: PullRequest) {
 import { formatAuthorName } from "./authors";
 
 export function getReviewCardTitle(pullRequest: PullRequest) {
+  // A value import blurs type-only and runtime dependencies.
   return pullRequest.title + " by " + formatAuthorName(pullRequest.authorId);
 }`,
   },

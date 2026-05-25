@@ -25,6 +25,7 @@ function isSession(value: unknown): value is Session {
 }
 
 export function readSession(value: unknown): Session | undefined {
+  // Runtime checks prove the value before exposing Session.
   if (!isSession(value)) {
     return undefined;
   }
@@ -41,6 +42,7 @@ export function readSession(value: unknown): Session | undefined {
 };
 
 export function readSession(value: unknown): Session {
+  // Assertion turns unknown data into Session without evidence.
   return value as Session;
 }`,
   },
