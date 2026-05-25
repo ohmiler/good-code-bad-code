@@ -9,6 +9,7 @@ export const metadata = {
     language: "python",
     filename: "review_score.py",
     code: `def calculate_review_score(review):
+    # Names show which review signals affect the score.
     comment_score = len(review.comments) * 2
     approval_score = review.approvals * 5
 
@@ -18,6 +19,7 @@ export const metadata = {
     language: "python",
     filename: "review_score.py",
     code: `def calc(x):
+    # Short names force reviewers to decode the domain first.
     a = len(x.c) * 2
     b = x.a * 5
 

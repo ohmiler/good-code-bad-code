@@ -9,6 +9,7 @@ export const metadata = {
     language: "python",
     filename: "reviewers.py",
     code: `def active_reviewer_emails(users):
+    # One filter plus one transformation fits a comprehension.
     return [
         user.email.lower()
         for user in users
@@ -19,6 +20,7 @@ export const metadata = {
     language: "python",
     filename: "reviewers.py",
     code: `def active_reviewer_emails(users):
+    # Nested branches hide the simple filter-and-map intent.
     emails = []
     for user in users:
         if user.is_active:

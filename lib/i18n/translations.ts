@@ -1611,6 +1611,10 @@ export const lessonThaiTranslations = {
     reviewNotes: [
       "ตอนรีวิวให้ถามว่า teammate ใหม่พอเดาหน้าที่ของฟังก์ชันจากชื่อได้ไหม ถ้าต้องเปิดหลายบรรทัดเพื่อแปลชื่อตัวแปร แปลว่าชื่อยังช่วยไม่พอ.",
     ],
+    codeComments: {
+      goodCode: ["ชื่อบอกว่าคะแนน review คิดจากสัญญาณอะไรบ้าง."],
+      badCode: ["ชื่อสั้นทำให้ reviewer ต้องแปลความหมายของงานก่อน."],
+    },
   },
   "python/truthy-falsy-none-checks": {
     title: "แยก None ออกจากค่าว่างที่ตั้งใจส่งมา",
@@ -1623,6 +1627,12 @@ export const lessonThaiTranslations = {
     reviewNotes: [
       "truthy check ใช้ได้เมื่อค่าว่างแปลว่าใช้ไม่ได้จริง ๆ แต่ถ้าต้องแยก “ไม่ได้ส่งมา” ออกจาก “ส่งค่าว่างมา” ให้ใช้ is None หรือ is not None ให้ชัด.",
     ],
+    codeComments: {
+      goodCode: ["None แปลว่า caller ไม่ได้ส่ง nickname มา."],
+      badCode: [
+        "เงื่อนไขนี้ทำให้ \"\", 0, False และ None กลายเป็นกรณีเดียวกัน.",
+      ],
+    },
   },
   "python/mutable-default-arguments": {
     title: "อย่าใช้ list/dict เป็นค่า default ของฟังก์ชัน",
@@ -1635,6 +1645,10 @@ export const lessonThaiTranslations = {
     reviewNotes: [
       "ตอนรีวิว signature ให้มองหา [], {} หรือ set() เป็น default ก่อนอ่าน body เพราะเป็นจุดที่ทำให้ state รั่วข้าม call ได้ง่าย.",
     ],
+    codeComments: {
+      goodCode: ["สร้าง list ใหม่เฉพาะตอน caller ไม่ได้ส่ง tags มา."],
+      badCode: ["list default นี้ถูกใช้ซ้ำทุกครั้งที่เรียกฟังก์ชัน."],
+    },
   },
   "python/list-dict-comprehensions": {
     title: "ใช้ comprehension เมื่ออ่านได้ในบรรทัดเดียว",
@@ -1647,6 +1661,12 @@ export const lessonThaiTranslations = {
     reviewNotes: [
       "ถ้าอ่าน comprehension แล้วพูดเป็นประโยคง่าย ๆ ได้ว่า “กรองอะไร แล้วแปลงเป็นอะไร” ถือว่าเหมาะ ถ้าเริ่มมีหลายเงื่อนไขหรือมี side effect ให้แตกเป็น loop จะรีวิวง่ายกว่า.",
     ],
+    codeComments: {
+      goodCode: [
+        "มีแค่หนึ่งเงื่อนไขกรองและหนึ่งการแปลงค่า จึงเหมาะกับ comprehension.",
+      ],
+      badCode: ["if ที่ซ้อนกันทำให้งาน filter-and-map ง่าย ๆ ดูซับซ้อนขึ้น."],
+    },
   },
   "python/exception-boundaries": {
     title: "จับ error ที่คาดไว้ อย่ากลืนทุก error",
@@ -1659,6 +1679,13 @@ export const lessonThaiTranslations = {
     reviewNotes: [
       "เมื่อเห็น except Exception ให้ถามว่า error ไหนที่คาดไว้จริง ๆ ถ้าต้องการข้อความที่อ่านง่าย ให้ wrap เป็น error เฉพาะของงานนั้น พร้อมเก็บ original exception ไว้ด้วย from error.",
     ],
+    codeComments: {
+      goodCode: ["จุดนี้จับเฉพาะ error เรื่องไฟล์และ JSON ที่คาดไว้."],
+      badCode: [
+        "file handle ไม่ได้ถูกครอบด้วย with และ encoding ก็ไม่ชัด.",
+        "การ catch ทุกอย่างทำให้ error จริงกลายเป็น default เงียบ ๆ.",
+      ],
+    },
   },
   "python/context-managers-files": {
     title: "เปิดไฟล์ด้วย with เพื่อให้ปิดไฟล์เสมอ",
@@ -1671,6 +1698,10 @@ export const lessonThaiTranslations = {
     reviewNotes: [
       "context manager ไม่ใช่แค่ style แต่เป็นวิธีทำให้ cleanup เห็นชัดในโค้ด คนรีวิวจึงมั่นใจได้ว่าไฟล์จะถูกปิดแม้งานตรงกลางล้ม.",
     ],
+    codeComments: {
+      goodCode: ["with จะปิดไฟล์ให้เสมอ แม้เขียน row แล้วเกิด error."],
+      badCode: ["ถ้าเกิด exception ก่อน close ไฟล์อาจค้างเปิดอยู่."],
+    },
   },
   "python/dataclasses-data-shapes": {
     title: "ใช้ dataclass แทน dict ที่ key กำกวม",
@@ -1683,6 +1714,10 @@ export const lessonThaiTranslations = {
     reviewNotes: [
       "dict เหมาะกับจุดรับส่ง JSON แต่ข้อมูลภายในแอปที่ใช้ซ้ำหลายจุดมักอ่านง่ายกว่าเมื่อเป็น dataclass เพราะชื่อ field และ default อยู่ตรงหน้า.",
     ],
+    codeComments: {
+      goodCode: ["รูปข้อมูลที่มีชื่อทำให้เห็น field ที่คืนออกมาชัดเจน."],
+      badCode: ["key ของ dict ที่กำกวมทำให้ caller เข้าใจรูปข้อมูลผิดได้ง่าย."],
+    },
   },
   "python/type-hints-boundaries": {
     title: "ใส่ type hint ตรงจุดรับเข้าและส่งออก",
@@ -1695,6 +1730,10 @@ export const lessonThaiTranslations = {
     reviewNotes: [
       "ไม่จำเป็นต้อง type ทุกบรรทัดเพื่อให้ได้ประโยชน์ ให้รีวิวจุดที่ข้อมูลข้ามจากฟังก์ชันหนึ่งไปอีกฟังก์ชันหนึ่งก่อน เช่น parameter, return value และ shared data model.",
     ],
+    codeComments: {
+      goodCode: ["type ตรง boundary บอก caller ว่ารับอะไรและคืนอะไร."],
+      badCode: ["input และ output ที่ไม่ typed ทำให้ caller ต้องเดาสัญญาของฟังก์ชัน."],
+    },
   },
   "python/dependency-injection-testability": {
     title: "ส่ง dependency เข้ามาเพื่อให้ test ใส่ fake ได้",
@@ -1707,6 +1746,10 @@ export const lessonThaiTranslations = {
     reviewNotes: [
       "dependency injection ไม่จำเป็นต้องเป็น framework ใน Python แค่ส่ง object ที่ต้องใช้งานจริง เช่น mailer หรือ client เป็น argument ก็มักพอให้โค้ด test ง่ายขึ้น.",
     ],
+    codeComments: {
+      goodCode: ["test ส่ง fake mailer เข้ามาแล้วตรวจข้อความได้."],
+      badCode: ["sender แบบ global ทำให้ test ต้อง patch import path ให้ถูก."],
+    },
   },
   "python/async-await-boundaries": {
     title: "เรียก async แล้วต้อง await ให้ได้ข้อมูลจริง",
@@ -1719,6 +1762,10 @@ export const lessonThaiTranslations = {
     reviewNotes: [
       "เวลารีวิว async Python ให้ไล่ทุก coroutine ว่าถูก await, ถูก return อย่างตั้งใจให้ caller await ต่อ หรือถูก schedule โดยมี owner ชัดเจน.",
     ],
+    codeComments: {
+      goodCode: ["รวม async call ที่ไม่พึ่งกัน เพื่อให้ผลลัพธ์เป็นข้อมูลจริง."],
+      badCode: ["ตรงนี้เก็บ coroutine object ไม่ใช่ profile ที่ดึงมาแล้ว."],
+    },
   },
   "php/strict-types-and-return-types": {
     title: "ระบุ type ของฟังก์ชันให้ชัด",

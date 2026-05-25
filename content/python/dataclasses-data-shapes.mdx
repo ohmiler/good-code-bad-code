@@ -19,6 +19,7 @@ class ReviewSummary:
 
 
 def summarize_review(review):
+    # The named shape makes every returned field explicit.
     return ReviewSummary(
         review_id=review.id,
         title=review.title,
@@ -29,6 +30,7 @@ def summarize_review(review):
     language: "python",
     filename: "review_summary.py",
     code: `def summarize_review(review):
+    # Vague dict keys make the returned shape easy to misunderstand.
     return {
         "id": review.id,
         "name": review.title,

@@ -19,6 +19,7 @@ class ReviewInput:
 
 
 def parse_review_input(payload: Mapping[str, object]) -> ReviewInput:
+    # Boundary types show callers what comes in and what comes back.
     return ReviewInput(
         title=str(payload["title"]),
         author_id=int(payload["author_id"]),
@@ -28,6 +29,7 @@ def parse_review_input(payload: Mapping[str, object]) -> ReviewInput:
     language: "python",
     filename: "review_input.py",
     code: `def parse_review_input(payload):
+    # Untyped input and output make callers guess the contract.
     return {
         "title": payload["title"],
         "author_id": payload["author_id"],

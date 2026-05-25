@@ -9,6 +9,7 @@ export const metadata = {
     language: "python",
     filename: "export_reviews.py",
     code: `def write_review_export(path, rows):
+    # with closes the file even if writing a row fails.
     with open(path, "w", encoding="utf-8") as file:
         for row in rows:
             file.write(f"{row.id},{row.status}\\n")`,
@@ -17,6 +18,7 @@ export const metadata = {
     language: "python",
     filename: "export_reviews.py",
     code: `def write_review_export(path, rows):
+    # An exception before close can leave the file handle open.
     file = open(path, "w")
     for row in rows:
         file.write(f"{row.id},{row.status}\\n")

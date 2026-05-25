@@ -9,6 +9,7 @@ export const metadata = {
     language: "python",
     filename: "tags.py",
     code: `def add_review_tag(tag, tags=None):
+    # Create a fresh list only when the caller omitted tags.
     if tags is None:
         tags = []
 
@@ -19,6 +20,7 @@ export const metadata = {
     language: "python",
     filename: "tags.py",
     code: `def add_review_tag(tag, tags=[]):
+    # This default list is reused across every call.
     tags.append(tag)
     return tags`,
   },

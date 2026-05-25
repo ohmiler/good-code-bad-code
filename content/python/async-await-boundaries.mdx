@@ -12,6 +12,7 @@ export const metadata = {
 
 
 async def fetch_profiles(user_ids, api):
+    # Gather independent async calls so the result is real data.
     tasks = [api.fetch_profile(user_id) for user_id in user_ids]
     return await asyncio.gather(*tasks)`,
   },
@@ -21,6 +22,7 @@ async def fetch_profiles(user_ids, api):
     code: `async def fetch_profiles(user_ids, api):
     profiles = []
     for user_id in user_ids:
+        # This appends coroutine objects, not fetched profiles.
         profiles.append(api.fetch_profile(user_id))
     return profiles`,
   },

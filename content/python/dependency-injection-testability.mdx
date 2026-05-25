@@ -9,6 +9,7 @@ export const metadata = {
     language: "python",
     filename: "notifications.py",
     code: `def notify_reviewer(review, mailer):
+    # Tests can pass a fake mailer and inspect the message.
     message = f"Review {review.title} is ready"
     mailer.send(
         to=review.reviewer_email,
@@ -23,6 +24,7 @@ export const metadata = {
 
 
 def notify_reviewer(review):
+    # The global sender makes tests patch the import path.
     send_email(
         review.reviewer_email,
         "Review requested",

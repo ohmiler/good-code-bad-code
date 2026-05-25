@@ -307,7 +307,7 @@ function countReviewCommentLines(code: string, track: string): number {
   return code.split("\n").filter((line) => {
     const trimmedLine = line.trim();
 
-    if (track === "git") {
+    if (track === "git" || track === "python") {
       return trimmedLine.startsWith("# ");
     }
 
@@ -781,6 +781,49 @@ test("Express comments have matching Thai translations", async () => {
       for (const [index, comment] of translatedComments.entries()) {
         assert.match(comment, /[\u0e00-\u0e7f]/, `express/${slug}.${sampleName}[${index}]`);
         assert.ok(comment.trim().length >= 8, `express/${slug}.${sampleName}[${index}]`);
+      }
+    }
+  }
+});
+
+test("Python samples include concise review comments", async () => {
+  const lessonsByTrack = await getTrackLessonFiles();
+  const pythonLessons = lessonsByTrack.get("python") ?? [];
+
+  assert.equal(pythonLessons.length, expectedLessonCounts.python);
+
+  for (const contentPath of pythonLessons) {
+    for (const sampleName of ["goodCode", "badCode"] as const) {
+      const code = await readMdxMetadataCodeSample(contentPath, sampleName);
+      const commentCount = countReviewCommentLines(code, "python");
+
+      assert.ok(commentCount >= 1, `${contentPath} ${sampleName}`);
+      assert.ok(commentCount <= 3, `${contentPath} ${sampleName}`);
+    }
+  }
+});
+
+test("Python comments have matching Thai translations", async () => {
+  const lessonsByTrack = await getTrackLessonFiles();
+  const pythonLessons = lessonsByTrack.get("python") ?? [];
+
+  assert.equal(pythonLessons.length, expectedLessonCounts.python);
+
+  for (const contentPath of pythonLessons) {
+    const slug = slugFromContentPath(contentPath);
+    const translation = lessonThaiTranslations[`python/${slug}`];
+
+    assert.ok(translation.codeComments, `python/${slug} missing codeComments`);
+
+    for (const sampleName of ["goodCode", "badCode"] as const) {
+      const code = await readMdxMetadataCodeSample(contentPath, sampleName);
+      const commentCount = countReviewCommentLines(code, "python");
+      const translatedComments = translation.codeComments[sampleName] ?? [];
+
+      assert.equal(translatedComments.length, commentCount, `python/${slug}`);
+      for (const [index, comment] of translatedComments.entries()) {
+        assert.match(comment, /[\u0e00-\u0e7f]/, `python/${slug}.${sampleName}[${index}]`);
+        assert.ok(comment.trim().length >= 8, `python/${slug}.${sampleName}[${index}]`);
       }
     }
   }

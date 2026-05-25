@@ -17,6 +17,7 @@ class SettingsError(Exception):
 
 def load_settings(path):
     try:
+        # The boundary handles only the file and JSON errors it expects.
         with open(path, encoding="utf-8") as file:
             return json.load(file)
     except FileNotFoundError as error:
@@ -32,8 +33,10 @@ def load_settings(path):
 
 def load_settings(path):
     try:
+        # The file handle is not scoped, and the default encoding is hidden.
         return json.load(open(path))
     except Exception:
+        # Catching everything turns real failures into silent defaults.
         return {}`,
   },
 };
