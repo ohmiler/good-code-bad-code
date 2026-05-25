@@ -105,7 +105,7 @@ export const trackThaiTranslations = {
   express: {
     title: "Express",
     description:
-      "ฝึกรีวิว app factory, router, middleware order, validation, auth และ error handling.",
+      "ฝึกรีวิวการสร้าง app, router แยกตามกลุ่มงาน, ลำดับ middleware, การตรวจ request, auth และ error handler.",
   },
   sql: {
     title: "SQL",
@@ -1282,47 +1282,47 @@ export const lessonThaiTranslations = {
   },
   "express/app-factory-server-startup": {
     codeComments: {
-      goodCode: ["test สามารถ import factory นี้ได้โดยไม่เปิด port"],
+      goodCode: ["test สามารถ import ฟังก์ชันสร้าง app ได้โดยไม่เปิด port"],
       badCode: ["แค่ import ไฟล์นี้ก็เริ่ม listen port แล้ว"],
     },
-    title: "แยก createApp ออกจากการเปิด server",
-    summary: "สร้าง Express app ด้วย function แยกไว้ก่อน แล้วค่อยให้ไฟล์เริ่มระบบเป็นคนเรียก `listen()`.",
-    takeaways: ["test ควรสร้าง app ได้โดยไม่ต้องเปิด port จริง."],
+    title: "แยกการสร้าง app ออกจากการเปิด server",
+    summary: "เขียน function สำหรับสร้าง Express app แยกจากไฟล์ที่เรียก `listen()` เพื่อเปิด port จริง.",
+    takeaways: ["test ควรสร้าง app ได้โดยไม่ต้องเปิด port จริงหรือเริ่ม server เอง."],
     whatToReview: [
       "โค้ดที่ดี export `createApp()` ทำให้ test, worker หรือ script สร้าง app ชุดเดียวกันได้โดยไม่เริ่ม server.",
       "โค้ดที่ควรปรับเรียก `app.listen()` ในไฟล์ app ทันที ทำให้แค่ import เพื่อ test ก็เปิด port โดยไม่ตั้งใจ.",
     ],
     reviewNotes: [
-      "ตอนรีวิวให้ถามว่าไฟล์นี้แค่สร้าง app หรือเริ่ม process จริงด้วย. ถ้า import แล้วเกิด side effect ทันที จะทำให้ test แยกยาก ปิด server ยาก และใช้ app ซ้ำในหลาย context ยาก.",
+      "ตอนรีวิวให้ถามว่าไฟล์นี้แค่ประกอบ Express app หรือเริ่ม server จริงด้วย. ถ้า import แล้วเกิด side effect ทันที จะทำให้ test แยกยาก ปิด server ยาก และใช้ app ซ้ำในหลายบริบทยาก.",
     ],
   },
   "express/router-boundaries": {
     codeComments: {
-      goodCode: ["router นี้ดูแล review endpoints และรับ dependency ชัดเจน"],
-      badCode: ["หลาย resource ถูกกองไว้ใน app.ts และใช้ global service ร่วมกัน"],
+      goodCode: ["router นี้ดูแล endpoint ของ reviews ชุดเดียว และรับ service ที่ต้องใช้ชัดเจน"],
+      badCode: ["reviews, users และ billing ถูกกองไว้ใน app.ts พร้อม global service ร่วมกัน"],
     },
-    title: "แยก router ตามเรื่อง",
-    summary: "รวม route ที่ดูแลเรื่องเดียวกันไว้ใน router ของตัวเอง และส่ง service ที่ต้องใช้เข้ามาอย่างชัดเจน.",
-    takeaways: ["router ควรดูแลเรื่องเดียว เช่น reviews และไม่ควรล้วง global service เอง."],
+    title: "แยก route ตามกลุ่มงานของระบบ",
+    summary: "รวม route ที่ดูแลงานกลุ่มเดียวกัน เช่น reviews, users หรือ billing ไว้ใน router ของตัวเอง และส่ง service ที่ต้องใช้เข้ามาอย่างชัดเจน.",
+    takeaways: ["router ควรดูแลกลุ่มงานเดียว เช่น reviews และไม่ควรไปหยิบ global service เอง."],
     whatToReview: [
-      "โค้ดที่ดีแยก route ของ reviews ไว้ใน router เฉพาะ และรับ service ผ่าน factory.",
+      "โค้ดที่ดีแยก route ของ reviews ไว้ใน router เฉพาะ และรับ service ของ reviews ผ่าน factory.",
       "โค้ดที่ควรปรับรวม reviews, users และ billing ไว้ใน `app.ts` ไฟล์เดียว จนดูไม่ออกว่าใครรับผิดชอบอะไร.",
     ],
     reviewNotes: [
-      "Express เพิ่ม route ในไฟล์เดียวได้ง่ายมาก ตอนรีวิวให้ถามว่าไฟล์นี้ยังเล่าเรื่องเดียวอยู่ไหม ถ้าเริ่มรวมหลาย domain เข้าด้วยกัน การหา dependency และเจ้าของ logic จะยากขึ้นเร็วมาก.",
+      "Express เพิ่ม route ในไฟล์เดียวได้ง่ายมาก ตอนรีวิวให้ถามว่า router นี้ยังดูแลงานกลุ่มเดียวอยู่ไหม ถ้าเริ่มรวม reviews, users และ billing เข้าด้วยกัน การหา service ที่เกี่ยวข้องและเจ้าของโค้ดส่วนนั้นจะยากขึ้นเร็วมาก.",
     ],
   },
   "express/middleware-order": {
     codeComments: {
-      goodCode: ["parse body และ auth มาก่อน route ส่วน 404/error อยู่ท้ายสุด"],
-      badCode: ["middleware ที่อยู่ก่อนหน้าไม่สามารถจัดการ route ที่รันไปแล้วได้"],
+      goodCode: ["ตัวอ่าน JSON body และ auth มาก่อน route ส่วน 404/error อยู่ท้ายสุด"],
+      badCode: ["middleware ที่วางผิดลำดับอาจไม่มีโอกาสทำงานกับ request นั้นแล้ว"],
     },
-    title: "เรียง middleware ให้ถูกลำดับ",
-    summary: "อ่าน `app.use()` จากบนลงล่าง แล้ววาง body parser, auth, route, 404 และ error handler ตามลำดับการทำงานจริง.",
+    title: "เรียง middleware ตามทางเดินของ request",
+    summary: "อ่าน `app.use()` จากบนลงล่างเหมือนทางเดินของ request แล้ววาง body parser, auth, route, 404 และ error handler ตามลำดับการทำงานจริง.",
     takeaways: ["ใน Express ลำดับ middleware คือพฤติกรรมจริง ไม่ใช่แค่การจัดโค้ดให้สวย."],
     whatToReview: [
-      "โค้ดที่ดี parse JSON ก่อนเข้า route, ใส่ auth ก่อน router ที่ต้องป้องกัน และวาง 404/error handler หลัง route.",
-      "โค้ดที่ควรปรับวาง error handler ก่อน route, auth หลัง route และ body parser หลัง route ทำให้บาง middleware ไม่มีโอกาสทำงาน.",
+      "โค้ดที่ดีอ่าน JSON body ก่อนเข้า route, ใส่ auth ก่อน router ที่ต้องป้องกัน และวาง 404/error handler หลัง route.",
+      "โค้ดที่ควรปรับวาง error handler ก่อน route, auth หลัง route และ body parser หลัง route ทำให้ body parser หรือ auth ไม่ทันทำงานกับ request นั้น.",
     ],
     reviewNotes: [
       "ตอนรีวิวให้อ่าน `app.use()` เหมือนทางเดินของ request จากบนลงล่าง. ถ้าวางผิดลำดับ route อาจเห็น body ไม่ครบ, auth ไม่ทำงาน หรือ error handler จับ error ไม่ทัน.",
@@ -1330,47 +1330,47 @@ export const lessonThaiTranslations = {
   },
   "express/request-validation": {
     codeComments: {
-      goodCode: ["ตรวจ body ตรง route ก่อนส่งต่อให้ business logic"],
-      badCode: ["raw body ถูกส่งเข้า service โดยยังไม่รู้ว่ารูปร่างถูกไหม"],
+      goodCode: ["ตรวจ req.body ที่ route ก่อนส่งต่อให้งานหลักของแอป"],
+      badCode: ["raw body ถูกส่งเข้า service ทั้งที่ยังไม่รู้ว่า field ครบและ format ถูกไหม"],
     },
-    title: "ตรวจ request ก่อนเรียก service",
-    summary: "ข้อมูลจาก `req.body` ยังไม่น่าเชื่อถือ route จึงควร validate ให้เรียบร้อยก่อนส่งเข้า service.",
-    takeaways: ["route handler ควรส่งค่าที่ตรวจแล้วเข้า service ไม่ใช่ส่ง raw request body."],
+    title: "ตรวจข้อมูลใน request ก่อนเรียก service",
+    summary: "ข้อมูลจาก `req.body` เป็นข้อมูลจากผู้ใช้ ยังไม่น่าเชื่อถือ route จึงควรตรวจให้เรียบร้อยก่อนส่งเข้า service.",
+    takeaways: ["route handler ควรส่งค่าที่ validate แล้วเข้า service ไม่ใช่ส่ง raw request body."],
     whatToReview: [
       "โค้ดที่ดีส่ง body เข้า validator ก่อน ถ้า input ไม่ถูกต้องก็ตอบ 400 ทันที.",
-      "โค้ดที่ควรปรับคัดลอกค่าจาก `req.body` เข้า service ตรง ๆ ทำให้ field ที่หายหรือ format ผิดไปพังลึกกว่าเดิม.",
+      "โค้ดที่ควรปรับส่ง `req.body` เข้า service ตรง ๆ ทำให้ field ที่ขาดหรือ format ผิดไปเจอ error ลึกใน service แทนที่จะตอบ 400 ตั้งแต่หน้า route.",
     ],
     reviewNotes: [
-      "route คือด่านแรกของข้อมูลจากผู้ใช้ ตอนรีวิวให้ดูว่าข้อมูลถูกเปลี่ยนเป็นค่าที่ app เชื่อถือได้แล้วหรือยัง ถ้าปล่อย raw body ผ่านไป assumption และ error response จะกระจายไปหลายชั้น.",
+      "route คือด่านแรกของข้อมูลจากผู้ใช้ ตอนรีวิวให้ดูว่าข้อมูลถูก validate และแปลงเป็นค่าที่ app เชื่อถือได้แล้วหรือยัง ถ้าปล่อย raw body ผ่านไป สมมติฐาน (assumption) และ error response จะกระจายไปหลายชั้น.",
     ],
   },
   "express/async-route-error-forwarding": {
     codeComments: {
-      goodCode: ["error ที่ throw จาก async handler จะไปถึง error handler กลาง"],
-      badCode: ["promise chain นี้ไม่ได้ return หรือ catch"],
+      goodCode: ["error ที่ throw จาก async handler จะถูกส่งต่อไป error handler กลาง"],
+      badCode: ["promise ที่เริ่มไว้ไม่ได้ return หรือ catch ทำให้ Express ตาม error ไม่เจอ"],
     },
-    title: "ให้ error ของ async route ไปถึง error handler",
-    summary: "งาน async ที่ fail ต้องถูก `throw`, `return` หรือ `catch` ให้ชัด เพื่อไม่ให้ request ค้างหรือ error หลุด.",
+    title: "ส่ง error จาก async route ให้ถึง error handler",
+    summary: "งาน async ที่ล้มเหลวต้อง `throw`, `return` หรือ `catch` ให้ชัด เพื่อให้ Express รู้ว่าจะจบ request อย่างไร.",
     takeaways: ["async route ต้องมีทางส่ง error ไปถึง error middleware เสมอ."],
     whatToReview: [
-      "โค้ดที่ดีใช้ async handler และ throw error เพื่อให้ error handler กลางจัดการต่อ.",
-      "โค้ดที่ควรปรับเริ่ม promise chain เองโดยไม่ return หรือ catch ทำให้ service error หลุดจาก request และอาจทำให้ request ไม่จบ.",
+      "โค้ดที่ดีใช้ async handler และ throw error เพื่อให้ error handler กลางรับต่อ.",
+      "โค้ดที่ควรปรับเริ่ม promise เองโดยไม่ return หรือ catch ทำให้ Express ไม่รู้ว่า error จาก service เกิดขึ้น และ request อาจค้าง.",
     ],
     reviewNotes: [
-      "Express 5 ส่ง rejected promise จาก async handler ไป error middleware ได้ แต่ promise chain ที่เริ่มเองยังต้อง return หรือ catch เอง. ตอนรีวิวให้ไล่ว่า async work ทุกชิ้นมีทางจบทั้ง success และ failure.",
+      "Express 5 ส่ง promise ที่ reject จาก async handler ไป error middleware ได้ แต่ promise ที่สร้างแล้วไม่ return ยังต้อง catch เอง. ตอนรีวิวให้ไล่ว่างาน async ทุกชิ้นมีทางจบทั้งสำเร็จและล้มเหลว.",
     ],
   },
   "express/central-error-handler": {
     codeComments: {
-      goodCode: ["อย่าส่ง response รอบสองถ้า headers ถูกส่งไปแล้ว"],
+      goodCode: ["ถ้า headers ถูกส่งไปแล้ว อย่าส่ง response ซ้ำ"],
       badCode: ["แต่ละ route สร้างรูปแบบ error และ status code เอง"],
     },
-    title: "ใช้ error handler กลาง",
+    title: "รวม error handler ไว้จุดเดียว",
     summary: "รวมการแปลง error เป็น HTTP response ไว้ที่เดียว เพื่อให้ status code, log และ body สม่ำเสมอ.",
-    takeaways: ["error handler กลางช่วยให้ client และคนดู log คาดเดา error ได้ง่ายขึ้น."],
+    takeaways: ["error handler กลางช่วยให้ client และคนอ่าน log คาดเดารูปแบบ error ได้ง่ายขึ้น."],
     whatToReview: [
       "โค้ดที่ดีมี `ErrorRequestHandler` ที่เช็ก `headersSent`, แปลง validation error และซ่อนรายละเอียด error ที่ไม่ควรส่งให้ client.",
-      "โค้ดที่ควรปรับ catch ซ้ำในหลาย route และตอบ status/body คนละแบบ ทั้งที่เป็น failure คล้ายกัน.",
+      "โค้ดที่ควรปรับ catch error ซ้ำในหลาย route และตอบ status/body คนละแบบ ทั้งที่เป็นกรณีผิดพลาดคล้ายกัน.",
     ],
     reviewNotes: [
       "ถ้าเห็น catch block ซ้ำ ๆ ใน route หลายจุด มักแปลว่า error handler กลางยังไม่ชัดพอ ความไม่สม่ำเสมอทำให้ client เขียนยาก และเวลา production พังจะไล่สาเหตุยากขึ้น.",
@@ -1379,14 +1379,14 @@ export const lessonThaiTranslations = {
   "express/response-shape-consistency": {
     codeComments: {
       goodCode: ["helper เล็ก ๆ ทำให้รูปแบบ response คงที่"],
-      badCode: ["endpoint ใกล้กันบังคับให้ client parse คนละแบบ"],
+      badCode: ["endpoint ใน API เดียวกันบังคับให้ client อ่าน response คนละแบบ"],
     },
-    title: "รูปแบบ response ให้คงที่",
+    title: "ตอบ response รูปแบบเดียวกัน",
     summary: "ตอบ success และ error ด้วยรูปแบบที่เดาได้ เช่น `{ data }` หรือ `{ error }` เหมือนกันทุก route.",
-    takeaways: ["client ไม่ควรต้องจำกฎการ parse แยกเฉพาะแต่ละ route."],
+    takeaways: ["client ไม่ควรต้องจำวิธีอ่าน response แยกตามแต่ละ route."],
     whatToReview: [
       "โค้ดที่ดีมี helper สำหรับ `ok`, `created` และ `fail` ทำให้ response สำเร็จและ error มีหน้าตาคงที่.",
-      "โค้ดที่ควรปรับตอบ array, object, string และ object ซ้อนคนละแบบใน endpoint ที่อยู่ใกล้กัน.",
+      "โค้ดที่ควรปรับตอบ array, object, string และ object ซ้อนคนละแบบใน endpoint ของ API ชุดเดียวกัน.",
     ],
     reviewNotes: [
       "ตอนรีวิวให้เทียบ response body ของ endpoint ใกล้กัน ถ้าหน้าตา response เปลี่ยนไปเรื่อย ๆ ความซับซ้อนจะไปตกที่ client, test และเอกสาร API.",
@@ -1394,50 +1394,50 @@ export const lessonThaiTranslations = {
   },
   "express/auth-middleware-boundaries": {
     codeComments: {
-      goodCode: ["middleware แปลง credential เป็น user context ที่ route ใช้ได้"],
-      badCode: ["auth, permission และ action หลักถูกปนอยู่ใน route เดียว"],
+      goodCode: ["middleware แปลง credential (ข้อมูลยืนยันตัวตน) เป็นข้อมูลผู้ใช้ที่ route ใช้ต่อได้"],
+      badCode: ["ตรวจตัวตน เช็กสิทธิ์ และงานหลักถูกปนอยู่ใน route เดียว"],
     },
-    title: "แยก auth ไว้ใน middleware",
-    summary: "ตรวจตัวตนใน middleware ครั้งเดียว แล้วส่งข้อมูลผู้ใช้ที่จำเป็นให้ route ผ่าน context ที่เชื่อถือได้.",
-    takeaways: ["route ควรใช้ user context ที่ตรวจแล้ว ไม่ควร parse credential ซ้ำเองทุก endpoint."],
+    title: "แยกการตรวจตัวตน (auth) ไว้ใน middleware",
+    summary: "ให้ middleware ตรวจ token/session ครั้งเดียว แล้วส่งข้อมูลผู้ใช้ที่ตรวจแล้วให้ route ใช้ต่อ.",
+    takeaways: ["route ควรใช้ข้อมูลผู้ใช้ที่ตรวจแล้ว ไม่ควรอ่าน token/session ซ้ำเองทุก endpoint."],
     whatToReview: [
-      "โค้ดที่ดีให้ `requireUser` อ่าน session แล้วเก็บ user id/role ใน `res.locals` สำหรับ route ถัดไป.",
-      "โค้ดที่ควรปรับอ่าน authorization header ใน route แล้วทำ auth, permission check และ action หลักใน handler เดียว.",
+      "โค้ดที่ดีให้ `requireUser` อ่าน session แล้วเก็บ user id/role ใน `res.locals` ให้ route ถัดไปใช้.",
+      "โค้ดที่ควรปรับอ่าน authorization header ใน route แล้วทำการตรวจตัวตน เช็กสิทธิ์ และงานหลักใน handler เดียว.",
     ],
     reviewNotes: [
-      "auth ควรมีที่อยู่ชัดเจนและตอบ failure แบบคงที่ ถ้าแต่ละ route เขียน auth เอง logic จะเพี้ยนจากกันง่ายและเพิ่มความเสี่ยงด้าน security.",
+      "การตรวจตัวตนควรมีที่อยู่ชัดเจนและตอบกรณีล้มเหลวแบบคงที่ ถ้าแต่ละ route เขียน auth เอง พฤติกรรม auth จะเพี้ยนจากกันง่ายและเพิ่มความเสี่ยงด้าน security.",
     ],
   },
   "express/rate-limiting-trust-proxy": {
-    title: "rate limiting และ trust proxy",
+    title: "จำกัด request และตั้งค่า trust proxy ให้ตรง deployment",
     codeComments: {
-      goodCode: ["เชื่อ proxy ตามจำนวน hop ที่ deployment ใช้จริง"],
-      badCode: ["เชื่อทุก proxy hop ทำให้การควบคุมด้วย IP spoof ได้ง่ายขึ้น"],
+      goodCode: ["เชื่อ proxy ตามจำนวนชั้นที่ deployment ใช้จริง"],
+      badCode: ["เชื่อ proxy ทุกชั้น (hop) ทำให้ปลอม IP เพื่อเลี่ยง limit ได้ง่ายขึ้น"],
     },
-    summary: "ถ้าใช้ rate limit ตาม IP ต้องตั้งค่า `trust proxy` ให้ตรงกับ deployment จริงก่อน ไม่อย่างนั้น IP ที่เห็นอาจไม่น่าเชื่อถือ.",
-    takeaways: ["rate limiting ควรอิง client identity ที่เชื่อถือได้ โดยเฉพาะแอปที่อยู่หลัง proxy."],
+    summary: "ถ้าจำกัดจำนวน request ด้วย IP ต้องบอก Express ว่าควรเชื่อ proxy กี่ชั้น (`trust proxy`) ตามระบบที่ deploy จริง ไม่อย่างนั้น IP ที่เห็นอาจไม่น่าเชื่อถือ.",
+    takeaways: ["rate limiting ควรอิง IP/client ที่เชื่อถือได้ โดยเฉพาะแอปที่อยู่หลัง proxy."],
     whatToReview: [
-      "โค้ดที่ดีตั้ง `trust proxy` เป็นจำนวน hop ที่ชัดเจน และกำหนด rate limit ที่มีผลจริง.",
-      "โค้ดที่ควรปรับ trust proxy ทุก hop และตั้ง limit สูงมากจน control นี้แทบไม่ช่วยป้องกันอะไร.",
+      "โค้ดที่ดีตั้ง `trust proxy` เป็นจำนวนชั้น proxy ที่ชัดเจน และกำหนด rate limit ที่มีผลจริง.",
+      "โค้ดที่ควรปรับ trust proxy ทุกชั้น และตั้ง limit สูงมากจน rate limit นี้แทบไม่ช่วยป้องกันอะไร.",
     ],
     reviewNotes: [
-      "security middleware ต้องดูคู่กับวิธี deploy เสมอ ตอนรีวิวให้ถามว่า Express เห็น IP ของผู้ใช้จริงหรือ IP ของ proxy และ policy นี้กัน abuse ได้จริงไหม.",
+      "security middleware ต้องดูคู่กับวิธี deploy เสมอ ตอนรีวิวให้ถามว่า Express เห็น IP ของผู้ใช้จริงหรือ IP ของ proxy และกติกานี้กันการยิง request เกินได้จริงไหม.",
     ],
   },
   "express/business-logic-out-of-routes": {
     codeComments: {
-      goodCode: ["route แค่แปลงข้อมูล HTTP ไปเรียก workflow"],
-      badCode: ["database, rule และ notification ถูกซ่อนไว้ใน handler เดียว"],
+      goodCode: ["route แค่แปลงข้อมูล HTTP ไปเรียกขั้นตอน approve"],
+      badCode: ["การอ่าน database, กฎ approve และ notification ถูกซ่อนไว้ใน handler เดียว"],
     },
-    title: "อย่าใส่ business logic หนักไว้ใน route",
-    summary: "ให้ route handler ทำหน้าที่รับ request และส่ง response ส่วนกฎธุรกิจและ side effect ควรอยู่ใน service หรือ workflow.",
-    takeaways: ["route ควรแปลง HTTP เป็นการเรียก use case ไม่ใช่เก็บ use case ทั้งหมดไว้ใน handler."],
+    title: "อย่าให้ route แบก logic งานหลักทั้งหมด",
+    summary: "route handler ควรรับ request และส่ง response ส่วนกฎของระบบ เช่น ใคร approve ได้ ต้อง update database อะไร และต้องส่ง notification ไหม ควรอยู่ใน service หรือ workflow.",
+    takeaways: ["route ควรแปลง HTTP เป็นการเรียกงานหลักของแอป ไม่ใช่เก็บขั้นตอนทั้งหมดไว้ใน handler."],
     whatToReview: [
-      "โค้ดที่ดีให้ route ส่ง reviewId และ approverId เข้า workflow ที่รับผิดชอบกฎการ approve.",
-      "โค้ดที่ควรปรับให้ route อ่าน database, เช็ก rule, update และส่ง notification เองทั้งหมด.",
+      "โค้ดที่ดีให้ route ส่ง reviewId และ approverId ไปเรียก workflow ที่รับผิดชอบขั้นตอน approve.",
+      "โค้ดที่ควรปรับให้ route อ่าน database, เช็กกฎว่า approve ได้ไหม, update และส่ง notification เองทั้งหมด.",
     ],
     reviewNotes: [
-      "route handler ควรสแกนง่ายแม้ use case จะซับซ้อน ถ้ากฎธุรกิจซ่อนอยู่ใน Express handler จะ reuse ยาก test ยาก และจัด transaction ให้ถูกต้องยาก.",
+      "route handler ควรอ่านคร่าว ๆ แล้วเข้าใจเร็ว แม้งานหลักจะซับซ้อน ถ้ากฎของระบบซ่อนอยู่ใน Express handler จะใช้ซ้ำยาก test ยาก และจัด transaction ให้ถูกต้องยาก.",
     ],
   },
   "sql/schema-keys-constraints": {
