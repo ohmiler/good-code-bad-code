@@ -16,6 +16,7 @@ export const metadata = {
 };
 
 export function logEvent(event: LogEvent) {
+  // Stable fields make logs searchable and correlatable.
   console.log(JSON.stringify({
     time: new Date().toISOString(),
     ...event,
@@ -26,6 +27,7 @@ export function logEvent(event: LogEvent) {
     language: "typescript",
     filename: "src/login.ts",
     code: `export function logLoginAttempt(email: string, password: string) {
+  // Secrets in logs become production data leaks.
   console.log("Login failed for " + email + " with password " + password);
 }`,
   },

@@ -14,6 +14,7 @@ export function installShutdown(server: Server, closeDatabase: () => Promise<voi
   async function shutdown(signal: string) {
     console.info("Received " + signal + ", shutting down");
 
+    // Stop accepting new work before closing dependencies.
     server.close(async () => {
       await closeDatabase();
       process.exit(0);
@@ -32,7 +33,8 @@ export function installShutdown(server: Server, closeDatabase: () => Promise<voi
   badCode: {
     language: "typescript",
     filename: "src/server.ts",
-    code: `process.on("SIGTERM", () => {
+    code: `// Immediate exit can drop in-flight requests.
+process.on("SIGTERM", () => {
   process.exit(0);
 });
 

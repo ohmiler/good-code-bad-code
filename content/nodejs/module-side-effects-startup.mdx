@@ -8,10 +8,11 @@ export const metadata = {
   goodCode: {
     language: "typescript",
     filename: "src/jobs/cleanup.ts",
-    code: `type CleanupJob = {
+code: `type CleanupJob = {
   stop: () => void;
 };
 
+// Callers decide when the background job starts and stops.
 export function startCleanupJob(runCleanup: () => Promise<void>): CleanupJob {
   const interval = setInterval(() => {
     runCleanup().catch((error) => {
@@ -29,6 +30,7 @@ export function startCleanupJob(runCleanup: () => Promise<void>): CleanupJob {
     filename: "src/jobs/cleanup.ts",
     code: `import { deleteExpiredSessions } from "../sessions";
 
+// Importing the helper also starts a permanent background loop.
 setInterval(() => {
   deleteExpiredSessions();
 }, 60_000);

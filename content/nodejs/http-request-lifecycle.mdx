@@ -27,6 +27,7 @@ export async function handleWebhook(
   request: IncomingMessage,
   response: ServerResponse,
 ) {
+  // Reject unsupported methods before reading the body.
   if (request.method !== "POST") {
     response.statusCode = 405;
     response.end("Method not allowed.");
@@ -48,6 +49,7 @@ export async function handleWebhook(
 ) {
   let body = "";
 
+  // Unbounded reads happen before the method is even checked.
   for await (const chunk of request) {
     body += chunk;
   }

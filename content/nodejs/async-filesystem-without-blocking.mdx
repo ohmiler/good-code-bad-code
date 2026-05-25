@@ -12,6 +12,7 @@ export const metadata = {
 import type { ServerResponse } from "node:http";
 
 export async function sendPublicConfig(response: ServerResponse) {
+  // Async I/O lets the event loop keep serving other requests.
   const file = await readFile("public-config.json", "utf8");
 
   response.setHeader("content-type", "application/json");
@@ -25,6 +26,7 @@ export async function sendPublicConfig(response: ServerResponse) {
 import type { ServerResponse } from "node:http";
 
 export function sendPublicConfig(response: ServerResponse) {
+  // Sync I/O blocks the whole process during a request.
   const file = readFileSync("public-config.json", "utf8");
 
   response.setHeader("content-type", "application/json");

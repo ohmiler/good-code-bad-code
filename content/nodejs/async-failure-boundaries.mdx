@@ -12,6 +12,7 @@ export const metadata = {
 import { createReport } from "../services/reports";
 
 export async function sendReport(response: ServerResponse) {
+  // The HTTP boundary owns both success and failure responses.
   try {
     const report = await createReport();
 
@@ -31,6 +32,7 @@ export async function sendReport(response: ServerResponse) {
 import { createReport } from "../services/reports";
 
 export function sendReport(response: ServerResponse) {
+  // Rejection has no owner, so the client may never get a response.
   createReport().then((report) => {
     response.setHeader("content-type", "application/json");
     response.end(JSON.stringify({ report }));

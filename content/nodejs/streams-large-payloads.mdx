@@ -16,6 +16,7 @@ export async function sendExport(filePath: string, response: ServerResponse) {
   response.setHeader("content-type", "text/csv");
 
   try {
+    // pipeline handles backpressure and stream errors.
     await pipeline(createReadStream(filePath), response);
   } catch (error) {
     console.error({ error, filePath }, "Export stream failed");
@@ -33,6 +34,7 @@ export async function sendExport(filePath: string, response: ServerResponse) {
 import type { ServerResponse } from "node:http";
 
 export async function sendExport(filePath: string, response: ServerResponse) {
+  // Loading the whole export scales memory with file size.
   const file = await readFile(filePath);
 
   response.setHeader("content-type", "text/csv");

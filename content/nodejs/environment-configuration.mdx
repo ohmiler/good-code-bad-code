@@ -17,6 +17,7 @@ export function readConfig(env: NodeJS.ProcessEnv): AppConfig {
   const databaseUrl = env.DATABASE_URL;
   const port = Number(env.PORT ?? "3000");
 
+  // Validate configuration before the app accepts traffic.
   if (!databaseUrl) {
     throw new Error("DATABASE_URL is required.");
   }
@@ -32,6 +33,7 @@ export function readConfig(env: NodeJS.ProcessEnv): AppConfig {
     language: "typescript",
     filename: "src/db.ts",
     code: `export function connectDatabase() {
+  // Hidden defaults can point production at the wrong service.
   return connect({
     url: process.env.DATABASE_URL || "postgres://localhost/dev",
     poolSize: Number(process.env.POOL_SIZE || "not-a-number"),

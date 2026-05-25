@@ -13,6 +13,7 @@ export const metadata = {
 const uploadRoot = path.resolve("uploads");
 
 export function resolveUploadPath(fileName: string) {
+  // Validate and resolve user input against the allowed root.
   if (!/^[a-z0-9._-]+$/i.test(fileName)) {
     throw new Error("Invalid file name.");
   }
@@ -29,9 +30,10 @@ export function resolveUploadPath(fileName: string) {
   badCode: {
     language: "typescript",
     filename: "src/files.ts",
-    code: `import path from "node:path";
+code: `import path from "node:path";
 
 export function resolveUploadPath(fileName: string) {
+  // User input can traverse outside the intended directory.
   return path.join("uploads", fileName);
 }`,
   },

@@ -14,6 +14,7 @@ import { readConfig } from "./config";
 const config = readConfig(process.env);
 const app = createApp({ logger: console });
 
+// Process startup is isolated to the entry point.
 const server = app.listen(config.port, () => {
   console.info("Server listening on port " + config.port);
 });
@@ -28,6 +29,7 @@ import { handleRequest } from "./handler";
 
 const server = http.createServer(handleRequest);
 
+// Importing this module immediately opens a socket.
 server.listen(process.env.PORT || 3000);
 
 export default server;`,
