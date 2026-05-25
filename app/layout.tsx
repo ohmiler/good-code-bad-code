@@ -6,6 +6,7 @@ import {
 } from "next/font/google";
 import { LanguageProvider } from "@/components/language/language-provider";
 import { SiteHeader } from "@/components/site-header";
+import { createPageMetadata, getSiteUrl, siteConfig } from "@/lib/seo";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -24,9 +25,30 @@ const ibmPlexSansThai = IBM_Plex_Sans_Thai({
   weight: ["400", "500", "600", "700"],
 });
 
+const rootMetadata = createPageMetadata({
+  title: siteConfig.name,
+  description: siteConfig.description,
+  path: "/",
+});
+
 export const metadata: Metadata = {
-  title: "Good Code Bad Code",
-  description: "Study code review patterns through side-by-side examples.",
+  ...rootMetadata,
+  metadataBase: new URL(getSiteUrl()),
+  applicationName: siteConfig.name,
+  title: {
+    default: siteConfig.name,
+    template: `%s | ${siteConfig.name}`,
+  },
+  keywords: [
+    "code review",
+    "good code",
+    "bad code",
+    "software engineering",
+    "frontend",
+    "backend",
+    "web development",
+  ],
+  category: "education",
 };
 
 export default function RootLayout({

@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test:content": "node --import tsx --test tests/content/schema.test.ts tests/content/lesson-registry.test.ts tests/content/navigation.test.ts tests/content/code-comments.test.ts tests/content/brand-wordmark.test.ts tests/content/i18n.test.ts tests/content/font.test.ts tests/content/track-icons.test.ts"
+    "test:content": "node --import tsx --test tests/content/schema.test.ts tests/content/lesson-registry.test.ts tests/content/navigation.test.ts tests/content/code-comments.test.ts tests/content/brand-wordmark.test.ts tests/content/i18n.test.ts tests/content/font.test.ts tests/content/track-icons.test.ts tests/content/seo.test.ts"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",

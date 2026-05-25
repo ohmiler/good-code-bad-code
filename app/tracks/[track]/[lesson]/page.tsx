@@ -13,6 +13,7 @@ import {
 } from "@/lib/content/lessons";
 import { getTrack } from "@/lib/content/tracks";
 import { getLessonThaiTranslation } from "@/lib/i18n/translations";
+import { createPageMetadata } from "@/lib/seo";
 
 export const dynamicParams = false;
 
@@ -29,10 +30,12 @@ export async function generateMetadata({
 
   if (!track || !lesson) notFound();
 
-  return {
-    title: `${lesson.title} | ${track.title} | Good Code Bad Code`,
+  return createPageMetadata({
+    title: `${lesson.title} | ${track.title}`,
     description: lesson.summary,
-  };
+    path: `/tracks/${track.slug}/${lesson.slug}`,
+    type: "article",
+  });
 }
 
 export default async function LessonPage({
