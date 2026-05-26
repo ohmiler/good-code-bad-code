@@ -23,6 +23,8 @@ export const uiCopy = {
     trackSearchLabel: "Search tracks",
     trackSearchPlaceholder: "Search tracks, frameworks, or review topics",
     trackFilterLabel: "Filter tracks",
+    trackFamilyFilterLabel: "Family",
+    trackAllFamilies: "All families",
     trackResultsLabel: "tracks",
     trackNoResultsTitle: "No tracks found",
     trackNoResultsSummary: "Try another keyword or reset the filters.",
@@ -48,11 +50,15 @@ export const uiCopy = {
     backToLibrary: "Back to library",
     whatToReview: "What to review",
     reviewNotesSection: "Review notes",
+    relatedTracks: "Related tracks",
+    relatedTracksSummary: "Keep learning inside the same language family.",
   },
   th: {
     trackSearchLabel: "ค้นหา track",
     trackSearchPlaceholder: "ค้นหา track, framework หรือหัวข้อรีวิว",
     trackFilterLabel: "กรอง track",
+    trackFamilyFilterLabel: "Family",
+    trackAllFamilies: "ทุก family",
     trackResultsLabel: "track",
     trackNoResultsTitle: "ไม่พบ track",
     trackNoResultsSummary: "ลองคำค้นใหม่หรือล้าง filter",
@@ -77,6 +83,8 @@ export const uiCopy = {
     backToLibrary: "กลับไปหน้ารวม",
     whatToReview: "ควรรีวิวอะไร",
     reviewNotesSection: "ข้อควรสังเกตตอนรีวิว",
+    relatedTracks: "Track ที่เกี่ยวข้อง",
+    relatedTracksSummary: "เรียนต่อในตระกูลภาษาเดียวกัน.",
   },
 } as const satisfies Record<Language, Record<string, string>>;
 

@@ -1,5 +1,11 @@
 import { trackThaiTranslations } from "@/lib/i18n/translations";
 import type { Language } from "@/lib/i18n/language";
+import {
+  getTrackFamily,
+  trackFamilies,
+  trackSearchAliases,
+  type TrackFamilyId,
+} from "./track-families";
 import type { TrackSlug } from "./tracks";
 
 export type FilterableTrack = {
@@ -74,10 +80,15 @@ function normalizeSearchText(value: string) {
 
 function getSearchFields(track: FilterableTrack, language: Language) {
   const thaiText = trackThaiTranslations[track.slug];
+  const family = getTrackFamily(track.slug);
   const localizedText =
     language === "th"
       ? [thaiText.title, thaiText.description]
       : [track.title, track.description];
+  const familyText = family
+    ? [family.label.en, family.label.th, ...family.searchTerms]
+    : [];
+  const aliases = trackSearchAliases[track.slug] ?? [];
 
   return [
     track.slug,
@@ -86,16 +97,20 @@ function getSearchFields(track: FilterableTrack, language: Language) {
     thaiText.title,
     thaiText.description,
     ...localizedText,
+    ...familyText,
+    ...aliases,
   ];
 }
 
 export function filterTracks<TTrack extends FilterableTrack>(
   tracks: readonly TTrack[],
   {
+    familyId,
     groupId,
     language,
     query,
   }: {
+    familyId?: TrackFamilyId | null;
     groupId: TrackFilterGroupId;
     language: Language;
     query: string;
@@ -106,9 +121,20 @@ export function filterTracks<TTrack extends FilterableTrack>(
     trackFilterGroups.find((candidate) => candidate.id === groupId) ??
     trackFilterGroups[0];
   const allowedTracks = new Set<TrackSlug>(group.tracks);
+  const family =
+    familyId === null || familyId === undefined
+      ? undefined
+      : trackFamilies.find((candidate) => candidate.id === familyId);
+  const allowedFamilyTracks = family
+    ? new Set<TrackSlug>(family.tracks)
+    : undefined;
 
   return tracks.filter((track) => {
     if (!allowedTracks.has(track.slug)) {
+      return false;
+    }
+
+    if (allowedFamilyTracks && !allowedFamilyTracks.has(track.slug)) {
       return false;
     }
 

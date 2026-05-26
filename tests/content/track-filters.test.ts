@@ -29,6 +29,7 @@ test("filterTracks matches slugs, English copy, and Thai copy", () => {
   assert.deepEqual(
     filterTracks(trackCards, {
       groupId: "all",
+      familyId: null,
       language: "en",
       query: "laravel",
     }).map((track) => track.slug),
@@ -38,6 +39,7 @@ test("filterTracks matches slugs, English copy, and Thai copy", () => {
   assert.deepEqual(
     filterTracks(trackCards, {
       groupId: "all",
+      familyId: null,
       language: "en",
       query: "value objects",
     }).map((track) => track.slug),
@@ -47,6 +49,7 @@ test("filterTracks matches slugs, English copy, and Thai copy", () => {
   assert.deepEqual(
     filterTracks(trackCards, {
       groupId: "all",
+      familyId: null,
       language: "th",
       query: "รีวิว Vue",
     }).map((track) => track.slug),
@@ -58,6 +61,7 @@ test("filterTracks combines search with a selected group", () => {
   assert.deepEqual(
     filterTracks(trackCards, {
       groupId: "backend",
+      familyId: null,
       language: "en",
       query: "middleware order",
     }).map((track) => track.slug),
@@ -67,9 +71,42 @@ test("filterTracks combines search with a selected group", () => {
   assert.deepEqual(
     filterTracks(trackCards, {
       groupId: "frontend",
+      familyId: null,
       language: "en",
       query: "middleware order",
     }).map((track) => track.slug),
     [],
+  );
+});
+
+test("filterTracks can search and filter by track family", () => {
+  assert.deepEqual(
+    filterTracks(trackCards, {
+      groupId: "all",
+      familyId: "c-family",
+      language: "en",
+      query: "",
+    }).map((track) => track.slug),
+    ["c", "cpp", "csharp"],
+  );
+
+  assert.deepEqual(
+    filterTracks(trackCards, {
+      groupId: "all",
+      familyId: null,
+      language: "en",
+      query: "c family",
+    }).map((track) => track.slug),
+    ["c", "cpp", "csharp"],
+  );
+
+  assert.deepEqual(
+    filterTracks(trackCards, {
+      groupId: "all",
+      familyId: null,
+      language: "en",
+      query: ".net",
+    }).map((track) => track.slug),
+    ["csharp"],
   );
 });

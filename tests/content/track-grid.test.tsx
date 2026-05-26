@@ -24,5 +24,8 @@ test("TrackGrid renders search input, filter chips, and result count", () => {
   assert.match(markup, /aria-pressed="true"[^>]*>All/);
   assert.match(markup, />Frontend</);
   assert.match(markup, />Backend</);
+  assert.match(markup, />Family</);
+  assert.match(markup, />All families</);
+  assert.match(markup, />C family</);
   assert.match(markup, new RegExp(`>${expectedCount} / ${expectedCount} tracks<`));
 });

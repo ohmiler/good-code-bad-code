@@ -1,8 +1,14 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { LessonBrowser } from "@/components/track/lesson-browser";
+import { RelatedTracks } from "@/components/track/related-tracks";
 import { TrackHeader } from "@/components/track/track-header";
-import { getLessonsByTrack, getTrackStaticParams } from "@/lib/content/lessons";
+import {
+  getAllTracks,
+  getLessonsByTrack,
+  getTrackStaticParams,
+} from "@/lib/content/lessons";
+import { getRelatedTrackSlugs } from "@/lib/content/track-families";
 import { getTrack, isTrackSlug } from "@/lib/content/tracks";
 import { createPageMetadata } from "@/lib/seo";
 
@@ -40,11 +46,16 @@ export default async function TrackPage({
   if (!track) notFound();
 
   const lessons = getLessonsByTrack(trackSlug);
+  const relatedTrackSlugs = new Set(getRelatedTrackSlugs(trackSlug));
+  const relatedTracks = getAllTracks().filter((candidate) =>
+    relatedTrackSlugs.has(candidate.slug),
+  );
 
   return (
     <main className="mx-auto w-full max-w-6xl px-5 py-12 sm:py-16">
       <TrackHeader track={track} />
       <LessonBrowser lessons={lessons} />
+      <RelatedTracks currentTrackSlug={track.slug} tracks={relatedTracks} />
     </main>
   );
 }
