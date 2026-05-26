@@ -317,7 +317,7 @@ export const lessonThaiTranslations = {
       "โค้ดที่ควรปรับใส่ role หรือ state ที่ไม่ตรงกับพฤติกรรมจริง ทำให้ screen reader และเครื่องมือช่วยอ่านรับข้อมูลผิด.",
     ],
     reviewNotes: [
-      "ARIA ช่วยได้มากเมื่อใช้ถูก แต่ถ้าใช้ผิดจะทำให้ผู้ใช้เครื่องมือช่วยอ่านได้ข้อมูลผิด เวลารีวิวให้ถามก่อนว่า native element มี role, state หรือ keyboard behavior นี้ให้เราอยู่แล้วหรือยัง.",
+      "ARIA ช่วยได้มากเมื่อใช้ถูก แต่ถ้าใช้ผิดจะทำให้ผู้ใช้เครื่องมือช่วยอ่านได้ข้อมูลผิด. เวลารีวิวให้ถามก่อนว่า native element มี role, state หรือ keyboard behavior นี้ให้เราอยู่แล้วหรือยัง.",
     ],
   },
   "css/flex-layout-boundaries": {
@@ -973,7 +973,7 @@ export const lessonThaiTranslations = {
       "โค้ดที่ควรปรับตั้งชื่อไฟล์เองแล้วไปแยก URL ใน browser ทำให้ Next.js ช่วยตรวจ route และ params ได้น้อยลง.",
     ],
     reviewNotes: [
-      "ตอนรีวิว Next.js ให้เริ่มจากโครงไฟล์ก่อนเสมอ. ถ้า folder, ส่วน URL แบบ `[projectId]` หรือไฟล์ `page.tsx` ไม่ตรงรูปแบบของ App Router โค้ดอาจยังดูเป็น React ธรรมดาได้ แต่ Next.js จะช่วยเรื่อง routing และ type ของ params ได้น้อยลงมาก.",
+      "ตอนรีวิว Next.js ให้เริ่มจากโครงไฟล์ก่อนเสมอ. ถ้า folder, ส่วน URL แบบ `[projectId]` หรือไฟล์ `page.tsx` ไม่ตรงรูปแบบของ App Router โค้ดอาจยังดูเป็น React ธรรมดาได้. แต่ Next.js จะช่วยเรื่อง routing และ type ของ params ได้น้อยลงมาก.",
     ],
   },
   "nextjs/layout-page-boundaries": {
@@ -1309,7 +1309,7 @@ export const lessonThaiTranslations = {
       "โค้ดที่ควรปรับรวม reviews, users และ billing ไว้ใน `app.ts` ไฟล์เดียว จนดูไม่ออกว่าใครรับผิดชอบอะไร.",
     ],
     reviewNotes: [
-      "Express เพิ่ม route ในไฟล์เดียวได้ง่ายมาก ตอนรีวิวให้ถามว่า router นี้ยังดูแลงานกลุ่มเดียวอยู่ไหม ถ้าเริ่มรวม reviews, users และ billing เข้าด้วยกัน การหา service ที่เกี่ยวข้องและเจ้าของโค้ดส่วนนั้นจะยากขึ้นเร็วมาก.",
+      "Express เพิ่ม route ในไฟล์เดียวได้ง่ายมาก. ตอนรีวิวให้ถามว่า router นี้ยังดูแลงานกลุ่มเดียวอยู่ไหม. ถ้าเริ่มรวม reviews, users และ billing เข้าด้วยกัน การหา service ที่เกี่ยวข้องและเจ้าของโค้ดส่วนนั้นจะยากขึ้นเร็วมาก.",
     ],
   },
   "express/middleware-order": {
@@ -1341,7 +1341,7 @@ export const lessonThaiTranslations = {
       "โค้ดที่ควรปรับส่ง `req.body` เข้า service ตรง ๆ ทำให้ field ที่ขาดหรือ format ผิดไปเจอ error ลึกใน service แทนที่จะตอบ 400 ตั้งแต่หน้า route.",
     ],
     reviewNotes: [
-      "route คือด่านแรกของข้อมูลจากผู้ใช้ ตอนรีวิวให้ดูว่าข้อมูลถูก validate และแปลงเป็นค่าที่ app เชื่อถือได้แล้วหรือยัง ถ้าปล่อย raw body ผ่านไป สมมติฐาน (assumption) และ error response จะกระจายไปหลายชั้น.",
+      "route คือด่านแรกของข้อมูลจากผู้ใช้. ตอนรีวิวให้ดูว่าข้อมูลถูก validate และแปลงเป็นค่าที่ app เชื่อถือได้แล้วหรือยัง. ถ้าปล่อย raw body ผ่านไป สมมติฐาน (assumption) และ error response จะกระจายไปหลายชั้น.",
     ],
   },
   "express/async-route-error-forwarding": {
@@ -1469,7 +1469,7 @@ export const lessonThaiTranslations = {
       "โค้ดที่ควรปรับใช้ `SELECT *` จน column จากหลาย table หลุดออกมา เสี่ยงชื่อ column ชนกัน และพังง่ายเมื่อ schema เปลี่ยน.",
     ],
     reviewNotes: [
-      "`SELECT *` เหมาะกับการลองสำรวจข้อมูล แต่ไม่เหมาะเป็น contract ใน production ตอนรีวิวให้ถามว่าทุก column ที่ส่งกลับจำเป็นจริงไหม และถ้า table เพิ่ม column ใหม่ โค้ดที่อ่านผลลัพธ์จะได้รับผลกระทบหรือเปล่า.",
+      "`SELECT *` เหมาะกับการลองสำรวจข้อมูล แต่ไม่เหมาะเป็น contract ใน production. ตอนรีวิวให้ถามว่าทุก column ที่ส่งกลับจำเป็นจริงไหม. ถ้า table เพิ่ม column ใหม่ โค้ดที่อ่านผลลัพธ์จะได้รับผลกระทบหรือเปล่า.",
     ],
   },
   "sql/filtering-null-handling": {
@@ -3060,7 +3060,7 @@ export const lessonThaiTranslations = {
       "โค้ดที่ควรปรับฝังสี hex, shadow และ pixel value ไว้ใน component เดียว ทำให้มีโอกาสถูก copy ไปใช้ต่อแบบไม่ตรงกัน.",
     ],
     reviewNotes: [
-      "custom value ของ Tailwind มีประโยชน์ แต่ถ้าค่าเดิมซ้ำหลายที่ ค่านั้นอาจเป็น theme token ที่ยังไม่มีชื่อ เวลารีวิวให้ถามว่าค่านี้ควรเป็นค่าของ component นี้เท่านั้น หรือควรเป็นค่ากลางของระบบ.",
+      "custom value ของ Tailwind มีประโยชน์. แต่ถ้าค่าเดิมซ้ำหลายที่ ค่านั้นอาจเป็น theme token ที่ยังไม่มีชื่อ. เวลารีวิวให้ถามว่าค่านี้ควรเป็นค่าของ component นี้เท่านั้น หรือควรเป็นค่ากลางของระบบ.",
     ],
   },
   "tailwindcss/dark-mode-variants": {
