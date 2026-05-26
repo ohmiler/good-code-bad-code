@@ -24,8 +24,18 @@ test("TrackGrid renders search input, filter chips, and result count", () => {
   assert.match(markup, /aria-pressed="true"[^>]*>All/);
   assert.match(markup, />Frontend</);
   assert.match(markup, />Backend</);
-  assert.match(markup, />Family</);
-  assert.match(markup, />All families</);
-  assert.match(markup, />C family</);
   assert.match(markup, new RegExp(`>${expectedCount} / ${expectedCount} tracks<`));
+});
+
+test("TrackGrid keeps track families out of the homepage chrome", () => {
+  const markup = renderToStaticMarkup(
+    <LanguageProvider initialLanguage="en">
+      <TrackGrid tracks={trackCards} />
+    </LanguageProvider>,
+  );
+
+  assert.doesNotMatch(markup, />Family</);
+  assert.doesNotMatch(markup, />All families</);
+  assert.doesNotMatch(markup, />C family</);
+  assert.doesNotMatch(markup, />JavaScript ecosystem</);
 });

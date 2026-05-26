@@ -10,11 +10,6 @@ import {
   trackFilterGroups,
   type TrackFilterGroupId,
 } from "@/lib/content/track-filters";
-import {
-  getTrackFamily,
-  trackFamilies,
-  type TrackFamilyId,
-} from "@/lib/content/track-families";
 import type { TrackSlug } from "@/lib/content/tracks";
 import { getTrackText, uiCopy } from "@/lib/i18n/translations";
 
@@ -31,28 +26,20 @@ export function TrackGrid({ tracks }: { tracks: TrackCard[] }) {
   const [query, setQuery] = useState("");
   const [selectedGroup, setSelectedGroup] =
     useState<TrackFilterGroupId>("all");
-  const [selectedFamily, setSelectedFamily] = useState<TrackFamilyId | null>(
-    null,
-  );
   const visibleTracks = useMemo(
     () =>
       filterTracks(tracks, {
-        familyId: selectedFamily,
         groupId: selectedGroup,
         language,
         query,
       }),
-    [language, query, selectedFamily, selectedGroup, tracks],
+    [language, query, selectedGroup, tracks],
   );
-  const hasActiveFilter =
-    query.trim().length > 0 ||
-    selectedGroup !== "all" ||
-    selectedFamily !== null;
+  const hasActiveFilter = query.trim().length > 0 || selectedGroup !== "all";
 
   function clearFilters() {
     setQuery("");
     setSelectedGroup("all");
-    setSelectedFamily(null);
   }
 
   return (
@@ -114,45 +101,6 @@ export function TrackGrid({ tracks }: { tracks: TrackCard[] }) {
         </div>
       </div>
 
-      <div className="space-y-2 rounded-lg border border-white/10 bg-white/[0.02] p-3">
-        <span className="text-xs font-medium uppercase tracking-[0.18em] text-zinc-500">
-          {copy.trackFamilyFilterLabel}
-        </span>
-        <div className="flex flex-wrap gap-2">
-          <button
-            type="button"
-            aria-pressed={selectedFamily === null}
-            onClick={() => setSelectedFamily(null)}
-            className={
-              selectedFamily === null
-                ? "h-9 rounded-md border border-emerald-300/60 bg-emerald-300/15 px-3 text-sm font-medium text-emerald-100 shadow-[0_0_22px_rgba(52,211,153,0.12)] transition"
-                : "h-9 rounded-md border border-white/10 bg-white/[0.03] px-3 text-sm font-medium text-zinc-400 transition hover:border-white/20 hover:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-emerald-300/30"
-            }
-          >
-            {copy.trackAllFamilies}
-          </button>
-          {trackFamilies.map((family) => {
-            const isSelected = family.id === selectedFamily;
-
-            return (
-              <button
-                key={family.id}
-                type="button"
-                aria-pressed={isSelected}
-                onClick={() => setSelectedFamily(family.id)}
-                className={
-                  isSelected
-                    ? "h-9 rounded-md border border-emerald-300/60 bg-emerald-300/15 px-3 text-sm font-medium text-emerald-100 shadow-[0_0_22px_rgba(52,211,153,0.12)] transition"
-                    : "h-9 rounded-md border border-white/10 bg-white/[0.03] px-3 text-sm font-medium text-zinc-400 transition hover:border-white/20 hover:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-emerald-300/30"
-                }
-              >
-                {family.label[language]}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
       <div className="flex min-h-7 flex-wrap items-center justify-between gap-3 border-y border-white/10 py-3 text-sm text-zinc-500">
         <span aria-live="polite">
           {visibleTracks.length} / {tracks.length} {copy.trackResultsLabel}
@@ -188,7 +136,6 @@ export function TrackGrid({ tracks }: { tracks: TrackCard[] }) {
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {visibleTracks.map((track) => {
             const text = getTrackText(track, language);
-            const family = getTrackFamily(track.slug);
 
             return (
               <Link
@@ -203,10 +150,7 @@ export function TrackGrid({ tracks }: { tracks: TrackCard[] }) {
                   <div className="min-w-0 flex-1">
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
-                        <p className="text-xs font-medium uppercase tracking-[0.16em] text-emerald-300/80">
-                          {family?.label[language]}
-                        </p>
-                        <h2 className="mt-1 min-w-0 text-xl font-semibold text-zinc-50">
+                        <h2 className="min-w-0 text-xl font-semibold text-zinc-50">
                           {text.title}
                         </h2>
                       </div>
