@@ -431,6 +431,18 @@ function issueCountByTrack(issues: readonly ContentQualityIssue[]) {
   return counts;
 }
 
+function issueCountByCode(issues: readonly ContentQualityIssue[]) {
+  const counts = new Map<string, number>();
+
+  for (const issue of issues) {
+    counts.set(issue.code, (counts.get(issue.code) ?? 0) + 1);
+  }
+
+  return [...counts.entries()].sort(([, leftCount], [, rightCount]) => {
+    return rightCount - leftCount;
+  });
+}
+
 function printDashboard(
   lessons: readonly LessonInfo[],
   issues: readonly ContentQualityIssue[],
@@ -475,14 +487,27 @@ function printDashboard(
     `Hard errors: ${summary.errorCount} | Polish warnings: ${summary.warningCount}`,
   );
 
+  const warningTypes = issueCountByCode(
+    issues.filter((issue) => issue.severity === "warning"),
+  );
+  if (warningTypes.length > 0) {
+    console.log("");
+    console.log("Warning types");
+    for (const [code, count] of warningTypes) {
+      console.log(`- ${code}: ${count}`);
+    }
+  }
+
   const topIssues = issues.slice(0, 12);
   if (topIssues.length > 0) {
     console.log("");
     console.log("Top polish flags");
     for (const issue of topIssues) {
       console.log(
-        `- [${issue.severity}] ${issue.source} ${issue.field}: ${issue.message}`,
+        `- [${issue.severity}:${issue.code}] ${issue.source} ${issue.field}: ${issue.message}`,
       );
+      console.log(`  ${issue.excerpt}`);
+      console.log(`  ${issue.suggestion}`);
     }
   }
 }

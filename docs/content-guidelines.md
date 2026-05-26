@@ -37,6 +37,7 @@ Use this when adding or reviewing lessons, translations, and code comments for G
 - Prefer workplace review language: name the boundary, dependency, data shape, state, query, request, response, or resource that is being reviewed.
 - Explain why the issue matters in production terms: debugging cost, hidden coupling, unsafe input, duplicated ownership, slow queries, leaked resources, or hard-to-test behavior.
 - A strong paragraph usually answers three questions: what reviewers should notice, why it matters, and what habit they should carry into the next review.
+- Treat Content QA warnings as review prompts, not automatic rewrites. The warning code points at the habit to inspect: generic nouns, floating adjectives, broad actions, or loose references.
 
 ## Track Sweep Workflow
 

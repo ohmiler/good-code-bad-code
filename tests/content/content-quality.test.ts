@@ -39,7 +39,7 @@ test("content quality rules separate hard errors from polish warnings", () => {
   assert.equal(summary.warningCount, 1);
   assert.deepEqual(
     issues.map((issue) => issue.code),
-    ["placeholder-copy", "vague-copy"],
+    ["placeholder-copy", "broad-action-th"],
   );
 });
 
@@ -53,6 +53,43 @@ test("content quality rules allow concrete real-work copy", () => {
   });
 
   assert.deepEqual(issues, []);
+});
+
+test("content quality rules do not flag file handles as vague handle copy", () => {
+  const items: ContentQualityItem[] = [
+    {
+      source: "content/python/context-managers-files.mdx",
+      field: "metadata.summary",
+      kind: "lesson-copy",
+      language: "en",
+      text: "Use context managers so file handles and other resources close even when work fails.",
+    },
+    {
+      source: "content/go/defer-resource-cleanup.mdx",
+      field: "whatToReview[1]",
+      kind: "review-notes",
+      language: "en",
+      text: "If importing a line fails, the file handle leaks until the process cleans up.",
+    },
+  ];
+
+  assert.deepEqual(items.flatMap(analyzeContentQualityItem), []);
+});
+
+test("content quality rules report actionable warning codes", () => {
+  const issues = analyzeContentQualityItem({
+    source: "content/example/topic.mdx",
+    field: "reviewNotes[0]",
+    kind: "review-notes",
+    language: "en",
+    text: "Handle things properly before returning a better response.",
+  });
+
+  assert.deepEqual(
+    issues.map((issue) => issue.code),
+    ["generic-noun"],
+  );
+  assert.match(issues[0]?.suggestion ?? "", /code object/);
 });
 
 test("qa:content script is registered and produces a dashboard", async () => {
@@ -71,6 +108,8 @@ test("qa:content script is registered and produces a dashboard", async () => {
 
   assert.match(stdout, /Content QA/);
   assert.match(stdout, /Track\s+Lessons\s+Thai\s+Comments\s+Flags/);
+  assert.match(stdout, /Warning types/);
+  assert.match(stdout, /\[warning:[a-z-]+\]/);
   assert.match(stdout, /html\s+10\/10/);
 });
 

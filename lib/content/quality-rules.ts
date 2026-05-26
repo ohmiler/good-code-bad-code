@@ -43,18 +43,65 @@ const placeholderPatterns = [
   /lorem ipsum/i,
 ] as const;
 
-const vagueCopyPatterns: Array<{
+type VagueCopyPattern = {
   language: ContentQualityLanguage;
+  code: string;
+  message: string;
+  suggestion: string;
   pattern: RegExp;
-}> = [
-  { language: "en", pattern: /\b(things?|stuff|something)\b/i },
-  { language: "en", pattern: /\b(properly|appropriate|clearer|better)\b/i },
-  { language: "en", pattern: /\bhandle(s|d|ing)?\b/i },
-  { language: "th", pattern: /จัดการ/ },
-  { language: "th", pattern: /เหมาะสม/ },
-  { language: "th", pattern: /ชัดเจน/ },
-  { language: "th", pattern: /ดีขึ้น/ },
-  { language: "th", pattern: /ต่าง ๆ|ต่างๆ|สิ่งนี้|มัน/ },
+  allow?: RegExp;
+};
+
+const vagueCopyPatterns: VagueCopyPattern[] = [
+  {
+    language: "en",
+    code: "generic-noun",
+    message: "Copy leans on a generic noun.",
+    suggestion:
+      "Name the code object, data shape, boundary, or user-visible behavior instead.",
+    pattern: /\b(things?|stuff|something)\b/i,
+  },
+  {
+    language: "en",
+    code: "floating-adjective",
+    message: "Copy uses a broad adjective without enough review detail.",
+    suggestion:
+      "Replace the adjective with the concrete review signal or production risk.",
+    pattern: /\b(properly|appropriate|clearer|better)\b/i,
+  },
+  {
+    language: "en",
+    code: "generic-handle",
+    message: "Copy uses 'handle' where a specific action would be stronger.",
+    suggestion:
+      "Name the action: validate, catch, return, close, retry, log, or reject.",
+    pattern: /\bhandle(s|d|ing)?\b/i,
+    allow: /\b(file|resource|timer|connection) handles?\b/i,
+  },
+  {
+    language: "th",
+    code: "broad-action-th",
+    message: "ข้อความใช้คำกริยากว้างเกินไป.",
+    suggestion:
+      "ระบุ action จริง เช่น validate, return, ปิด resource, ส่ง response, หรือคืน error.",
+    pattern: /จัดการ/,
+  },
+  {
+    language: "th",
+    code: "floating-adjective-th",
+    message: "ข้อความใช้คำคุณศัพท์กว้างโดยยังไม่ชี้ object ในโค้ด.",
+    suggestion:
+      "บอก code object, boundary, data shape, state, หรือ production risk ให้ตรงขึ้น.",
+    pattern: /เหมาะสม|ชัดเจน|ดีขึ้น/,
+  },
+  {
+    language: "th",
+    code: "loose-reference-th",
+    message: "ข้อความใช้สรรพนามหรือคำรวมที่ทำให้เป้าหมายไม่ชัด.",
+    suggestion:
+      "แทนด้วยชื่อ object หรือ behavior ที่ reviewer ต้องมองในโค้ด.",
+    pattern: /ต่าง ๆ|ต่างๆ|สิ่งนี้|มัน/,
+  },
 ];
 
 function compactWhitespace(value: string) {
@@ -81,8 +128,10 @@ function hasPlaceholder(text: string) {
 
 function findVagueCopyPattern(item: ContentQualityItem) {
   return vagueCopyPatterns.find(
-    ({ language, pattern }) =>
-      language === item.language && pattern.test(item.text),
+    ({ allow, language, pattern }) =>
+      language === item.language &&
+      pattern.test(item.text) &&
+      !allow?.test(item.text),
   );
 }
 
@@ -125,10 +174,9 @@ export function analyzeContentQualityItem(
   if (vaguePattern) {
     issues.push({
       severity: "warning",
-      code: "vague-copy",
-      message: "Copy may be too abstract or adjective-led.",
-      suggestion:
-        "Name the concrete code object, risk, or review habit instead of relying on broad wording.",
+      code: vaguePattern.code,
+      message: vaguePattern.message,
+      suggestion: vaguePattern.suggestion,
       source: item.source,
       field: item.field,
       excerpt: excerpt(text),
