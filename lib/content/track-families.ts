@@ -7,6 +7,7 @@ export type TrackFamilyId =
   | "python-ecosystem"
   | "php-ecosystem"
   | "c-family"
+  | "embedded-scripting"
   | "backend-languages"
   | "data-ops";
 
@@ -58,6 +59,12 @@ export const trackFamilies = [
     tracks: ["c", "cpp", "csharp", "rust"],
   },
   {
+    id: "embedded-scripting",
+    label: { en: "Embedded scripting", th: "สคริปต์ฝังในระบบ" },
+    searchTerms: ["embedded scripting lua tables metatable coroutine sandbox config"],
+    tracks: ["lua"],
+  },
+  {
     id: "backend-languages",
     label: { en: "Backend languages", th: "ภาษา Backend" },
     searchTerms: ["backend service api concurrency"],
@@ -81,6 +88,7 @@ export const trackSearchAliases: Partial<Record<TrackSlug, readonly string[]>> =
   cpp: ["c++", "systems", "native", "memory"],
   csharp: ["c#", ".net", "dotnet", "asp.net", "microsoft"],
   rust: ["borrow checker", "borrowing", "ownership", "cargo", "memory safety"],
+  lua: ["tables", "metatable", "coroutine", "embedded scripting", "sandbox", "config"],
   sql: ["database", "query"],
   docker: ["container", "containers"],
 } as const satisfies Partial<Record<TrackSlug, readonly string[]>>;

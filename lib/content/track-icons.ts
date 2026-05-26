@@ -20,6 +20,7 @@ export const trackIconKeys = {
   cpp: "plus-plus",
   csharp: "hash",
   rust: "shield",
+  lua: "moon",
   git: "git-branch",
   fastapi: "zap",
   django: "layers",

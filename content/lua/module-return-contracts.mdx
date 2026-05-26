@@ -1,0 +1,38 @@
+export const metadata = {
+  title: "Module return contracts",
+  track: "lua",
+  order: 3,
+  summary: "Return an explicit module table so require calls expose a stable API instead of hidden globals.",
+  tags: ["modules", "require", "globals"],
+  takeaways: ["A Lua module should return the functions it wants callers to use and avoid mutating global state during import."],
+  goodCode: {
+    language: "lua",
+    filename: "src/review_rules.lua",
+    code: `local ReviewRules = {}
+
+function ReviewRules.is_approved(review)
+  -- The exported function is visible on the returned module table.
+  return review.score ~= nil and review.score >= 4
+end
+
+return ReviewRules`,
+  },
+  badCode: {
+    language: "lua",
+    filename: "review_rules.lua",
+    code: `function is_approved(review)
+  -- Global function names can collide across unrelated modules.
+  return review.score >= 4
+end`,
+  },
+};
+
+## What to review
+
+The good version builds and returns a module table. A caller using `require` can see the exported surface and keep names scoped.
+
+The bad version writes a global function during load. Another file can replace it, and tests can pass or fail depending on import order.
+
+## Review notes
+
+Lua modules should make their public API explicit. Review top-level assignments carefully because missing `local` often means global state changed during import.

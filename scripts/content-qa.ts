@@ -217,6 +217,9 @@ function countCommentLines(sample: CodeSampleInfo, track: string) {
       if (sample.language === "sql") {
         return line.startsWith("/*") || line.startsWith("--");
       }
+      if (sample.language === "lua") {
+        return line.startsWith("--");
+      }
       if (
         sample.language === "python" ||
         sample.language === "bash" ||

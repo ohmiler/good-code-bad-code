@@ -1,0 +1,41 @@
+export const metadata = {
+  title: "Busted test cases",
+  track: "lua",
+  order: 10,
+  summary: "Write Lua tests around observable module behavior instead of only checking that functions return truthy values.",
+  tags: ["tests", "busted", "assertions"],
+  takeaways: ["Lua tests should name the behavior, build a small fixture, and assert the exact output or error shape."],
+  goodCode: {
+    language: "lua",
+    filename: "spec/review_rules_spec.lua",
+    code: `describe("review rules", function()
+  it("rejects a missing title", function()
+    -- The fixture names the invalid input the module must reject.
+    local ok, error = ReviewRules.validate({ title = nil, score = 5 })
+
+    assert.is_false(ok)
+    assert.are.equal("title_required", error.code)
+  end)
+end)`,
+  },
+  badCode: {
+    language: "lua",
+    filename: "spec/review_rules_spec.lua",
+    code: `describe("review rules", function()
+  it("validates reviews", function()
+    -- Truthy checks miss the actual validation contract.
+    assert.is_truthy(ReviewRules.validate({}))
+  end)
+end)`,
+  },
+};
+
+## What to review
+
+The good version names the invalid input and asserts the exact error code. A regression in title validation will fail clearly.
+
+The bad version only checks for a truthy result. It does not protect the validation contract that callers rely on.
+
+## Review notes
+
+Lua tests should read like review notes for the module. Prefer one focused invalid input and a precise assertion over a broad truthy check.

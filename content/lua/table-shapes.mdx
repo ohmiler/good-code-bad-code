@@ -1,0 +1,38 @@
+export const metadata = {
+  title: "Tables as records and arrays",
+  track: "lua",
+  order: 1,
+  summary: "Keep table shape clear when a value behaves like a record, array, or map.",
+  tags: ["tables", "shape", "records"],
+  takeaways: ["Lua table review should name whether a table is a record, array, map, or mixed structure."],
+  goodCode: {
+    language: "lua",
+    filename: "src/review_summary.lua",
+    code: `local function build_review_summary(title, score)
+  -- Named fields make this table read like a stable record.
+  return {
+    title = title,
+    score = score,
+    approved = score >= 4,
+  }
+end`,
+  },
+  badCode: {
+    language: "lua",
+    filename: "review_summary.lua",
+    code: `local function build_review_summary(title, score)
+  -- Positional fields hide what each slot means to the caller.
+  return { title, score, score >= 4 }
+end`,
+  },
+};
+
+## What to review
+
+The good version uses named fields, so callers can read the table as a record and access values without remembering index positions.
+
+The bad version mixes unrelated values into positional slots. A caller has to know that index `3` means approval state, which is easy to break during later edits.
+
+## Review notes
+
+Lua tables can represent many shapes. In review, ask which shape the code intends and whether the access pattern makes that shape visible.

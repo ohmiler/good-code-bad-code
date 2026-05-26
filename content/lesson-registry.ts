@@ -575,6 +575,36 @@ import RustCargoFeatureDependencies, {
 import RustTestsFixturesAssertions, {
   metadata as rustTestsFixturesAssertionsMetadata,
 } from "./rust/tests-fixtures-assertions.mdx";
+import LuaTableShapes, {
+  metadata as luaTableShapesMetadata,
+} from "./lua/table-shapes.mdx";
+import LuaNilBoundaryDefaults, {
+  metadata as luaNilBoundaryDefaultsMetadata,
+} from "./lua/nil-boundary-defaults.mdx";
+import LuaModuleReturnContracts, {
+  metadata as luaModuleReturnContractsMetadata,
+} from "./lua/module-return-contracts.mdx";
+import LuaMetatableOperatorBoundaries, {
+  metadata as luaMetatableOperatorBoundariesMetadata,
+} from "./lua/metatable-operator-boundaries.mdx";
+import LuaCoroutineLifecycle, {
+  metadata as luaCoroutineLifecycleMetadata,
+} from "./lua/coroutine-lifecycle.mdx";
+import LuaPcallErrorHandling, {
+  metadata as luaPcallErrorHandlingMetadata,
+} from "./lua/pcall-error-handling.mdx";
+import LuaSandboxedExecution, {
+  metadata as luaSandboxedExecutionMetadata,
+} from "./lua/sandboxed-execution.mdx";
+import LuaEmbeddedApiBoundaries, {
+  metadata as luaEmbeddedApiBoundariesMetadata,
+} from "./lua/embedded-api-boundaries.mdx";
+import LuaConfigurationValidation, {
+  metadata as luaConfigurationValidationMetadata,
+} from "./lua/configuration-validation.mdx";
+import LuaBustedTestCases, {
+  metadata as luaBustedTestCasesMetadata,
+} from "./lua/busted-test-cases.mdx";
 import GitStatusBeforeWork, {
   metadata as gitStatusBeforeWorkMetadata,
 } from "./git/status-before-work.mdx";
@@ -1903,6 +1933,66 @@ const rawLessons: RawLesson[] = [
     source: "content/rust/tests-fixtures-assertions.mdx",
     metadata: rustTestsFixturesAssertionsMetadata,
     Component: RustTestsFixturesAssertions,
+  },
+  {
+    slug: "table-shapes",
+    source: "content/lua/table-shapes.mdx",
+    metadata: luaTableShapesMetadata,
+    Component: LuaTableShapes,
+  },
+  {
+    slug: "nil-boundary-defaults",
+    source: "content/lua/nil-boundary-defaults.mdx",
+    metadata: luaNilBoundaryDefaultsMetadata,
+    Component: LuaNilBoundaryDefaults,
+  },
+  {
+    slug: "module-return-contracts",
+    source: "content/lua/module-return-contracts.mdx",
+    metadata: luaModuleReturnContractsMetadata,
+    Component: LuaModuleReturnContracts,
+  },
+  {
+    slug: "metatable-operator-boundaries",
+    source: "content/lua/metatable-operator-boundaries.mdx",
+    metadata: luaMetatableOperatorBoundariesMetadata,
+    Component: LuaMetatableOperatorBoundaries,
+  },
+  {
+    slug: "coroutine-lifecycle",
+    source: "content/lua/coroutine-lifecycle.mdx",
+    metadata: luaCoroutineLifecycleMetadata,
+    Component: LuaCoroutineLifecycle,
+  },
+  {
+    slug: "pcall-error-handling",
+    source: "content/lua/pcall-error-handling.mdx",
+    metadata: luaPcallErrorHandlingMetadata,
+    Component: LuaPcallErrorHandling,
+  },
+  {
+    slug: "sandboxed-execution",
+    source: "content/lua/sandboxed-execution.mdx",
+    metadata: luaSandboxedExecutionMetadata,
+    Component: LuaSandboxedExecution,
+  },
+  {
+    slug: "embedded-api-boundaries",
+    source: "content/lua/embedded-api-boundaries.mdx",
+    metadata: luaEmbeddedApiBoundariesMetadata,
+    Component: LuaEmbeddedApiBoundaries,
+  },
+  {
+    slug: "configuration-validation",
+    source: "content/lua/configuration-validation.mdx",
+    metadata: luaConfigurationValidationMetadata,
+    Component: LuaConfigurationValidation,
+  },
+  {
+    slug: "busted-test-cases",
+    source: "content/lua/busted-test-cases.mdx",
+    metadata: luaBustedTestCasesMetadata,
+    Component: LuaBustedTestCases,
   },
   {
     slug: "status-before-work",

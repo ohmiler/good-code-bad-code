@@ -1,0 +1,43 @@
+export const metadata = {
+  title: "Embedded API boundaries",
+  track: "lua",
+  order: 8,
+  summary: "Keep host-provided APIs small and explicit when Lua scripts extend an application.",
+  tags: ["embedded", "api", "host"],
+  takeaways: ["An embedded Lua API should expose narrow commands rather than raw host objects with broad mutation power."],
+  goodCode: {
+    language: "lua",
+    filename: "src/review_script_api.lua",
+    code: `local api = {}
+
+function api.add_note(review, text)
+  -- The host API validates script input before mutating review state.
+  assert(type(text) == "string", "note text must be a string")
+  review.notes[#review.notes + 1] = text
+end
+
+return api`,
+  },
+  badCode: {
+    language: "lua",
+    filename: "review_script_api.lua",
+    code: `local api = {}
+
+function api.expose_review(review)
+  -- Scripts receive the full mutable host object.
+  return review
+end
+
+return api`,
+  },
+};
+
+## What to review
+
+The good version exposes a narrow command and validates script input before changing host state.
+
+The bad version hands the whole host object to scripts. A script can mutate fields the host does not expect, making failures hard to trace.
+
+## Review notes
+
+Embedded Lua APIs stay reviewable when each exported function names one host action, validates script input, and limits the state it can mutate.

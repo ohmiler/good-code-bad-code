@@ -60,6 +60,22 @@ test("replaceCodeCommentLines translates JavaScript line comments without changi
   );
 });
 
+test("replaceCodeCommentLines translates Lua comments without changing code", () => {
+  assert.equal(
+    replaceCodeCommentLines(
+      `local function build_review(title)
+  -- Named fields make the table shape explicit.
+  return { title = title }
+end`,
+      ["field แบบมีชื่อทำให้ shape ของ table ชัด"],
+    ),
+    `local function build_review(title)
+  -- field แบบมีชื่อทำให้ shape ของ table ชัด
+  return { title = title }
+end`,
+  );
+});
+
 test("replaceCodeCommentLines leaves extra or missing translations safe", () => {
   assert.equal(
     replaceCodeCommentLines("# Review staged work.\ngit diff --staged", []),

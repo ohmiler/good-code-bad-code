@@ -1,0 +1,42 @@
+export const metadata = {
+  title: "Nil boundaries and defaults",
+  track: "lua",
+  order: 2,
+  summary: "Normalize nil at the boundary so the rest of the code can distinguish missing data from empty values.",
+  tags: ["nil", "defaults", "boundaries"],
+  takeaways: ["Lua code should choose defaults at input boundaries instead of scattering nil checks through business logic."],
+  goodCode: {
+    language: "lua",
+    filename: "src/review_options.lua",
+    code: `local function normalize_options(options)
+  options = options or {}
+
+  -- Defaults are chosen once before the review job runs.
+  return {
+    limit = options.limit or 20,
+    include_archived = options.include_archived == true,
+  }
+end`,
+  },
+  badCode: {
+    language: "lua",
+    filename: "review_options.lua",
+    code: `local function fetch_reviews(options)
+  -- Every read repeats a nil decision with slightly different rules.
+  local limit = options and options.limit or 20
+  local archived = options and options.include_archived
+
+  return query_reviews(limit, archived)
+end`,
+  },
+};
+
+## What to review
+
+The good version turns optional input into one normalized table. Later code can rely on `limit` and `include_archived` having predictable types.
+
+The bad version repeats nil checks inside the workflow. Each line can drift into a different default rule, especially when booleans are involved.
+
+## Review notes
+
+In Lua reviews, watch for `nil` flowing deep into the code path. Defaults are easier to audit when they live at the boundary where input enters the module.

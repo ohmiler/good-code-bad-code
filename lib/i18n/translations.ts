@@ -184,6 +184,11 @@ export const trackThaiTranslations = {
     description:
       "ฝึกรีวิว Rust ว่า ownership, borrowing, lifetime, Result, Option, trait, async boundary, Cargo feature และ test ทำให้การถือครองข้อมูลกับ failure path มองเห็นในโค้ดหรือไม่.",
   },
+  lua: {
+    title: "Lua",
+    description:
+      "ฝึกรีวิว Lua ว่า table shape, nil boundary, module, metatable, coroutine, sandbox, API ที่ฝังใน host, config และ test ทำให้ behavior อ่านตามงานจริงได้หรือไม่.",
+  },
   git: {
     title: "Git",
     description:
@@ -4321,6 +4326,166 @@ export const lessonThaiTranslations = {
     ],
     reviewNotes: [
       "test ที่อ่านแล้วรู้ rule จะช่วยรีวิวมากกว่า test ที่แค่เรียกฟังก์ชันแล้วผ่าน ให้ดูว่า fixture เล็กพอและ assertion ผูกกับ behavior ที่ต้องรักษาหรือไม่.",
+    ],
+  },
+  "lua/table-shapes": {
+    codeComments: {
+      goodCode: ["field แบบมีชื่อทำให้ table อ่านเป็น record ที่เสถียร"],
+      badCode: ["field ตามตำแหน่งซ่อนความหมายของแต่ละช่องจาก caller"],
+    },
+    title: "table ที่เป็น record หรือ array",
+    summary: "ระบุ shape ของ table ให้เห็นว่าเป็น record, array, map หรือโครงสร้างผสม.",
+    takeaways: ["เวลารีวิว Lua table ให้ถามว่า table นี้แทน shape แบบไหนและ access pattern สื่อความหมายนั้นหรือไม่."],
+    whatToReview: [
+      "โค้ดที่ดีใช้ field name จึงเห็นว่า `title`, `score` และ `approved` เป็นข้อมูลคนละความหมาย.",
+      "โค้ดที่ควรปรับใช้ตำแหน่งใน array ทำให้ caller ต้องจำว่า index ไหนคือค่าอะไร.",
+    ],
+    reviewNotes: [
+      "Lua ใช้ table ได้หลายแบบมาก ถ้า shape ไม่ชัด โค้ดจะอ่านยากทันที ให้ชื่อ field เมื่อข้อมูลมีความหมายแบบ record.",
+    ],
+  },
+  "lua/nil-boundary-defaults": {
+    codeComments: {
+      goodCode: ["เลือก default ครั้งเดียวก่อน workflow หลักเริ่มทำงาน"],
+      badCode: ["แต่ละ read ตัดสิน nil เองและอาจใช้กฎไม่เหมือนกัน"],
+    },
+    title: "nil boundary และค่า default",
+    summary: "normalize `nil` ที่ขอบเขต input เพื่อให้ logic ด้านในใช้ type ที่คาดเดาได้.",
+    takeaways: ["Lua code ควรเลือก default ที่ boundary แทนการกระจาย nil check ไปทั่ว workflow."],
+    whatToReview: [
+      "โค้ดที่ดีแปลง options เป็น table ที่มี `limit` และ `include_archived` ชัดก่อน query.",
+      "โค้ดที่ควรปรับอ่าน nil ซ้ำหลายจุด ทำให้ default ของ boolean และ number เพี้ยนกันได้ง่าย.",
+    ],
+    reviewNotes: [
+      "ถ้าเห็น `options and options.x` หลายครั้งในฟังก์ชันเดียว ให้พิจารณาแยก normalize step เพื่อให้ส่วนที่เหลือของ code path อ่านง่ายขึ้น.",
+    ],
+  },
+  "lua/module-return-contracts": {
+    codeComments: {
+      goodCode: ["export function ผ่าน module table ที่ return จากไฟล์"],
+      badCode: ["global function อาจชนกับชื่อจาก module อื่นตามลำดับ require"],
+    },
+    title: "contract ของ module ที่ return",
+    summary: "module Lua ควร return API table ที่ระบุ exported function แทนการเขียน function ลง global ระหว่าง import.",
+    takeaways: ["ไฟล์ Lua ที่ถูก `require` ควรบอก public API ผ่านค่าที่ return และหลีกเลี่ยง global state."],
+    whatToReview: [
+      "โค้ดที่ดีสร้าง `ReviewRules` แล้ว return table ให้ caller เห็น exported surface.",
+      "โค้ดที่ควรปรับประกาศ `is_approved` เป็น global ทำให้ชื่อชนกันและ test ขึ้นกับลำดับ import.",
+    ],
+    reviewNotes: [
+      "ใน Lua การลืม `local` มักแปลว่าแก้ global state ให้รีวิว top-level assignment ทุกตัวว่าเป็น public contract จริงหรือเป็น bug.",
+    ],
+  },
+  "lua/metatable-operator-boundaries": {
+    codeComments: {
+      goodCode: ["method ชื่อ passes ทำให้ approval rule อ่านตรงไปตรงมา"],
+      badCode: ["operator บวกกลับ mutate operand ซ้ายแบบคาดเดายาก"],
+    },
+    title: "metatable และขอบเขต operator",
+    summary: "ใช้ metatable เมื่อต้องการ domain behavior ที่อ่านง่าย ไม่ใช่เพื่อซ่อน side effect ใน operator.",
+    takeaways: ["metamethod ควรทำสิ่งที่ reader คาดได้จาก operator และไม่ซ่อน mutation ที่สำคัญ."],
+    whatToReview: [
+      "โค้ดที่ดีใช้ metatable เพื่อผูก method กับ score object และยังอ่าน approval rule ได้จาก body ของ method.",
+      "โค้ดที่ควรปรับ overload `__add` แล้ว mutate ค่าเดิม ทำให้คนอ่านคิดว่าเป็น arithmetic แต่จริง ๆ เปลี่ยน state.",
+    ],
+    reviewNotes: [
+      "metatable ทำให้ Lua ยืดหยุ่นมาก แต่ถ้า behavior ไม่ตรงกับ intuition ให้ใช้ method ชื่อชัดแทน operator.",
+    ],
+  },
+  "lua/coroutine-lifecycle": {
+    codeComments: {
+      goodCode: ["resume คืน success flag แยกจากค่าที่ coroutine yield"],
+      badCode: ["error ถูก return เหมือนเป็น output ปกติของงาน"],
+    },
+    title: "lifecycle ของ coroutine",
+    summary: "ตรวจ status และผลลัพธ์จาก `coroutine.resume` เพื่อแยก yielded, finished และ failed state.",
+    takeaways: ["โค้ด coroutine ใน Lua ควรเช็กทั้ง status และ success flag ก่อนถือว่างานเดินต่อได้."],
+    whatToReview: [
+      "โค้ดที่ดีเช็ก coroutine ที่จบแล้วและเก็บ `ok` จาก `resume` เพื่อคืน error path แยกจาก result.",
+      "โค้ดที่ควรปรับทิ้ง success flag ทำให้ runtime error ใน coroutine ดูเหมือน output ปกติ.",
+    ],
+    reviewNotes: [
+      "เวลารีวิว scheduler เล็ก ๆ ใน Lua ให้ถามว่า state ไหนคือ yielded, dead และ failed ถ้าทั้งหมดใช้ return shape เดียวกันจะ debug ยาก.",
+    ],
+  },
+  "lua/pcall-error-handling": {
+    codeComments: {
+      goodCode: ["pcall กัน error จาก plugin ไม่ให้หลุดออกจาก host process"],
+      badCode: ["plugin error หลุดออกมาโดยไม่มี context ของ host"],
+    },
+    title: "จัด error ด้วย pcall",
+    summary: "ใช้ `pcall` ที่ trust boundary แล้วแปลง failure เป็น error table ที่ host return หรือ log พร้อม context ได้.",
+    takeaways: ["host ที่รัน Lua plugin ควร catch error ที่ boundary และเติม context ให้ caller ตัดสินใจได้."],
+    whatToReview: [
+      "โค้ดที่ดีจับ error จาก plugin แล้วคืน error table ที่มี code และ message.",
+      "โค้ดที่ควรปรับเรียก plugin ตรง ๆ ทำให้ error หลุดผ่าน host โดยไม่มีข้อมูลพอสำหรับ recovery.",
+    ],
+    reviewNotes: [
+      "`pcall` ควรอยู่ตรง boundary ที่มีโค้ดไม่น่าเชื่อถือหรือ extension point ไม่ใช่ห่อทุกบรรทัดจน error contract อ่านไม่ออก.",
+    ],
+  },
+  "lua/sandboxed-execution": {
+    codeComments: {
+      goodCode: ["chunk เห็นเฉพาะ helper ที่ copy เข้า env"],
+      badCode: ["chunk เข้าถึงและแก้ global environment ของ host ได้"],
+    },
+    title: "sandbox สำหรับ dynamic execution",
+    summary: "จำกัด environment ของ Lua chunk ที่โหลดแบบ dynamic เพื่อไม่ให้ script แตะ global ของ host เกินจำเป็น.",
+    takeaways: ["dynamic Lua ควรรันด้วย environment table ที่เล็กและ explicit โดยเฉพาะเมื่อรับ script จากผู้ใช้หรือ plugin."],
+    whatToReview: [
+      "โค้ดที่ดีส่ง `env` เข้า `load` และเลือก helper เท่าที่ rule script ต้องใช้.",
+      "โค้ดที่ควรปรับใช้ `load(source)` ตรง ๆ ทำให้ script เห็น global และ mutate state ที่ host ไม่ได้ตั้งใจเปิด.",
+    ],
+    reviewNotes: [
+      "sandbox review ต้องดูทั้ง environment, chunk mode และ helper ที่ expose ถ้า helper ตัวเดียวกว้างเกินไป sandbox ก็รั่วทางพฤติกรรมได้.",
+    ],
+  },
+  "lua/embedded-api-boundaries": {
+    codeComments: {
+      goodCode: ["host API validate input ก่อนแก้ state ของ review"],
+      badCode: ["script ได้ object เต็มและ mutate field ใดก็ได้"],
+    },
+    title: "ขอบเขต API เมื่อติด Lua ใน host",
+    summary: "API ที่ host เปิดให้ Lua script ควรแคบและ explicit แทนการส่ง object ภายในแบบแก้ได้ทั้งหมด.",
+    takeaways: ["embedded Lua API ควรเปิดเป็น command ที่ตรวจ input ไม่ใช่ raw host object ที่มี mutation กว้างเกินไป."],
+    whatToReview: [
+      "โค้ดที่ดีเปิด `add_note` เป็นคำสั่งเฉพาะและตรวจว่า note text เป็น string ก่อนแก้ state.",
+      "โค้ดที่ควรปรับส่ง review object ทั้งก้อนให้ script ทำให้ field ภายในถูกแก้โดยไม่มี contract.",
+    ],
+    reviewNotes: [
+      "ให้รีวิว exported host API เหมือน public API จริง เพราะ script จะเริ่มพึ่งพาพฤติกรรมนั้นทันทีเมื่อถูกใช้งาน.",
+    ],
+  },
+  "lua/configuration-validation": {
+    codeComments: {
+      goodCode: ["validated config คืน shape ที่ runtime code ใช้ต่อได้แน่นอน"],
+      badCode: ["runtime code ได้ config shape ใดก็ได้จากไฟล์"],
+    },
+    title: "validation ของ configuration",
+    summary: "ตรวจ Lua config table ตอน load เพื่อให้ runtime path ไม่ต้องเดา type และ required field เอง.",
+    takeaways: ["Lua config เป็น code ได้ แต่ก็ยังควรมี contract ของ table shape ที่ตรวจตอนเริ่มระบบ."],
+    whatToReview: [
+      "โค้ดที่ดี assert ว่า config เป็น table และ `review_path` เป็น string ก่อนคืน normalized shape.",
+      "โค้ดที่ควรปรับส่ง raw config ต่อ ทำให้ typo หรือ wrong type ไปพังใน runtime path ไกลจากจุดโหลด config.",
+    ],
+    reviewNotes: [
+      "config validation ที่ดีทำให้ error เกิดเร็วและมีชื่อ field ชัด ไม่ใช่ปล่อยให้ downstream code กลายเป็น type checker แบบกระจัดกระจาย.",
+    ],
+  },
+  "lua/busted-test-cases": {
+    codeComments: {
+      goodCode: ["fixture ระบุ input ที่ผิดกฎและ assert error code ชัดเจน"],
+      badCode: ["truthy check ไม่ได้ป้องกัน contract ของ validation"],
+    },
+    title: "test case ด้วย Busted",
+    summary: "เขียน test ที่บอก behavior, fixture และ assertion ชัด แทนการเช็กเพียงว่า function return truthy.",
+    takeaways: ["Lua test ควร assert output หรือ error shape ที่ module สัญญากับ caller."],
+    whatToReview: [
+      "โค้ดที่ดีส่ง review title ที่หายไปและ assert `title_required` เพื่อป้องกัน regression ตรง rule นั้น.",
+      "โค้ดที่ควรปรับใช้ `{}` แล้ว assert truthy ทำให้ test ผ่านได้แม้ validation contract เปลี่ยนผิด.",
+    ],
+    reviewNotes: [
+      "test ที่ดีควรอ่านเหมือน review note ของ behavior: input คืออะไร, expected result คืออะไร, และ failure จะบอกสาเหตุได้ตรงไหม.",
     ],
   },
 } as const satisfies Record<string, LessonThaiTranslation>;

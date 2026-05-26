@@ -1,0 +1,44 @@
+export const metadata = {
+  title: "Coroutine lifecycle",
+  track: "lua",
+  order: 5,
+  summary: "Check coroutine status and resume results so yielded work cannot fail silently.",
+  tags: ["coroutines", "lifecycle", "errors"],
+  takeaways: ["Lua coroutine code should inspect resume success and status before assuming a task advanced."],
+  goodCode: {
+    language: "lua",
+    filename: "src/review_worker.lua",
+    code: `local function resume_worker(worker)
+  if coroutine.status(worker) == "dead" then
+    return nil, "worker already finished"
+  end
+
+  -- resume returns success separately from yielded values.
+  local ok, result = coroutine.resume(worker)
+  if not ok then
+    return nil, result
+  end
+
+  return result
+end`,
+  },
+  badCode: {
+    language: "lua",
+    filename: "review_worker.lua",
+    code: `local function resume_worker(worker)
+  -- The error value is treated like normal work output.
+  local _, result = coroutine.resume(worker)
+  return result
+end`,
+  },
+};
+
+## What to review
+
+The good version checks whether the coroutine is already dead and keeps the `ok` flag from `resume`. Errors return as error values, not normal task output.
+
+The bad version ignores the success flag. A runtime error inside the coroutine can look like a normal yielded result.
+
+## Review notes
+
+For Lua coroutine code, review both lifecycle and resume result handling. A coroutine scheduler should make finished, yielded, and failed states distinct.

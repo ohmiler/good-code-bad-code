@@ -216,6 +216,28 @@ test("validateLessonMetadata accepts Rust code samples", () => {
   );
 });
 
+test("validateLessonMetadata accepts Lua code samples", () => {
+  const luaMetadata = {
+    ...validMetadata,
+    track: "lua",
+    goodCode: {
+      language: "lua",
+      filename: "src/review_summary.lua",
+      code: "local review = { title = title, score = score }",
+    },
+    badCode: {
+      language: "lua",
+      filename: "review_summary.lua",
+      code: "local review = { title, score }",
+    },
+  };
+
+  assert.deepEqual(
+    validateLessonMetadata(luaMetadata, "content/lua/table-shapes.mdx"),
+    luaMetadata,
+  );
+});
+
 test("validateLessonMetadata accepts Vue single-file component samples", () => {
   const vueMetadata = {
     ...validMetadata,

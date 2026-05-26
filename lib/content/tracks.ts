@@ -114,6 +114,12 @@ export const tracks = [
       "Review ownership, borrowing, lifetimes, Result and Option boundaries, traits, async safety, Cargo features, and tests.",
   },
   {
+    slug: "lua",
+    title: "Lua",
+    description:
+      "Review table shapes, nil boundaries, modules, metatables, coroutines, sandboxed execution, embedded APIs, and tests.",
+  },
+  {
     slug: "git",
     title: "Git",
     description:

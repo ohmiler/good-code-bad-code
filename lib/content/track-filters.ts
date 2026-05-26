@@ -41,6 +41,7 @@ const backend = [
   "cpp",
   "csharp",
   "rust",
+  "lua",
   "fastapi",
   "django",
   "go",

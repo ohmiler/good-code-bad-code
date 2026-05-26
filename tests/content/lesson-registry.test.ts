@@ -34,6 +34,7 @@ const expectedLessonCounts = {
   cpp: 10,
   csharp: 10,
   rust: 10,
+  lua: 10,
   git: 10,
 } as const;
 
@@ -318,6 +319,10 @@ function countReviewCommentLines(code: string, track: string): number {
       return trimmedLine.startsWith("# ");
     }
 
+    if (track === "lua") {
+      return trimmedLine.startsWith("-- ");
+    }
+
     if (track === "html") {
       return trimmedLine.startsWith("<!-- ") && trimmedLine.endsWith(" -->");
     }
@@ -341,7 +346,8 @@ function countReviewCommentLines(code: string, track: string): number {
       track === "c" ||
       track === "cpp" ||
       track === "csharp" ||
-      track === "rust"
+      track === "rust" ||
+      track === "lua"
     ) {
       return trimmedLine.startsWith("// ");
     }
@@ -368,7 +374,7 @@ test("seeded lessons match expected track counts", async () => {
   const lessonsByTrack = await getTrackLessonFiles();
   const allLessonFiles = [...lessonsByTrack.values()].flat();
 
-  assert.equal(allLessonFiles.length, 250);
+  assert.equal(allLessonFiles.length, 260);
   for (const track of tracks) {
     assert.equal(
       lessonsByTrack.get(track.slug)?.length,
@@ -1227,6 +1233,49 @@ test("Rust comments have matching Thai translations", async () => {
       for (const [index, comment] of translatedComments.entries()) {
         assert.match(comment, /[\u0e00-\u0e7f]/, `rust/${slug}.${sampleName}[${index}]`);
         assert.ok(comment.trim().length >= 8, `rust/${slug}.${sampleName}[${index}]`);
+      }
+    }
+  }
+});
+
+test("Lua samples include concise review comments", async () => {
+  const lessonsByTrack = await getTrackLessonFiles();
+  const luaLessons = lessonsByTrack.get("lua") ?? [];
+
+  assert.equal(luaLessons.length, expectedLessonCounts.lua);
+
+  for (const contentPath of luaLessons) {
+    for (const sampleName of ["goodCode", "badCode"] as const) {
+      const code = await readMdxMetadataCodeSample(contentPath, sampleName);
+      const commentCount = countReviewCommentLines(code, "lua");
+
+      assert.ok(commentCount >= 1, `${contentPath} ${sampleName}`);
+      assert.ok(commentCount <= 3, `${contentPath} ${sampleName}`);
+    }
+  }
+});
+
+test("Lua comments have matching Thai translations", async () => {
+  const lessonsByTrack = await getTrackLessonFiles();
+  const luaLessons = lessonsByTrack.get("lua") ?? [];
+
+  assert.equal(luaLessons.length, expectedLessonCounts.lua);
+
+  for (const contentPath of luaLessons) {
+    const slug = slugFromContentPath(contentPath);
+    const translation = lessonThaiTranslations[`lua/${slug}`];
+
+    assert.ok(translation.codeComments, `lua/${slug} missing codeComments`);
+
+    for (const sampleName of ["goodCode", "badCode"] as const) {
+      const code = await readMdxMetadataCodeSample(contentPath, sampleName);
+      const commentCount = countReviewCommentLines(code, "lua");
+      const translatedComments = translation.codeComments[sampleName] ?? [];
+
+      assert.equal(translatedComments.length, commentCount, `lua/${slug}`);
+      for (const [index, comment] of translatedComments.entries()) {
+        assert.match(comment, /[\u0e00-\u0e7f]/, `lua/${slug}.${sampleName}[${index}]`);
+        assert.ok(comment.trim().length >= 8, `lua/${slug}.${sampleName}[${index}]`);
       }
     }
   }

@@ -192,6 +192,13 @@ const iconShapes = {
       <path d="M12 9v6" />
     </>
   ),
+  moon: (
+    <>
+      <path d="M18 15.5A7.5 7.5 0 0 1 8.5 6a6.8 6.8 0 1 0 9.5 9.5Z" />
+      <path d="M14 7h.01" />
+      <path d="M17 10h.01" />
+    </>
+  ),
   "git-branch": (
     <>
       <circle cx="6" cy="6" r="2" />

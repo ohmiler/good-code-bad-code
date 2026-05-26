@@ -1,0 +1,39 @@
+export const metadata = {
+  title: "pcall error handling",
+  track: "lua",
+  order: 6,
+  summary: "Wrap untrusted or plugin code with pcall and convert failures into typed results for the host app.",
+  tags: ["pcall", "errors", "plugins"],
+  takeaways: ["Lua host code should catch plugin failures at the boundary and return a result the caller can classify."],
+  goodCode: {
+    language: "lua",
+    filename: "src/plugin_runner.lua",
+    code: `local function run_plugin(plugin, review)
+  -- pcall keeps plugin errors from unwinding the host process.
+  local ok, result = pcall(plugin.review, review)
+  if not ok then
+    return nil, { code = "plugin_error", message = result }
+  end
+
+  return result
+end`,
+  },
+  badCode: {
+    language: "lua",
+    filename: "plugin_runner.lua",
+    code: `local function run_plugin(plugin, review)
+  -- A plugin error escapes without host context.
+  return plugin.review(review)
+end`,
+  },
+};
+
+## What to review
+
+The good version catches plugin failures and turns them into a structured error table. The host can log the plugin name, disable it, or show a controlled message.
+
+The bad version calls plugin code directly. A plugin error escapes through the host path without enough context for recovery.
+
+## Review notes
+
+Use `pcall` at trust boundaries, not everywhere. Review whether the code adds context after catching the error so callers can decide what to do next.

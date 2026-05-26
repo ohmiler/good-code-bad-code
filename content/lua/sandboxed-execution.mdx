@@ -1,0 +1,39 @@
+export const metadata = {
+  title: "Sandboxed execution",
+  track: "lua",
+  order: 7,
+  summary: "Limit the environment for dynamic Lua chunks so scripts can use approved helpers without reaching host globals.",
+  tags: ["sandbox", "environment", "security"],
+  takeaways: ["Dynamic Lua execution should run with a small explicit environment instead of the full global table."],
+  goodCode: {
+    language: "lua",
+    filename: "src/rule_sandbox.lua",
+    code: `local function compile_rule(source)
+  local env = {
+    tonumber = tonumber,
+    math = { min = math.min, max = math.max },
+  }
+
+  -- The chunk sees only the helpers copied into env.
+  return load(source, "review_rule", "t", env)
+end`,
+  },
+  badCode: {
+    language: "lua",
+    filename: "rule_sandbox.lua",
+    code: `local function compile_rule(source)
+  -- The chunk can read and change the host global environment.
+  return load(source)
+end`,
+  },
+};
+
+## What to review
+
+The good version gives the loaded chunk a small environment with only approved helpers. The script cannot reach unrelated globals by default.
+
+The bad version loads code into the default environment. A rule script can access global functions or mutate state the host never intended to expose.
+
+## Review notes
+
+Dynamic Lua execution is a security boundary. Review the environment table, the chunk mode, and which helpers are copied into the sandbox.

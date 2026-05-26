@@ -1,0 +1,40 @@
+export const metadata = {
+  title: "Configuration validation",
+  track: "lua",
+  order: 9,
+  summary: "Validate Lua configuration tables before using them to build routes, plugins, or runtime behavior.",
+  tags: ["configuration", "validation", "tables"],
+  takeaways: ["Lua config review should check required fields and value types at load time."],
+  goodCode: {
+    language: "lua",
+    filename: "src/config.lua",
+    code: `local function read_config(config)
+  assert(type(config) == "table", "config must be a table")
+  assert(type(config.review_path) == "string", "review_path must be a string")
+
+  -- Validated config returns a predictable shape to runtime code.
+  return {
+    review_path = config.review_path,
+    max_reviews = tonumber(config.max_reviews) or 100,
+  }
+end`,
+  },
+  badCode: {
+    language: "lua",
+    filename: "config.lua",
+    code: `local function read_config(config)
+  -- Runtime code receives whatever shape the config file happened to define.
+  return config
+end`,
+  },
+};
+
+## What to review
+
+The good version checks that the config is a table and that required fields have the expected type. Runtime code receives a normalized shape.
+
+The bad version passes the raw config table through. Typos and wrong types fail later, often far away from the file that introduced them.
+
+## Review notes
+
+Lua config is code, but it still needs a contract. Validate the table shape when loading config so runtime paths do not become type checks by accident.

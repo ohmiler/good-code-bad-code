@@ -1,0 +1,44 @@
+export const metadata = {
+  title: "Metatable operator boundaries",
+  track: "lua",
+  order: 4,
+  summary: "Use metatables for clear domain behavior, not for surprising mutation or hidden lookup rules.",
+  tags: ["metatable", "operators", "domain"],
+  takeaways: ["Metatable review should check whether metamethods keep domain operations visible or hide side effects."],
+  goodCode: {
+    language: "lua",
+    filename: "src/review_score.lua",
+    code: `local Score = {}
+Score.__index = Score
+
+function Score.new(value)
+  return setmetatable({ value = value }, Score)
+end
+
+function Score:passes()
+  -- Method syntax keeps the approval rule explicit.
+  return self.value >= 4
+end`,
+  },
+  badCode: {
+    language: "lua",
+    filename: "review_score.lua",
+    code: `local score_meta = {
+  __add = function(left, right)
+    -- Addition mutates the left operand instead of returning a new score.
+    left.value = left.value + right.value
+    return left
+  end,
+}`,
+  },
+};
+
+## What to review
+
+The good version uses a metatable to attach methods to a score object. The approval rule is still a named method with visible intent.
+
+The bad version overloads addition and mutates the left value. A reader expecting arithmetic gets hidden state changes.
+
+## Review notes
+
+Metatables are powerful enough to make code elegant or opaque. In review, prefer named methods unless a metamethod matches a familiar, side-effect-free operation.

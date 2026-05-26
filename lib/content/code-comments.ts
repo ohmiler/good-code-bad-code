@@ -18,7 +18,10 @@ export function replaceCodeCommentLines(
             !trimmedStart.startsWith("/* ") ||
             !trimmedStart.endsWith(" */")
           ) {
-            if (!trimmedStart.startsWith("// ")) {
+            if (
+              !trimmedStart.startsWith("// ") &&
+              !trimmedStart.startsWith("-- ")
+            ) {
               return line;
             }
           }
@@ -38,11 +41,15 @@ export function replaceCodeCommentLines(
         return `${indentation}# ${translatedComment}`;
       }
 
-      if (trimmedStart.startsWith("// ")) {
-        return `${indentation}// ${translatedComment}`;
-      }
+    if (trimmedStart.startsWith("// ")) {
+      return `${indentation}// ${translatedComment}`;
+    }
 
-      if (trimmedStart.startsWith("/* ")) {
+    if (trimmedStart.startsWith("-- ")) {
+      return `${indentation}-- ${translatedComment}`;
+    }
+
+    if (trimmedStart.startsWith("/* ")) {
         return `${indentation}/* ${translatedComment} */`;
       }
 
