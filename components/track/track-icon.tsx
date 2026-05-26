@@ -165,6 +165,18 @@ const iconShapes = {
       <path d="M18 15h4" />
     </>
   ),
+  "plus-plus": (
+    <>
+      <path d="M5 8h6" />
+      <path d="M8 5v6" />
+      <path d="M13 8h6" />
+      <path d="M16 5v6" />
+      <path d="M5 16h6" />
+      <path d="M8 13v6" />
+      <path d="M13 16h6" />
+      <path d="M16 13v6" />
+    </>
+  ),
   "git-branch": (
     <>
       <circle cx="6" cy="6" r="2" />

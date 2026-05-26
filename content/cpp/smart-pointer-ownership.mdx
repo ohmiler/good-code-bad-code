@@ -1,0 +1,53 @@
+export const metadata = {
+  title: "Smart pointer ownership",
+  track: "cpp",
+  order: 2,
+  summary: "Return smart pointers when heap ownership crosses a boundary, and keep raw pointers for non-owning access.",
+  tags: ["unique_ptr", "ownership", "memory"],
+  takeaways: ["A C++ API should show ownership in its type: `unique_ptr` for one owner, `shared_ptr` for shared lifetime, and raw pointers for observation."],
+  goodCode: {
+    language: "cpp",
+    filename: "src/review_factory.cpp",
+    code: `#include <memory>
+#include <string>
+#include <utility>
+
+struct Review {
+    explicit Review(std::string title) : title(std::move(title)) {}
+    std::string title;
+};
+
+std::unique_ptr<Review> make_review(std::string title)
+{
+    // unique_ptr names the single owner of the Review.
+    return std::make_unique<Review>(std::move(title));
+}`,
+  },
+  badCode: {
+    language: "cpp",
+    filename: "review_factory.cpp",
+    code: `#include <string>
+#include <utility>
+
+struct Review {
+    explicit Review(std::string title) : title(std::move(title)) {}
+    std::string title;
+};
+
+Review* make_review(std::string title)
+{
+    // Raw new leaves callers to guess who must delete the Review.
+    return new Review(std::move(title));
+}`,
+  },
+};
+
+## What to review
+
+The good version returns `std::unique_ptr<Review>`, so the single-owner rule is part of the signature. Callers cannot forget that the object owns heap memory.
+
+The bad version returns a raw pointer from `new`. Some callers may delete it, some may leak it, and some may pass it around as a borrowed pointer.
+
+## Review notes
+
+When a C++ function returns a pointer, ask whether that pointer owns memory. If it owns memory, the type should say so before anyone reads the implementation.

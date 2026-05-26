@@ -1,0 +1,63 @@
+export const metadata = {
+  title: "Move semantics and lifetimes",
+  track: "cpp",
+  order: 3,
+  summary: "Move owned values into long-lived objects instead of storing references that can outlive the caller.",
+  tags: ["move", "lifetimes", "references"],
+  takeaways: ["Reference members are lifetime contracts; prefer owned values when the object needs data after the caller returns."],
+  goodCode: {
+    language: "cpp",
+    filename: "src/review_batch.cpp",
+    code: `#include <string>
+#include <utility>
+#include <vector>
+
+struct Review {
+    std::string title;
+};
+
+class ReviewBatch {
+public:
+    explicit ReviewBatch(std::vector<Review> reviews)
+        : reviews_(std::move(reviews))
+    {
+        // Moving owned input gives the batch a stable lifetime.
+    }
+
+private:
+    std::vector<Review> reviews_;
+};`,
+  },
+  badCode: {
+    language: "cpp",
+    filename: "review_batch.cpp",
+    code: `#include <string>
+#include <vector>
+
+struct Review {
+    std::string title;
+};
+
+class ReviewBatch {
+public:
+    explicit ReviewBatch(const std::vector<Review>& reviews)
+        : reviews_(reviews)
+    {
+        // Reference storage can outlive the caller's vector.
+    }
+
+private:
+    const std::vector<Review>& reviews_;
+};`,
+  },
+};
+
+## What to review
+
+The good version takes the vector by value and moves it into the batch. The class owns its data, so it can safely outlive the call site.
+
+The bad version stores a reference member. If the caller passes a temporary or a local vector, the batch later reads through a dangling reference.
+
+## Review notes
+
+Review reference members with extra suspicion. They can be correct, but only when the referenced object has a longer lifetime than the class that stores the reference.

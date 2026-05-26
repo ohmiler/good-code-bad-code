@@ -150,6 +150,28 @@ test("validateLessonMetadata accepts C code samples", () => {
   );
 });
 
+test("validateLessonMetadata accepts C++ code samples", () => {
+  const cppMetadata = {
+    ...validMetadata,
+    track: "cpp",
+    goodCode: {
+      language: "cpp",
+      filename: "src/review_store.cpp",
+      code: "std::unique_ptr<Review> make_review(std::string title) { return std::make_unique<Review>(std::move(title)); }",
+    },
+    badCode: {
+      language: "cpp",
+      filename: "review_store.cpp",
+      code: "Review* make_review(std::string title) { return new Review(title); }",
+    },
+  };
+
+  assert.deepEqual(
+    validateLessonMetadata(cppMetadata, "content/cpp/smart-pointer-ownership.mdx"),
+    cppMetadata,
+  );
+});
+
 test("validateLessonMetadata accepts Vue single-file component samples", () => {
   const vueMetadata = {
     ...validMetadata,

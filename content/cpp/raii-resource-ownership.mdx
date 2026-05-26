@@ -1,0 +1,61 @@
+export const metadata = {
+  title: "RAII resource ownership",
+  track: "cpp",
+  order: 1,
+  summary: "Use RAII objects so files, locks, and other resources release through scope instead of manual cleanup paths.",
+  tags: ["raii", "resources", "ownership"],
+  takeaways: ["C++ resource code should tie acquisition to an object lifetime, so exits through return or exception still release the resource."],
+  goodCode: {
+    language: "cpp",
+    filename: "src/review_file.cpp",
+    code: `#include <filesystem>
+#include <fstream>
+#include <stdexcept>
+#include <string_view>
+
+void save_review(const std::filesystem::path& path, std::string_view body)
+{
+    std::ofstream file(path);
+    if (!file) {
+        throw std::runtime_error("cannot open review file");
+    }
+
+    // RAII closes the file when the stream leaves scope.
+    file << body;
+    if (!file) {
+        throw std::runtime_error("cannot write review file");
+    }
+}`,
+  },
+  badCode: {
+    language: "cpp",
+    filename: "review_file.cpp",
+    code: `#include <cstdio>
+
+bool save_review(const char* path, const char* body)
+{
+    FILE* file = std::fopen(path, "w");
+    if (file == nullptr) {
+        return false;
+    }
+
+    if (std::fputs(body, file) == EOF) {
+        // Early return skips the manual fclose call.
+        return false;
+    }
+
+    std::fclose(file);
+    return true;
+}`,
+  },
+};
+
+## What to review
+
+The good version uses an output stream whose destructor closes the file. Every exit path releases the resource, including exceptions raised after the write.
+
+The bad version uses manual `fclose` and returns early on write failure. That path leaves the file open and hides any close-time error.
+
+## Review notes
+
+In C++ reviews, prefer a resource-owning object over a cleanup checklist. The acquisition line and the release lifetime should be visible in the same scope.

@@ -1,0 +1,45 @@
+export const metadata = {
+  title: "Template constraints",
+  track: "cpp",
+  order: 7,
+  summary: "Use concepts or focused type requirements so template errors point to the contract the caller missed.",
+  tags: ["templates", "concepts", "types"],
+  takeaways: ["Template code should name the operations it needs, because unconstrained templates fail far from the call site."],
+  goodCode: {
+    language: "cpp",
+    filename: "src/review_score.cpp",
+    code: `#include <concepts>
+
+template <typename T>
+concept ScoredReview = requires(const T& value) {
+    { value.score() } -> std::convertible_to<int>;
+};
+
+template <ScoredReview T>
+bool passes_review_threshold(const T& review)
+{
+    // Concept names the API expected from T.
+    return review.score() >= 70;
+}`,
+  },
+  badCode: {
+    language: "cpp",
+    filename: "review_score.cpp",
+    code: `template <typename T>
+bool passes_review_threshold(T review)
+{
+    // Unconstrained template errors appear far from the call site.
+    return review.score() >= 70;
+}`,
+  },
+};
+
+## What to review
+
+The good version defines a concept that says the type must expose `score()` convertible to `int`. Failed calls point to that named contract.
+
+The bad version accepts any type until the function body asks for `score()`. The compiler error can be long and detached from the API intent.
+
+## Review notes
+
+Template flexibility should come with a named constraint. If a template needs methods, operators, or value categories, make those requirements visible at the boundary.

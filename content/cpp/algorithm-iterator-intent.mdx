@@ -1,0 +1,52 @@
+export const metadata = {
+  title: "Algorithm and iterator intent",
+  track: "cpp",
+  order: 8,
+  summary: "Use standard algorithms when their names describe the pass over a range more directly than manual counters.",
+  tags: ["algorithms", "iterators", "ranges"],
+  takeaways: ["A standard algorithm can make a range operation read as a single reviewable action instead of a custom loop."],
+  goodCode: {
+    language: "cpp",
+    filename: "src/review_counts.cpp",
+    code: `#include <algorithm>
+#include <vector>
+
+int count_published_reviews(const std::vector<Review>& reviews)
+{
+    // Algorithm name says this pass counts matching reviews.
+    return static_cast<int>(std::count_if(
+        reviews.begin(),
+        reviews.end(),
+        [](const Review& review) { return review.is_published(); }
+    ));
+}`,
+  },
+  badCode: {
+    language: "cpp",
+    filename: "review_counts.cpp",
+    code: `#include <vector>
+
+int count_published_reviews(const std::vector<Review>& reviews)
+{
+    int total = 0;
+    for (std::size_t index = 0; index < reviews.size(); ++index) {
+        // Manual counters make the range goal easy to miss.
+        if (reviews[index].is_published()) {
+            total++;
+        }
+    }
+
+    return total;
+}`,
+  },
+};
+
+## What to review
+
+The good version says the function counts reviews that match a predicate. The range and predicate are visible without index bookkeeping.
+
+The bad version works, but reviewers must read the loop body to learn that the goal is a count. Manual index code also adds room for off-by-one mistakes.
+
+## Review notes
+
+Use algorithms when the algorithm name matches the work: count, find, transform, any, all, none. Keep loops when the business rule needs named steps or multiple exits.

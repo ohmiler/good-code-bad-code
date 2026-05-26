@@ -485,6 +485,36 @@ import CCompilerWarningsFlags, {
 import CUnitTestsCases, {
   metadata as cUnitTestsCasesMetadata,
 } from "./c/unit-tests-cases.mdx";
+import CppRaiiResourceOwnership, {
+  metadata as cppRaiiResourceOwnershipMetadata,
+} from "./cpp/raii-resource-ownership.mdx";
+import CppSmartPointerOwnership, {
+  metadata as cppSmartPointerOwnershipMetadata,
+} from "./cpp/smart-pointer-ownership.mdx";
+import CppMoveSemanticsLifetimes, {
+  metadata as cppMoveSemanticsLifetimesMetadata,
+} from "./cpp/move-semantics-lifetimes.mdx";
+import CppConstReferencesStringView, {
+  metadata as cppConstReferencesStringViewMetadata,
+} from "./cpp/const-references-string-view.mdx";
+import CppRuleOfZero, {
+  metadata as cppRuleOfZeroMetadata,
+} from "./cpp/rule-of-zero.mdx";
+import CppExceptionBoundaries, {
+  metadata as cppExceptionBoundariesMetadata,
+} from "./cpp/exception-translation-boundaries.mdx";
+import CppTemplateConstraints, {
+  metadata as cppTemplateConstraintsMetadata,
+} from "./cpp/template-constraints.mdx";
+import CppAlgorithmIteratorIntent, {
+  metadata as cppAlgorithmIteratorIntentMetadata,
+} from "./cpp/algorithm-iterator-intent.mdx";
+import CppScopedLocksSharedState, {
+  metadata as cppScopedLocksSharedStateMetadata,
+} from "./cpp/scoped-locks-shared-state.mdx";
+import CppUnitTestsEdgeCases, {
+  metadata as cppUnitTestsEdgeCasesMetadata,
+} from "./cpp/unit-tests-edge-cases.mdx";
 import GitStatusBeforeWork, {
   metadata as gitStatusBeforeWorkMetadata,
 } from "./git/status-before-work.mdx";
@@ -1633,6 +1663,66 @@ const rawLessons: RawLesson[] = [
     source: "content/c/unit-tests-cases.mdx",
     metadata: cUnitTestsCasesMetadata,
     Component: CUnitTestsCases,
+  },
+  {
+    slug: "raii-resource-ownership",
+    source: "content/cpp/raii-resource-ownership.mdx",
+    metadata: cppRaiiResourceOwnershipMetadata,
+    Component: CppRaiiResourceOwnership,
+  },
+  {
+    slug: "smart-pointer-ownership",
+    source: "content/cpp/smart-pointer-ownership.mdx",
+    metadata: cppSmartPointerOwnershipMetadata,
+    Component: CppSmartPointerOwnership,
+  },
+  {
+    slug: "move-semantics-lifetimes",
+    source: "content/cpp/move-semantics-lifetimes.mdx",
+    metadata: cppMoveSemanticsLifetimesMetadata,
+    Component: CppMoveSemanticsLifetimes,
+  },
+  {
+    slug: "const-references-string-view",
+    source: "content/cpp/const-references-string-view.mdx",
+    metadata: cppConstReferencesStringViewMetadata,
+    Component: CppConstReferencesStringView,
+  },
+  {
+    slug: "rule-of-zero",
+    source: "content/cpp/rule-of-zero.mdx",
+    metadata: cppRuleOfZeroMetadata,
+    Component: CppRuleOfZero,
+  },
+  {
+    slug: "exception-translation-boundaries",
+    source: "content/cpp/exception-translation-boundaries.mdx",
+    metadata: cppExceptionBoundariesMetadata,
+    Component: CppExceptionBoundaries,
+  },
+  {
+    slug: "template-constraints",
+    source: "content/cpp/template-constraints.mdx",
+    metadata: cppTemplateConstraintsMetadata,
+    Component: CppTemplateConstraints,
+  },
+  {
+    slug: "algorithm-iterator-intent",
+    source: "content/cpp/algorithm-iterator-intent.mdx",
+    metadata: cppAlgorithmIteratorIntentMetadata,
+    Component: CppAlgorithmIteratorIntent,
+  },
+  {
+    slug: "scoped-locks-shared-state",
+    source: "content/cpp/scoped-locks-shared-state.mdx",
+    metadata: cppScopedLocksSharedStateMetadata,
+    Component: CppScopedLocksSharedState,
+  },
+  {
+    slug: "unit-tests-edge-cases",
+    source: "content/cpp/unit-tests-edge-cases.mdx",
+    metadata: cppUnitTestsEdgeCasesMetadata,
+    Component: CppUnitTestsEdgeCases,
   },
   {
     slug: "status-before-work",

@@ -96,6 +96,12 @@ export const tracks = [
       "Review pointers, buffer bounds, allocation ownership, const contracts, structs, error codes, file cleanup, integer limits, compiler flags, and tests.",
   },
   {
+    slug: "cpp",
+    title: "C++",
+    description:
+      "Review RAII, smart pointers, move semantics, const references, rule of zero, exception boundaries, templates, algorithms, locks, and tests.",
+  },
+  {
     slug: "git",
     title: "Git",
     description:

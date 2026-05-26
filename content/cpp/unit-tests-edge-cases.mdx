@@ -1,0 +1,47 @@
+export const metadata = {
+  title: "Unit tests for edge cases",
+  track: "cpp",
+  order: 10,
+  summary: "Write C++ tests that assert edge cases directly instead of printing values for reviewers to inspect.",
+  tags: ["tests", "assertions", "edge-cases"],
+  takeaways: ["A C++ test should encode the boundary expectation in assertions so CI can fail without human log reading."],
+  goodCode: {
+    language: "cpp",
+    filename: "tests/review_validation_test.cpp",
+    code: `#include <cassert>
+
+void rejects_empty_title()
+{
+    // Test name and assertion capture the boundary case.
+    assert(validate_review("", 80) == ReviewStatus::empty_title);
+}
+
+int main()
+{
+    rejects_empty_title();
+}`,
+  },
+  badCode: {
+    language: "cpp",
+    filename: "tests/review_validation_test.cpp",
+    code: `#include <iostream>
+
+int main()
+{
+    auto status = validate_review("", 80);
+
+    // Printing the status makes CI pass even when the value is wrong.
+    std::cout << static_cast<int>(status) << "\\n";
+}`,
+  },
+};
+
+## What to review
+
+The good version names the edge case and asserts the exact status. CI fails when validation accepts an empty title or returns the wrong error.
+
+The bad version prints the status and exits successfully. The test only works if a person reads the log and notices the wrong number.
+
+## Review notes
+
+C++ tests should pin behavior at boundaries: empty values, moved-from values, missing keys, exceptions, and lock-protected paths. Prefer assertions over demonstration output.

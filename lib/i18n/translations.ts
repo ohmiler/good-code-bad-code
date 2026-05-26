@@ -161,6 +161,11 @@ export const trackThaiTranslations = {
     description:
       "ฝึกรีวิว C ว่า pointer, buffer, malloc/free, const, struct, error code, file cleanup, integer overflow, compiler flag และ test บอก ownership กับ failure path พอหรือไม่.",
   },
+  cpp: {
+    title: "C++",
+    description:
+      "ฝึกรีวิว C++ ว่า RAII, smart pointer, move, const reference, rule of zero, exception boundary, template, algorithm, lock และ test บอก lifetime กับ ownership ครบหรือไม่.",
+  },
   git: {
     title: "Git",
     description:
@@ -2759,6 +2764,166 @@ export const lessonThaiTranslations = {
     codeComments: {
       goodCode: ["test data ตั้งชื่อ boundary condition ที่กำลังรีวิว."],
       badCode: ["การ print ให้มนุษย์ตัดสินผล test เอง."],
+    },
+  },
+  "cpp/raii-resource-ownership": {
+    title: "RAII สำหรับ ownership ของ resource",
+    summary: "ใช้ object แบบ RAII ให้ file, lock หรือ resource อื่น release ตาม scope แทนการไล่ cleanup เองทุก path.",
+    takeaways: ["โค้ด resource ใน C++ ควรผูก acquisition กับ lifetime ของ object เพื่อให้ return และ exception release resource ได้."],
+    whatToReview: [
+      "โค้ดที่ดีใช้ output stream ที่ destructor ปิดไฟล์ให้ ทุก exit path จึง release resource.",
+      "โค้ดที่ควรปรับใช้ fclose เอง และ return ก่อนถึง cleanup เมื่อ write ล้ม ทำให้ไฟล์ยังเปิดค้าง.",
+    ],
+    reviewNotes: [
+      "เวลารีวิว C++ ให้มองหา object ที่ถือ resource ก่อน checklist cleanup. จุดเปิด resource และ lifetime ที่ release ควรเห็นใน scope เดียวกัน.",
+    ],
+    codeComments: {
+      goodCode: ["RAII ปิดไฟล์เมื่อ stream ออกจาก scope."],
+      badCode: ["return เร็วทำให้ข้าม fclose แบบ manual."],
+    },
+  },
+  "cpp/smart-pointer-ownership": {
+    title: "smart pointer ที่บอก ownership",
+    summary: "ใช้ smart pointer เมื่อ heap ownership ข้าม function boundary และเก็บ raw pointer ไว้สำหรับการอ้างถึงแบบไม่เป็นเจ้าของ.",
+    takeaways: ["API C++ ควรบอก ownership ผ่าน type: unique_ptr สำหรับเจ้าของเดียว, shared_ptr สำหรับ lifetime ร่วม, raw pointer สำหรับการมองค่า."],
+    whatToReview: [
+      "โค้ดที่ดีคืน std::unique_ptr<Review> ทำให้กฎเจ้าของเดียวอยู่ใน signature.",
+      "โค้ดที่ควรปรับคืน raw pointer จาก new ทำให้ caller ต้องเดาว่าใครต้อง delete.",
+    ],
+    reviewNotes: [
+      "เมื่อ function คืน pointer ให้ถามว่า pointer นั้นเป็นเจ้าของ memory หรือไม่ ถ้าเป็นเจ้าของ type ควรบอกก่อนต้องอ่าน implementation.",
+    ],
+    codeComments: {
+      goodCode: ["unique_ptr บอกเจ้าของเดียวของ Review."],
+      badCode: ["raw new ทำให้ caller ต้องเดาว่าใครต้อง delete Review."],
+    },
+  },
+  "cpp/move-semantics-lifetimes": {
+    title: "move semantics และ lifetime ของค่า",
+    summary: "move ค่าที่ object ต้องเก็บระยะยาวเข้ามาเป็นของตัวเอง แทนการเก็บ reference ที่อาจมีอายุสั้นกว่า caller.",
+    takeaways: ["reference member คือสัญญา lifetime ถ้า object ต้องใช้ข้อมูลหลัง caller return ให้ชอบ owned value มากกว่า."],
+    whatToReview: [
+      "โค้ดที่ดีรับ vector เป็น value แล้ว move เข้า batch ทำให้ class เป็นเจ้าของข้อมูล.",
+      "โค้ดที่ควรปรับเก็บ reference member ถ้า caller ส่ง temporary หรือ local vector จะอ่านผ่าน dangling reference.",
+    ],
+    reviewNotes: [
+      "reference member ใน class ควรถูกถามเสมอว่า object ที่อ้างถึงอยู่นานกว่า class นี้จริงหรือไม่.",
+    ],
+    codeComments: {
+      goodCode: ["move input ที่เป็นเจ้าของแล้ว ทำให้ batch มี lifetime ของข้อมูลเอง."],
+      badCode: ["reference storage อาจอยู่นานกว่า vector ของ caller."],
+    },
+  },
+  "cpp/const-references-string-view": {
+    title: "const reference และ string_view สำหรับข้อมูลอ่านอย่างเดียว",
+    summary: "ใช้ const reference หรือ string_view กับ input ที่อ่านอย่างเดียว เพื่อเลี่ยง copy และทำให้ mutation เห็นจาก signature.",
+    takeaways: ["parameter C++ ควรบอกว่า function ยืมข้อมูล, copy ข้อมูล หรือแก้ข้อมูล."],
+    whatToReview: [
+      "โค้ดที่ดีใช้ std::string_view เพื่อยืมข้อความแบบอ่านอย่างเดียวโดยไม่ copy.",
+      "โค้ดที่ควรปรับ copy string ทั้งสองตัวและแก้สำเนาใน predicate ทำให้ check อ่านอย่างเดียวดูหนักกว่าจริง.",
+    ],
+    reviewNotes: [
+      "parameter type คือเอกสารรีวิว: ใช้ string_view กับข้อความที่ยืม, const T& กับ object ใหญ่ที่อ่านอย่างเดียว, value เมื่อจะ copy หรือ move.",
+    ],
+    codeComments: {
+      goodCode: ["string_view ยืมข้อความอ่านอย่างเดียวโดยไม่ copy."],
+      badCode: ["copy string ทั้งสองตัวซ่อน intent ว่าอ่านอย่างเดียว."],
+    },
+  },
+  "cpp/rule-of-zero": {
+    title: "rule of zero แทน special member เอง",
+    summary: "ใช้ member จาก standard library เพื่อให้ copy, move และ destruction ใช้ behavior ที่ compiler สร้างให้ แทน raw pointer code.",
+    takeaways: ["ถ้า class ไม่ได้ถือ raw resource โดยตรง ปกติไม่ควรเขียน destructor, copy constructor หรือ move constructor เอง."],
+    whatToReview: [
+      "โค้ดที่ดีเก็บ std::string และ std::vector จึงใช้ copy, move และ destruction ที่ compiler สร้างได้.",
+      "โค้ดที่ควรปรับถือ raw char buffer แล้วมีแค่ destructor ทำให้ copy ที่ compiler สร้างอาจลบ pointer เดียวกันสองครั้ง.",
+    ],
+    reviewNotes: [
+      "ถ้าเห็น destructor ใน C++ สมัยใหม่ ให้หา ownership story ต่อ บ่อยครั้งทางออกคือเลิกถือ raw ownership ไม่ใช่เพิ่ม special member อีกหลายตัว.",
+    ],
+    codeComments: {
+      goodCode: ["standard member ทำให้ copy และ move behavior ถูกสร้างจาก type."],
+      badCode: ["destructor แบบ manual แต่ไม่มี copy control ทำให้ copy share pointer เดียวกัน."],
+    },
+  },
+  "cpp/exception-translation-boundaries": {
+    title: "boundary ที่แปลง exception เป็นผลลัพธ์",
+    summary: "catch exception ในจุดที่แปลเป็น result ที่ caller เข้าใจได้ เช่น status, response หรือ log record.",
+    takeaways: ["exception ควรพาเหตุผลไปจนถึง boundary ที่แปลความหมายเป็นผลลัพธ์สำหรับ caller ได้."],
+    whatToReview: [
+      "โค้ดที่ดีจับ ParseError และแปลงเป็น expected error string โดยยังเก็บข้อความ failure.",
+      "โค้ดที่ควรปรับ catch ทุก exception แล้วคืน nullopt ทำให้ parse error, file error และ programming error เหลือผลลัพธ์เดียวกัน.",
+    ],
+    reviewNotes: [
+      "catch exception ตรงจุดที่มี context พอจะแปลความหมาย ถ้าจับลึกเกินไปเหตุผลหาย ถ้าจับสูงเกินไป failure ที่กู้ได้อาจกลายเป็น crash.",
+    ],
+    codeComments: {
+      goodCode: ["boundary translation เก็บข้อความ failure จาก parser ไว้."],
+      badCode: ["catch ทุก exception ลบ failure เดิมออก."],
+    },
+  },
+  "cpp/template-constraints": {
+    title: "template constraint ที่บอก contract",
+    summary: "ใช้ concept หรือ requirement ที่โฟกัส เพื่อให้ template error ชี้ไปที่ contract ที่ caller ขาด.",
+    takeaways: ["template code ควรตั้งชื่อ operation ที่ต้องใช้ เพราะ unconstrained template มัก fail ไกลจาก call site."],
+    whatToReview: [
+      "โค้ดที่ดีมี concept บอกว่า type ต้องมี score() ที่แปลงเป็น int ได้.",
+      "โค้ดที่ควรปรับรับ type ใดก็ได้จนถึง function body แล้วค่อยเรียก score() ทำให้ compiler error ยาวและหลุดจาก intent ของ API.",
+    ],
+    reviewNotes: [
+      "ความยืดหยุ่นของ template ควรมาพร้อม constraint ที่ตั้งชื่อได้ ถ้าต้องใช้ method, operator หรือ value category ให้เห็นที่ boundary.",
+    ],
+    codeComments: {
+      goodCode: ["concept ตั้งชื่อ API ที่ต้องการจาก T."],
+      badCode: ["unconstrained template ทำให้ error โผล่ไกลจาก call site."],
+    },
+  },
+  "cpp/algorithm-iterator-intent": {
+    title: "algorithm และ iterator ที่บอก intent",
+    summary: "ใช้ standard algorithm เมื่อชื่อ algorithm อธิบายการเดิน range ได้ตรงกว่า counter แบบ manual.",
+    takeaways: ["standard algorithm ทำให้ range operation อ่านเป็น action เดียวที่รีวิวได้ แทน loop เฉพาะกิจ."],
+    whatToReview: [
+      "โค้ดที่ดีใช้ count_if ทำให้รู้ทันทีว่า function นับ review ที่ predicate ผ่าน.",
+      "โค้ดที่ควรปรับต้องอ่าน loop body ก่อนถึงรู้ว่า goal คือการนับ และ index code เพิ่มโอกาส off-by-one.",
+    ],
+    reviewNotes: [
+      "ใช้ algorithm เมื่อชื่อตรงกับงาน เช่น count, find, transform, any, all, none และเก็บ loop ไว้เมื่อกฎงานต้องมี step หรือ exit หลายทาง.",
+    ],
+    codeComments: {
+      goodCode: ["ชื่อ algorithm บอกว่า pass นี้นับ review ที่ตรงเงื่อนไข."],
+      badCode: ["counter แบบ manual ทำให้ goal ของ range มองข้ามได้ง่าย."],
+    },
+  },
+  "cpp/scoped-locks-shared-state": {
+    title: "scoped lock สำหรับ shared state",
+    summary: "ใช้ lock object ที่ผูกกับ scope เพื่อให้ early return ไม่ทิ้ง mutex locked อยู่.",
+    takeaways: ["mutex code ควรทำให้ lock lifetime เห็นใน scope ไม่พึ่งการจับคู่ lock และ unlock ด้วยตา."],
+    whatToReview: [
+      "โค้ดที่ดีสร้าง std::scoped_lock ตอนเข้าช่วง critical section และปล่อย mutex เมื่อออกจาก scope.",
+      "โค้ดที่ควรปรับ lock/unlock เอง และ branch not-found return ก่อน unlock ทำให้ call ถัดไป deadlock ได้.",
+    ],
+    reviewNotes: [
+      "รีวิว lifetime ของ lock เหมือน lifetime ของไฟล์ scoped guard ควรทำให้พื้นที่ที่ถูกป้องกันเห็นได้โดยไม่ต้องมองหา call คู่ไกล ๆ.",
+    ],
+    codeComments: {
+      goodCode: ["scoped_lock ผูก lifetime ของ mutex กับการอ่านครั้งนี้."],
+      badCode: ["return เร็วทำให้ mutex ยัง locked อยู่."],
+    },
+  },
+  "cpp/unit-tests-edge-cases": {
+    title: "unit test สำหรับ edge case",
+    summary: "เขียน test C++ ที่ assert edge case ตรง ๆ แทนการ print ค่าแล้วให้ reviewer อ่านผลเอง.",
+    takeaways: ["test C++ ควร encode boundary expectation ใน assertion เพื่อให้ CI fail ได้โดยไม่ต้องอ่าน log เอง."],
+    whatToReview: [
+      "โค้ดที่ดีตั้งชื่อ edge case และ assert status ที่ต้องได้ ทำให้ CI fail เมื่อ validation ผิด.",
+      "โค้ดที่ควรปรับ print status แล้ว exit สำเร็จ ทำให้ test ผ่านแม้ค่าผิด ถ้าไม่มีคนอ่าน log.",
+    ],
+    reviewNotes: [
+      "C++ test ควร pin behavior ที่ boundary เช่น empty value, moved-from value, missing key, exception และ path ที่มี lock.",
+    ],
+    codeComments: {
+      goodCode: ["ชื่อ test และ assertion จับ boundary case ไว้ตรง ๆ."],
+      badCode: ["การ print status ทำให้ CI ผ่านแม้ค่าผิด."],
     },
   },
   "git/status-before-work": {

@@ -1,0 +1,73 @@
+export const metadata = {
+  title: "Scoped locks for shared state",
+  track: "cpp",
+  order: 9,
+  summary: "Use scoped lock objects so mutex ownership follows block lifetime and early returns cannot leave shared state locked.",
+  tags: ["concurrency", "mutex", "locks"],
+  takeaways: ["Mutex code should make the lock lifetime visible in scope, not depend on matching manual lock and unlock calls."],
+  goodCode: {
+    language: "cpp",
+    filename: "src/review_cache.cpp",
+    code: `#include <mutex>
+#include <optional>
+#include <string>
+#include <unordered_map>
+
+class ReviewCache {
+public:
+    std::optional<Review> find(const std::string& id) const
+    {
+        // scoped_lock ties the mutex lifetime to this read.
+        std::scoped_lock lock(mutex_);
+        auto found = reviews_.find(id);
+        if (found == reviews_.end()) {
+            return std::nullopt;
+        }
+
+        return found->second;
+    }
+
+private:
+    mutable std::mutex mutex_;
+    std::unordered_map<std::string, Review> reviews_;
+};`,
+  },
+  badCode: {
+    language: "cpp",
+    filename: "review_cache.cpp",
+    code: `#include <mutex>
+#include <optional>
+#include <string>
+#include <unordered_map>
+
+class ReviewCache {
+public:
+    std::optional<Review> find(const std::string& id) const
+    {
+        mutex_.lock();
+        auto found = reviews_.find(id);
+        if (found == reviews_.end()) {
+            // Early return leaves the mutex locked.
+            return std::nullopt;
+        }
+
+        mutex_.unlock();
+        return found->second;
+    }
+
+private:
+    mutable std::mutex mutex_;
+    std::unordered_map<std::string, Review> reviews_;
+};`,
+  },
+};
+
+## What to review
+
+The good version creates a lock object at the top of the critical section. The mutex unlocks when the lock leaves scope.
+
+The bad version calls `lock()` and `unlock()` manually. The not-found branch returns before unlock, so later calls can deadlock.
+
+## Review notes
+
+Review lock lifetime the same way you review file lifetime. A scoped guard should make the protected region visible without matching distant calls by eye.

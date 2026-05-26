@@ -1,0 +1,50 @@
+export const metadata = {
+  title: "Exception boundaries",
+  track: "cpp",
+  order: 6,
+  summary: "Catch exceptions at boundaries where code can translate them into a result the caller understands.",
+  tags: ["exceptions", "boundaries", "errors"],
+  takeaways: ["Exceptions should travel with meaning until a boundary can translate them into a status, response, or log record."],
+  goodCode: {
+    language: "cpp",
+    filename: "src/review_loader.cpp",
+    code: `#include <expected>
+#include <string>
+
+std::expected<Review, std::string> load_review_result(const std::string& path)
+{
+    try {
+        return parse_review_file(path);
+    } catch (const ParseError& error) {
+        // Boundary translation preserves the parser failure message.
+        return std::unexpected(error.what());
+    }
+}`,
+  },
+  badCode: {
+    language: "cpp",
+    filename: "review_loader.cpp",
+    code: `#include <optional>
+#include <string>
+
+std::optional<Review> load_review_result(const std::string& path)
+{
+    try {
+        return parse_review_file(path);
+    } catch (...) {
+        // Catching every exception erases the original failure.
+        return std::nullopt;
+    }
+}`,
+  },
+};
+
+## What to review
+
+The good version catches a domain exception and translates it into an `expected` error string. The caller still receives the failure reason.
+
+The bad version catches every exception and returns an empty optional. It hides parse errors, file errors, and programming errors behind the same result.
+
+## Review notes
+
+Catch exceptions where the code has enough context to translate them. Catching too low erases meaning; catching too high can turn recoverable failures into crashes.

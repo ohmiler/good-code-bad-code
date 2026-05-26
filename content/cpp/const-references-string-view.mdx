@@ -1,0 +1,41 @@
+export const metadata = {
+  title: "Const references and string_view",
+  track: "cpp",
+  order: 4,
+  summary: "Use const references or string_view for read-only inputs so call sites avoid copies and mutation stays visible.",
+  tags: ["const", "string_view", "parameters"],
+  takeaways: ["Read-only C++ parameters should say whether they borrow data, copy data, or mutate data."],
+  goodCode: {
+    language: "cpp",
+    filename: "src/review_title.cpp",
+    code: `#include <string_view>
+
+bool has_review_prefix(std::string_view title, std::string_view prefix)
+{
+    // string_view borrows read-only text without copying it.
+    return title.starts_with(prefix);
+}`,
+  },
+  badCode: {
+    language: "cpp",
+    filename: "review_title.cpp",
+    code: `#include <string>
+
+bool has_review_prefix(std::string title, std::string prefix)
+{
+    // Copying both strings hides the read-only intent.
+    title.shrink_to_fit();
+    return title.rfind(prefix, 0) == 0;
+}`,
+  },
+};
+
+## What to review
+
+The good version uses `std::string_view` for borrowed text. The signature communicates that the function reads the strings and does not retain them.
+
+The bad version copies both strings, then mutates a copy inside a predicate. That makes a read-only check look heavier and less direct than it is.
+
+## Review notes
+
+Parameter types are review documentation. Use `std::string_view` for borrowed text, `const T&` for larger read-only objects, and values when the function needs a copy or will move.
