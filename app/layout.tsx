@@ -4,6 +4,7 @@ import {
   Geist_Mono,
   IBM_Plex_Sans_Thai,
 } from "next/font/google";
+import { BackToTopButton } from "@/components/back-to-top-button";
 import { LanguageBootstrapScript } from "@/components/language/language-bootstrap-script";
 import { LanguageProvider } from "@/components/language/language-provider";
 import { SiteFooter } from "@/components/site-footer";
@@ -81,6 +82,7 @@ export default function RootLayout({
           <SiteHeader />
           <div className="flex-1">{children}</div>
           <SiteFooter />
+          <BackToTopButton />
         </LanguageProvider>
       </body>
     </html>
