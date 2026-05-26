@@ -43,7 +43,7 @@ export function cleanupNow() {
 
 ## What to review
 
-The good version makes startup explicit and returns a handle that can stop the background job.
+The good version makes startup explicit and returns a stop function for the background job.
 
 The bad version starts a timer at import time, so tests or scripts that only need `cleanupNow` also start an ongoing background loop.
 

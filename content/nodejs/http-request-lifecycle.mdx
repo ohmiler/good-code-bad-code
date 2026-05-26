@@ -2,7 +2,7 @@ export const metadata = {
   title: "HTTP request lifecycle",
   track: "nodejs",
   order: 7,
-  summary: "Handle method checks, body limits, and response exits in a predictable order.",
+  summary: "Order method checks, body limits, and response exits so invalid requests stop early.",
   tags: ["http", "requests", "validation"],
   takeaways: ["A request handler should validate early, read bounded input, and return after sending a response."],
   goodCode: {

@@ -52,4 +52,4 @@ The bad version exits immediately, which can drop in-flight requests and leave e
 
 ## Review notes
 
-In review, ask what happens during deploys, container restarts, and local Ctrl+C. The bad version is review-worthy because process signal handling is part of production correctness, not just operational polish.
+In review, ask what happens during deploys, container restarts, and local Ctrl+C. The bad version is review-worthy because the signal path controls production correctness, not just operational polish.

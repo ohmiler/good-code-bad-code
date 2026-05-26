@@ -2,7 +2,7 @@ export const metadata = {
   title: "Async failure boundaries",
   track: "nodejs",
   order: 3,
-  summary: "Handle rejected promises at the boundary where you can return a useful response.",
+  summary: "Catch rejected promises at the HTTP boundary where the route can log context and send one response.",
   tags: ["errors", "async", "http"],
   takeaways: ["Every async request path should have a clear failure path and one response."],
   goodCode: {
@@ -45,8 +45,8 @@ export function sendReport(response: ServerResponse) {
 
 The good version catches async failures at the HTTP boundary, logs context, and returns a single error response.
 
-The bad version never handles a rejected promise, so the process can emit an unhandled rejection while the client waits or disconnects.
+The bad version leaves the rejected promise without an owner, so the process can emit an unhandled rejection while the client waits or disconnects.
 
 ## Review notes
 
-In review, follow every promise created in request code to see where rejection is handled. The bad version is review-worthy because successful paths look clean while failure behavior is undefined.
+In review, follow every promise created in request code to find the rejection owner. The bad version is review-worthy because successful paths look clean while failure behavior is undefined.

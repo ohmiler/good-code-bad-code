@@ -37,7 +37,7 @@ export function sendPublicConfig(response: ServerResponse) {
 
 ## What to review
 
-The good version awaits an async file read and lets the event loop continue handling other work while the disk is busy.
+The good version awaits an async file read and lets the event loop continue accepting other request work while the disk is busy.
 
 The bad version uses `readFileSync` in a request path, blocking every other request in the process until the read finishes.
 

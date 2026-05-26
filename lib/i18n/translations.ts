@@ -1129,7 +1129,7 @@ export const lessonThaiTranslations = {
     summary: "แยกโค้ดที่เริ่มโปรแกรม Node.js (process) ออกจากโค้ดประกอบ app เพื่อให้ module ถูก import ไป test หรือใช้ซ้ำได้โดยไม่เปิด server เอง.",
     takeaways: ["module ของ Node.js ควรถูก import ได้โดยไม่เริ่ม process, เปิด port/socket หรือเริ่มงานเบื้องหลังทันที."],
     whatToReview: [
-      "โค้ดที่ดีให้ `server.ts` เป็น entry point ที่อ่าน config, สร้าง app และ `listen` port อย่างชัดเจน.",
+      "โค้ดที่ดีให้ `server.ts` เป็น entry point ที่อ่าน config, สร้าง app และเรียก `listen` กับ port ที่มาจาก config.",
       "โค้ดที่ควรปรับเริ่ม server ตั้งแต่ตอน import module ทำให้ test, worker หรือ script เปิด port โดยไม่ตั้งใจ.",
     ],
     reviewNotes: [
@@ -1145,7 +1145,7 @@ export const lessonThaiTranslations = {
     summary: "ใช้ filesystem API แบบ async ในโค้ดที่ทำงานตอน request เข้ามา เพื่อไม่ให้การอ่าน disk ครั้งหนึ่งบล็อก request อื่นทั้ง process.",
     takeaways: ["หลีกเลี่ยง filesystem sync call ใน HTTP handler หรือ hot path ที่อาจมีหลาย request พร้อมกัน."],
     whatToReview: [
-      "โค้ดที่ดีใช้ `readFile` จาก `node:fs/promises` เพื่อให้ event loop ไปจัดการงานอื่นได้ระหว่างรอ disk.",
+      "โค้ดที่ดีใช้ `readFile` จาก `node:fs/promises` เพื่อให้ event loop รับ request อื่นได้ระหว่างรอ disk.",
       "โค้ดที่ควรปรับใช้ `readFileSync` ใน request handler ทำให้ process หยุดรับงานอื่นจนอ่านไฟล์เสร็จ.",
     ],
     reviewNotes: [
@@ -1157,12 +1157,12 @@ export const lessonThaiTranslations = {
       goodCode: ["จุดรับ HTTP รับผิดชอบทั้ง response สำเร็จและล้มเหลว"],
       badCode: ["promise ที่ reject ไม่มีคนรับผิดชอบ client จึงอาจไม่ได้ response"],
     },
-    title: "กำหนดจุดจัดการ error ของ async",
-    summary: "เมื่อ promise ล้มเหลว ให้จัดการที่ขอบ HTTP ซึ่งยัง log บริบทและตอบ response ที่มีประโยชน์ให้ client ได้.",
-    takeaways: ["โค้ดที่ทำงานตอน request เข้ามาแบบ async ควรมีทางล้มเหลวที่ชัดเจน และต้องส่ง response เพียงครั้งเดียว."],
+    title: "กำหนดเจ้าของ error ของ async",
+    summary: "เมื่อ promise ล้มเหลว ให้ HTTP boundary เป็นเจ้าของ error เพื่อ log บริบทและตอบ response ที่มีประโยชน์ให้ client.",
+    takeaways: ["โค้ด async ใน request path ควรมี failure path ที่อ่านจากโค้ดได้ และต้องส่ง response เพียงครั้งเดียว."],
     whatToReview: [
       "โค้ดที่ดี catch error ที่ HTTP boundary, log context และส่ง status 500 พร้อมข้อความที่เข้าใจได้.",
-      "โค้ดที่ควรปรับสร้าง promise แล้วไม่จัดการ rejection ทำให้ client อาจค้างหรือ process เจอ unhandled rejection.",
+      "โค้ดที่ควรปรับสร้าง promise แล้วปล่อย rejection ไม่มีเจ้าของ ทำให้ client อาจค้างหรือ process เจอ unhandled rejection.",
     ],
     reviewNotes: [
       "ตอนรีวิวให้ไล่ทุก promise ใน request code ว่าถ้า reject แล้วใครรับผิดชอบ. happy path ที่ดูสะอาดอาจซ่อนพฤติกรรมตอนล้มเหลวที่ไม่มีใครนิยามไว้เลย.",
@@ -1174,8 +1174,8 @@ export const lessonThaiTranslations = {
       badCode: ["ค่าสำรองที่ซ่อนอยู่พา production ไปผิด service ได้"],
     },
     title: "รวม config จาก environment ไว้จุดเดียว",
-    summary: "อ่านและตรวจค่า environment configuration ครั้งเดียวตอน startup แล้วส่งต่อเป็น config object ที่มีหน้าตาชัดเจน.",
-    takeaways: ["config ควร fail fast พร้อมข้อความชัดเจน ไม่ควรกระจาย `process.env` และ fallback เงียบ ๆ ไปทั่ว codebase."],
+    summary: "อ่านและตรวจค่า environment configuration ครั้งเดียวตอน startup แล้วส่งต่อเป็น config object ที่มี field แน่นอน.",
+    takeaways: ["config ควร fail fast พร้อมข้อความที่บอกชื่อค่าที่หายไป ไม่ควรกระจาย `process.env` และ fallback เงียบ ๆ ไปทั่ว codebase."],
     whatToReview: [
       "โค้ดที่ดีแปลง env เป็น typed config object และตรวจ required value ก่อน app เริ่มรับ traffic.",
       "โค้ดที่ควรปรับอ่าน `process.env` ลึกใน infrastructure code พร้อม fallback ที่อาจชี้ production ไปผิด database.",
@@ -1191,9 +1191,9 @@ export const lessonThaiTranslations = {
     },
     title: "อย่าเริ่มงานตอน import module",
     summary: "อย่าเริ่ม timer, connection หรือ background job เพียงเพราะมีคน import module เพื่อใช้ function บางตัว.",
-    takeaways: ["side effect ควรอยู่หลัง start function ที่เรียกชัดเจน หรืออยู่ใน entry point ที่ควบคุม lifecycle ได้."],
+    takeaways: ["side effect ควรอยู่หลัง start function ที่ผู้เรียกเลือกเวลาเริ่มเอง หรืออยู่ใน entry point ที่ควบคุม lifecycle ได้."],
     whatToReview: [
-      "โค้ดที่ดีมี `startCleanupJob` ที่เริ่มงานชัดเจนและคืน `stop` handle สำหรับ shutdown หรือ test.",
+      "โค้ดที่ดีมี `startCleanupJob` ที่เริ่ม background job ตอนถูกเรียก และคืน `stop` function สำหรับ shutdown หรือ test.",
       "โค้ดที่ควรปรับเริ่ม `setInterval` ที่ top level ทำให้แค่ import เพื่อใช้ function เดียวก็เริ่ม background loop.",
     ],
     reviewNotes: [
@@ -1202,14 +1202,14 @@ export const lessonThaiTranslations = {
   },
   "nodejs/streams-large-payloads": {
     codeComments: {
-      goodCode: ["pipeline ช่วยทยอยส่งข้อมูลและจัดการ stream error"],
+      goodCode: ["pipeline ช่วยทยอยส่งข้อมูลและส่ง stream error ไปจุดเดียว"],
       badCode: ["โหลด export ทั้งก้อนเข้า memory ตามขนาดไฟล์"],
     },
     title: "ทยอยส่งข้อมูลใหญ่ด้วย stream",
     summary: "ส่งไฟล์หรือ response ขนาดใหญ่ด้วย stream เพื่อทยอยอ่านและทยอยส่ง แทนการโหลดทั้งหมดเข้า memory ก่อนส่ง.",
-    takeaways: ["payload ใหญ่ควรใช้ streaming ผ่าน pipeline พร้อม error handling ไม่ใช่ `readFile` ทั้งก้อนเสมอไป."],
+    takeaways: ["payload ใหญ่ควรใช้ streaming ผ่าน pipeline พร้อม error path ไม่ใช่ `readFile` ทั้งก้อนเสมอไป."],
     whatToReview: [
-      "โค้ดที่ดีใช้ `createReadStream` กับ `pipeline` เพื่อรองรับ backpressure หรือจังหวะที่ฝั่งรับตามไม่ทัน และจัดการ stream failure.",
+      "โค้ดที่ดีใช้ `createReadStream` กับ `pipeline` เพื่อรองรับ backpressure หรือจังหวะที่ฝั่งรับตามไม่ทัน และส่ง stream failure กลับไปยัง response path.",
       "โค้ดที่ควรปรับ `readFile` ทั้งไฟล์ก่อนส่ง response ทำให้ memory เพิ่มตามขนาดไฟล์และจำนวนผู้ใช้พร้อมกัน.",
     ],
     reviewNotes: [
@@ -1245,7 +1245,7 @@ export const lessonThaiTranslations = {
       "โค้ดที่ควรปรับ `process.exit` ทันทีเมื่อได้ `SIGTERM` หรือ `SIGINT` ทำให้ request ที่กำลังทำงานหลุดได้.",
     ],
     reviewNotes: [
-      "ตอนรีวิวให้คิดถึง deploy, container restart และ Ctrl+C ตอน local. signal handling เป็นความถูกต้องของ production เพราะมันกำหนดว่า request และ connection ที่ค้างอยู่จะถูกปิดอย่างไร.",
+      "ตอนรีวิวให้คิดถึง deploy, container restart และ Ctrl+C ตอน local. signal path เป็นความถูกต้องของ production เพราะ path นี้กำหนดว่า request และ connection ที่ค้างอยู่จะถูกปิดอย่างไร.",
     ],
   },
   "nodejs/structured-logging": {
