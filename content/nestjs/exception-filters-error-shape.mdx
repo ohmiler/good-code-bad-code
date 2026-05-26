@@ -1,0 +1,61 @@
+export const metadata = {
+  title: "Exception filters and error shape",
+  track: "nestjs",
+  order: 5,
+  summary: "Use exception filters when an API needs one response shape for logged and user-facing errors.",
+  tags: ["errors", "filters", "http"],
+  takeaways: ["Exception filters should translate failures into consistent responses without leaking internal details."],
+  goodCode: {
+    language: "typescript",
+    filename: "http-exception.filter.ts",
+    code: `import {
+  ArgumentsHost,
+  Catch,
+  ExceptionFilter,
+  HttpException,
+} from "@nestjs/common";
+
+@Catch(HttpException)
+export class ApiExceptionFilter implements ExceptionFilter {
+  // The filter owns the public error response shape.
+  catch(error: HttpException, host: ArgumentsHost) {
+    const response = host.switchToHttp().getResponse();
+    const status = error.getStatus();
+
+    response.status(status).json({
+      statusCode: status,
+      error: "REQUEST_FAILED",
+      message: error.message,
+    });
+  }
+}`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "reviews.controller.ts",
+    code: `import { Controller, Get, Param } from "@nestjs/common";
+
+@Controller("reviews")
+export class ReviewsController {
+  @Get(":id")
+  async findOne(@Param("id") id: string) {
+    try {
+      return await this.reviews.findOne(id);
+    } catch (error) {
+      // Raw errors can leak internal messages to clients.
+      return { ok: false, error: String(error) };
+    }
+  }
+}`,
+  },
+};
+
+## What to review
+
+The good version puts API error formatting in a filter. Route methods can throw framework exceptions and still return a consistent JSON shape.
+
+The bad version catches unknown errors inside a route and serializes them. Internal messages can leak to clients and logs may lose the original stack.
+
+## Review notes
+
+Use filters for response shape and logging policy. Avoid route-level catch blocks that turn every failure into a success response with an error object.

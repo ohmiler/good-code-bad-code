@@ -1,0 +1,63 @@
+export const metadata = {
+  title: "Module, controller, and provider boundaries",
+  track: "nestjs",
+  order: 1,
+  summary: "Separate NestJS modules, controllers, and providers so routing, application logic, and feature wiring stay reviewable.",
+  tags: ["modules", "controllers", "providers"],
+  takeaways: ["Controllers should translate HTTP requests while providers own application work and modules wire the feature together."],
+  goodCode: {
+    language: "typescript",
+    filename: "reviews.module.ts",
+    code: `import { Body, Controller, Injectable, Module, Post } from "@nestjs/common";
+
+@Controller("reviews")
+export class ReviewsController {
+  constructor(private readonly reviews: ReviewsService) {}
+
+  // The controller reads HTTP input and delegates application work.
+  @Post()
+  create(@Body() body: CreateReviewDto) {
+    return this.reviews.create(body);
+  }
+}
+
+@Injectable()
+export class ReviewsService {
+  create(input: CreateReviewDto) {
+    return { id: crypto.randomUUID(), ...input };
+  }
+}
+
+@Module({
+  controllers: [ReviewsController],
+  providers: [ReviewsService],
+})
+export class ReviewsModule {}`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "reviews.controller.ts",
+    code: `import { Body, Controller, Post } from "@nestjs/common";
+
+@Controller("reviews")
+export class ReviewsController {
+  @Post()
+  async create(@Body() body: any) {
+    // The controller owns persistence, ids, and HTTP input in one method.
+    const review = { id: Date.now(), ...body };
+    await db.collection("reviews").insertOne(review);
+    return review;
+  }
+}`,
+  },
+};
+
+## What to review
+
+The good version gives the controller one job: accept HTTP input and call the service. The module declares the controller and provider that make the feature available.
+
+The bad version puts database writes and id generation inside the controller. That makes route code harder to test and couples HTTP concerns to persistence decisions.
+
+## Review notes
+
+In NestJS reviews, follow a request from module to controller to provider. If a controller method grows into business logic or persistence logic, move that work behind an injected provider.

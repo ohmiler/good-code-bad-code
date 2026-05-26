@@ -105,6 +105,14 @@ const iconShapes = {
       <path d="M8 7h8" />
     </>
   ),
+  hexagon: (
+    <>
+      <path d="m12 3 7.5 4.5v9L12 21l-7.5-4.5v-9L12 3Z" />
+      <path d="M9 9h6" />
+      <path d="M9 12h6" />
+      <path d="M9 15h4" />
+    </>
+  ),
   database: (
     <>
       <ellipse cx="12" cy="5" rx="7" ry="3" />

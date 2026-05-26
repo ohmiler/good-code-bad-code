@@ -1,0 +1,54 @@
+export const metadata = {
+  title: "Dependency injection providers",
+  track: "nestjs",
+  order: 2,
+  summary: "Use NestJS providers and injection tokens so services declare their collaborators instead of constructing infrastructure directly.",
+  tags: ["providers", "dependency-injection", "testing"],
+  takeaways: ["Constructor injection makes dependencies visible and gives tests a stable place to replace infrastructure."],
+  goodCode: {
+    language: "typescript",
+    filename: "reviews.service.ts",
+    code: `import { Inject, Injectable } from "@nestjs/common";
+
+export const REVIEWS_REPOSITORY = Symbol("REVIEWS_REPOSITORY");
+
+@Injectable()
+export class ReviewsService {
+  constructor(
+    @Inject(REVIEWS_REPOSITORY)
+    private readonly reviews: ReviewsRepository,
+  ) {}
+
+  // The service declares the repository it needs.
+  findPending() {
+    return this.reviews.findByStatus("pending");
+  }
+}`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "reviews.service.ts",
+    code: `import { Injectable } from "@nestjs/common";
+import { MongoClient } from "mongodb";
+
+@Injectable()
+export class ReviewsService {
+  async findPending() {
+    // Direct construction hides connection and test boundaries.
+    const client = new MongoClient(process.env.MONGO_URL!);
+    const reviews = client.db().collection("reviews");
+    return reviews.find({ status: "pending" }).toArray();
+  }
+}`,
+  },
+};
+
+## What to review
+
+The good version declares a repository dependency at the constructor boundary. Tests can provide a fake repository without opening a database connection.
+
+The bad version creates a database client inside the method. Every call now depends on environment variables, network access, and driver setup.
+
+## Review notes
+
+Provider injection is the main seam for testability in NestJS. When a service calls `new` for infrastructure, ask whether that collaborator should be a provider registered in the module.

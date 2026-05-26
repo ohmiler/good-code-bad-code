@@ -1,0 +1,63 @@
+export const metadata = {
+  title: "Request lifecycle: middleware and guards",
+  track: "nestjs",
+  order: 9,
+  summary: "Place middleware, guards, pipes, and interceptors according to the NestJS request lifecycle.",
+  tags: ["middleware", "guards", "lifecycle"],
+  takeaways: ["Middleware is for low-level request work; guards decide access before pipes and controller logic run."],
+  goodCode: {
+    language: "typescript",
+    filename: "request-context.middleware.ts",
+    code: `import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  NestMiddleware,
+} from "@nestjs/common";
+import type { NextFunction, Response } from "express";
+
+@Injectable()
+export class RequestContextMiddleware implements NestMiddleware {
+  // Middleware attaches low-level request metadata.
+  use(request: RequestWithContext, _response: Response, next: NextFunction) {
+    request.requestId = crypto.randomUUID();
+    next();
+  }
+}
+
+@Injectable()
+export class AdminGuard implements CanActivate {
+  canActivate(context: ExecutionContext) {
+    const request = context.switchToHttp().getRequest<RequestWithContext>();
+    return request.user?.role === "admin";
+  }
+}`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "auth.middleware.ts",
+    code: `import { Injectable, NestMiddleware } from "@nestjs/common";
+
+@Injectable()
+export class AuthMiddleware implements NestMiddleware {
+  use(request: any, response: any, next: () => void) {
+    // Access policy hidden in middleware can bypass controller metadata.
+    if (request.path.startsWith("/admin") && request.user?.role !== "admin") {
+      response.status(403).send("Forbidden");
+      return;
+    }
+    next();
+  }
+}`,
+  },
+};
+
+## What to review
+
+The good version uses middleware for request metadata and a guard for authorization. Each concern maps to a lifecycle stage.
+
+The bad version hides route access policy inside path-string checks. Controller metadata and route decorators no longer tell the full security story.
+
+## Review notes
+
+NestJS request flow has distinct review points. Use middleware for raw request preparation, guards for access decisions, pipes for input validation, and interceptors for work around handler execution.

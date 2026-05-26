@@ -1,0 +1,50 @@
+export const metadata = {
+  title: "Guards for auth and authorization",
+  track: "nestjs",
+  order: 4,
+  summary: "Use guards to approve or reject a request before protected controller code runs.",
+  tags: ["guards", "auth", "authorization"],
+  takeaways: ["Authorization checks belong before the route body, not halfway through controller logic."],
+  goodCode: {
+    language: "typescript",
+    filename: "reviews.controller.ts",
+    code: `import { Controller, Get, UseGuards } from "@nestjs/common";
+
+@Controller("reviews")
+@UseGuards(SessionGuard, ReviewerRoleGuard)
+export class ReviewsController {
+  // Guards decide access before this method runs.
+  @Get("pending")
+  findPending() {
+    return this.reviews.findPending();
+  }
+}`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "reviews.controller.ts",
+    code: `import { Controller, Get, Req } from "@nestjs/common";
+
+@Controller("reviews")
+export class ReviewsController {
+  @Get("pending")
+  findPending(@Req() request: any) {
+    // Access checks are mixed into route behavior.
+    if (!request.user || request.user.role !== "reviewer") {
+      return [];
+    }
+    return this.reviews.findPending();
+  }
+}`,
+  },
+};
+
+## What to review
+
+The good version declares authentication and role checks at the controller boundary. A reviewer can see access policy before reading route behavior.
+
+The bad version hides authorization inside the route method and returns an empty list on denial. That can mask a security bug as normal application behavior.
+
+## Review notes
+
+In NestJS, guards are the review point for access control. Look for routes that read `request.user` directly and decide whether that logic belongs in a reusable guard.

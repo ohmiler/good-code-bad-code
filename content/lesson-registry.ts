@@ -275,6 +275,36 @@ import ExpressRateLimitingTrustProxy, {
 import ExpressBusinessLogicOutOfRoutes, {
   metadata as expressBusinessLogicOutOfRoutesMetadata,
 } from "./express/business-logic-out-of-routes.mdx";
+import NestjsModuleControllerProviderBoundaries, {
+  metadata as nestjsModuleControllerProviderBoundariesMetadata,
+} from "./nestjs/module-controller-provider-boundaries.mdx";
+import NestjsDependencyInjectionProviders, {
+  metadata as nestjsDependencyInjectionProvidersMetadata,
+} from "./nestjs/dependency-injection-providers.mdx";
+import NestjsDtoValidationPipes, {
+  metadata as nestjsDtoValidationPipesMetadata,
+} from "./nestjs/dto-validation-pipes.mdx";
+import NestjsGuardsAuthAuthorization, {
+  metadata as nestjsGuardsAuthAuthorizationMetadata,
+} from "./nestjs/guards-auth-authorization.mdx";
+import NestjsExceptionFiltersErrorShape, {
+  metadata as nestjsExceptionFiltersErrorShapeMetadata,
+} from "./nestjs/exception-filters-error-shape.mdx";
+import NestjsInterceptorsResponseLogging, {
+  metadata as nestjsInterceptorsResponseLoggingMetadata,
+} from "./nestjs/interceptors-response-logging.mdx";
+import NestjsConfigModuleValidation, {
+  metadata as nestjsConfigModuleValidationMetadata,
+} from "./nestjs/config-module-validation.mdx";
+import NestjsRepositoryServiceBoundaries, {
+  metadata as nestjsRepositoryServiceBoundariesMetadata,
+} from "./nestjs/repository-service-boundaries.mdx";
+import NestjsRequestLifecycleMiddlewareGuards, {
+  metadata as nestjsRequestLifecycleMiddlewareGuardsMetadata,
+} from "./nestjs/request-lifecycle-middleware-guards.mdx";
+import NestjsTestingModuleOverrides, {
+  metadata as nestjsTestingModuleOverridesMetadata,
+} from "./nestjs/testing-module-overrides.mdx";
 import SqlSchemaKeysConstraints, {
   metadata as sqlSchemaKeysConstraintsMetadata,
 } from "./sql/schema-keys-constraints.mdx";
@@ -1123,6 +1153,66 @@ const rawLessons: RawLesson[] = [
     source: "content/express/business-logic-out-of-routes.mdx",
     metadata: expressBusinessLogicOutOfRoutesMetadata,
     Component: ExpressBusinessLogicOutOfRoutes,
+  },
+  {
+    slug: "module-controller-provider-boundaries",
+    source: "content/nestjs/module-controller-provider-boundaries.mdx",
+    metadata: nestjsModuleControllerProviderBoundariesMetadata,
+    Component: NestjsModuleControllerProviderBoundaries,
+  },
+  {
+    slug: "dependency-injection-providers",
+    source: "content/nestjs/dependency-injection-providers.mdx",
+    metadata: nestjsDependencyInjectionProvidersMetadata,
+    Component: NestjsDependencyInjectionProviders,
+  },
+  {
+    slug: "dto-validation-pipes",
+    source: "content/nestjs/dto-validation-pipes.mdx",
+    metadata: nestjsDtoValidationPipesMetadata,
+    Component: NestjsDtoValidationPipes,
+  },
+  {
+    slug: "guards-auth-authorization",
+    source: "content/nestjs/guards-auth-authorization.mdx",
+    metadata: nestjsGuardsAuthAuthorizationMetadata,
+    Component: NestjsGuardsAuthAuthorization,
+  },
+  {
+    slug: "exception-filters-error-shape",
+    source: "content/nestjs/exception-filters-error-shape.mdx",
+    metadata: nestjsExceptionFiltersErrorShapeMetadata,
+    Component: NestjsExceptionFiltersErrorShape,
+  },
+  {
+    slug: "interceptors-response-logging",
+    source: "content/nestjs/interceptors-response-logging.mdx",
+    metadata: nestjsInterceptorsResponseLoggingMetadata,
+    Component: NestjsInterceptorsResponseLogging,
+  },
+  {
+    slug: "config-module-validation",
+    source: "content/nestjs/config-module-validation.mdx",
+    metadata: nestjsConfigModuleValidationMetadata,
+    Component: NestjsConfigModuleValidation,
+  },
+  {
+    slug: "repository-service-boundaries",
+    source: "content/nestjs/repository-service-boundaries.mdx",
+    metadata: nestjsRepositoryServiceBoundariesMetadata,
+    Component: NestjsRepositoryServiceBoundaries,
+  },
+  {
+    slug: "request-lifecycle-middleware-guards",
+    source: "content/nestjs/request-lifecycle-middleware-guards.mdx",
+    metadata: nestjsRequestLifecycleMiddlewareGuardsMetadata,
+    Component: NestjsRequestLifecycleMiddlewareGuards,
+  },
+  {
+    slug: "testing-module-overrides",
+    source: "content/nestjs/testing-module-overrides.mdx",
+    metadata: nestjsTestingModuleOverridesMetadata,
+    Component: NestjsTestingModuleOverrides,
   },
   {
     slug: "schema-keys-constraints",

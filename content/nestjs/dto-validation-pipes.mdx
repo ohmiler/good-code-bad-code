@@ -1,0 +1,51 @@
+export const metadata = {
+  title: "DTO validation pipes",
+  track: "nestjs",
+  order: 3,
+  summary: "Validate request DTOs at the NestJS boundary before controller methods receive untrusted input.",
+  tags: ["dto", "validation", "pipes"],
+  takeaways: ["A controller should receive data that already passed DTO validation and transformation rules."],
+  goodCode: {
+    language: "typescript",
+    filename: "main.ts",
+    code: `import { ValidationPipe } from "@nestjs/common";
+import { NestFactory } from "@nestjs/core";
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+
+  // The global pipe rejects unknown fields before controllers run.
+  app.useGlobalPipes(
+    new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }),
+  );
+
+  await app.listen(3000);
+}
+bootstrap();`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "reviews.controller.ts",
+    code: `import { Body, Controller, Post } from "@nestjs/common";
+
+@Controller("reviews")
+export class ReviewsController {
+  @Post()
+  create(@Body() body: any) {
+    // Validation is scattered inside route code and misses extra fields.
+    if (!body.title) throw new Error("title is required");
+    return this.reviews.create(body);
+  }
+}`,
+  },
+};
+
+## What to review
+
+The good version applies `ValidationPipe` at the application boundary, so DTO rules run before controller methods.
+
+The bad version validates one field by hand inside the route. Extra request fields can still pass through to the service.
+
+## Review notes
+
+Review NestJS input by finding the pipe boundary first. If DTO validation is scattered inside methods, errors become inconsistent and request shapes are harder to trust.

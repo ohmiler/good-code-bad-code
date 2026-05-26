@@ -1,0 +1,61 @@
+export const metadata = {
+  title: "Interceptors for response and logging work",
+  track: "nestjs",
+  order: 6,
+  summary: "Use interceptors for cross-cutting response mapping, timing, and logging around controller method execution.",
+  tags: ["interceptors", "logging", "responses"],
+  takeaways: ["Interceptors should wrap route execution without forcing every controller method to repeat the same timing or response code."],
+  goodCode: {
+    language: "typescript",
+    filename: "request-timing.interceptor.ts",
+    code: `import {
+  CallHandler,
+  ExecutionContext,
+  Injectable,
+  NestInterceptor,
+} from "@nestjs/common";
+import { tap } from "rxjs";
+
+@Injectable()
+export class RequestTimingInterceptor implements NestInterceptor {
+  intercept(context: ExecutionContext, next: CallHandler) {
+    const startedAt = Date.now();
+
+    // The interceptor measures every decorated route the same way.
+    return next.handle().pipe(
+      tap(() => {
+        const request = context.switchToHttp().getRequest();
+        logger.info({ path: request.url, durationMs: Date.now() - startedAt });
+      }),
+    );
+  }
+}`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "reviews.controller.ts",
+    code: `import { Controller, Get } from "@nestjs/common";
+
+@Controller("reviews")
+export class ReviewsController {
+  @Get()
+  async findAll() {
+    // Repeating timing code in each route invites drift.
+    const startedAt = Date.now();
+    const result = await this.reviews.findAll();
+    logger.info({ durationMs: Date.now() - startedAt });
+    return { data: result };
+  }
+}`,
+  },
+};
+
+## What to review
+
+The good version puts request timing in an interceptor that wraps the controller call. The controller can focus on returning reviews.
+
+The bad version repeats timing and response wrapping inside a route. Other routes can drift in field names, timing behavior, or log context.
+
+## Review notes
+
+Interceptors fit cross-cutting work around handler execution. If many controllers repeat response mapping, timing, or cache checks, review whether an interceptor would make the policy visible once.

@@ -1,0 +1,53 @@
+export const metadata = {
+  title: "Repository and service boundaries",
+  track: "nestjs",
+  order: 8,
+  summary: "Keep NestJS services focused on application rules and put database details behind repository providers.",
+  tags: ["repositories", "services", "database"],
+  takeaways: ["Services should express use cases while repositories express database queries and persistence details."],
+  goodCode: {
+    language: "typescript",
+    filename: "reviews.service.ts",
+    code: `import { Injectable, NotFoundException } from "@nestjs/common";
+
+@Injectable()
+export class ReviewsService {
+  constructor(private readonly reviews: ReviewsRepository) {}
+
+  // The service owns the use case and the repository owns the query.
+  async approve(reviewId: string, reviewerId: string) {
+    const review = await this.reviews.findPendingById(reviewId);
+    if (!review) throw new NotFoundException("Review not found");
+
+    return this.reviews.markApproved(reviewId, reviewerId);
+  }
+}`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "reviews.service.ts",
+    code: `import { Injectable } from "@nestjs/common";
+
+@Injectable()
+export class ReviewsService {
+  async approve(reviewId: string, reviewerId: string) {
+    // SQL details and application rules are tangled in one method.
+    const review = await db.query("select * from reviews where id = $1", [reviewId]);
+    await db.query("update reviews set status = 'approved' where id = $1", [
+      reviewId,
+    ]);
+    return review.rows[0];
+  }
+}`,
+  },
+};
+
+## What to review
+
+The good version lets the service read like a use case: find a pending review, reject missing data, then approve it.
+
+The bad version mixes SQL details with application decisions. Query shape, status transitions, and error semantics are harder to test separately.
+
+## Review notes
+
+Repository boundaries are useful when query details start hiding the use case. Keep database-specific code behind a provider so service tests can focus on behavior.

@@ -1,0 +1,53 @@
+export const metadata = {
+  title: "Configuration module validation",
+  track: "nestjs",
+  order: 7,
+  summary: "Validate NestJS configuration at startup so missing environment variables fail before requests arrive.",
+  tags: ["configuration", "environment", "validation"],
+  takeaways: ["Configuration should be parsed once at startup and injected as typed values instead of read ad hoc from process.env."],
+  goodCode: {
+    language: "typescript",
+    filename: "app.module.ts",
+    code: `import { Module } from "@nestjs/common";
+import { ConfigModule } from "@nestjs/config";
+
+@Module({
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      validate(config) {
+        // Startup fails if required runtime config is absent.
+        if (!config.DATABASE_URL) {
+          throw new Error("DATABASE_URL is required");
+        }
+        return config;
+      },
+    }),
+  ],
+})
+export class AppModule {}`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "reviews.repository.ts",
+    code: `import { Injectable } from "@nestjs/common";
+
+@Injectable()
+export class ReviewsRepository {
+  connect() {
+    // A missing env var appears only when this method is called.
+    return connectToDatabase(process.env.DATABASE_URL!);
+  }
+}`,
+  },
+};
+
+## What to review
+
+The good version validates required runtime configuration while the app boots. A bad deployment fails before serving traffic.
+
+The bad version reads `process.env` inside a repository and asserts that the value exists. Missing configuration becomes a runtime request failure.
+
+## Review notes
+
+Configuration is part of the application boundary. In NestJS reviews, prefer a config module that validates and exposes values through injection over scattered `process.env` reads.

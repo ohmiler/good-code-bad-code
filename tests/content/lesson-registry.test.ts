@@ -19,6 +19,7 @@ const expectedLessonCounts = {
   nextjs: 10,
   nodejs: 10,
   express: 10,
+  nestjs: 10,
   sql: 10,
   python: 10,
   fastapi: 10,
@@ -328,6 +329,7 @@ function countReviewCommentLines(code: string, track: string): number {
       track === "nextjs" ||
       track === "nodejs" ||
       track === "express" ||
+      track === "nestjs" ||
       track === "php" ||
       track === "java"
     ) {
@@ -356,7 +358,7 @@ test("seeded lessons match expected track counts", async () => {
   const lessonsByTrack = await getTrackLessonFiles();
   const allLessonFiles = [...lessonsByTrack.values()].flat();
 
-  assert.equal(allLessonFiles.length, 190);
+  assert.equal(allLessonFiles.length, 200);
   for (const track of tracks) {
     assert.equal(
       lessonsByTrack.get(track.slug)?.length,
@@ -828,6 +830,49 @@ test("Express comments have matching Thai translations", async () => {
       for (const [index, comment] of translatedComments.entries()) {
         assert.match(comment, /[\u0e00-\u0e7f]/, `express/${slug}.${sampleName}[${index}]`);
         assert.ok(comment.trim().length >= 8, `express/${slug}.${sampleName}[${index}]`);
+      }
+    }
+  }
+});
+
+test("NestJS samples include concise review comments", async () => {
+  const lessonsByTrack = await getTrackLessonFiles();
+  const nestjsLessons = lessonsByTrack.get("nestjs") ?? [];
+
+  assert.equal(nestjsLessons.length, expectedLessonCounts.nestjs);
+
+  for (const contentPath of nestjsLessons) {
+    for (const sampleName of ["goodCode", "badCode"] as const) {
+      const code = await readMdxMetadataCodeSample(contentPath, sampleName);
+      const commentCount = countReviewCommentLines(code, "nestjs");
+
+      assert.ok(commentCount >= 1, `${contentPath} ${sampleName}`);
+      assert.ok(commentCount <= 3, `${contentPath} ${sampleName}`);
+    }
+  }
+});
+
+test("NestJS comments have matching Thai translations", async () => {
+  const lessonsByTrack = await getTrackLessonFiles();
+  const nestjsLessons = lessonsByTrack.get("nestjs") ?? [];
+
+  assert.equal(nestjsLessons.length, expectedLessonCounts.nestjs);
+
+  for (const contentPath of nestjsLessons) {
+    const slug = slugFromContentPath(contentPath);
+    const translation = lessonThaiTranslations[`nestjs/${slug}`];
+
+    assert.ok(translation.codeComments, `nestjs/${slug} missing codeComments`);
+
+    for (const sampleName of ["goodCode", "badCode"] as const) {
+      const code = await readMdxMetadataCodeSample(contentPath, sampleName);
+      const commentCount = countReviewCommentLines(code, "nestjs");
+      const translatedComments = translation.codeComments[sampleName] ?? [];
+
+      assert.equal(translatedComments.length, commentCount, `nestjs/${slug}`);
+      for (const [index, comment] of translatedComments.entries()) {
+        assert.match(comment, /[\u0e00-\u0e7f]/, `nestjs/${slug}.${sampleName}[${index}]`);
+        assert.ok(comment.trim().length >= 8, `nestjs/${slug}.${sampleName}[${index}]`);
       }
     }
   }

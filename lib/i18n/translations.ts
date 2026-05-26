@@ -112,6 +112,11 @@ export const trackThaiTranslations = {
     description:
       "ฝึกรีวิว Express app ว่าแยก router ตามงานจริงไหม middleware เรียงถูกทางของ request ไหม และ error/auth อยู่จุดที่ควรอยู่หรือเปล่า.",
   },
+  nestjs: {
+    title: "NestJS",
+    description:
+      "ฝึกรีวิว NestJS ว่า module, controller, provider, pipe, guard, filter และ interceptor แบ่งหน้าที่ตาม request flow หรือไม่.",
+  },
   sql: {
     title: "SQL",
     description:
@@ -1603,6 +1608,166 @@ export const lessonThaiTranslations = {
     ],
     reviewNotes: [
       "route handler ควรอ่านคร่าว ๆ แล้วเข้าใจเร็ว แม้งานหลักจะซับซ้อน ถ้ากฎของระบบซ่อนอยู่ใน Express handler จะใช้ซ้ำยาก test ยาก และจัด transaction ให้ถูกต้องยาก.",
+    ],
+  },
+  "nestjs/module-controller-provider-boundaries": {
+    codeComments: {
+      goodCode: ["controller อ่านข้อมูล HTTP แล้วส่งต่องานหลักให้ service"],
+      badCode: ["controller รับผิดชอบ database, id และ input ใน method เดียว"],
+    },
+    title: "ขอบเขตของ module, controller และ provider",
+    summary: "แยก routing, งานหลักของแอป และการประกอบ feature ออกจากกัน เพื่อให้รีวิว NestJS ได้ตาม request flow.",
+    takeaways: ["controller ควรแปลง HTTP request ส่วน provider ควรรับผิดชอบงานหลัก และ module ควรประกอบ feature เข้าด้วยกัน."],
+    whatToReview: [
+      "โค้ดที่ดีให้ controller รับ input แล้วเรียก service ส่วน module ประกาศ controller กับ provider ที่ feature นี้ใช้.",
+      "โค้ดที่ควรปรับเขียน database write และ id generation ใน controller ทำให้ test route ยากและผูก HTTP กับ persistence.",
+    ],
+    reviewNotes: [
+      "เวลารีวิว NestJS ให้ตาม request จาก module ไป controller แล้วไป provider ถ้า controller เริ่มมี business logic หรือ persistence ให้ย้ายงานนั้นหลัง provider.",
+    ],
+  },
+  "nestjs/dependency-injection-providers": {
+    codeComments: {
+      goodCode: ["service ประกาศ repository ที่ต้องใช้ผ่าน constructor"],
+      badCode: ["การสร้าง client ใน method ซ่อน connection และขอบเขต test"],
+    },
+    title: "provider และ dependency injection",
+    summary: "ใช้ provider และ injection token เพื่อให้ service ประกาศ collaborator ที่ต้องใช้ แทนการสร้าง infrastructure เองใน method.",
+    takeaways: ["constructor injection ทำให้ dependency มองเห็นได้ และ test แทน infrastructure ด้วย fake provider ได้ตรงจุด."],
+    whatToReview: [
+      "โค้ดที่ดีประกาศ repository dependency ตรง constructor boundary ทำให้ test ใส่ fake repository ได้.",
+      "โค้ดที่ควรปรับสร้าง database client ใน method ทำให้ทุก call พึ่ง env, network และ driver setup.",
+    ],
+    reviewNotes: [
+      "provider injection คือจุดสำคัญของ testability ใน NestJS ถ้า service เรียก `new` สำหรับ infrastructure ให้ถามว่า collaborator นั้นควรเป็น provider ใน module หรือไม่.",
+    ],
+  },
+  "nestjs/dto-validation-pipes": {
+    codeComments: {
+      goodCode: ["global pipe ปฏิเสธ field ที่ไม่รู้จักก่อน controller ทำงาน"],
+      badCode: ["validation กระจายอยู่ใน route และยังปล่อย field เกินเข้า service"],
+    },
+    title: "ตรวจ DTO ด้วย validation pipe",
+    summary: "ตรวจ request DTO ที่ขอบเขตของ NestJS ก่อนให้ controller method รับ input ที่ยังไม่ผ่านกฎ.",
+    takeaways: ["controller ควรได้รับ data ที่ผ่าน DTO validation และ transformation rule แล้ว."],
+    whatToReview: [
+      "โค้ดที่ดีใช้ `ValidationPipe` ที่ boundary ของแอป ทำให้ DTO rule รันก่อน controller.",
+      "โค้ดที่ควรปรับตรวจแค่ field เดียวใน route ทำให้ field แปลกปลอมยังหลุดถึง service.",
+    ],
+    reviewNotes: [
+      "รีวิว input ของ NestJS ให้หา pipe boundary ก่อน ถ้า validation กระจายใน method error จะไม่สม่ำเสมอ และ request shape จะเชื่อถือยาก.",
+    ],
+  },
+  "nestjs/guards-auth-authorization": {
+    codeComments: {
+      goodCode: ["guard ตัดสินสิทธิ์ก่อน method นี้รัน"],
+      badCode: ["access check ถูกปนกับพฤติกรรมของ route"],
+    },
+    title: "ใช้ guard สำหรับ auth และ authorization",
+    summary: "ใช้ guard เพื่ออนุญาตหรือปฏิเสธ request ก่อนโค้ดใน controller ที่ถูกป้องกันจะรัน.",
+    takeaways: ["authorization ควรเกิดก่อน route body ไม่ใช่ซ่อนอยู่กลาง controller logic."],
+    whatToReview: [
+      "โค้ดที่ดีประกาศ authentication และ role check ที่ controller boundary คนรีวิวเห็น policy ก่อนอ่าน route.",
+      "โค้ดที่ควรปรับซ่อน authorization ใน method และคืน list ว่างเมื่อถูกปฏิเสธ ทำให้ bug security ดูเหมือนผลลัพธ์ปกติ.",
+    ],
+    reviewNotes: [
+      "ใน NestJS guard คือจุดรีวิว access control ให้หา route ที่อ่าน `request.user` เอง แล้วถามว่า logic นั้นควรเป็น reusable guard หรือไม่.",
+    ],
+  },
+  "nestjs/exception-filters-error-shape": {
+    codeComments: {
+      goodCode: ["filter เป็นเจ้าของรูป response error ที่ส่งให้ client"],
+      badCode: ["raw error อาจปล่อยข้อความภายในออกไปหา client"],
+    },
+    title: "exception filter และรูปแบบ error",
+    summary: "ใช้ exception filter เมื่อ API ต้องการ response error รูปเดียวกัน พร้อมแยกข้อความสำหรับ log ออกจากข้อความที่ client เห็น.",
+    takeaways: ["exception filter ควรแปล failure เป็น response ที่คงที่ โดยไม่ปล่อยรายละเอียดภายในออกไป."],
+    whatToReview: [
+      "โค้ดที่ดีให้ filter จัดรูป JSON error ส่วน route method โยน framework exception ได้.",
+      "โค้ดที่ควรปรับ catch error ใน route แล้ว stringify ส่งกลับ ทำให้ client เห็นข้อความภายในและ log อาจเสีย stack.",
+    ],
+    reviewNotes: [
+      "ใช้ filter สำหรับรูป response และนโยบาย logging หลีกเลี่ยง catch ใน route ที่เปลี่ยนทุก failure ให้เป็น success response พร้อม object error.",
+    ],
+  },
+  "nestjs/interceptors-response-logging": {
+    codeComments: {
+      goodCode: ["interceptor วัด route ที่ประกาศใช้ด้วยวิธีเดียวกัน"],
+      badCode: ["timing code ที่ซ้ำใน route หลายจุด drift ได้ง่าย"],
+    },
+    title: "interceptor สำหรับ response และ logging",
+    summary: "ใช้ interceptor สำหรับงานรอบ controller method เช่น response mapping, timing และ logging.",
+    takeaways: ["interceptor ควรห่อ route execution โดยไม่บังคับให้ทุก controller method เขียน timing หรือ response code ซ้ำ."],
+    whatToReview: [
+      "โค้ดที่ดีวาง request timing ใน interceptor ที่ห่อ controller call ทำให้ controller โฟกัสการคืน reviews.",
+      "โค้ดที่ควรปรับทำ timing และ response wrapping ใน route เดียว ทำให้ route อื่น drift เรื่อง field name หรือ log context.",
+    ],
+    reviewNotes: [
+      "interceptor เหมาะกับงานข้ามหลาย route รอบ handler execution ถ้า controller หลายตัวทำ response mapping หรือ timing ซ้ำ ให้พิจารณา interceptor.",
+    ],
+  },
+  "nestjs/config-module-validation": {
+    codeComments: {
+      goodCode: ["startup ล้มเหลวทันทีถ้า runtime config ที่ต้องมีหายไป"],
+      badCode: ["env var ที่หายไปจะโผล่ตอน method นี้ถูกเรียก"],
+    },
+    title: "ตรวจ configuration ตอนเริ่มระบบ",
+    summary: "ตรวจ configuration ของ NestJS ตอน startup เพื่อให้ env var ที่ขาดทำให้ deploy ล้มก่อนรับ request.",
+    takeaways: ["configuration ควรถูก parse ครั้งเดียวตอน startup และถูก inject เป็นค่าที่มีรูปแบบ ไม่ใช่อ่านจาก `process.env` กระจายหลายจุด."],
+    whatToReview: [
+      "โค้ดที่ดีตรวจ runtime config ตอนแอป boot ทำให้ deployment ที่ขาดค่าไม่เริ่มรับ traffic.",
+      "โค้ดที่ควรปรับอ่าน `process.env` ใน repository และใช้ assertion ทำให้ config ที่ขาดกลายเป็น request failure.",
+    ],
+    reviewNotes: [
+      "configuration คือ boundary ของแอป ใน NestJS ควรใช้ config module ที่ validate และ expose ผ่าน injection แทนการอ่าน `process.env` กระจาย.",
+    ],
+  },
+  "nestjs/repository-service-boundaries": {
+    codeComments: {
+      goodCode: ["service เป็นเจ้าของ use case ส่วน repository เป็นเจ้าของ query"],
+      badCode: ["SQL details กับกฎของแอปถูกปนใน method เดียว"],
+    },
+    title: "ขอบเขตของ repository และ service",
+    summary: "ให้ service โฟกัสกฎของแอป และให้ database detail อยู่หลัง repository provider.",
+    takeaways: ["service ควรเล่า use case ส่วน repository ควรเล่า query และ persistence detail."],
+    whatToReview: [
+      "โค้ดที่ดีอ่านเหมือน use case: หา pending review, ปฏิเสธข้อมูลที่ไม่พบ แล้ว approve.",
+      "โค้ดที่ควรปรับปน SQL กับ application decision ทำให้ query shape, status transition และ error semantics test แยกยาก.",
+    ],
+    reviewNotes: [
+      "repository boundary มีประโยชน์เมื่อ query detail เริ่มบัง use case ให้ซ่อน code เฉพาะ database หลัง provider เพื่อให้ service test โฟกัส behavior.",
+    ],
+  },
+  "nestjs/request-lifecycle-middleware-guards": {
+    codeComments: {
+      goodCode: ["middleware แนบ metadata ระดับ request ก่อนผ่านต่อ"],
+      badCode: ["access policy ที่ซ่อนใน middleware อาจข้าม metadata ของ controller"],
+    },
+    title: "request lifecycle: middleware และ guard",
+    summary: "วาง middleware, guard, pipe และ interceptor ตามลำดับ request lifecycle ของ NestJS.",
+    takeaways: ["middleware เหมาะกับงาน request ระดับต่ำ ส่วน guard ควรตัดสินสิทธิ์ก่อน pipe และ controller logic รัน."],
+    whatToReview: [
+      "โค้ดที่ดีใช้ middleware สำหรับ request metadata และใช้ guard สำหรับ authorization.",
+      "โค้ดที่ควรปรับซ่อน access policy ใน path-string check ทำให้ decorator บน controller เล่า security story ไม่ครบ.",
+    ],
+    reviewNotes: [
+      "request flow ของ NestJS มีจุดรีวิวแยกกัน ใช้ middleware เตรียม request, guard ตัดสิน access, pipe ตรวจ input และ interceptor ทำงานรอบ handler.",
+    ],
+  },
+  "nestjs/testing-module-overrides": {
+    codeComments: {
+      goodCode: ["testing module แทน infrastructure ที่ provider boundary"],
+      badCode: ["test เขียน private field หลังสร้าง service แล้ว"],
+    },
+    title: "override provider ใน testing module",
+    summary: "ใช้ testing module และ provider override เพื่อ test wiring ของ NestJS โดยไม่แตะ infrastructure จริง.",
+    takeaways: ["test ควรแทน external provider ที่ module boundary แทนการแก้ service internals."],
+    whatToReview: [
+      "โค้ดที่ดีสร้าง testing module แล้วแทน repository provider ทำให้ test ใช้ injection path เดียวกับแอป.",
+      "โค้ดที่ควรปรับสร้าง service เองแล้วเขียน private dependency ทีหลัง ทำให้ module registration ที่พังอาจไม่ถูกจับ.",
+    ],
+    reviewNotes: [
+      "สำหรับ NestJS tests ให้ override provider ที่ module boundary ถ้า test patch private field ได้ แปลว่า test อาจผ่านทั้งที่ production dependency injection พัง.",
     ],
   },
   "sql/schema-keys-constraints": {

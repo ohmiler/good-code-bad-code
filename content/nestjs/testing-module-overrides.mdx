@@ -1,0 +1,49 @@
+export const metadata = {
+  title: "Testing module overrides",
+  track: "nestjs",
+  order: 10,
+  summary: "Use NestJS testing modules and provider overrides so tests exercise application wiring without real infrastructure.",
+  tags: ["testing", "providers", "overrides"],
+  takeaways: ["A test should replace external providers at the module boundary instead of reaching into service internals."],
+  goodCode: {
+    language: "typescript",
+    filename: "reviews.service.spec.ts",
+    code: `import { Test } from "@nestjs/testing";
+
+it("returns pending reviews", async () => {
+  const repository = { findByStatus: vi.fn().mockResolvedValue([]) };
+
+  // The testing module replaces infrastructure at the provider boundary.
+  const moduleRef = await Test.createTestingModule({
+    providers: [ReviewsService, { provide: REVIEWS_REPOSITORY, useValue: repository }],
+  }).compile();
+
+  const service = moduleRef.get(ReviewsService);
+  await service.findPending();
+
+  expect(repository.findByStatus).toHaveBeenCalledWith("pending");
+});`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "reviews.service.spec.ts",
+    code: `it("returns pending reviews", async () => {
+  const service = new ReviewsService();
+
+  // The test patches a private field after construction.
+  (service as any).reviews = { findByStatus: vi.fn().mockResolvedValue([]) };
+
+  await service.findPending();
+});`,
+  },
+};
+
+## What to review
+
+The good version builds a testing module and replaces the repository provider. The test uses the same injection path as the application.
+
+The bad version constructs the service manually and writes a private dependency after the fact. That can hide broken module registration.
+
+## Review notes
+
+For NestJS tests, prefer overriding providers at the module boundary. If tests patch private fields, they may pass while production dependency injection is broken.

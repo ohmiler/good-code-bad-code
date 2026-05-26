@@ -10,6 +10,7 @@ export const trackIconKeys = {
   nextjs: "route",
   nodejs: "server",
   express: "network",
+  nestjs: "hexagon",
   sql: "database",
   python: "terminal",
   php: "file-code",

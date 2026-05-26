@@ -54,6 +54,12 @@ export const tracks = [
       "Review app factories, routers, middleware order, validation, auth, and error handling.",
   },
   {
+    slug: "nestjs",
+    title: "NestJS",
+    description:
+      "Review modules, controllers, providers, validation pipes, guards, filters, interceptors, config, and tests.",
+  },
+  {
     slug: "sql",
     title: "SQL",
     description:
