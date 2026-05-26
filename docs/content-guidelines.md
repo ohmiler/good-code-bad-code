@@ -30,6 +30,14 @@ Use this when adding or reviewing lessons, translations, and code comments for G
 - Summaries should be plain and direct before going deeper in Review Notes.
 - Code Comment translations must match the English comment count and order for `goodCode` and `badCode`.
 
+## Real-work language
+
+- Say what reviewers should notice in the code, not just that the code is "clear", "better", or "appropriate".
+- Avoid floating adjectives that do not name the object, risk, or habit. Replace them with concrete phrasing such as "the route validates request input before calling the service" or "the component keeps derived state out of local state".
+- Prefer workplace review language: name the boundary, dependency, data shape, state, query, request, response, or resource that is being reviewed.
+- Explain why the issue matters in production terms: debugging cost, hidden coupling, unsafe input, duplicated ownership, slow queries, leaked resources, or hard-to-test behavior.
+- A strong paragraph usually answers three questions: what reviewers should notice, why it matters, and what habit they should carry into the next review.
+
 ## Track Sweep Workflow
 
 - Update the MDX lesson examples and English comments first.
