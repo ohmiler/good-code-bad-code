@@ -523,7 +523,7 @@ export const lessonThaiTranslations = {
     },
     title: "ใช้ start / end เมื่อต้องรองรับหลายทิศทางภาษา",
     summary:
-      "ถ้า layout เกี่ยวข้องกับตำแหน่งซ้ายขวา ควรใช้แนวคิดอย่าง start และ end แทนการ fix เป็นซ้ายหรือขวาตลอด เช่นใช้ `margin-inline-start` แทน `margin-left`. วิธีนี้ช่วยให้ layout รองรับภาษาที่อ่านจากขวาไปซ้ายได้มากขึ้น เช่น Arabic หรือ Hebrew.",
+      "ถ้า layout เกี่ยวข้องกับตำแหน่งซ้ายขวา ควรใช้ start และ end แทนซ้ายขวาตายตัว. เช่นใช้ `border-inline-start` แทน `border-left` และ `text-align: start` แทน `text-align: left`. วิธีนี้ช่วยให้ layout รองรับภาษาที่อ่านจากขวาไปซ้ายได้มากขึ้น เช่น Arabic หรือ Hebrew.",
     takeaways: ["ถ้าเจตนาคือด้านเริ่มข้อความหรือแกนบนล่าง ให้ใช้ logical properties แทน left/right ที่ตายตัว."],
     whatToReview: [
       "โค้ดที่ดีระบุ border-inline-start และ margin-block เพื่อบอกความสัมพันธ์กับ flow ของเอกสาร.",
@@ -540,7 +540,7 @@ export const lessonThaiTranslations = {
     },
     title: "เก็บค่าที่ใช้ซ้ำไว้ใน custom properties",
     summary:
-      "ถ้ามีค่าที่ใช้ซ้ำหลายจุด เช่น สี ระยะห่าง ขนาดตัวอักษร หรือ border radius ควรเก็บไว้ใน CSS custom properties เช่น `--color-primary`, `--space-md` และ `--radius-lg`. วิธีนี้ช่วยให้แก้ไขง่าย ทำให้ design system สม่ำเสมอ และไม่ต้องกระจายค่าเดิมซ้ำหลายที่.",
+      "ถ้ามีค่าที่ใช้ซ้ำหลายจุด เช่น สี ระยะห่าง หรือ border radius ควรเก็บไว้ใน CSS custom properties เช่น `--color-surface`, `--color-border`, `--space-4` และ `--radius-sm`. ค่าเฉพาะ component เช่น `--notice-accent` ช่วยให้ variant เปลี่ยนเฉพาะค่าที่เป็นของตัวเอง.",
     takeaways: ["ค่าที่ใช้ซ้ำควรมีชื่อ token เพื่อให้รีวิวผลกระทบของการเปลี่ยน design system ได้จากจุดเดียว."],
     whatToReview: [
       "โค้ดที่ดีประกาศ token กลาง แล้วให้ variant override เฉพาะค่าที่เป็นของ variant นั้น.",
