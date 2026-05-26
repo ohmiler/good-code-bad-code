@@ -669,19 +669,19 @@ export const lessonThaiTranslations = {
       "โค้ดที่ควรปรับบอก TypeScript ให้เชื่อว่า value เป็น Session โดยไม่พิสูจน์อะไรเลย ทำให้ข้อมูลผิดรูปไหลผ่านระบบได้.",
     ],
     reviewNotes: [
-      "เวลาเห็น assertion หรือ `as` ใกล้ข้อมูลจาก JSON, storage, network, URL params หรือ library ภายนอก ให้ถามว่ามีหลักฐานอะไรยืนยันชนิดนี้ไหม ยิ่งข้อมูลไม่น่าเชื่อถือเท่าไร ยิ่งควรตรวจตอนรันจริง.",
+      "เวลาเห็น assertion หรือ `as` ใกล้ข้อมูลจาก JSON, storage, network, URL params หรือ library ภายนอก ให้ถามว่ามีหลักฐานอะไรยืนยันชนิดนี้ไหม. ยิ่งข้อมูลไม่น่าเชื่อถือเท่าไร ยิ่งควรตรวจตอนรันจริง.",
     ],
   },
   "typescript/exhaustive-never-checks": {
     codeComments: {
-      goodCode: ["ใช้ never ทำให้ case ของ union ที่ลืมจัดการกลายเป็น compile error"],
+      goodCode: ["ใช้ never ทำให้ case ของ union ที่ตกหล่นกลายเป็น compile error"],
       badCode: ["fallback กว้าง ๆ ซ่อน state ใหม่ที่โค้ดลืมรองรับ"],
     },
-    title: "บังคับให้จัดการทุกสถานะด้วย never",
+    title: "บังคับให้เขียนทุกสถานะด้วย never",
     summary: "ถ้า union มีหลายสถานะ ให้เขียนให้ครบทุกกรณี เมื่อเพิ่มสถานะใหม่แล้วลืมรองรับ TypeScript จะเตือนทันที.",
     takeaways: ["ใช้ never ใน branch สุดท้าย เพื่อให้สถานะของ union ที่ตกหล่นกลายเป็น type error."],
     whatToReview: [
-      "โค้ดที่ดีทำให้ branch สุดท้ายเป็นไปไม่ได้เมื่อจัดการทุกสถานะครบ และจะเตือนทันทีเมื่อมีสถานะใหม่ถูกเพิ่มเข้ามา.",
+      "โค้ดที่ดีทำให้ branch สุดท้ายเป็นไปไม่ได้เมื่อ union ทุกสถานะมี branch ของตัวเอง และจะเตือนทันทีเมื่อมีสถานะใหม่ถูกเพิ่มเข้ามา.",
       "โค้ดที่ควรปรับซ่อนกรณีที่ลืมไว้หลัง fallback กว้าง ๆ ทำให้สถานะใหม่ถูกแสดงเป็น Unknown แทนที่จะบังคับให้เขียนพฤติกรรมจริง.",
     ],
     reviewNotes: [
@@ -697,7 +697,7 @@ export const lessonThaiTranslations = {
     summary: "ใช้ ? เมื่อ field อาจไม่ถูกส่งมาเลย และใช้ null เมื่อ field มีอยู่แต่ตั้งใจให้ค่าว่าง เช่น ผู้ใช้ลบ avatar ออก.",
     takeaways: ["ใช้ ? เมื่อ property อาจไม่มีอยู่ และใช้ null เมื่อ property มีอยู่แต่ตั้งใจให้ว่างจริง ๆ."],
     whatToReview: [
-      "โค้ดที่ดีแยก field ที่ยังไม่ถูกกรอกออกจาก field ที่ตั้งใจไม่มี avatar อย่างชัดเจน.",
+      "โค้ดที่ดีแยก field ที่ยังไม่ถูกกรอกออกจาก field ที่ตั้งใจไม่มี avatar จากชนิดข้อมูลได้ทันที.",
       "โค้ดที่ควรปรับยอมทั้ง undefined และ null แทบทุกที่ ทำให้คนเรียกแยกไม่ออกว่าข้อมูลหาย ถูกล้าง หรือยังโหลดไม่เสร็จ.",
     ],
     reviewNotes: [
@@ -733,7 +733,7 @@ export const lessonThaiTranslations = {
       "โค้ดที่ควรปรับคืน object ทั้งก้อน รวมถึง field ภายในที่ API ไม่ควรสัญญาว่าคนข้างนอกจะใช้ได้.",
     ],
     reviewNotes: [
-      "Utility types มีประโยชน์เมื่อทำให้ข้อมูลที่เปิดเผยเล็กและชัดขึ้น มันควรสื่อว่า API ให้ข้อมูลอะไร ไม่ใช่แค่ย่อ type ซับซ้อนให้ดูสั้น.",
+      "Utility types มีประโยชน์เมื่อทำให้ข้อมูลที่เปิดเผยเหลือเฉพาะ field ตามสัญญาของ boundary. ควรสื่อว่า API ให้ข้อมูลอะไร ไม่ใช่แค่ย่อ type ซับซ้อนให้ดูสั้น.",
     ],
   },
   "typescript/type-only-imports-module-boundaries": {
@@ -757,9 +757,9 @@ export const lessonThaiTranslations = {
       goodCode: ["field status บอกว่า branch นี้ใช้ข้อมูลชุดไหนได้"],
       badCode: ["optional field หลายตัวเปิดทางให้ state ที่เป็นไปไม่ได้ compile ผ่าน"],
     },
-    title: "ใช้ union ที่มี field บอกสถานะชัดเจน",
+    title: "ใช้ union ที่มี status บอกสถานะ",
     summary: "ใช้ field กลาง เช่น status เพื่อบอกว่า object ตอนนี้อยู่กรณีไหน และ field ไหนอ่านได้จริงในกรณีนั้น.",
-    takeaways: ["ทำให้สถานะที่เป็นไปไม่ได้เขียนยากขึ้น ด้วย union ที่แยกกรณีชัดเจน."],
+    takeaways: ["ทำให้สถานะที่เป็นไปไม่ได้เขียนยากขึ้น ด้วย union ที่แยกกรณีตาม field กลาง."],
     whatToReview: [
       "โค้ดที่ดีมี field กลางสำหรับบอกสถานะ ทำให้แต่ละ branch รู้ว่าข้อมูลชุดไหนใช้ได้แน่นอน.",
       "โค้ดที่ควรปรับใช้ optional field หลายตัวจนต้องเดาเองว่า field ไหนควรมาคู่กับ field ไหน.",
@@ -786,14 +786,14 @@ export const lessonThaiTranslations = {
   },
   "typescript/precise-function-types": {
     codeComments: {
-      goodCode: ["callback type บอก action และ argument ที่เรียกได้ชัดเจน"],
+      goodCode: ["callback type บอก action และ argument ที่เรียกได้"],
       badCode: ["Function กว้างเกินไป ใครเรียกด้วยรูปแบบผิดก็ยัง compile ผ่าน"],
     },
-    title: "กำหนดรูปแบบ function ให้ชัด",
+    title: "กำหนดรูปแบบ function ให้เจาะจง",
     summary: "ระบุรูปแบบของ callback ว่ารับอะไรและคืนอะไร แทนการใช้ Function กว้าง ๆ ที่แทบไม่ช่วยตรวจการเรียกผิด.",
-    takeaways: ["callback type ที่ชัดทำให้เรียกผิดยากขึ้น และทำให้คนรีวิวเห็นเจตนาของ API ได้ง่ายขึ้น."],
+    takeaways: ["callback type ที่ระบุรูปการเรียกทำให้เรียกผิดยากขึ้น และทำให้คนรีวิวเห็นเจตนาของ API ได้ง่ายขึ้น."],
     whatToReview: [
-      "โค้ดที่ดีบอก parameter และ return type ของ callback ชัดเจน.",
+      "โค้ดที่ดีบอก parameter และ return type ของ callback ตามรูปการเรียกจริง.",
       "โค้ดที่ควรปรับใช้ Function ทำให้ใครส่งอะไรก็ได้ และ compiler ช่วยจับผิดไม่ได้.",
     ],
     reviewNotes: [

@@ -2,7 +2,7 @@ export const metadata = {
   title: "Exhaustive checks with never",
   track: "typescript",
   order: 5,
-  summary: "Make every union case handled so new states fail loudly during development.",
+  summary: "Give every union case a branch so new states fail loudly during development.",
   tags: ["unions", "exhaustive", "never"],
   takeaways: ["Use a `never` assignment in the final branch to make missing union cases a type error."],
   goodCode: {
@@ -38,7 +38,7 @@ function renderReviewState(state: ReviewState) {
   | { status: "merged"; mergedBy: string };
 
 function renderReviewState(state: ReviewState) {
-  // Generic fallback hides states the code forgot to handle.
+  // Generic fallback hides states without a branch.
   if (state.status === "draft") {
     return "Draft";
   }
@@ -54,9 +54,9 @@ function renderReviewState(state: ReviewState) {
 
 ## What to review
 
-The good version makes the final branch impossible when all union cases are handled, so adding a new state creates a compile-time reminder.
+The good version makes the final branch impossible after every union case has its own branch, so adding a new state creates a compile-time reminder.
 
-The bad version hides missing cases behind a generic fallback, which can make new product states render as unknown instead of asking the developer to handle them.
+The bad version hides missing cases behind a generic fallback, which can make new product states render as unknown instead of forcing a real branch for that state.
 
 ## Review notes
 
