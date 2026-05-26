@@ -402,8 +402,9 @@ export const lessonThaiTranslations = {
       goodCode: ["container เป็นเจ้าของช่องว่าง ส่วน status วางตำแหน่งของตัวเอง"],
       badCode: ["กฎของ child กระทบทุก item จน layout เปลี่ยนตามโครงสร้าง"],
     },
-    title: "ให้ container เป็นเจ้าของ flex layout",
-    summary: "วางระยะห่างและแนวจัดเรียงไว้ที่ flex container ด้วย gap แทนการผลัก margin จาก child ทีละตัว.",
+    title: "ให้ container เป็นคนกำหนด flex layout",
+    summary:
+      "ถ้าต้องการจัดระยะห่างของ items ใน flex layout ให้จัดที่ parent หรือ flex container เป็นหลัก เช่นใช้ `gap` แทนการใส่ margin ให้ child ทีละตัว. วิธีนี้ทำให้ layout ควบคุมง่ายกว่า และลดปัญหาระยะห่างเพี้ยนเมื่อมีการเพิ่มหรือลบ item.",
     takeaways: ["ให้ container เป็นคนกำหนดช่องว่างของ item เพื่อให้เพิ่มหรือย้าย child แล้ว layout ไม่แอบเปลี่ยน."],
     whatToReview: [
       "โค้ดที่ดีให้ container ระบุ display, align และ gap ในที่เดียว คนอ่านจึงรู้ว่า layout นี้มาจากกฎไหน.",
@@ -418,8 +419,9 @@ export const lessonThaiTranslations = {
       goodCode: ["สีของทุก state ยังมี contrast พอให้เห็นและอ่านข้อความได้"],
       badCode: ["state ใช้สีจางจนคนใช้แยกปุ่มปกติกับปุ่มที่กำลัง focus ไม่ออก"],
     },
-    title: "สีของ state ต้องอ่านได้",
-    summary: "กำหนด hover, focus, disabled และ active ให้ยังอ่านข้อความได้ และไม่ฝากความหมายไว้กับสีจางเพียงอย่างเดียว.",
+    title: "สีของ state ควรอ่านเข้าใจได้",
+    summary:
+      "สีของ state เช่น hover, focus, disabled และ active ควรบอกสถานะได้ และมี contrast ที่อ่านง่าย. ไม่ควรใช้สีอย่างเดียวในการบอกสถานะ เพราะผู้ใช้บางคนอาจมองเห็นสีไม่เหมือนกัน.",
     takeaways: ["state สำคัญต้องมี contrast พอ และ focus ring ต้องเห็นได้เมื่อใช้คีย์บอร์ด."],
     whatToReview: [
       "โค้ดที่ดีให้แต่ละ state มีสี ขอบ หรือ ring ที่ตรวจด้วยตาได้บนพื้นหลังจริง.",
@@ -434,8 +436,9 @@ export const lessonThaiTranslations = {
       goodCode: ["clamp กำหนดเพดานบนล่าง ทำให้ตัวอักษรยืดตามพื้นที่แต่ไม่หลุดกรอบอ่าน"],
       badCode: ["ใช้ vw กับ body text ตรง ๆ จนบางหน้าจอตัวเล็กหรือใหญ่เกินอ่าน"],
     },
-    title: "ขนาด responsive ที่มีเพดาน",
-    summary: "ใช้ clamp หรือช่วงค่าที่ระบุขั้นต่ำและขั้นสูง แทนการผูก body text กับ viewport ตรง ๆ.",
+    title: "ใช้ขนาด responsive ที่มีขอบเขต",
+    summary:
+      "อย่าปล่อยให้ขนาดตัวอักษรหรือ element เปลี่ยนตาม viewport แบบไม่มีขอบเขต. ควรใช้ `clamp()` หรือกำหนดค่าต่ำสุดและค่าสูงสุดไว้ เพื่อให้ขนาดยืดหยุ่นได้ แต่ยังอ่านง่ายในทุกหน้าจอ.",
     takeaways: ["ตัวอักษรหลักควรปรับตามพื้นที่แบบมีขอบเขต ไม่ปล่อยให้ viewport กำหนดขนาดทั้งหมด."],
     whatToReview: [
       "โค้ดที่ดีบอกขนาดต่ำสุด ค่ากลาง และขนาดสูงสุด เพื่อให้หลาย viewport ยังอ่านได้.",
@@ -450,8 +453,9 @@ export const lessonThaiTranslations = {
       goodCode: ["border-box ทำให้ width ที่ประกาศรวม padding และ border แล้ว"],
       badCode: ["width ถูกบวก padding กับ border ทีหลังจนกล่องกว้างกว่าที่ประกาศ"],
     },
-    title: "คำนวณขนาดกล่องให้ตรงกับที่ประกาศ",
-    summary: "ตั้ง box-sizing ให้ width ของ component รวม padding และ border เพื่อกัน layout ล้นจากขนาดจริงที่ถูกบวกเพิ่ม.",
+    title: "กำหนดขนาดกล่องให้คาดเดาได้",
+    summary:
+      "ใช้ `box-sizing: border-box` เพื่อให้ `width` ของ element รวม padding และ border เข้าไปด้วย. วิธีนี้ช่วยให้คำนวณขนาด layout ง่ายขึ้น และลดปัญหากล่องใหญ่เกินกว่าที่ตั้งใจไว้.",
     takeaways: ["ใช้ border-box กับ component ที่มี padding หรือ border เพื่อให้ขนาดจริงตรงกับตัวเลขที่รีวิว."],
     whatToReview: [
       "โค้ดที่ดีทำให้ card กว้างเท่าค่าที่ประกาศแม้มี padding และ border.",
@@ -466,8 +470,9 @@ export const lessonThaiTranslations = {
       goodCode: ["class ของ component บอกเจ้าของ rule ได้ทันที"],
       badCode: ["selector ยาวชนะด้วย specificity แต่ทำให้ component ผูกกับโครงสร้างหน้า"],
     },
-    title: "selector ที่บอกเจ้าของ style",
-    summary: "ใช้ class และ modifier ที่มีขอบเขต เพื่อให้รู้ว่ากฎไหนรับผิดชอบ state ไหนโดยไม่ต้องพึ่ง selector ยาวหรือ !important.",
+    title: "เขียน selector ให้รู้ว่า style นี้เป็นของใคร",
+    summary:
+      "ใช้ class name ที่สื่อความหมายแบบเจาะจง และแบ่งส่วนของ style ให้เป็นระบบ เช่น style นี้เป็นของ component ไหน, เป็น state แบบไหน หรือเป็น modifier ของอะไร. วิธีนี้ลดการใช้ selector ยาว ๆ และลดการพึ่ง `!important` บ่อยเกินไป.",
     takeaways: ["เริ่มจาก class ของ component แล้วเพิ่ม modifier เมื่อมี state แทนการไล่เพิ่ม specificity."],
     whatToReview: [
       "โค้ดที่ดีอ่านชื่อ selector แล้วรู้ว่า rule อยู่ในขอบเขต component ใดและใช้กับ state ใด.",
@@ -482,8 +487,9 @@ export const lessonThaiTranslations = {
       goodCode: ["Grid วางกติกาคอลัมน์ responsive ไว้จุดเดียว"],
       badCode: ["float กับ nth-child บังคับแถวด้วยเลขที่เปราะเมื่อจำนวน card เปลี่ยน"],
     },
-    title: "ให้ Grid อธิบายคอลัมน์แทนเลขลับ",
-    summary: "ใช้ CSS Grid ระบุขนาดขั้นต่ำของ card และช่องว่างระหว่างคอลัมน์ แทนการคำนวณ width, margin และตำแหน่งแถวเอง.",
+    title: "ใช้ Grid เมื่อ layout เป็นแถวและคอลัมน์",
+    summary:
+      "ถ้า layout มีโครงสร้างแบบตาราง เช่น card หลายคอลัมน์ หรือพื้นที่ที่ต้องจัดเป็นแถวและคอลัมน์ ควรใช้ CSS Grid. Grid ช่วยให้กำหนดจำนวนคอลัมน์ ช่องว่าง และตำแหน่งของ element ได้ตรงกว่าแทนการคำนวณ `width`, margin หรือจัดตำแหน่งเองหลายจุด.",
     takeaways: ["ใช้ repeat, minmax และ gap เพื่อให้ browser วาง track แทน float หรือ nth-child ที่ต้องคำนวณมือ."],
     whatToReview: [
       "โค้ดที่ดีบอกกติกาเดียวว่า card ต้องกว้างอย่างน้อยเท่าไรและเพิ่มคอลัมน์เมื่อพื้นที่พอ.",
@@ -498,8 +504,9 @@ export const lessonThaiTranslations = {
       goodCode: ["hover focus และ selected มีสัญญาณภาพคนละแบบ"],
       badCode: ["ลบ outline แล้วไม่มีสไตล์แทน ทำให้ผู้ใช้คีย์บอร์ดหาตำแหน่งไม่เจอ"],
     },
-    title: "แยก hover, selected และ focus-visible",
-    summary: "ให้ hover, active, selected และ keyboard focus มีสัญญาณของตัวเอง เพื่อรีวิว interaction แต่ละแบบได้จาก CSS.",
+    title: "แยก hover, selected และ focus-visible ให้ชัด",
+    summary:
+      "แต่ละ state ควรมีหน้าที่ของตัวเอง: hover คือเมื่อเอาเมาส์ไปชี้, selected คือ item ที่ถูกเลือกอยู่, และ focus-visible คือจุดที่ผู้ใช้กำลังโฟกัสด้วย keyboard. เมื่อแยก state เหล่านี้ตามหน้าที่ ผู้ใช้จะเข้าใจ interaction ได้ง่ายขึ้น และเว็บจะใช้งานด้วย keyboard ได้ครบกว่า.",
     takeaways: ["ใช้ :focus-visible สำหรับคีย์บอร์ด และอย่าลบ outline หากยังไม่มี ring หรือสไตล์แทนที่มองเห็นได้."],
     whatToReview: [
       "โค้ดที่ดีแยก state ของเมาส์ คีย์บอร์ด และ selected เพื่อให้แต่ละทางเข้า UI มี feedback ของตัวเอง.",
@@ -514,8 +521,9 @@ export const lessonThaiTranslations = {
       goodCode: ["logical properties วางเส้นและระยะตามทิศทางการอ่าน"],
       badCode: ["left/right แบบตายตัวผูก layout กับภาษาอ่านซ้ายไปขวา"],
     },
-    title: "ใช้ start/end เมื่อดีไซน์ตามทิศทางอ่าน",
-    summary: "เลือก block, inline, start และ end เมื่อระยะหรือเส้นขอบควรตามทิศทางภาษา แทนการ hard-code ซ้ายขวาทุกกรณี.",
+    title: "ใช้ start / end เมื่อต้องรองรับหลายทิศทางภาษา",
+    summary:
+      "ถ้า layout เกี่ยวข้องกับตำแหน่งซ้ายขวา ควรใช้แนวคิดอย่าง start และ end แทนการ fix เป็นซ้ายหรือขวาตลอด เช่นใช้ `margin-inline-start` แทน `margin-left`. วิธีนี้ช่วยให้ layout รองรับภาษาที่อ่านจากขวาไปซ้ายได้มากขึ้น เช่น Arabic หรือ Hebrew.",
     takeaways: ["ถ้าเจตนาคือด้านเริ่มข้อความหรือแกนบนล่าง ให้ใช้ logical properties แทน left/right ที่ตายตัว."],
     whatToReview: [
       "โค้ดที่ดีระบุ border-inline-start และ margin-block เพื่อบอกความสัมพันธ์กับ flow ของเอกสาร.",
@@ -530,8 +538,9 @@ export const lessonThaiTranslations = {
       goodCode: ["token ที่ตั้งชื่อบอกว่าเลขหรือสีนี้เป็นการตัดสินใจของระบบดีไซน์"],
       badCode: ["ค่าดิบซ้ำหลายจุด ทำให้ไม่รู้ว่าค่าไหนควรเปลี่ยนพร้อมกัน"],
     },
-    title: "ตั้งชื่อค่าที่ใช้ซ้ำด้วย custom properties",
-    summary: "ใช้ custom properties ตั้งชื่อสี ระยะ และ radius ที่เป็นกติกากลาง แทนการกระจายเลขหรือ hex ซ้ำในหลาย component.",
+    title: "เก็บค่าที่ใช้ซ้ำไว้ใน custom properties",
+    summary:
+      "ถ้ามีค่าที่ใช้ซ้ำหลายจุด เช่น สี ระยะห่าง ขนาดตัวอักษร หรือ border radius ควรเก็บไว้ใน CSS custom properties เช่น `--color-primary`, `--space-md` และ `--radius-lg`. วิธีนี้ช่วยให้แก้ไขง่าย ทำให้ design system สม่ำเสมอ และไม่ต้องกระจายค่าเดิมซ้ำหลายที่.",
     takeaways: ["ค่าที่ใช้ซ้ำควรมีชื่อ token เพื่อให้รีวิวผลกระทบของการเปลี่ยน design system ได้จากจุดเดียว."],
     whatToReview: [
       "โค้ดที่ดีประกาศ token กลาง แล้วให้ variant override เฉพาะค่าที่เป็นของ variant นั้น.",
@@ -546,8 +555,9 @@ export const lessonThaiTranslations = {
       goodCode: ["motion ลดลงตาม prefers-reduced-motion แต่ state ยังสื่อได้"],
       badCode: ["animation เล่นกับทุกคน และ state ถูกซ่อนไว้ใน motion ที่ปิดไม่ได้"],
     },
-    title: "motion ที่ยังใช้ได้เมื่อผู้ใช้ขอลดการเคลื่อนไหว",
-    summary: "ให้ animation สื่อ state โดยไม่เป็นทางเดียวในการเข้าใจ UI และรองรับ prefers-reduced-motion สำหรับผู้ใช้ที่ขอลด motion.",
+    title: "ใช้ motion อย่างพอดี และให้ผู้ใช้ลด motion ได้",
+    summary:
+      "animation ควรช่วยให้ผู้ใช้เข้าใจ UI ไม่ใช่ทำให้รู้สึกช้า วุ่นวาย หรือรบกวนสายตา. ควรทำ animation ให้สั้น กระชับ และมีความหมาย พร้อมรองรับ `prefers-reduced-motion` สำหรับผู้ใช้ที่ต้องการลดการเคลื่อนไหวบนหน้าจอ.",
     takeaways: ["เมื่อ motion ลดลง UI ยังต้องบอก state ผ่านสี ข้อความ ขอบ หรือระยะ ไม่ฝากความหมายไว้ที่การเคลื่อนไหวอย่างเดียว."],
     whatToReview: [
       "โค้ดที่ดีลด duration หรือปิด transform เมื่อผู้ใช้ขอลด motion แต่ยังมี feedback ให้รู้ว่า state เปลี่ยน.",
