@@ -12,6 +12,7 @@ const trackCards = tracks.map((track) => ({
 }));
 
 test("TrackGrid renders search input, filter chips, and result count", () => {
+  const expectedCount = tracks.length;
   const markup = renderToStaticMarkup(
     <LanguageProvider initialLanguage="en">
       <TrackGrid tracks={trackCards} />
@@ -23,5 +24,5 @@ test("TrackGrid renders search input, filter chips, and result count", () => {
   assert.match(markup, /aria-pressed="true"[^>]*>All/);
   assert.match(markup, />Frontend</);
   assert.match(markup, />Backend</);
-  assert.match(markup, />21 \/ 21 tracks</);
+  assert.match(markup, new RegExp(`>${expectedCount} / ${expectedCount} tracks<`));
 });

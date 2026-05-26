@@ -152,6 +152,19 @@ const iconShapes = {
       <path d="M5 21h14" />
     </>
   ),
+  chip: (
+    <>
+      <rect height="12" rx="2" width="12" x="6" y="6" />
+      <path d="M9 2v4" />
+      <path d="M15 2v4" />
+      <path d="M9 18v4" />
+      <path d="M15 18v4" />
+      <path d="M2 9h4" />
+      <path d="M2 15h4" />
+      <path d="M18 9h4" />
+      <path d="M18 15h4" />
+    </>
+  ),
   "git-branch": (
     <>
       <circle cx="6" cy="6" r="2" />

@@ -16,6 +16,7 @@ export const trackIconKeys = {
   php: "file-code",
   laravel: "leaf",
   java: "coffee",
+  c: "chip",
   git: "git-branch",
   fastapi: "zap",
   django: "layers",

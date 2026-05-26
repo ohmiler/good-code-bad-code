@@ -1,0 +1,63 @@
+export const metadata = {
+  title: "File I/O cleanup paths",
+  track: "c",
+  order: 7,
+  summary: "Keep cleanup on every file I/O path so early returns and write failures do not leak file handles.",
+  tags: ["files", "cleanup", "resources"],
+  takeaways: ["File cleanup should be visible on success and failure paths, especially when the function can return before the bottom."],
+  goodCode: {
+    language: "c",
+    filename: "src/review_file.c",
+    code: `#include <stdio.h>
+
+int save_review(const char *path, const char *body)
+{
+    FILE *file = fopen(path, "w");
+    if (file == NULL) {
+        return -1;
+    }
+
+    // One cleanup exit closes the file on every failure path.
+    int result = 0;
+    if (fputs(body, file) == EOF) {
+        result = -1;
+    }
+    if (fclose(file) == EOF) {
+        result = -1;
+    }
+
+    return result;
+}`,
+  },
+  badCode: {
+    language: "c",
+    filename: "review_file.c",
+    code: `#include <stdio.h>
+
+int save_review(const char *path, const char *body)
+{
+    FILE *file = fopen(path, "w");
+    if (file == NULL) {
+        return -1;
+    }
+
+    if (fputs(body, file) == EOF) {
+        // This early return leaves the file handle open.
+        return -1;
+    }
+
+    fclose(file);
+    return 0;
+}`,
+  },
+};
+
+## What to review
+
+The good version keeps close logic on the same path as the write result. Both `fputs` and `fclose` can affect the final status.
+
+The bad version returns before `fclose` when the write fails. That leaks the file handle and can also hide buffered write errors.
+
+## Review notes
+
+With C file I/O, review every return after `fopen`. A cleanup label or one exit path often makes the release path easier to audit than many early returns.

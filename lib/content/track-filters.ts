@@ -31,6 +31,7 @@ const backend = [
   "php",
   "laravel",
   "java",
+  "c",
   "fastapi",
   "django",
   "go",

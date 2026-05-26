@@ -128,6 +128,28 @@ test("validateLessonMetadata accepts Java code samples", () => {
   );
 });
 
+test("validateLessonMetadata accepts C code samples", () => {
+  const cMetadata = {
+    ...validMetadata,
+    track: "c",
+    goodCode: {
+      language: "c",
+      filename: "src/review_buffer.c",
+      code: "int copy_review(char *dst, size_t dst_size, const char *src) { return 0; }",
+    },
+    badCode: {
+      language: "c",
+      filename: "review_buffer.c",
+      code: "void copy_review(char *dst, char *src) { strcpy(dst, src); }",
+    },
+  };
+
+  assert.deepEqual(
+    validateLessonMetadata(cMetadata, "content/c/pointer-ownership.mdx"),
+    cMetadata,
+  );
+});
+
 test("validateLessonMetadata accepts Vue single-file component samples", () => {
   const vueMetadata = {
     ...validMetadata,

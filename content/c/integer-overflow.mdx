@@ -1,0 +1,46 @@
+export const metadata = {
+  title: "Integer overflow before allocation",
+  track: "c",
+  order: 8,
+  summary: "Check multiplication before allocating arrays so a wrapped byte count does not create a too-small buffer.",
+  tags: ["integers", "overflow", "malloc"],
+  takeaways: ["Allocation math must be checked before `malloc`, because overflow can turn a large request into a small allocation."],
+  goodCode: {
+    language: "c",
+    filename: "src/review_scores.c",
+    code: `#include <stdint.h>
+#include <stdlib.h>
+
+int allocate_scores(size_t count, int **out)
+{
+    // Check multiplication before asking malloc for bytes.
+    if (out == NULL || count > SIZE_MAX / sizeof **out) {
+        return -1;
+    }
+
+    *out = malloc(count * sizeof **out);
+    return *out == NULL ? -1 : 0;
+}`,
+  },
+  badCode: {
+    language: "c",
+    filename: "review_scores.c",
+    code: `#include <stdlib.h>
+
+int *allocate_scores(size_t count)
+{
+    // Overflow can make malloc reserve fewer bytes than requested.
+    return malloc(count * sizeof(int));
+}`,
+  },
+};
+
+## What to review
+
+The good version checks that `count * sizeof **out` fits in `size_t` before allocating. The output pointer is written only after the size is proven.
+
+The bad version multiplies directly inside `malloc`. If the multiplication wraps, the loop that fills the array can write past the smaller allocation.
+
+## Review notes
+
+Review allocation size math before the allocation call. The larger the count comes from user input, files, or network data, the more important the overflow check becomes.

@@ -1,0 +1,56 @@
+export const metadata = {
+  title: "Struct ownership and borrowed views",
+  track: "c",
+  order: 5,
+  summary: "Use small view structs to state borrowed data and lengths, instead of returning pointers to temporary storage.",
+  tags: ["structs", "ownership", "views"],
+  takeaways: ["A struct that borrows memory should say so through const pointers and lengths, while stack storage must never escape its function."],
+  goodCode: {
+    language: "c",
+    filename: "src/review_view.c",
+    code: `#include <stddef.h>
+#include <string.h>
+
+struct ReviewView {
+    const char *title;
+    size_t title_len;
+};
+
+struct ReviewView review_view_from_title(const char *title)
+{
+    // A view stores borrowed data plus its length.
+    return (struct ReviewView) {
+        .title = title,
+        .title_len = strlen(title),
+    };
+}`,
+  },
+  badCode: {
+    language: "c",
+    filename: "review_view.c",
+    code: `#include <string.h>
+
+struct ReviewView {
+    char *title;
+};
+
+struct ReviewView default_review_view(void)
+{
+    char title[32];
+    strcpy(title, "Draft review");
+
+    // Returning stack storage breaks after the function returns.
+    return (struct ReviewView) { .title = title };
+}`,
+  },
+};
+
+## What to review
+
+The good version returns a borrowed view: it keeps the caller-owned pointer and records the length. The `const` field tells readers that the view will not edit the title.
+
+The bad version stores a pointer to a local stack array. The pointer becomes invalid as soon as the function returns, so later reads have undefined behavior.
+
+## Review notes
+
+For structs with pointer fields, ask whether the struct owns the memory or only borrows it. Borrowed views should be short-lived, const where possible, and paired with sizes.

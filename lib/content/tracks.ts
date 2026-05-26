@@ -90,6 +90,12 @@ export const tracks = [
       "Review null boundaries, immutability, value objects, exceptions, resources, generics, streams, concurrency, records, and service boundaries.",
   },
   {
+    slug: "c",
+    title: "C",
+    description:
+      "Review pointers, buffer bounds, allocation ownership, const contracts, structs, error codes, file cleanup, integer limits, compiler flags, and tests.",
+  },
+  {
     slug: "git",
     title: "Git",
     description:

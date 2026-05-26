@@ -1,0 +1,48 @@
+export const metadata = {
+  title: "Compiler warning contracts",
+  track: "c",
+  order: 9,
+  summary: "Make compiler assumptions visible in source so warning flags and language version mistakes fail during review or CI.",
+  tags: ["compiler", "warnings", "builds"],
+  takeaways: ["Build assumptions belong near the code they protect, because reviewers cannot infer warning policy from a function body alone."],
+  goodCode: {
+    language: "c",
+    filename: "src/review_parse.c",
+    code: `#include <stdlib.h>
+
+#if !defined(__STDC_VERSION__) || __STDC_VERSION__ < 201112L
+#error "compile with C11 or newer"
+#endif
+
+int parse_review_score(const char *value)
+{
+    // Source-level build contracts keep compiler assumptions visible.
+    if (value == NULL) {
+        return -1;
+    }
+
+    return atoi(value);
+}`,
+  },
+  badCode: {
+    language: "c",
+    filename: "review_parse.c",
+    code: `#include <stdlib.h>
+
+int parse_review_score(char *value)
+{
+    // Missing build contracts let warnings stay optional.
+    return atoi(value);
+}`,
+  },
+};
+
+## What to review
+
+The good version states the required C version and uses `const` on the input pointer. CI can compile with strict flags and fail when the contract is not met.
+
+The bad version leaves build assumptions outside the code. A project can compile it with weak flags and miss nullability, const, or standard-version problems.
+
+## Review notes
+
+Compiler flags are part of code quality in C. Review the source and the build command together, especially for `-Wall`, `-Wextra`, `-Werror`, and the selected C standard.

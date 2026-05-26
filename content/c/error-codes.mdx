@@ -1,0 +1,56 @@
+export const metadata = {
+  title: "Error codes that name failures",
+  track: "c",
+  order: 6,
+  summary: "Return named error codes when validation can fail for multiple reasons, so callers can branch without guessing.",
+  tags: ["errors", "validation", "contracts"],
+  takeaways: ["A C error code is useful when it preserves the reason a caller needs for logging, retrying, or showing a message."],
+  goodCode: {
+    language: "c",
+    filename: "src/review_validation.c",
+    code: `enum ReviewStatus {
+    REVIEW_OK = 0,
+    REVIEW_EMPTY_TITLE = -1,
+    REVIEW_SCORE_OUT_OF_RANGE = -2,
+};
+
+enum ReviewStatus validate_review(const char *title, int score)
+{
+    // Named result codes tell callers which input failed.
+    if (title == 0 || title[0] == '\\0') {
+        return REVIEW_EMPTY_TITLE;
+    }
+    if (score < 0 || score > 100) {
+        return REVIEW_SCORE_OUT_OF_RANGE;
+    }
+
+    return REVIEW_OK;
+}`,
+  },
+  badCode: {
+    language: "c",
+    filename: "review_validation.c",
+    code: `int validate_review(const char *title, int score)
+{
+    // A single -1 erases which validation failed.
+    if (title == 0 || title[0] == '\\0') {
+        return -1;
+    }
+    if (score < 0 || score > 100) {
+        return -1;
+    }
+
+    return 0;
+}`,
+  },
+};
+
+## What to review
+
+The good version gives each failure a named enum value. Callers can log a useful reason, map it to a response, or assert it in tests.
+
+The bad version returns `-1` for every validation failure. Callers must repeat validation logic or show a generic error to the user.
+
+## Review notes
+
+When a function can fail, ask what the caller needs next. If the caller only needs success or failure, a boolean may fit. If it needs a reason, name the reason in the return type.

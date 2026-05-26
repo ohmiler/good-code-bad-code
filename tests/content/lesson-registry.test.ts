@@ -30,6 +30,7 @@ const expectedLessonCounts = {
   tailwindcss: 10,
   php: 10,
   java: 10,
+  c: 10,
   git: 10,
 } as const;
 
@@ -333,7 +334,8 @@ function countReviewCommentLines(code: string, track: string): number {
       track === "nestjs" ||
       track === "laravel" ||
       track === "php" ||
-      track === "java"
+      track === "java" ||
+      track === "c"
     ) {
       return trimmedLine.startsWith("// ");
     }
@@ -360,7 +362,7 @@ test("seeded lessons match expected track counts", async () => {
   const lessonsByTrack = await getTrackLessonFiles();
   const allLessonFiles = [...lessonsByTrack.values()].flat();
 
-  assert.equal(allLessonFiles.length, 210);
+  assert.equal(allLessonFiles.length, 220);
   for (const track of tracks) {
     assert.equal(
       lessonsByTrack.get(track.slug)?.length,
@@ -1047,6 +1049,49 @@ test("Java comments have matching Thai translations", async () => {
       for (const [index, comment] of translatedComments.entries()) {
         assert.match(comment, /[\u0e00-\u0e7f]/, `java/${slug}.${sampleName}[${index}]`);
         assert.ok(comment.trim().length >= 8, `java/${slug}.${sampleName}[${index}]`);
+      }
+    }
+  }
+});
+
+test("C samples include concise review comments", async () => {
+  const lessonsByTrack = await getTrackLessonFiles();
+  const cLessons = lessonsByTrack.get("c") ?? [];
+
+  assert.equal(cLessons.length, expectedLessonCounts.c);
+
+  for (const contentPath of cLessons) {
+    for (const sampleName of ["goodCode", "badCode"] as const) {
+      const code = await readMdxMetadataCodeSample(contentPath, sampleName);
+      const commentCount = countReviewCommentLines(code, "c");
+
+      assert.ok(commentCount >= 1, `${contentPath} ${sampleName}`);
+      assert.ok(commentCount <= 3, `${contentPath} ${sampleName}`);
+    }
+  }
+});
+
+test("C comments have matching Thai translations", async () => {
+  const lessonsByTrack = await getTrackLessonFiles();
+  const cLessons = lessonsByTrack.get("c") ?? [];
+
+  assert.equal(cLessons.length, expectedLessonCounts.c);
+
+  for (const contentPath of cLessons) {
+    const slug = slugFromContentPath(contentPath);
+    const translation = lessonThaiTranslations[`c/${slug}`];
+
+    assert.ok(translation.codeComments, `c/${slug} missing codeComments`);
+
+    for (const sampleName of ["goodCode", "badCode"] as const) {
+      const code = await readMdxMetadataCodeSample(contentPath, sampleName);
+      const commentCount = countReviewCommentLines(code, "c");
+      const translatedComments = translation.codeComments[sampleName] ?? [];
+
+      assert.equal(translatedComments.length, commentCount, `c/${slug}`);
+      for (const [index, comment] of translatedComments.entries()) {
+        assert.match(comment, /[\u0e00-\u0e7f]/, `c/${slug}.${sampleName}[${index}]`);
+        assert.ok(comment.trim().length >= 8, `c/${slug}.${sampleName}[${index}]`);
       }
     }
   }

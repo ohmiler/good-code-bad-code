@@ -156,6 +156,11 @@ export const trackThaiTranslations = {
     description:
       "ฝึกรีวิว Java ว่า null มี Optional/exception boundary ไหม object ถูกแก้จากข้างนอกไม่ได้ไหม resource ถูกปิดแน่ไหม และแยก controller/service/repository อ่านง่ายหรือเปล่า.",
   },
+  c: {
+    title: "C",
+    description:
+      "ฝึกรีวิว C ว่า pointer, buffer, malloc/free, const, struct, error code, file cleanup, integer overflow, compiler flag และ test บอก ownership กับ failure path พอหรือไม่.",
+  },
   git: {
     title: "Git",
     description:
@@ -2594,6 +2599,166 @@ export const lessonThaiTranslations = {
     codeComments: {
       goodCode: ["service เป็นเจ้าของ flow ของงาน และเรียก dependency ที่ต้องใช้."],
       badCode: ["HTTP, SQL, การเปิด connection และ email ถูกผสมไว้ใน controller เดียว."],
+    },
+  },
+  "c/pointer-ownership": {
+    title: "ownership ของ pointer ที่ function boundary",
+    summary: "ถ้า function เขียนผ่าน pointer ให้ caller ส่ง buffer กับขนาดเข้ามา อย่าคืน static buffer ที่ caller หลายจุดเขียนทับกันได้.",
+    takeaways: ["function ที่เขียนผ่าน pointer ควรบอกว่าใครเป็นเจ้าของ storage และ storage นั้นมีขนาดเท่าไร."],
+    whatToReview: [
+      "โค้ดที่ดีให้ caller ส่ง destination buffer และขนาด ทำให้เห็นตำแหน่ง write, overflow path และ result code.",
+      "โค้ดที่ควรปรับคืน pointer ไปยัง static buffer ร่วมกัน ทำให้ caller เขียนทับกันได้ และ strcpy ไม่เช็กขนาด array.",
+    ],
+    reviewNotes: [
+      "เวลารีวิว C ให้เริ่มจากคำถาม pointer ที่ boundary: function อ่าน, เขียน, ยืม, หรือรับ ownership ของ pointer นั้นกันแน่.",
+    ],
+    codeComments: {
+      goodCode: ["storage ที่ caller ส่งมา ทำให้จุดที่ถูกเขียนเห็นได้ตั้งแต่ boundary."],
+      badCode: ["static storage ที่ใช้ร่วมกันซ่อน ownership ระหว่าง caller."],
+    },
+  },
+  "c/buffer-bounds": {
+    title: "ขอบเขต buffer ตอน format ข้อความ",
+    summary: "ใช้ API ที่รับขนาด buffer และเช็กผลลัพธ์ก่อนถือว่าข้อความครบ เพราะข้อความที่ถูกตัดอาจเป็น bug ของข้อมูล.",
+    takeaways: ["bounded write ยังต้องเช็ก return value เพราะ truncation อาจทำให้ข้อมูลที่ผู้ใช้เห็นผิด."],
+    whatToReview: [
+      "โค้ดที่ดีใช้ snprintf, ส่งขนาด buffer และคืน error เมื่อ label ยาวเกินพื้นที่.",
+      "โค้ดที่ควรปรับใช้ sprintf ทำให้ function ไม่มีทางรู้ว่า destination พอสำหรับข้อความหรือไม่.",
+    ],
+    reviewNotes: [
+      "รีวิว fixed buffer ให้ดูทั้ง API และ return value. API ที่จำกัดขนาดช่วยกัน overwrite แต่โค้ดยังต้องตัดสินใจว่า truncation ยอมได้ไหม.",
+    ],
+    codeComments: {
+      goodCode: ["snprintf บอกได้ว่า label ยาวเกิน buffer หรือไม่."],
+      badCode: ["sprintf ไม่รู้ขนาดปลายทางที่กำลังเขียน."],
+    },
+  },
+  "c/allocation-free-ownership": {
+    title: "ownership ของ malloc และ free",
+    summary: "จับคู่ heap allocation กับ release function ที่เห็นได้ เพื่อให้ caller รู้ว่าเริ่มเป็นเจ้าของ memory เมื่อไรและปล่อยคืนตรงไหน.",
+    takeaways: ["heap ownership ควรเป็น contract ในโค้ด: จุดที่สร้าง memory ต้องชี้ไปยังจุดที่ release memory นั้น."],
+    whatToReview: [
+      "โค้ดที่ดีมี review_create และ review_free เป็นคู่กัน และคืน memory ของ struct เมื่อ allocation ของ title ล้ม.",
+      "โค้ดที่ควรปรับ allocate label แล้วคืน pointer โดยไม่บอกว่าใครต้อง free ทำให้ call site leak ได้ง่าย.",
+    ],
+    reviewNotes: [
+      "เมื่อเห็น malloc ให้หา release contract ไม่ใช่แค่ free ใกล้ ๆ จุดนั้น. release function ที่ตั้งชื่อไว้ช่วยให้ test และ doc ตรงกัน.",
+    ],
+    codeComments: {
+      goodCode: ["คู่ create/free บอกเจ้าของ heap memory."],
+      badCode: ["allocate heap โดยไม่บอกเจ้าของ ทำให้ leak ทุกครั้งที่เรียกได้."],
+    },
+  },
+  "c/const-correctness": {
+    title: "ใช้ const กับ path ที่อ่านอย่างเดียว",
+    summary: "ใส่ const ให้ pointer ที่อ่านอย่างเดียว เพื่อให้ caller และ reviewer รู้ว่า check นี้ไม่แก้ state ที่ใช้ร่วมกัน.",
+    takeaways: ["const เป็นส่วนหนึ่งของ API contract ใน C เพราะแยก path ที่อ่านอย่างเดียวออกจาก function ที่อาจแก้ข้อมูล."],
+    whatToReview: [
+      "โค้ดที่ดีรับ const struct Review * ทำให้ compiler ช่วยกันไม่ให้ score check แก้ review.",
+      "โค้ดที่ควรปรับรับ mutable pointer และแก้คะแนนใน predicate ทำให้ caller ที่แค่ถามผลได้รับ side effect กลับไป.",
+    ],
+    reviewNotes: [
+      "ถ้า function อ่านข้อมูลอย่างเดียว ให้ถามว่าทำไม pointer ยังไม่เป็น const. ถ้าใส่ const ไม่ได้ การแก้ข้อมูลควรอยู่ในชื่อ function.",
+    ],
+    codeComments: {
+      goodCode: ["const สัญญาว่า check นี้ไม่แก้ review."],
+      badCode: ["check สำหรับอ่านกลับแก้ state ทำให้ caller คาดไม่ถึง."],
+    },
+  },
+  "c/struct-ownership": {
+    title: "struct ที่ยืมข้อมูลและอายุของ pointer",
+    summary: "ใช้ view struct เพื่อบอก borrowed data กับความยาว แทนการคืน pointer ไปยัง temporary storage.",
+    takeaways: ["struct ที่ยืม memory ควรมี const pointer และ length ส่วน stack storage ห้ามหลุดออกจาก function."],
+    whatToReview: [
+      "โค้ดที่ดีคืน view ที่บอกว่า title เป็น borrowed pointer และเก็บความยาวไว้พร้อมกัน.",
+      "โค้ดที่ควรปรับเก็บ pointer ไปยัง array บน stack ซึ่งหมดอายุทันทีเมื่อ function return.",
+    ],
+    reviewNotes: [
+      "สำหรับ struct ที่มี pointer field ให้ถามว่า struct เป็นเจ้าของ memory หรือแค่ยืม. view ที่ยืมควรอายุสั้นและมีขนาดกำกับ.",
+    ],
+    codeComments: {
+      goodCode: ["view เก็บ borrowed data พร้อมความยาว."],
+      badCode: ["return stack storage ทำให้ pointer พังหลังออกจาก function."],
+    },
+  },
+  "c/error-codes": {
+    title: "error code ที่บอกเหตุผลของ failure",
+    summary: "คืน error code ที่ตั้งชื่อไว้เมื่อ validation ล้มได้หลายสาเหตุ เพื่อให้ caller แยก branch โดยไม่ต้องเดา.",
+    takeaways: ["error code มีค่าก็ต่อเมื่อเก็บเหตุผลที่ caller ต้องใช้ต่อ เช่น log, retry หรือข้อความที่ผู้ใช้เห็น."],
+    whatToReview: [
+      "โค้ดที่ดีให้ enum value กับแต่ละ failure ทำให้ caller log หรือ map เป็น response ได้ตรงสาเหตุ.",
+      "โค้ดที่ควรปรับคืน -1 ทุกกรณี ทำให้ caller ต้อง validate ซ้ำหรือคืน error กว้างเกินไป.",
+    ],
+    reviewNotes: [
+      "ถามว่า caller ต้องรู้อะไรหลัง function ล้ม ถ้าต้องรู้แค่ผ่านหรือไม่ผ่าน boolean อาจพอ ถ้าต้องรู้เหตุผล ให้ตั้งชื่อเหตุผลใน return type.",
+    ],
+    codeComments: {
+      goodCode: ["result code ที่ตั้งชื่อบอกว่า input ไหนล้ม."],
+      badCode: ["ค่า -1 ค่าเดียวลบเหตุผลของ validation."],
+    },
+  },
+  "c/file-io-cleanup": {
+    title: "cleanup path ของ file I/O",
+    summary: "ให้ cleanup ครอบทุก path ของ file I/O เพื่อไม่ให้ early return หรือ write failure ทิ้ง file handle ค้าง.",
+    takeaways: ["file cleanup ต้องเห็นได้ทั้งทางสำเร็จและทางล้ม โดยเฉพาะ function ที่ return ได้ก่อนถึงบรรทัดสุดท้าย."],
+    whatToReview: [
+      "โค้ดที่ดีรวมผลของ fputs และ fclose ไว้ใน path เดียว จึงปิดไฟล์แม้ write ล้ม.",
+      "โค้ดที่ควรปรับ return ก่อน fclose เมื่อ write ล้ม ทำให้ file handle leak และอาจพลาด buffered write error.",
+    ],
+    reviewNotes: [
+      "เมื่อเห็น fopen ให้ไล่ทุก return หลังจากนั้น. cleanup label หรือ exit path เดียวมักทำให้ release path ตรวจง่ายกว่า early return หลายจุด.",
+    ],
+    codeComments: {
+      goodCode: ["exit path เดียวปิดไฟล์ได้ทุกทางที่ล้ม."],
+      badCode: ["return เร็วทำให้ file handle ยังเปิดค้าง."],
+    },
+  },
+  "c/integer-overflow": {
+    title: "เช็ก integer overflow ก่อน allocation",
+    summary: "เช็ก multiplication ก่อน allocate array เพื่อไม่ให้ byte count ที่ overflow กลายเป็น buffer เล็กเกินจริง.",
+    takeaways: ["allocation math ต้องเช็กก่อน malloc เพราะ overflow อาจเปลี่ยน request ใหญ่ให้เป็น allocation ขนาดเล็ก."],
+    whatToReview: [
+      "โค้ดที่ดีเช็กว่า count * sizeof **out ยังอยู่ใน SIZE_MAX ก่อนเขียน output pointer.",
+      "โค้ดที่ควรปรับคูณขนาดตรงใน malloc ถ้าค่า wrap loop ที่เติม array จะเขียนเกิน allocation.",
+    ],
+    reviewNotes: [
+      "รีวิว size math ก่อนถึง malloc โดยเฉพาะเมื่อ count มาจาก user input, file หรือ network data.",
+    ],
+    codeComments: {
+      goodCode: ["เช็ก multiplication ก่อนขอ bytes จาก malloc."],
+      badCode: ["overflow อาจทำให้ malloc จอง bytes น้อยกว่าที่ต้องใช้."],
+    },
+  },
+  "c/compiler-warnings-flags": {
+    title: "compiler warning เป็น contract ของ build",
+    summary: "ทำให้สมมติฐานของ compiler เห็นใน source เพื่อให้ warning flag และ C standard ที่ผิด fail ตั้งแต่ review หรือ CI.",
+    takeaways: ["build assumption ควรอยู่ใกล้โค้ดที่พึ่งพา เพราะ reviewer เดา warning policy จาก function body อย่างเดียวไม่ได้."],
+    whatToReview: [
+      "โค้ดที่ดีบอก C standard ที่ต้องใช้ และใช้ const กับ input pointer เพื่อให้ strict build ช่วยจับผิด.",
+      "โค้ดที่ควรปรับปล่อย build assumption ไว้นอก source ทำให้ project ที่เปิด flag อ่อนพลาดปัญหา const หรือ standard version.",
+    ],
+    reviewNotes: [
+      "คุณภาพของ C รวมถึง compiler flags ด้วย ให้รีวิว source คู่กับ build command เช่น -Wall, -Wextra, -Werror และ C standard ที่เลือก.",
+    ],
+    codeComments: {
+      goodCode: ["build contract ใน source ทำให้สมมติฐานของ compiler เห็นได้."],
+      badCode: ["ไม่มี build contract ทำให้ warning เป็นแค่ตัวเลือก."],
+    },
+  },
+  "c/unit-tests-cases": {
+    title: "unit test ที่ assert boundary case",
+    summary: "เขียน test C ขนาดเล็กที่ assert behavior ตรง ๆ แทนการ print output แล้วให้คนอ่านผลเอง.",
+    takeaways: ["test C ควร fail เองเมื่อโค้ดพัง ไม่ควรฝากผลไว้กับการอ่าน terminal output ของ reviewer."],
+    whatToReview: [
+      "โค้ดที่ดีเปลี่ยน label ที่คาดไว้เป็น assertion ทำให้ test fail อัตโนมัติเมื่อ formatter คืน error หรือเขียนข้อความผิด.",
+      "โค้ดที่ควรปรับ print ผลแล้ว exit สำเร็จ ทำให้ CI ผ่านแม้ output ผิด หากไม่มีคนอ่าน log.",
+    ],
+    reviewNotes: [
+      "สำหรับ C test ให้ชอบ executable เล็ก ๆ ที่มี assertion และชื่อ boundary case เช่น buffer พอดี, truncation, null input และ allocation failure.",
+    ],
+    codeComments: {
+      goodCode: ["test data ตั้งชื่อ boundary condition ที่กำลังรีวิว."],
+      badCode: ["การ print ให้มนุษย์ตัดสินผล test เอง."],
     },
   },
   "git/status-before-work": {

@@ -455,6 +455,36 @@ import JavaRecordsAndDtoBoundaries, {
 import JavaPackageServiceBoundaries, {
   metadata as javaPackageServiceBoundariesMetadata,
 } from "./java/package-service-boundaries.mdx";
+import CPointerOwnership, {
+  metadata as cPointerOwnershipMetadata,
+} from "./c/pointer-ownership.mdx";
+import CBufferBounds, {
+  metadata as cBufferBoundsMetadata,
+} from "./c/buffer-bounds.mdx";
+import CAllocationFreeOwnership, {
+  metadata as cAllocationFreeOwnershipMetadata,
+} from "./c/allocation-free-ownership.mdx";
+import CConstCorrectness, {
+  metadata as cConstCorrectnessMetadata,
+} from "./c/const-correctness.mdx";
+import CStructOwnership, {
+  metadata as cStructOwnershipMetadata,
+} from "./c/struct-ownership.mdx";
+import CErrorCodes, {
+  metadata as cErrorCodesMetadata,
+} from "./c/error-codes.mdx";
+import CFileIoCleanup, {
+  metadata as cFileIoCleanupMetadata,
+} from "./c/file-io-cleanup.mdx";
+import CIntegerOverflow, {
+  metadata as cIntegerOverflowMetadata,
+} from "./c/integer-overflow.mdx";
+import CCompilerWarningsFlags, {
+  metadata as cCompilerWarningsFlagsMetadata,
+} from "./c/compiler-warnings-flags.mdx";
+import CUnitTestsCases, {
+  metadata as cUnitTestsCasesMetadata,
+} from "./c/unit-tests-cases.mdx";
 import GitStatusBeforeWork, {
   metadata as gitStatusBeforeWorkMetadata,
 } from "./git/status-before-work.mdx";
@@ -1543,6 +1573,66 @@ const rawLessons: RawLesson[] = [
     source: "content/java/package-service-boundaries.mdx",
     metadata: javaPackageServiceBoundariesMetadata,
     Component: JavaPackageServiceBoundaries,
+  },
+  {
+    slug: "pointer-ownership",
+    source: "content/c/pointer-ownership.mdx",
+    metadata: cPointerOwnershipMetadata,
+    Component: CPointerOwnership,
+  },
+  {
+    slug: "buffer-bounds",
+    source: "content/c/buffer-bounds.mdx",
+    metadata: cBufferBoundsMetadata,
+    Component: CBufferBounds,
+  },
+  {
+    slug: "allocation-free-ownership",
+    source: "content/c/allocation-free-ownership.mdx",
+    metadata: cAllocationFreeOwnershipMetadata,
+    Component: CAllocationFreeOwnership,
+  },
+  {
+    slug: "const-correctness",
+    source: "content/c/const-correctness.mdx",
+    metadata: cConstCorrectnessMetadata,
+    Component: CConstCorrectness,
+  },
+  {
+    slug: "struct-ownership",
+    source: "content/c/struct-ownership.mdx",
+    metadata: cStructOwnershipMetadata,
+    Component: CStructOwnership,
+  },
+  {
+    slug: "error-codes",
+    source: "content/c/error-codes.mdx",
+    metadata: cErrorCodesMetadata,
+    Component: CErrorCodes,
+  },
+  {
+    slug: "file-io-cleanup",
+    source: "content/c/file-io-cleanup.mdx",
+    metadata: cFileIoCleanupMetadata,
+    Component: CFileIoCleanup,
+  },
+  {
+    slug: "integer-overflow",
+    source: "content/c/integer-overflow.mdx",
+    metadata: cIntegerOverflowMetadata,
+    Component: CIntegerOverflow,
+  },
+  {
+    slug: "compiler-warnings-flags",
+    source: "content/c/compiler-warnings-flags.mdx",
+    metadata: cCompilerWarningsFlagsMetadata,
+    Component: CCompilerWarningsFlags,
+  },
+  {
+    slug: "unit-tests-cases",
+    source: "content/c/unit-tests-cases.mdx",
+    metadata: cUnitTestsCasesMetadata,
+    Component: CUnitTestsCases,
   },
   {
     slug: "status-before-work",

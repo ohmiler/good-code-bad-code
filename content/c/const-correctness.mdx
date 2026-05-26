@@ -1,0 +1,56 @@
+export const metadata = {
+  title: "Const correctness for read paths",
+  track: "c",
+  order: 4,
+  summary: "Mark read-only pointers as const so callers and reviewers know a check will not mutate shared state.",
+  tags: ["const", "pointers", "contracts"],
+  takeaways: ["Const is part of the API contract in C; it separates read-only review paths from functions that may change data."],
+  goodCode: {
+    language: "c",
+    filename: "src/review_score.c",
+    code: `#include <stdbool.h>
+
+struct Review {
+    int score;
+};
+
+bool review_score_is_passing(const struct Review *review)
+{
+    // const promises this check will not mutate the review.
+    if (review == NULL) {
+        return false;
+    }
+
+    return review->score >= 70;
+}`,
+  },
+  badCode: {
+    language: "c",
+    filename: "review_score.c",
+    code: `#include <stdbool.h>
+
+struct Review {
+    int score;
+};
+
+bool review_score_is_passing(struct Review *review)
+{
+    // A read check that rewrites state surprises callers.
+    if (review->score < 0) {
+        review->score = 0;
+    }
+
+    return review->score >= 70;
+}`,
+  },
+};
+
+## What to review
+
+The good version accepts a `const struct Review *`, so the compiler helps enforce that the score check is read-only.
+
+The bad version receives a mutable pointer and normalizes negative scores during a predicate call. A caller asking a question gets state mutation as a hidden side effect.
+
+## Review notes
+
+In C, `const` is one of the cheapest review signals. If a function reads data only, ask for `const`; if it cannot be `const`, the mutation should be named in the function.

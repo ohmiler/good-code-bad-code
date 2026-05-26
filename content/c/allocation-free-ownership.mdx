@@ -1,0 +1,70 @@
+export const metadata = {
+  title: "Allocation and free ownership",
+  track: "c",
+  order: 3,
+  summary: "Pair heap allocation with a visible free function so callers know when they own memory and when to release it.",
+  tags: ["malloc", "free", "ownership"],
+  takeaways: ["Heap ownership should appear as a contract: the code that creates memory must name the code that releases it."],
+  goodCode: {
+    language: "c",
+    filename: "src/review.c",
+    code: `#include <stdlib.h>
+#include <string.h>
+
+struct Review {
+    char *title;
+};
+
+struct Review *review_create(const char *title)
+{
+    struct Review *review = malloc(sizeof *review);
+    if (review == NULL) {
+        return NULL;
+    }
+
+    size_t length = strlen(title) + 1;
+    review->title = malloc(length);
+    if (review->title == NULL) {
+        free(review);
+        return NULL;
+    }
+
+    // The create/free pair states who owns heap memory.
+    memcpy(review->title, title, length);
+    return review;
+}
+
+void review_free(struct Review *review)
+{
+    if (review != NULL) {
+        free(review->title);
+        free(review);
+    }
+}`,
+  },
+  badCode: {
+    language: "c",
+    filename: "review.c",
+    code: `#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+char *review_title_for_display(const char *title)
+{
+    // Heap allocation without a matching owner leaks per call.
+    char *label = malloc(strlen(title) + 10);
+    sprintf(label, "Review: %s", title);
+    return label;
+}`,
+  },
+};
+
+## What to review
+
+The good version exposes a constructor and a matching `review_free`. If title allocation fails, it releases the struct before returning failure.
+
+The bad version allocates a display label and returns it without naming who must free it. Call sites can leak memory or free the same pointer in inconsistent places.
+
+## Review notes
+
+When reviewing `malloc`, search for the matching `free` contract, not only a nearby `free` call. A named release function makes ownership easier to test and document.

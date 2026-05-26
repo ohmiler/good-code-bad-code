@@ -1,0 +1,54 @@
+export const metadata = {
+  title: "Unit tests with boundary cases",
+  track: "c",
+  order: 10,
+  summary: "Write small C tests that assert boundary behavior directly, instead of printing output for a human to inspect.",
+  tags: ["tests", "assertions", "boundaries"],
+  takeaways: ["A C test should fail by itself when the code breaks, without asking a reviewer to read terminal output."],
+  goodCode: {
+    language: "c",
+    filename: "tests/review_label_test.c",
+    code: `#include <assert.h>
+#include <string.h>
+
+static void test_review_label_fits_buffer(void)
+{
+    char buffer[16];
+
+    // Test data names the boundary condition under review.
+    assert(format_review_label(buffer, sizeof buffer, 42) == 0);
+    assert(strcmp(buffer, "review-42") == 0);
+}
+
+int main(void)
+{
+    test_review_label_fits_buffer();
+    return 0;
+}`,
+  },
+  badCode: {
+    language: "c",
+    filename: "tests/review_label_test.c",
+    code: `#include <stdio.h>
+
+int main(void)
+{
+    char buffer[16];
+    format_review_label(buffer, sizeof buffer, 42);
+
+    // Printing output asks humans to judge the test result.
+    printf("%s\\n", buffer);
+    return 0;
+}`,
+  },
+};
+
+## What to review
+
+The good version turns the expected label into assertions. The test fails automatically when the formatter returns an error or writes the wrong text.
+
+The bad version prints the result and exits successfully. CI will pass even if the output is wrong, unless a human reads the log.
+
+## Review notes
+
+For C tests, prefer tiny executable tests with assertions and named boundary cases. Add cases for exact-fit buffers, truncation, null input, and allocation failure paths.
