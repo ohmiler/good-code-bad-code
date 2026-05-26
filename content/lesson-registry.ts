@@ -155,6 +155,36 @@ import ReactMemoizationWhenItHelps, {
 import ReactCompositionOverPropFlags, {
   metadata as reactCompositionOverPropFlagsMetadata,
 } from "./react/composition-over-prop-flags.mdx";
+import VueSingleFileComponentBoundaries, {
+  metadata as vueSingleFileComponentBoundariesMetadata,
+} from "./vue/single-file-component-boundaries.mdx";
+import VuePropsEmitsContracts, {
+  metadata as vuePropsEmitsContractsMetadata,
+} from "./vue/props-emits-contracts.mdx";
+import VueComputedVsWatch, {
+  metadata as vueComputedVsWatchMetadata,
+} from "./vue/computed-vs-watch.mdx";
+import VueListRenderingKeys, {
+  metadata as vueListRenderingKeysMetadata,
+} from "./vue/list-rendering-keys.mdx";
+import VueFormVModelBoundaries, {
+  metadata as vueFormVModelBoundariesMetadata,
+} from "./vue/form-v-model-boundaries.mdx";
+import VueComposablesStateOwnership, {
+  metadata as vueComposablesStateOwnershipMetadata,
+} from "./vue/composables-state-ownership.mdx";
+import VueAsyncStateLoadingErrors, {
+  metadata as vueAsyncStateLoadingErrorsMetadata,
+} from "./vue/async-state-loading-errors.mdx";
+import VuePiniaStoreActions, {
+  metadata as vuePiniaStoreActionsMetadata,
+} from "./vue/pinia-store-actions.mdx";
+import VueProvideInjectBoundaries, {
+  metadata as vueProvideInjectBoundariesMetadata,
+} from "./vue/provide-inject-boundaries.mdx";
+import VueSlotsComponentComposition, {
+  metadata as vueSlotsComponentCompositionMetadata,
+} from "./vue/slots-component-composition.mdx";
 import NextjsAppRouterFileConventions, {
   metadata as nextjsAppRouterFileConventionsMetadata,
 } from "./nextjs/app-router-file-conventions.mdx";
@@ -853,6 +883,66 @@ const rawLessons: RawLesson[] = [
     source: "content/react/composition-over-prop-flags.mdx",
     metadata: reactCompositionOverPropFlagsMetadata,
     Component: ReactCompositionOverPropFlags,
+  },
+  {
+    slug: "single-file-component-boundaries",
+    source: "content/vue/single-file-component-boundaries.mdx",
+    metadata: vueSingleFileComponentBoundariesMetadata,
+    Component: VueSingleFileComponentBoundaries,
+  },
+  {
+    slug: "props-emits-contracts",
+    source: "content/vue/props-emits-contracts.mdx",
+    metadata: vuePropsEmitsContractsMetadata,
+    Component: VuePropsEmitsContracts,
+  },
+  {
+    slug: "computed-vs-watch",
+    source: "content/vue/computed-vs-watch.mdx",
+    metadata: vueComputedVsWatchMetadata,
+    Component: VueComputedVsWatch,
+  },
+  {
+    slug: "list-rendering-keys",
+    source: "content/vue/list-rendering-keys.mdx",
+    metadata: vueListRenderingKeysMetadata,
+    Component: VueListRenderingKeys,
+  },
+  {
+    slug: "form-v-model-boundaries",
+    source: "content/vue/form-v-model-boundaries.mdx",
+    metadata: vueFormVModelBoundariesMetadata,
+    Component: VueFormVModelBoundaries,
+  },
+  {
+    slug: "composables-state-ownership",
+    source: "content/vue/composables-state-ownership.mdx",
+    metadata: vueComposablesStateOwnershipMetadata,
+    Component: VueComposablesStateOwnership,
+  },
+  {
+    slug: "async-state-loading-errors",
+    source: "content/vue/async-state-loading-errors.mdx",
+    metadata: vueAsyncStateLoadingErrorsMetadata,
+    Component: VueAsyncStateLoadingErrors,
+  },
+  {
+    slug: "pinia-store-actions",
+    source: "content/vue/pinia-store-actions.mdx",
+    metadata: vuePiniaStoreActionsMetadata,
+    Component: VuePiniaStoreActions,
+  },
+  {
+    slug: "provide-inject-boundaries",
+    source: "content/vue/provide-inject-boundaries.mdx",
+    metadata: vueProvideInjectBoundariesMetadata,
+    Component: VueProvideInjectBoundaries,
+  },
+  {
+    slug: "slots-component-composition",
+    source: "content/vue/slots-component-composition.mdx",
+    metadata: vueSlotsComponentCompositionMetadata,
+    Component: VueSlotsComponentComposition,
   },
   {
     slug: "app-router-file-conventions",

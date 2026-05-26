@@ -1,0 +1,53 @@
+export const metadata = {
+  title: "Composables and state ownership",
+  track: "vue",
+  order: 6,
+  summary: "Use composables to group reusable reactive behavior while keeping each caller's state isolated.",
+  tags: ["composables", "state", "reuse"],
+  takeaways: ["A composable should return the state and actions one caller needs, without sharing mutable module state by accident."],
+  goodCode: {
+    language: "typescript",
+    filename: "useReviewFilters.ts",
+    code: `import { computed, ref } from "vue";
+
+export function useReviewFilters(reviews: Ref<Review[]>) {
+  // Each caller receives its own filter refs.
+  const query = ref("");
+  const activeOnly = ref(true);
+
+  const visibleReviews = computed(() =>
+    reviews.value.filter((review) => {
+      return (!activeOnly.value || review.active) &&
+        review.title.includes(query.value);
+    }),
+  );
+
+  return { query, activeOnly, visibleReviews };
+}`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "reviewFilters.ts",
+    code: `import { computed, ref } from "vue";
+
+// Module state is shared by every component that imports this file.
+export const query = ref("");
+export const activeOnly = ref(true);
+
+export function visibleReviews(reviews: Ref<Review[]>) {
+  return computed(() =>
+    reviews.value.filter((review) => review.title.includes(query.value)),
+  );
+}`,
+  },
+};
+
+## What to review
+
+The good version creates filter state inside the composable call. Two pages can use the same composable without sharing query text.
+
+The bad version exports mutable refs from module scope. Components that import the module can overwrite each other's filters.
+
+## Review notes
+
+Composables are functions, not just folders for shared refs. In review, check whether state is created per caller or shared intentionally through a store.

@@ -1,0 +1,52 @@
+export const metadata = {
+  title: "List rendering keys",
+  track: "vue",
+  order: 4,
+  summary: "Use stable item identifiers for v-for keys so Vue can preserve component and form state across list changes.",
+  tags: ["v-for", "keys", "lists"],
+  takeaways: ["A v-for key should identify the data item, not its current position in the array."],
+  goodCode: {
+    language: "vue",
+    filename: "ReviewQueue.vue",
+    code: `<script setup lang="ts">
+defineProps<{
+  reviews: Array<{ id: string; title: string; reviewer: string }>;
+}>();
+
+// Each key follows the review record when the list is sorted.
+</script>
+
+<template>
+  <article v-for="review in reviews" :key="review.id">
+    <h2>{{ review.title }}</h2>
+    <p>{{ review.reviewer }}</p>
+  </article>
+</template>`,
+  },
+  badCode: {
+    language: "vue",
+    filename: "ReviewQueue.vue",
+    code: `<script setup>
+defineProps(["reviews"]);
+
+// Index keys change meaning when rows move.
+</script>
+
+<template>
+  <article v-for="(review, index) in reviews" :key="index">
+    <h2>{{ review.title }}</h2>
+    <input v-model="review.note">
+  </article>
+</template>`,
+  },
+};
+
+## What to review
+
+The good version keys each row by the review id. Vue can keep row state attached to the same review after sorting or inserting.
+
+The bad version keys rows by array index. Moving a row can attach input state or child component state to the wrong review.
+
+## Review notes
+
+When reviewing `v-for`, compare the key with the data identity. Index keys are only low-risk for static lists that never reorder, insert, delete, or keep per-row state.

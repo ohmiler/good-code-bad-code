@@ -15,6 +15,7 @@ const expectedLessonCounts = {
   javascript: 10,
   typescript: 10,
   react: 10,
+  vue: 10,
   nextjs: 10,
   nodejs: 10,
   express: 10,
@@ -323,6 +324,7 @@ function countReviewCommentLines(code: string, track: string): number {
       track === "javascript" ||
       track === "typescript" ||
       track === "react" ||
+      track === "vue" ||
       track === "nextjs" ||
       track === "nodejs" ||
       track === "express" ||
@@ -354,7 +356,7 @@ test("seeded lessons match expected track counts", async () => {
   const lessonsByTrack = await getTrackLessonFiles();
   const allLessonFiles = [...lessonsByTrack.values()].flat();
 
-  assert.equal(allLessonFiles.length, 180);
+  assert.equal(allLessonFiles.length, 190);
   for (const track of tracks) {
     assert.equal(
       lessonsByTrack.get(track.slug)?.length,
@@ -654,6 +656,49 @@ test("React comments have matching Thai translations", async () => {
       for (const [index, comment] of translatedComments.entries()) {
         assert.match(comment, /[\u0e00-\u0e7f]/, `react/${slug}.${sampleName}[${index}]`);
         assert.ok(comment.trim().length >= 8, `react/${slug}.${sampleName}[${index}]`);
+      }
+    }
+  }
+});
+
+test("Vue samples include concise review comments", async () => {
+  const lessonsByTrack = await getTrackLessonFiles();
+  const vueLessons = lessonsByTrack.get("vue") ?? [];
+
+  assert.equal(vueLessons.length, expectedLessonCounts.vue);
+
+  for (const contentPath of vueLessons) {
+    for (const sampleName of ["goodCode", "badCode"] as const) {
+      const code = await readMdxMetadataCodeSample(contentPath, sampleName);
+      const commentCount = countReviewCommentLines(code, "vue");
+
+      assert.ok(commentCount >= 1, `${contentPath} ${sampleName}`);
+      assert.ok(commentCount <= 3, `${contentPath} ${sampleName}`);
+    }
+  }
+});
+
+test("Vue comments have matching Thai translations", async () => {
+  const lessonsByTrack = await getTrackLessonFiles();
+  const vueLessons = lessonsByTrack.get("vue") ?? [];
+
+  assert.equal(vueLessons.length, expectedLessonCounts.vue);
+
+  for (const contentPath of vueLessons) {
+    const slug = slugFromContentPath(contentPath);
+    const translation = lessonThaiTranslations[`vue/${slug}`];
+
+    assert.ok(translation.codeComments, `vue/${slug} missing codeComments`);
+
+    for (const sampleName of ["goodCode", "badCode"] as const) {
+      const code = await readMdxMetadataCodeSample(contentPath, sampleName);
+      const commentCount = countReviewCommentLines(code, "vue");
+      const translatedComments = translation.codeComments[sampleName] ?? [];
+
+      assert.equal(translatedComments.length, commentCount, `vue/${slug}`);
+      for (const [index, comment] of translatedComments.entries()) {
+        assert.match(comment, /[\u0e00-\u0e7f]/, `vue/${slug}.${sampleName}[${index}]`);
+        assert.ok(comment.trim().length >= 8, `vue/${slug}.${sampleName}[${index}]`);
       }
     }
   }

@@ -6,6 +6,7 @@ export const trackIconKeys = {
   javascript: "braces",
   typescript: "brackets",
   react: "atom",
+  vue: "component",
   nextjs: "route",
   nodejs: "server",
   express: "network",

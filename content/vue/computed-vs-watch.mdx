@@ -1,0 +1,60 @@
+export const metadata = {
+  title: "Computed values versus watchers",
+  track: "vue",
+  order: 3,
+  summary: "Use computed values for derived display data and reserve watchers for side effects.",
+  tags: ["computed", "watch", "reactivity"],
+  takeaways: ["If a value can be derived from reactive inputs, prefer computed over a watcher that copies state."],
+  goodCode: {
+    language: "vue",
+    filename: "ReviewList.vue",
+    code: `<script setup lang="ts">
+import { computed, ref } from "vue";
+
+const query = ref("");
+const reviews = ref([{ id: "r1", title: "Auth review" }]);
+
+// Computed output stays derived from the current inputs.
+const visibleReviews = computed(() =>
+  reviews.value.filter((review) =>
+    review.title.toLowerCase().includes(query.value.toLowerCase()),
+  ),
+);
+</script>
+
+<template>
+  <input v-model="query" aria-label="Filter reviews">
+  <article v-for="review in visibleReviews" :key="review.id">
+    {{ review.title }}
+  </article>
+</template>`,
+  },
+  badCode: {
+    language: "vue",
+    filename: "ReviewList.vue",
+    code: `<script setup>
+import { ref, watch } from "vue";
+
+const query = ref("");
+const reviews = ref([{ id: "r1", title: "Auth review" }]);
+const visibleReviews = ref(reviews.value);
+
+// A watcher copies derived state and can fall out of sync.
+watch(query, () => {
+  visibleReviews.value = reviews.value.filter((review) =>
+    review.title.toLowerCase().includes(query.value.toLowerCase()),
+  );
+});
+</script>`,
+  },
+};
+
+## What to review
+
+The good version keeps filtered reviews as a computed value. The list updates whenever either the query or reviews change.
+
+The bad version copies derived data into a separate ref. A reviewer must check every input path to confirm the copied value is refreshed.
+
+## Review notes
+
+Use watchers when the code needs an effect such as saving to storage, calling an API, or syncing with a non-Vue library. Use computed when the output is just a view of current reactive inputs.

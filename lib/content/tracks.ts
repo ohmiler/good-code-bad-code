@@ -30,6 +30,12 @@ export const tracks = [
       "Review component boundaries, state, effects, and rendering decisions.",
   },
   {
+    slug: "vue",
+    title: "Vue",
+    description:
+      "Review single-file components, props, emits, reactivity, composables, stores, and slots.",
+  },
+  {
     slug: "nextjs",
     title: "Next.js",
     description:

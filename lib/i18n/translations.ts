@@ -92,6 +92,11 @@ export const trackThaiTranslations = {
     description:
       "ฝึกรีวิว component ว่าส่ง props ชัดไหม เก็บ state เท่าที่จำเป็นไหม และ effect/context ถูกใช้ในขอบเขตที่ควบคุมได้หรือเปล่า.",
   },
+  vue: {
+    title: "Vue",
+    description:
+      "ฝึกรีวิว Vue ว่า single-file component รับ props และส่ง event ตรงขอบเขตหรือไม่ ใช้ reactivity, composable, store และ slot ในจุดที่อ่านตามงานจริงได้หรือเปล่า.",
+  },
   nextjs: {
     title: "Next.js",
     description:
@@ -958,6 +963,166 @@ export const lessonThaiTranslations = {
     ],
     reviewNotes: [
       "ถ้าความต้องการใหม่ทุกครั้งทำให้ component ต้องเพิ่ม prop true/false อีกตัว ให้ลองมองหา composition. children หรือ prop อย่าง actions ช่วยให้ component ที่เอาไปใช้ส่ง UI ที่ต้องการเข้ามา โดยไม่บังคับให้ component หลักรู้ทุกกรณีล่วงหน้า.",
+    ],
+  },
+  "vue/single-file-component-boundaries": {
+    codeComments: {
+      goodCode: ["props วางข้อมูลที่ component ต้องใช้ไว้ตรงขอบเขตของ SFC"],
+      badCode: ["SFC นี้รวม route, session, fetch และหน้าจอไว้ในไฟล์เดียว"],
+    },
+    title: "ขอบเขตของ single-file component",
+    summary: "ให้ Vue SFC รับข้อมูลผ่าน props และรับผิดชอบ UI หนึ่งส่วน แทนการรวม route, store, fetch และ markup ไว้ในไฟล์เดียว.",
+    takeaways: ["SFC ควรบอกได้ว่ารับข้อมูลอะไร แสดงอะไร และส่ง event อะไรกลับออกไป."],
+    whatToReview: [
+      "โค้ดที่ดีทำให้เห็นขอบเขตของ card จาก props และ markup ในไฟล์เดียว.",
+      "โค้ดที่ควรปรับรวมหลายหน้าที่ ทำให้คนรีวิวต้องอ่าน route, session และ API ก่อนเข้าใจ UI.",
+    ],
+    reviewNotes: [
+      "เวลารีวิว Vue ให้ถามว่า SFC นี้เป็นเจ้าของอะไร ถ้าอ่าน route, store, remote data และ markup พร้อมกัน ควรแยกส่วนโหลดข้อมูลออกจาก component ที่แสดงผล.",
+    ],
+  },
+  "vue/props-emits-contracts": {
+    codeComments: {
+      goodCode: ["child ขอให้ parent เปลี่ยน state ผ่าน event ที่ตั้งชื่อไว้"],
+      badCode: ["การแก้ prop โดยตรงซ่อนทางไหลของข้อมูลระหว่าง parent กับ child"],
+    },
+    title: "สัญญาของ props และ emits",
+    summary: "ประกาศ props และ emits ให้ parent กับ child ตกลงกันได้ว่าข้อมูลเข้าและ event ออกมีรูปแบบใด.",
+    takeaways: ["props คือข้อมูลเข้า ส่วน emits คือทางส่งคำขอกลับไปหา parent."],
+    whatToReview: [
+      "โค้ดที่ดีตั้งชื่อ input และ payload ของ event ทำให้ parent เห็น action ที่ child ขอ.",
+      "โค้ดที่ควรปรับแก้ prop object โดยตรง ทำให้ owner ของ state อ่านยาก.",
+    ],
+    reviewNotes: [
+      "ใน Vue ให้มอง props เป็นข้อมูลอ่านอย่างเดียว ถ้า child ต้องการเปลี่ยนค่า ให้มองหา emit ที่ตั้งชื่อไว้หรือ action ใน store.",
+    ],
+  },
+  "vue/computed-vs-watch": {
+    codeComments: {
+      goodCode: ["computed ทำให้ผลลัพธ์ตาม input ปัจจุบันเสมอ"],
+      badCode: ["watcher นี้ copy state ที่คำนวณได้และอาจหลุด sync"],
+    },
+    title: "ใช้ computed หรือ watch ให้ตรงงาน",
+    summary: "ใช้ computed สำหรับค่าที่คำนวณจาก reactive input และใช้ watch เมื่อต้องยิงผลข้างเคียง เช่น API หรือ storage.",
+    takeaways: ["ถ้าค่าใหม่คำนวณจากค่าปัจจุบันได้ ให้ใช้ computed แทน watcher ที่ copy state."],
+    whatToReview: [
+      "โค้ดที่ดีให้ filtered list เป็น computed ที่ตาม query และ reviews.",
+      "โค้ดที่ควรปรับ copy filtered list ใส่ ref แยก ทำให้ต้องตรวจทุกทางที่ input เปลี่ยน.",
+    ],
+    reviewNotes: [
+      "watch เหมาะกับงานที่ออกนอกระบบ reactivity เช่น บันทึกลง storage หรือเรียก API ถ้าเป็นแค่หน้าตาของข้อมูลปัจจุบัน computed จะอ่านเส้นทางได้ตรงกว่า.",
+    ],
+  },
+  "vue/list-rendering-keys": {
+    codeComments: {
+      goodCode: ["key ตาม review record แม้ list ถูกเรียงใหม่"],
+      badCode: ["index key เปลี่ยนความหมายเมื่อแถวถูกย้าย"],
+    },
+    title: "key ของ list rendering",
+    summary: "ใช้ id ของ item เป็น key ของ `v-for` เพื่อให้ Vue ผูก state ของแถวกับข้อมูลเดิมเมื่อ list เปลี่ยน.",
+    takeaways: ["key ของ `v-for` ควรชี้ตัวข้อมูล ไม่ใช่ตำแหน่งปัจจุบันใน array."],
+    whatToReview: [
+      "โค้ดที่ดีใช้ review id เป็น key ทำให้ state ของแถวยังตาม review เดิม.",
+      "โค้ดที่ควรปรับใช้ index เป็น key เมื่อย้ายแถวแล้ว input state อาจไปติด review ผิดตัว.",
+    ],
+    reviewNotes: [
+      "ตอนรีวิว `v-for` ให้เทียบ key กับตัวตนของข้อมูล index key มีความเสี่ยงเมื่อ list เพิ่ม ลบ เรียงใหม่ หรือเก็บ state ต่อแถว.",
+    ],
+  },
+  "vue/form-v-model-boundaries": {
+    codeComments: {
+      goodCode: ["draft อยู่ใน form จนกว่าผู้ใช้กด save"],
+      badCode: ["การพิมพ์แก้ prop ก่อนผู้ใช้ยืนยันการบันทึก"],
+    },
+    title: "ขอบเขตของฟอร์มและ v-model",
+    summary: "ให้ form component เก็บ draft local แล้ว emit ค่าที่ submit แทนการเขียนทะลุ prop ระหว่างผู้ใช้พิมพ์.",
+    takeaways: ["form ควรเป็นเจ้าของ draft input และส่งค่าที่ commit แล้วกลับไปผ่าน event."],
+    whatToReview: [
+      "โค้ดที่ดีแยก draft title จากค่าที่บันทึก และส่ง event `save` ครั้งเดียว.",
+      "โค้ดที่ควรปรับเขียนเข้า prop object ตอนพิมพ์ ทำให้ cancel และ validation อ่านยาก.",
+    ],
+    reviewNotes: [
+      "เวลารีวิว form ให้หา owner ของ draft state ถ้า form แก้ข้อมูล parent ทันที ต้องตรวจว่า error, cancel และ save ล้มเหลวคืนค่าเดิมอย่างไร.",
+    ],
+  },
+  "vue/composables-state-ownership": {
+    codeComments: {
+      goodCode: ["caller แต่ละตัวได้ filter refs ของตัวเอง"],
+      badCode: ["module state ถูกใช้ร่วมกันทุก component ที่ import ไฟล์นี้"],
+    },
+    title: "composable กับเจ้าของ state",
+    summary: "ใช้ composable เพื่อรวม reactive behavior ที่ใช้ซ้ำ โดยไม่เผลอแชร์ mutable state ให้ทุก caller.",
+    takeaways: ["composable ควรคืน state และ action ที่ caller หนึ่งตัวต้องใช้ โดยไม่แชร์ ref ระดับ module ถ้าไม่ได้ตั้งใจ."],
+    whatToReview: [
+      "โค้ดที่ดีสร้าง query และ activeOnly ใหม่ทุกครั้งที่เรียก composable.",
+      "โค้ดที่ควรปรับ export ref จาก module scope ทำให้หน้าอื่นเขียน filter ทับกันได้.",
+    ],
+    reviewNotes: [
+      "composable คือ function ไม่ใช่ที่รวม ref กลางเสมอ ตอนรีวิวให้ดูว่า state ถูกสร้างต่อ caller หรือควรย้ายไปเป็น store.",
+    ],
+  },
+  "vue/async-state-loading-errors": {
+    codeComments: {
+      goodCode: ["loading และ error refs บอกทุกสถานะของ request"],
+      badCode: ["request ที่ล้มเหลวหายไปใน console และหน้าจอไม่มีข้อความ"],
+    },
+    title: "สถานะ async, loading และ error",
+    summary: "เก็บ loading, data และ error ไว้ด้วยกัน เพื่อไม่ให้ view แสดงข้อมูลเก่าหรือซ่อน request ที่ล้มเหลว.",
+    takeaways: ["component ที่โหลดข้อมูลควรมีทางแสดง loading, success และ error ให้ผู้ใช้เห็น."],
+    whatToReview: [
+      "โค้ดที่ดีแสดงผลทั้งก่อน response, หลังสำเร็จ และหลังล้มเหลว.",
+      "โค้ดที่ควรปรับ assign data เฉพาะทางสำเร็จ ทำให้ request ล้มเหลวแล้วหน้าว่าง.",
+    ],
+    reviewNotes: [
+      "รีวิว async Vue โดยตามทุกทางของ request: ก่อนตอบกลับ สำเร็จ ล้มเหลว และลองใหม่ failure ที่เงียบคือ bug ฝั่งผู้ใช้.",
+    ],
+  },
+  "vue/pinia-store-actions": {
+    codeComments: {
+      goodCode: ["actions ตั้งชื่อเส้นทางเขียน state และคุม async transition"],
+      badCode: ["importer ใดก็เขียน shared state ได้โดยไม่ผ่าน action"],
+    },
+    title: "action ใน Pinia store",
+    summary: "เก็บ shared state หลัง Pinia store และให้การเขียน state ผ่าน action ที่ตั้งชื่อตามงาน.",
+    takeaways: ["Pinia store ควรมี state, getter และ action ที่รีวิวเส้นทางการเปลี่ยนค่าได้."],
+    whatToReview: [
+      "โค้ดที่ดีให้ component เรียก `loadReviews` โดยไม่ต้องรู้ทุก field ที่ถูกเขียน.",
+      "โค้ดที่ควรปรับ export reactive object ทำให้ใครก็เขียน state กลางได้.",
+    ],
+    reviewNotes: [
+      "Pinia ทำให้ shared state audit ได้ง่ายเมื่อการเขียนผ่าน action ตอนรีวิวให้หา state change ที่เกิดนอก store หรือ fetch ที่ซ้ำใน component.",
+    ],
+  },
+  "vue/provide-inject-boundaries": {
+    codeComments: {
+      goodCode: ["consumer อ่าน theme ได้แต่เขียนค่ากลับโดยตรงไม่ได้"],
+      badCode: ["object กว้างหนึ่งก้อนกลายเป็น dependency ซ่อนของหลาย component"],
+    },
+    title: "ขอบเขตของ provide และ inject",
+    summary: "ใช้ provide/inject กับ context ที่แคบและมี typed key แทนการส่ง object ใหญ่เป็น dependency ซ่อนทั้งแอป.",
+    takeaways: ["ค่าที่ inject ควรมี contract เล็ก typed key และ provider อยู่ใกล้ feature ที่เป็นเจ้าของ context."],
+    whatToReview: [
+      "โค้ดที่ดี provide ค่า theme แบบอ่านอย่างเดียว และเก็บ mutation ไว้ที่ provider.",
+      "โค้ดที่ควรปรับ inject object กว้าง ทำให้ component ผูกกับ user, reviews, settings และ theme พร้อมกัน.",
+    ],
+    reviewNotes: [
+      "ใช้ provide/inject เมื่อ props ต้องส่ง context เดิมผ่านหลายชั้น แต่ contract ที่ inject ควรเล็กพอให้ทดสอบ consumer ได้โดยไม่ต้องสร้างทั้งแอป.",
+    ],
+  },
+  "vue/slots-component-composition": {
+    codeComments: {
+      goodCode: ["slots ให้ caller ส่งเนื้อหาโดยไม่เพิ่ม mode flag"],
+      badCode: ["boolean flags บังคับให้ shell รู้ action ของทุก caller"],
+    },
+    title: "ใช้ slots เพื่อ composition",
+    summary: "ใช้ slots เมื่อ component shell ต้องให้ caller เป็นเจ้าของเนื้อหา ปุ่ม หรือพื้นที่บางส่วนของ layout.",
+    takeaways: ["slots ให้ parent เป็นเจ้าของเนื้อหาที่เปลี่ยนตาม feature ส่วน child เป็นเจ้าของโครงสร้างที่ใช้ร่วมกัน."],
+    whatToReview: [
+      "โค้ดที่ดีให้ shell คุมโครง panel และให้ caller ส่ง title, body, actions ผ่าน slot.",
+      "โค้ดที่ควรปรับเพิ่ม prop สำหรับ action ทุกแบบ ทำให้ shell ต้องรู้กรณีของ caller มากขึ้นเรื่อย ๆ.",
+    ],
+    reviewNotes: [
+      "ถ้า component มี boolean props เพิ่มทุกครั้งที่มี variant ใหม่ ให้ตรวจว่า slots จะทำให้ shell เล็กลงได้หรือไม่ shell ควรคุมโครง ส่วน caller คุมเนื้อหาเฉพาะ feature.",
     ],
   },
   "nextjs/app-router-file-conventions": {

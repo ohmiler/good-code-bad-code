@@ -1,0 +1,58 @@
+export const metadata = {
+  title: "Provide and inject boundaries",
+  track: "vue",
+  order: 9,
+  summary: "Use provide and inject for narrow context values with typed keys, not as a hidden app-wide dependency channel.",
+  tags: ["provide", "inject", "context"],
+  takeaways: ["Injected values should have a small contract, a typed key, and a provider close to the feature that owns the context."],
+  goodCode: {
+    language: "typescript",
+    filename: "reviewThemeContext.ts",
+    code: `import type { InjectionKey, Ref } from "vue";
+import { inject, provide, readonly, ref } from "vue";
+
+type ReviewTheme = "light" | "dark";
+const reviewThemeKey: InjectionKey<Readonly<Ref<ReviewTheme>>> =
+  Symbol("review-theme");
+
+export function provideReviewTheme() {
+  // Consumers can read the theme but cannot rewrite it directly.
+  const theme = ref<ReviewTheme>("light");
+  provide(reviewThemeKey, readonly(theme));
+  return { theme };
+}
+
+export function useReviewTheme() {
+  const theme = inject(reviewThemeKey);
+  if (!theme) throw new Error("Review theme provider is missing");
+  return theme;
+}`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "appContext.ts",
+    code: `import { inject, provide, reactive } from "vue";
+
+const appContextKey = Symbol("app");
+
+// One mutable object becomes a hidden dependency for many components.
+export function provideAppContext() {
+  const app = reactive({ user: null, reviews: [], settings: {}, theme: "light" });
+  provide(appContextKey, app);
+}
+
+export function useAppContext() {
+  return inject(appContextKey) as any;
+}`,
+  },
+};
+
+## What to review
+
+The good version provides a narrow, typed context value and keeps mutation at the provider boundary.
+
+The bad version injects a broad mutable object. Components can become coupled to unrelated user, review, settings, and theme state.
+
+## Review notes
+
+Use provide/inject when props would pass the same context through many layers. Keep the injected contract small enough that a consumer can be tested without rebuilding the whole app.

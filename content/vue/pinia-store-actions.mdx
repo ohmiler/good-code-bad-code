@@ -1,0 +1,64 @@
+export const metadata = {
+  title: "Pinia store actions",
+  track: "vue",
+  order: 8,
+  summary: "Keep shared Vue state behind Pinia stores with actions that name writes and async transitions.",
+  tags: ["pinia", "stores", "actions"],
+  takeaways: ["A Pinia store should expose state, derived getters, and named actions instead of letting components mutate shared state from any file."],
+  goodCode: {
+    language: "typescript",
+    filename: "stores/reviews.ts",
+    code: `import { defineStore } from "pinia";
+
+export const useReviewsStore = defineStore("reviews", {
+  state: () => ({
+    reviews: [] as Review[],
+    isLoading: false,
+  }),
+  getters: {
+    pendingReviews: (state) =>
+      state.reviews.filter((review) => review.status === "pending"),
+  },
+  actions: {
+    // Actions name the write path and own the async transition.
+    async loadReviews() {
+      this.isLoading = true;
+      try {
+        this.reviews = await fetch("/api/reviews").then((response) =>
+          response.json(),
+        );
+      } finally {
+        this.isLoading = false;
+      }
+    },
+  },
+});`,
+  },
+  badCode: {
+    language: "typescript",
+    filename: "reviewState.ts",
+    code: `import { reactive } from "vue";
+
+// Any importer can rewrite shared state without a named action.
+export const reviewState = reactive({
+  reviews: [] as Review[],
+  isLoading: false,
+});
+
+export async function loadReviews() {
+  reviewState.reviews = await fetch("/api/reviews").then((response) =>
+    response.json(),
+  );
+}`,
+  },
+};
+
+## What to review
+
+The good version gives shared state a store name, derived getter, and action. Components can call `loadReviews` without knowing every field that changes.
+
+The bad version exports a mutable object and a free function. Any importer can write to state directly, bypassing one reviewable update path.
+
+## Review notes
+
+Pinia stores make shared state easier to audit when writes go through actions. In review, look for state changes that happen outside the store or duplicate fetch logic in components.

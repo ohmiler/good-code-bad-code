@@ -1,0 +1,61 @@
+export const metadata = {
+  title: "Props and emits contracts",
+  track: "vue",
+  order: 2,
+  summary: "Declare props and emitted events so parent and child components agree on their data contract.",
+  tags: ["props", "emits", "contracts"],
+  takeaways: ["Props describe input from the parent; emits describe output back to the parent."],
+  goodCode: {
+    language: "vue",
+    filename: "ReviewActions.vue",
+    code: `<script setup lang="ts">
+const props = defineProps<{
+  reviewId: string;
+  canApprove: boolean;
+}>();
+
+const emit = defineEmits<{
+  approve: [reviewId: string];
+}>();
+
+// The child asks the parent to change state through a named event.
+function approveReview() {
+  emit("approve", props.reviewId);
+}
+</script>
+
+<template>
+  <button :disabled="!canApprove" @click="approveReview">
+    Approve
+  </button>
+</template>`,
+  },
+  badCode: {
+    language: "vue",
+    filename: "ReviewActions.vue",
+    code: `<script setup>
+const props = defineProps(["review"]);
+
+// Mutating a prop hides the parent-child data flow.
+function approveReview() {
+  props.review.status = "approved";
+}
+</script>
+
+<template>
+  <button @click="approveReview">
+    Approve
+  </button>
+</template>`,
+  },
+};
+
+## What to review
+
+The good version names the input fields and the event payload. The parent can see exactly which action the child requests.
+
+The bad version mutates a prop object directly. That makes ownership unclear and can leave the parent, store, or cache out of sync.
+
+## Review notes
+
+In Vue, props should be read as inputs. When the child needs a change, review for a named emit or a store action so the write happens at the owner boundary.

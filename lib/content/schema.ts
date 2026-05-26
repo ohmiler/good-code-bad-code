@@ -7,6 +7,7 @@ export type CodeLanguage =
   | "javascript"
   | "typescript"
   | "tsx"
+  | "vue"
   | "sql"
   | "python"
   | "php"
@@ -50,6 +51,7 @@ const codeLanguages = new Set<CodeLanguage>([
   "javascript",
   "typescript",
   "tsx",
+  "vue",
   "sql",
   "python",
   "php",

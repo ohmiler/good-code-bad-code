@@ -69,6 +69,15 @@ const iconShapes = {
       <ellipse cx="12" cy="12" rx="8" ry="3" transform="rotate(120 12 12)" />
     </>
   ),
+  component: (
+    <>
+      <rect height="7" rx="1.5" width="7" x="4" y="4" />
+      <rect height="7" rx="1.5" width="7" x="13" y="4" />
+      <rect height="7" rx="1.5" width="7" x="4" y="13" />
+      <path d="M13 17h7" />
+      <path d="M17 13v7" />
+    </>
+  ),
   route: (
     <>
       <circle cx="5" cy="6" r="2" />

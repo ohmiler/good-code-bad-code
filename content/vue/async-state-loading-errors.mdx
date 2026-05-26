@@ -1,0 +1,71 @@
+export const metadata = {
+  title: "Async state, loading, and errors",
+  track: "vue",
+  order: 7,
+  summary: "Model loading, data, and error state together so async views do not render stale or silent failures.",
+  tags: ["async", "loading", "errors"],
+  takeaways: ["Async Vue components need visible loading and error paths, not only a happy-path ref assignment."],
+  goodCode: {
+    language: "vue",
+    filename: "ReviewFeed.vue",
+    code: `<script setup lang="ts">
+import { onMounted, ref } from "vue";
+
+const reviews = ref<Review[]>([]);
+const isLoading = ref(false);
+const errorMessage = ref("");
+
+// Loading and error refs describe every request state.
+async function loadReviews() {
+  isLoading.value = true;
+  errorMessage.value = "";
+
+  try {
+    const response = await fetch("/api/reviews");
+    if (!response.ok) throw new Error("Reviews failed to load");
+    reviews.value = await response.json();
+  } catch (error) {
+    errorMessage.value = "Reviews are unavailable right now.";
+  } finally {
+    isLoading.value = false;
+  }
+}
+
+onMounted(loadReviews);
+</script>
+
+<template>
+  <p v-if="isLoading">Loading reviews...</p>
+  <p v-else-if="errorMessage">{{ errorMessage }}</p>
+  <ReviewList v-else :reviews="reviews" />
+</template>`,
+  },
+  badCode: {
+    language: "vue",
+    filename: "ReviewFeed.vue",
+    code: `<script setup>
+import { onMounted, ref } from "vue";
+
+const reviews = ref([]);
+
+// Failed requests disappear into the console.
+onMounted(async () => {
+  reviews.value = await fetch("/api/reviews").then((response) => response.json());
+});
+</script>
+
+<template>
+  <ReviewList :reviews="reviews" />
+</template>`,
+  },
+};
+
+## What to review
+
+The good version models loading, success, and error paths in the same component state. The template shows a user-facing result for each path.
+
+The bad version assigns data only on success. Failed requests can leave the page empty with no message or retry path.
+
+## Review notes
+
+Review async Vue code by following every request path: before the response, after success, after failure, and after a retry. Silent failures are production bugs, not just missing UI polish.

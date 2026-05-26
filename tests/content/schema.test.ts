@@ -128,6 +128,31 @@ test("validateLessonMetadata accepts Java code samples", () => {
   );
 });
 
+test("validateLessonMetadata accepts Vue single-file component samples", () => {
+  const vueMetadata = {
+    ...validMetadata,
+    track: "vue",
+    goodCode: {
+      language: "vue",
+      filename: "ReviewCard.vue",
+      code: "<script setup lang=\"ts\">\\ndefineProps<{ title: string }>();\\n</script>",
+    },
+    badCode: {
+      language: "vue",
+      filename: "ReviewCard.vue",
+      code: "<script setup>\\ndefineProps([\"title\"]);\\n</script>",
+    },
+  };
+
+  assert.deepEqual(
+    validateLessonMetadata(
+      vueMetadata,
+      "content/vue/single-file-component-boundaries.mdx",
+    ),
+    vueMetadata,
+  );
+});
+
 test("validateLessonMetadata accepts Bash code samples for Git lessons", () => {
   const gitMetadata = {
     ...validMetadata,
@@ -154,10 +179,10 @@ test("validateLessonMetadata rejects unknown tracks", () => {
   assert.throws(
     () =>
       validateLessonMetadata(
-        { ...validMetadata, track: "vue" },
-        "content/vue/component-state.mdx",
+        { ...validMetadata, track: "ruby" },
+        "content/ruby/component-state.mdx",
       ),
-    /unknown track "vue"/,
+    /unknown track "ruby"/,
   );
 });
 

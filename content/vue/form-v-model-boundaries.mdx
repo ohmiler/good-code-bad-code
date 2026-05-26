@@ -1,0 +1,57 @@
+export const metadata = {
+  title: "Form v-model boundaries",
+  track: "vue",
+  order: 5,
+  summary: "Keep form drafts local and emit submitted values instead of writing through props while the user types.",
+  tags: ["forms", "v-model", "state"],
+  takeaways: ["A form component should own draft input state and send a committed value back through an event."],
+  goodCode: {
+    language: "vue",
+    filename: "ReviewTitleForm.vue",
+    code: `<script setup lang="ts">
+import { ref } from "vue";
+
+const props = defineProps<{ initialTitle: string }>();
+const emit = defineEmits<{ save: [title: string] }>();
+
+// The draft is local until the user submits the form.
+const draftTitle = ref(props.initialTitle);
+</script>
+
+<template>
+  <form @submit.prevent="emit('save', draftTitle.trim())">
+    <label>
+      Review title
+      <input v-model="draftTitle">
+    </label>
+    <button type="submit">Save</button>
+  </form>
+</template>`,
+  },
+  badCode: {
+    language: "vue",
+    filename: "ReviewTitleForm.vue",
+    code: `<script setup>
+const props = defineProps(["review"]);
+
+// Typing writes through the prop before the user saves.
+</script>
+
+<template>
+  <form>
+    <input v-model="props.review.title">
+    <button>Save</button>
+  </form>
+</template>`,
+  },
+};
+
+## What to review
+
+The good version separates draft input from the saved value. The parent receives a single save event with the trimmed title.
+
+The bad version writes to a prop object as the user types. Cancel, validation, and optimistic update behavior become harder to reason about.
+
+## Review notes
+
+For Vue forms, look for the owner of draft state. If the form edits parent data immediately, reviewers need to check how validation errors, cancel actions, and failed saves restore the previous value.

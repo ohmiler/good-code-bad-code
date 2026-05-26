@@ -1,0 +1,60 @@
+export const metadata = {
+  title: "Slots for component composition",
+  track: "vue",
+  order: 10,
+  summary: "Use slots when a reusable Vue shell needs caller-owned content, actions, or layout regions.",
+  tags: ["slots", "composition", "components"],
+  takeaways: ["Slots let the parent own variable content while the child owns shared structure and accessibility."],
+  goodCode: {
+    language: "vue",
+    filename: "PanelShell.vue",
+    code: `<script setup lang="ts">
+defineProps<{ labelledBy: string }>();
+
+// Slots let callers supply content without adding mode flags.
+</script>
+
+<template>
+  <section class="panel" :aria-labelledby="labelledBy">
+    <header>
+      <slot name="title" />
+    </header>
+    <div class="panel__body">
+      <slot />
+    </div>
+    <footer>
+      <slot name="actions" />
+    </footer>
+  </section>
+</template>`,
+  },
+  badCode: {
+    language: "vue",
+    filename: "PanelShell.vue",
+    code: `<script setup>
+defineProps(["title", "body", "showApprove", "showArchive", "showCancel"]);
+
+// Boolean flags force the shell to know every caller action.
+</script>
+
+<template>
+  <section class="panel">
+    <h2>{{ title }}</h2>
+    <p>{{ body }}</p>
+    <button v-if="showApprove">Approve</button>
+    <button v-if="showArchive">Archive</button>
+    <button v-if="showCancel">Cancel</button>
+  </section>
+</template>`,
+  },
+};
+
+## What to review
+
+The good version owns the panel structure and lets the caller provide title, body, and actions through named slots.
+
+The bad version adds one prop for every possible action. Each new caller can force the shell component to learn another special case.
+
+## Review notes
+
+When a component keeps gaining boolean props for visual variants or actions, review whether slots would keep the shell smaller. The shell should own structure; the caller should own feature-specific content.

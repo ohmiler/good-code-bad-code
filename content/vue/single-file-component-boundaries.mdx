@@ -1,0 +1,60 @@
+export const metadata = {
+  title: "Single-file component boundaries",
+  track: "vue",
+  order: 1,
+  summary: "Keep Vue single-file components focused on one UI responsibility with inputs visible at the component boundary.",
+  tags: ["sfc", "components", "boundaries"],
+  takeaways: ["A Vue SFC should show what it receives, what it renders, and which events it can send back."],
+  goodCode: {
+    language: "vue",
+    filename: "ReviewCard.vue",
+    code: `<script setup lang="ts">
+type ReviewCardProps = {
+  title: string;
+  reviewerName: string;
+  status: "approved" | "changes-requested";
+};
+
+// Props keep display data at the component boundary.
+defineProps<ReviewCardProps>();
+</script>
+
+<template>
+  <article class="review-card">
+    <h2>{{ title }}</h2>
+    <p>{{ reviewerName }} marked this review as {{ status }}.</p>
+  </article>
+</template>`,
+  },
+  badCode: {
+    language: "vue",
+    filename: "ReviewDashboard.vue",
+    code: `<script setup>
+import { useRoute } from "vue-router";
+import { useSession } from "@/stores/session";
+
+// This SFC owns routing, session state, fetching, and display at once.
+const route = useRoute();
+const session = useSession();
+const response = await fetch("/api/reviews/" + route.params.id);
+const review = await response.json();
+</script>
+
+<template>
+  <section>
+    <h2>{{ session.project.name }}: {{ review.title }}</h2>
+    <p>{{ review.reviewer.name }} marked this review as {{ review.status }}.</p>
+  </section>
+</template>`,
+  },
+};
+
+## What to review
+
+The good version makes the SFC boundary visible: the component receives the exact display fields it needs and renders one card.
+
+The bad version mixes routing, session state, fetching, and display. A reviewer has to understand several app concerns before knowing what the component is responsible for.
+
+## Review notes
+
+In Vue reviews, start by asking what the SFC owns. If a component reads route state, store state, remote data, and markup in one file, split the data-loading boundary from the presentational component.
