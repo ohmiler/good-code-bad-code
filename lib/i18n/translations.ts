@@ -20,6 +20,13 @@ type TrackTranslation = {
 
 export const uiCopy = {
   en: {
+    trackSearchLabel: "Search tracks",
+    trackSearchPlaceholder: "Search tracks, frameworks, or review topics",
+    trackFilterLabel: "Filter tracks",
+    trackResultsLabel: "tracks",
+    trackNoResultsTitle: "No tracks found",
+    trackNoResultsSummary: "Try another keyword or reset the filters.",
+    trackClearFilters: "Clear filters",
     headerTagline: "Review patterns by Track",
     homeEyebrow: "Example Library",
     homeSummary:
@@ -43,6 +50,13 @@ export const uiCopy = {
     reviewNotesSection: "Review notes",
   },
   th: {
+    trackSearchLabel: "ค้นหา track",
+    trackSearchPlaceholder: "ค้นหา track, framework หรือหัวข้อรีวิว",
+    trackFilterLabel: "กรอง track",
+    trackResultsLabel: "track",
+    trackNoResultsTitle: "ไม่พบ track",
+    trackNoResultsSummary: "ลองคำค้นใหม่หรือล้าง filter",
+    trackClearFilters: "ล้าง filter",
     headerTagline: "ฝึกรีวิวโค้ดตามภาษา",
     homeEyebrow: "คลังตัวอย่าง",
     homeSummary: "ฝึกอ่านรีวิวโค้ดจากตัวอย่าง Good Code และ Bad Code แบบเทียบกัน.",
