@@ -47,7 +47,7 @@ export const metadata = {
 
 ## What to review
 
-The good version handles disqualifying cases first, which keeps the final return focused on the actual positive condition.
+The good version returns from disqualifying cases first, which keeps the final return focused on the actual positive condition.
 
 The bad version reaches the same answer, but each nested branch makes reviewers hold more state in their heads before they can see the main rule.
 

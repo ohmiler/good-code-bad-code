@@ -509,7 +509,7 @@ export const lessonThaiTranslations = {
       "โค้ดที่ควรปรับสมมติว่าหน้าตาข้อมูลถูกต้องเสมอ ทำให้ข้อมูลผิดรูปกลายเป็น runtime error ที่เดายาก.",
     ],
     reviewNotes: [
-      "ตอนรีวิวให้หาบรรทัดแรกที่ข้อมูลจากข้างนอกเข้าระบบ จุดนั้นควรเป็นที่จัดการความไม่แน่นอน ไม่ใช่ปล่อยให้ caller ทุกจุดต้องเดาเองว่าข้อมูลปลอดภัยหรือยัง.",
+      "ตอนรีวิวให้หาบรรทัดแรกที่ข้อมูลจากข้างนอกเข้าระบบ จุดนั้นควรตรวจ shape และคืน error ของ boundary ไม่ใช่ปล่อยให้ caller ทุกจุดต้องเดาเองว่าข้อมูลปลอดภัยหรือยัง.",
     ],
   },
   "javascript/array-transformations": {
@@ -519,13 +519,13 @@ export const lessonThaiTranslations = {
     },
     title: "แปลง array ให้อ่านเป็นขั้นตอน",
     summary: "ใช้ array methods เพื่อให้เห็นขั้นตอนว่า กรองอะไร แปลงอะไร และเรียงผลอย่างไร โดยไม่แก้ input เดิมแบบไม่ตั้งใจ.",
-    takeaways: ["ใช้ filter, map และ reduce เมื่อมันทำให้การแปลงข้อมูลอ่านเป็นลำดับ และไม่ต้องแก้ object หรือ array ต้นทาง."],
+    takeaways: ["ใช้ filter, map และ reduce เมื่อ pipeline ทำให้การแปลงข้อมูลอ่านเป็นลำดับ และไม่ต้องแก้ object หรือ array ต้นทาง."],
     whatToReview: [
       "โค้ดที่ดีอ่านเหมือน pipeline: กรองไฟล์ที่ไม่ต้องการ แปลงรูปร่างข้อมูล แล้วค่อยเรียงผลลัพธ์ใหม่.",
       "โค้ดที่ควรปรับ sort array เดิมและเติม field ลง object เดิม ทำให้โค้ดอื่นที่ถือ reference เดียวกันเห็นข้อมูลเปลี่ยนตามไปด้วย.",
     ],
     reviewNotes: [
-      "เวลารีวิว logic ที่จัดการ collection ให้ถามว่าฟังก์ชันนี้เปลี่ยน input เดิมหรือคืนข้อมูลชุดใหม่. การ mutate ที่ซ่อนอยู่ใน loop มักดูไม่อันตรายตอนแรก แต่ทำให้ bug ไล่ยากเมื่อมีคนถือข้อมูลชุดเดิมอยู่.",
+      "เวลารีวิว collection logic ให้ถามว่าฟังก์ชันนี้เปลี่ยน input เดิมหรือคืนข้อมูลชุดใหม่. การ mutate ที่ซ่อนอยู่ใน loop มักดูไม่อันตรายตอนแรก แต่ทำให้ bug ไล่ยากเมื่อมีคนถือข้อมูลชุดเดิมอยู่.",
     ],
   },
   "javascript/promise-concurrency": {
@@ -570,7 +570,7 @@ export const lessonThaiTranslations = {
     takeaways: ["เปิดเผย function เล็ก ๆ จาก module และส่ง dependency เข้ามาเมื่อโค้ดต้องใช้ storage, network หรือ browser API."],
     whatToReview: [
       "โค้ดที่ดีซ่อน storage key ไว้ใน module และรับ storage เป็น dependency ทำให้ทดสอบและใช้ซ้ำง่ายขึ้น.",
-      "โค้ดที่ควรปรับเขียนลง window และ localStorage ตรง ๆ ทำให้โค้ดที่ไม่เกี่ยวข้องเปลี่ยน state ได้โดยไม่ผ่าน API ที่ชัดเจน.",
+      "โค้ดที่ควรปรับเขียนลง window และ localStorage ตรง ๆ ทำให้โค้ดที่ไม่เกี่ยวข้องเปลี่ยน state ได้โดยไม่ผ่าน API ของ module.",
     ],
     reviewNotes: [
       "global ไม่ได้ผิดเสมอ แต่ควรตั้งใจใช้ ขอบเขต module ที่ดีควรบอก caller ว่าต้องเรียก function ไหน โดยไม่ต้องรู้ว่าค่าข้างในถูกเก็บไว้ที่ window, localStorage หรือที่อื่น.",
@@ -578,18 +578,18 @@ export const lessonThaiTranslations = {
   },
   "javascript/dates-time-zones": {
     codeComments: {
-      goodCode: ["ส่ง locale และ time zone เข้าไปชัดเจนก่อนจัดรูปแบบวันที่"],
+      goodCode: ["ส่ง locale และ time zone เข้า formatter ก่อนจัดรูปแบบวันที่"],
       badCode: ["ประกอบวันที่เอง ทำให้ผลลัพธ์ผูกกับ time zone ของเครื่องที่รันแบบไม่รู้ตัว"],
     },
     title: "วันที่และเขตเวลา (time zone)",
     summary: "จัดรูปแบบวันที่ด้วย locale และ time zone ที่ตั้งใจ แทนการต่อวันเดือนปีเองจากสภาพแวดล้อมตอนรัน (runtime).",
     takeaways: ["ใช้ Intl สำหรับการจัดรูปแบบวันที่ และส่ง time zone ให้ชัดเมื่อวันที่ที่แสดงมีผลกับผู้ใช้."],
     whatToReview: [
-      "โค้ดที่ดีทำให้ locale และ time zone เป็น input ชัดเจน จึงแสดง timestamp เดียวกันได้ถูกต้องตามกลุ่มผู้ใช้.",
+      "โค้ดที่ดีส่ง locale และ time zone เป็น input ของ formatter จึงแสดง timestamp เดียวกันได้ถูกต้องตามกลุ่มผู้ใช้.",
       "โค้ดที่ควรปรับต่อวันที่เองด้วย time zone ของเครื่องที่รัน ทำให้วันที่อาจเลื่อนสำหรับผู้ใช้คนละประเทศหรือคนละเขตเวลา.",
     ],
     reviewNotes: [
-      "วันที่ควรถูกรีวิวด้วยความระวังเป็นพิเศษ เพราะมักใช้ได้บนเครื่องเราแต่พังตอนข้ามวัน ข้ามเดือน หรือเจอผู้ใช้คนละ time zone การระบุ locale/time zone ชัดเจนปลอดภัยกว่า default ที่ซ่อนอยู่.",
+      "วันที่ควรถูกรีวิวด้วยความระวังเป็นพิเศษ เพราะมักใช้ได้บนเครื่องเราแต่พังตอนข้ามวัน ข้ามเดือน หรือเจอผู้ใช้คนละ time zone. การส่ง locale/time zone เข้า formatter ปลอดภัยกว่า default ที่ซ่อนอยู่.",
     ],
   },
   "javascript/guard-clauses": {
@@ -601,7 +601,7 @@ export const lessonThaiTranslations = {
     summary: "คืนค่าเร็วเมื่อข้อมูลไม่พร้อม เพื่อให้ทางหลักของ function อ่านเป็นเส้นตรงและสั้นลง.",
     takeaways: ["ใช้ early return เพื่อให้เคสปกติอยู่ในระดับ indentation ที่อ่านง่าย."],
     whatToReview: [
-      "โค้ดที่ดีจัดการเคสที่ใช้ไม่ได้ตั้งแต่ต้น แล้วปล่อยให้ logic หลักอยู่ในระดับ indentation เดียว.",
+      "โค้ดที่ดี return เคสที่ใช้ไม่ได้ตั้งแต่ต้น แล้วปล่อยให้ logic หลักอยู่ในระดับ indentation เดียว.",
       "โค้ดที่ควรปรับซ้อน if หลายชั้น ทำให้คนรีวิวต้องจำเงื่อนไขในหัวตลอดเวลา.",
     ],
     reviewNotes: [
@@ -610,12 +610,12 @@ export const lessonThaiTranslations = {
   },
   "javascript/async-error-handling": {
     codeComments: {
-      goodCode: ["เช็ก HTTP status ก่อน parse และมีทางจัดการ request ที่ล้มเหลว"],
-      badCode: ["parse แบบคิดว่าจะสำเร็จเสมอ ทำให้ error หลุดโดยไม่มีทางจัดการ"],
+      goodCode: ["เช็ก HTTP status ก่อน parse และคืน error object เมื่อ request ล้มเหลว"],
+      badCode: ["parse แบบคิดว่าจะสำเร็จเสมอ ทำให้ error หลุดออกนอก contract"],
     },
-    title: "จัดการ error ของงาน async ให้ครบ",
+    title: "ทำ error path ของงาน async ให้ครบ",
     summary: "ตรวจ response และเตรียมทางกรณี request ล้มเหลว ก่อนสมมติว่าทุกอย่างเป็น JSON ที่ถูกต้อง.",
-    takeaways: ["async code ควรมีทางสำหรับกรณีสำเร็จและกรณีล้มเหลวที่อ่านได้ชัดเจน."],
+    takeaways: ["async code ควรมี success path และ failure path ที่ caller อ่าน contract ได้จาก return value."],
     whatToReview: [
       "โค้ดที่ดีตรวจสถานะ response และแยก error path ก่อนใช้ข้อมูล.",
       "โค้ดที่ควรปรับสมมติว่า request สำเร็จเสมอ ทำให้ bug โผล่ตอน network หรือ server มีปัญหา.",
