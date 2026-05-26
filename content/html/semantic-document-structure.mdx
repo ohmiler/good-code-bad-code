@@ -8,8 +8,11 @@ export const metadata = {
   goodCode: {
     language: "html",
     filename: "article.html",
-    code: `<main>
-  <!-- main and article expose the page outline before CSS runs. -->
+    code: `<!-- nav, main, and article expose page regions before CSS runs. -->
+<nav aria-label="Primary">
+  <a href="/reviews">Review guide</a>
+</nav>
+<main>
   <article aria-labelledby="article-title">
     <h1 id="article-title">Reviewing pull requests</h1>
     <p>Small reviews are easier to reason about.</p>
@@ -20,7 +23,10 @@ export const metadata = {
     language: "html",
     filename: "article.html",
     code: `<div>
-  <!-- Generic divs hide the content structure from the document outline. -->
+  <!-- Generic divs hide navigation and content structure from the document outline. -->
+  <div class="nav">
+    <span>Review guide</span>
+  </div>
   <div>
     <b>Reviewing pull requests</b>
     <div>Small reviews are easier to reason about.</div>
@@ -31,9 +37,9 @@ export const metadata = {
 
 ## What to review
 
-The good version exposes the page structure through native landmarks and a real heading.
+The good version exposes navigation, main content, article content, and a real heading through native HTML.
 
-The bad version may look acceptable, but it hides meaning behind generic containers.
+The bad version may look acceptable, but it hides navigation and content meaning behind generic containers.
 
 ## Review notes
 
