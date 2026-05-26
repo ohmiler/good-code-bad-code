@@ -12,6 +12,7 @@ export type CodeLanguage =
   | "python"
   | "php"
   | "java"
+  | "kotlin"
   | "c"
   | "cpp"
   | "csharp"
@@ -61,6 +62,7 @@ const codeLanguages = new Set<CodeLanguage>([
   "python",
   "php",
   "java",
+  "kotlin",
   "c",
   "cpp",
   "csharp",

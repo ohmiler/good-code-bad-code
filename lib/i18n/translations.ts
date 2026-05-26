@@ -164,6 +164,11 @@ export const trackThaiTranslations = {
     description:
       "ฝึกรีวิว Java ว่า null มี Optional/exception boundary ไหม object ถูกแก้จากข้างนอกไม่ได้ไหม resource ถูกปิดแน่ไหม และแยก controller/service/repository อ่านง่ายหรือเปล่า.",
   },
+  kotlin: {
+    title: "Kotlin",
+    description:
+      "ฝึกรีวิว Kotlin ว่า null safety, data class, sealed state, scope function, collection, coroutine, Flow, JVM interop และ test ระบุ contract ที่โค้ด production ใช้จริงหรือไม่.",
+  },
   c: {
     title: "C",
     description:
@@ -2628,6 +2633,166 @@ export const lessonThaiTranslations = {
       goodCode: ["service เป็นเจ้าของ flow ของงาน และเรียก dependency ที่ต้องใช้."],
       badCode: ["HTTP, SQL, การเปิด connection และ email ถูกผสมไว้ใน controller เดียว."],
     },
+  },
+  "kotlin/null-safety-boundaries": {
+    codeComments: {
+      goodCode: ["เช็ก nullable input ก่อนสร้าง Review ใน service"],
+      badCode: ["crash ถูกซ่อนไว้ใน branch runtime แทน validation result"],
+    },
+    title: "ขอบเขตของ null safety",
+    summary: "ให้ nullable value หยุดที่ input boundary แทนการปล่อย `!!` กระจายอยู่ใน service code.",
+    takeaways: ["รีวิว Kotlin ควรเห็นจุดที่ `String?` ถูกแปลงเป็น `String` ใกล้ request หรือ Java interop boundary."],
+    whatToReview: [
+      "โค้ดที่ดี trim title และคืน null เมื่อ input ใช้สร้าง Review ไม่ได้ ก่อน object ฝั่ง domain จะเกิดขึ้น.",
+      "โค้ดที่ควรปรับใช้ `!!` ทำให้ missing title กลายเป็น crash แทน branch ที่ caller ตอบกลับผู้ใช้ได้.",
+    ],
+    reviewNotes: [
+      "เวลารีวิว Kotlin ให้ถามว่า nullable contract ถูกตัดสินใจที่ boundary ไหน ถ้าเจอ `!!` ใน service code ให้ย้อนกลับไปดู input validation หรือ adapter จาก Java.",
+    ],
+  },
+  "kotlin/data-class-immutability": {
+    codeComments: {
+      goodCode: ["copy คืน draft ถัดไปโดยไม่ mutate value ของ caller"],
+      badCode: ["shared mutable state เปลี่ยนทุก reference ที่ถือ draft นี้"],
+    },
+    title: "data class และ immutability",
+    summary: "ใช้ data class แบบ immutable และ `copy` เมื่อ request สร้าง state ถัดไป.",
+    takeaways: ["Kotlin data class ที่ข้าม boundary ควรป้องกัน state จาก mutation หลังสร้าง object."],
+    whatToReview: [
+      "โค้ดที่ดีใช้ `val`, `List` และ `copy` ทำให้การเปลี่ยน title เป็น operation ที่มองเห็นในโค้ด.",
+      "โค้ดที่ควรปรับเปิด `var` และ `MutableList` ทำให้ส่วนอื่นเปลี่ยน draft โดยไม่ผ่านชื่อ operation.",
+    ],
+    reviewNotes: [
+      "เมื่อ type ถูกส่งข้าม controller, service หรือ UI boundary ให้ดูว่า field เป็น snapshot หรือ shared state. ถ้าเป็น snapshot ควรใช้ read-only collection และคืน value ใหม่เมื่อเปลี่ยน state.",
+    ],
+  },
+  "kotlin/sealed-result-states": {
+    codeComments: {
+      goodCode: ["return type ระบุทุก branch ที่ caller ต้อง render"],
+      badCode: ["string status ซ่อนชุด workflow state ที่อนุญาต"],
+    },
+    title: "state ของผลลัพธ์ด้วย sealed type",
+    summary: "ใช้ sealed type แทน status string เมื่อ workflow มีชุดผลลัพธ์ปิด.",
+    takeaways: ["sealed result ทำให้ reviewer เห็น branch ที่ caller ต้อง render, retry หรือ log."],
+    whatToReview: [
+      "โค้ดที่ดีประกาศ Published และ Rejected ใน type เดียว ทำให้ `when` expression ตรวจครบทุก branch ได้.",
+      "โค้ดที่ควรปรับคืน string แบบ `ok` หรือ `bad` ทำให้ typo หรือ status ใหม่ไหลไปถึง caller โดยไม่มีสัญญาณจาก compiler.",
+    ],
+    reviewNotes: [
+      "ใช้ sealed interface หรือ sealed class เมื่อ state เป็นชุดค่าที่ทีมควบคุมเอง ถ้าค่าเป็น external data ให้ parse ที่ boundary แล้วแปลงเป็น domain result.",
+    ],
+  },
+  "kotlin/scope-function-intent": {
+    codeComments: {
+      goodCode: ["also ใช้บันทึก audit โดยยังคืน review ตัวเดิม"],
+      badCode: ["receiver ซ้อนกันทำให้ต้องไล่ว่า id มาจาก object ไหน"],
+    },
+    title: "เจตนาของ scope function",
+    summary: "ใช้ scope function เมื่อ receiver และ return value ตรงกับเจตนาที่ reviewer ต้องอ่าน.",
+    takeaways: ["scope function ใน Kotlin ควรบอกว่ากำลัง transform, configure หรือบันทึก side effect."],
+    whatToReview: [
+      "โค้ดที่ดีตั้งชื่อตัวแปร review แล้วใช้ `also` เฉพาะ audit side effect ที่ไม่เปลี่ยน return value.",
+      "โค้ดที่ควรปรับซ้อน `let` กับ `apply` ทำให้ `it`, `this` และ `id` ต้องไล่ context ก่อนเห็นค่าที่ return.",
+    ],
+    reviewNotes: [
+      "ให้ใช้ `let` เมื่อ transform ค่า, `also` เมื่อ observe ค่า และ `apply` เมื่อ configure receiver ถ้า business logic มี receiver ซ้อนหลายชั้น ให้ตั้งชื่อตัวแปรกลางแทน.",
+    ],
+  },
+  "kotlin/collection-transformations": {
+    codeComments: {
+      goodCode: ["pipeline ระบุ approval rule ก่อนเลือก title"],
+      badCode: ["mutation ซ่อน selection rule ไว้ใน loop plumbing"],
+    },
+    title: "การแปลง collection",
+    summary: "เลือก operation ของ collection ที่บอก data rule แทนการสะสม mutable list ด้วยมือ.",
+    takeaways: ["รีวิว Kotlin collection ควรจับคู่ `filter`, `map` และ `mapNotNull` กับกฎ domain ที่ถูกใช้."],
+    whatToReview: [
+      "โค้ดที่ดีใช้ `filter` สำหรับ score และ `map` สำหรับ title จึงเห็นทั้ง selection rule และ output shape.",
+      "โค้ดที่ควรปรับสร้าง mutable list แล้วลืม score check ทำให้ loop ดังเกินกฎงานที่ต้องรักษา.",
+    ],
+    reviewNotes: [
+      "ก่อนอ่าน pipeline ให้ตั้งคำถามว่า item ไหนอยู่ต่อ, field ไหนถูกส่งออก และ invalid data หายไปตรงไหน ถ้า callback ทำงานหนักหรือมี side effect ให้แตกชื่อขั้นกลาง.",
+    ],
+  },
+  "kotlin/coroutine-scope-lifecycle": {
+    codeComments: {
+      goodCode: ["child jobs ถูก cancel พร้อม digest request"],
+      badCode: ["GlobalScope อยู่ยาวกว่า request ที่สั่งงาน"],
+    },
+    title: "lifecycle ของ coroutine scope",
+    summary: "ผูก child coroutine กับ request, screen หรือ worker ที่เป็นเจ้าของงานนั้น.",
+    takeaways: ["รีวิว Kotlin coroutine ต้องเห็นว่า scope ไหนเป็นเจ้าของ job และ cancellation ไปถึง child job อย่างไร."],
+    whatToReview: [
+      "โค้ดที่ดีใช้ `coroutineScope` ทำให้ async job สำหรับ user และ review อยู่ใต้ request เดียวกัน.",
+      "โค้ดที่ควรปรับใช้ `GlobalScope.launch` ทำให้ request ถูก cancel แล้วงานส่ง digest ยังวิ่งต่อโดย caller ไม่เห็น failure.",
+    ],
+    reviewNotes: [
+      "อ่าน coroutine code จาก ownership ของ scope ก่อน body เสมอ job ควรเป็นของ request, screen, service lifetime หรือ worker lifetime ที่เห็นในโค้ด.",
+    ],
+  },
+  "kotlin/flow-state-streams": {
+    codeComments: {
+      goodCode: ["Flow pipeline ฝาก collection และ cancellation ไว้กับ caller"],
+      badCode: ["background collection อยู่ยาวกว่า screen หรือ request"],
+    },
+    title: "state stream ด้วย Flow",
+    summary: "ให้ Flow pipeline ยัง cancel ได้ และให้ caller เลือกจุดเริ่ม collection.",
+    takeaways: ["รีวิว Kotlin Flow ควรแยก stream transformation ออกจาก lifecycle ที่ collect stream นั้น."],
+    whatToReview: [
+      "โค้ดที่ดีคืน Flow ที่แปลง event เป็น title ทำให้ caller เป็นเจ้าของ collection, cancellation และ error reporting.",
+      "โค้ดที่ควรปรับเริ่ม collect ใน helper และเก็บผลลง mutable list ร่วม ทำให้ shutdown กับ failure path ตามยาก.",
+    ],
+    reviewNotes: [
+      "ฟังก์ชันที่ return Flow ควรบอก shape ของ stream ส่วน screen, request หรือ worker ควรเป็นจุด collect และถือ cancellation scope.",
+    ],
+  },
+  "kotlin/resource-use-boundaries": {
+    codeComments: {
+      goodCode: ["use ปิด reader ทั้งตอนอ่านสำเร็จและตอน throw"],
+      badCode: ["reader อาจค้างเมื่อ readLines throw ระหว่างอ่านไฟล์"],
+    },
+    title: "ขอบเขตการใช้ resource",
+    summary: "ปิด file และ stream ใน boundary เดียวกับจุดที่เปิด resource.",
+    takeaways: ["รีวิว Kotlin resource ควรจับคู่ทุก stream ที่เปิดกับ `use` หรือ close path ที่เห็นในโค้ด."],
+    whatToReview: [
+      "โค้ดที่ดีเปิด reader แล้วครอบด้วย `use` ใน expression เดียว ทำให้ cleanup อยู่ใกล้ owner ของ resource.",
+      "โค้ดที่ควรปรับ return ก่อน close ถ้าอ่านไฟล์ล้มจะทิ้ง file descriptor ค้าง.",
+    ],
+    reviewNotes: [
+      "เมื่อ Kotlin code เปิด file, socket, stream หรือ database cursor ให้ไล่ทั้ง success path และ failure path `use` ช่วยวาง cleanup ไว้ข้าง resource owner.",
+    ],
+  },
+  "kotlin/jvm-interop-platform-types": {
+    codeComments: {
+      goodCode: ["เช็กค่าจาก Java ก่อนใช้เป็น non-null ใน Kotlin"],
+      badCode: ["platform type จาก Java ยังพก null เข้ามาได้"],
+    },
+    title: "platform type ตอน interop กับ JVM",
+    summary: "อ่านค่า Java platform type เป็น input ที่ยังต้องพิสูจน์ nullability ก่อนเข้า service logic.",
+    takeaways: ["รีวิว Kotlin ควรมี boundary check เมื่อ Java API คืนค่าที่ไม่มี nullability metadata."],
+    whatToReview: [
+      "โค้ดที่ดีเช็ก Java object และ reviewerName ก่อนคืน string ให้ฝั่ง Kotlin.",
+      "โค้ดที่ควรปรับเชื่อ platform type ทันที ทำให้ null จาก Java พังไกลจาก interop boundary.",
+    ],
+    reviewNotes: [
+      "ที่ Java interop boundary ให้แปลง platform type เป็น Kotlin nullable หรือ non-null contract ก่อนส่งต่อเข้า service code.",
+    ],
+  },
+  "kotlin/kotest-fixtures-assertions": {
+    codeComments: {
+      goodCode: ["fixture ระบุ invalid input และ error code ที่คาดไว้"],
+      badCode: ["non-null assertion ไม่แตะ validation contract ที่ caller ใช้"],
+    },
+    title: "fixture และ assertion ใน Kotest",
+    summary: "เขียน Kotlin test ที่บอก behavior, input fixture และ output contract ที่ต้องคงไว้.",
+    takeaways: ["Kotlin test ควร assert result shape ที่ caller ใช้ ไม่ใช่แค่พิสูจน์ว่า function คืนค่าบางแบบ."],
+    whatToReview: [
+      "โค้ดที่ดีส่ง title ว่างและ assert `title_blank` ทำให้ regression ตรง rule นี้ fail ที่ test.",
+      "โค้ดที่ควรปรับเช็กแค่ non-null result ทำให้ test ผ่านได้แม้ validator คืน error ผิดชนิด.",
+    ],
+    reviewNotes: [
+      "รีวิว test โดยเชื่อม fixture, action และ assertion ถ้า assertion ไม่ระบุ state, error code หรือ persisted row ที่ caller ใช้ test อาจพลาด behavior สำคัญ.",
+    ],
   },
   "c/pointer-ownership": {
     title: "ownership ของ pointer ที่ function boundary",

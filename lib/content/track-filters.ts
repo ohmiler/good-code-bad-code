@@ -37,6 +37,7 @@ const backend = [
   "php",
   "laravel",
   "java",
+  "kotlin",
   "c",
   "cpp",
   "csharp",

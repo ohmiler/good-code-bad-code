@@ -1,0 +1,39 @@
+export const metadata = {
+  title: "Null safety boundaries",
+  track: "kotlin",
+  order: 1,
+  summary: "Keep nullable values at input boundaries instead of spreading `!!` through service code.",
+  tags: ["null-safety", "boundaries"],
+  takeaways: ["Kotlin review should make nullable contracts visible where request or Java data enters the code."],
+  goodCode: {
+    language: "kotlin",
+    filename: "src/main/kotlin/reviews/ReviewService.kt",
+    code: `data class Review(val title: String)
+
+fun createReview(title: String?): Review? {
+    // Nullable input is checked before service code builds the Review.
+    val normalized = title?.trim()?.takeIf { it.isNotEmpty() } ?: return null
+    return Review(normalized)
+}`,
+  },
+  badCode: {
+    language: "kotlin",
+    filename: "ReviewService.kt",
+    code: `data class Review(val title: String)
+
+fun createReview(title: String?): Review {
+    // The crash moves request validation into a hidden runtime branch.
+    return Review(title!!.trim())
+}`,
+  },
+};
+
+## What to review
+
+The good version turns a nullable title into a domain decision before the Review object exists.
+
+The bad version uses `!!`, so a missing title becomes a runtime crash instead of a validation result.
+
+## Review notes
+
+In Kotlin review, ask where `String?` becomes `String`. That conversion should be near the input boundary or Java interop boundary, not scattered through service code.

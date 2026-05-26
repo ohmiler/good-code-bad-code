@@ -1,0 +1,40 @@
+export const metadata = {
+  title: "Collection transformations",
+  track: "kotlin",
+  order: 5,
+  summary: "Prefer collection operations that name the data rule instead of manual mutable accumulation.",
+  tags: ["collections", "transformations"],
+  takeaways: ["Kotlin collection review should connect `filter`, `map`, and `mapNotNull` to the domain rule being applied."],
+  goodCode: {
+    language: "kotlin",
+    filename: "src/main/kotlin/reviews/ReviewQueries.kt",
+    code: `fun approvedTitles(reviews: List<Review>): List<String> {
+    // The pipeline names the approval rule before selecting titles.
+    return reviews
+        .filter { review -> review.score >= 4 }
+        .map { review -> review.title }
+}`,
+  },
+  badCode: {
+    language: "kotlin",
+    filename: "ReviewQueries.kt",
+    code: `fun approvedTitles(reviews: List<Review>): List<String> {
+    val titles = mutableListOf<String>()
+    for (review in reviews) {
+        // Mutation hides the selection rule inside loop plumbing.
+        titles.add(review.title)
+    }
+    return titles
+}`,
+  },
+};
+
+## What to review
+
+The good version puts the approval rule next to the transformation, so the output list follows from the pipeline.
+
+The bad version builds a mutable list and forgets the score check, making the loop mechanics louder than the domain rule.
+
+## Review notes
+
+Review collection code by naming the rule first: which items stay, which fields leave, and what happens to invalid data. Kotlin pipelines should make those steps visible without hiding expensive work in callbacks.

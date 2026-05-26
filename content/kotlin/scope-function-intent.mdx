@@ -1,0 +1,40 @@
+export const metadata = {
+  title: "Scope function intent",
+  track: "kotlin",
+  order: 4,
+  summary: "Use scope functions when the receiver and return value match the reader's expectation.",
+  tags: ["scope-functions", "readability"],
+  takeaways: ["Kotlin scope functions should reveal whether code transforms a value, configures an object, or records a side effect."],
+  goodCode: {
+    language: "kotlin",
+    filename: "src/main/kotlin/reviews/ReviewFactory.kt",
+    code: `fun buildReview(input: ReviewInput): Review {
+    val title = input.title.trim()
+    val review = Review(title = title, score = input.score)
+
+    // also records the created review without replacing the return value.
+    return review.also { createdReview -> audit.created(createdReview.id) }
+}`,
+  },
+  badCode: {
+    language: "kotlin",
+    filename: "ReviewFactory.kt",
+    code: `fun buildReview(input: ReviewInput) =
+    input.let {
+        Review(it.title.trim(), it.score).apply {
+            // Nested receivers hide whether id belongs to input or Review.
+            audit.created(id)
+        }
+    }`,
+  },
+};
+
+## What to review
+
+The good version names the intermediate Review and uses `also` only for the audit side effect.
+
+The bad version nests `let` and `apply`, so `it`, `this`, and `id` need extra mental tracking before a reviewer can see the returned value.
+
+## Review notes
+
+Scope functions are useful when their intent is narrow: `let` transforms, `also` observes, `apply` configures the receiver. Nested receivers in business logic often need named variables instead.

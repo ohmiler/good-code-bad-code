@@ -128,6 +128,31 @@ test("validateLessonMetadata accepts Java code samples", () => {
   );
 });
 
+test("validateLessonMetadata accepts Kotlin code samples", () => {
+  const kotlinMetadata = {
+    ...validMetadata,
+    track: "kotlin",
+    goodCode: {
+      language: "kotlin",
+      filename: "src/main/kotlin/reviews/ReviewService.kt",
+      code: "fun normalizeTitle(title: String?): String? = title?.trim()?.takeIf { it.isNotEmpty() }",
+    },
+    badCode: {
+      language: "kotlin",
+      filename: "ReviewService.kt",
+      code: "fun normalizeTitle(title: String?): String = title!!.trim()",
+    },
+  };
+
+  assert.deepEqual(
+    validateLessonMetadata(
+      kotlinMetadata,
+      "content/kotlin/null-safety-boundaries.mdx",
+    ),
+    kotlinMetadata,
+  );
+});
+
 test("validateLessonMetadata accepts C code samples", () => {
   const cMetadata = {
     ...validMetadata,

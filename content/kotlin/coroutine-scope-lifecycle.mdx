@@ -1,0 +1,40 @@
+export const metadata = {
+  title: "Coroutine scope lifecycle",
+  track: "kotlin",
+  order: 6,
+  summary: "Tie child coroutines to the request or screen that started the work.",
+  tags: ["coroutines", "structured-concurrency"],
+  takeaways: ["Kotlin coroutine review should check which scope owns each child job and how cancellation reaches it."],
+  goodCode: {
+    language: "kotlin",
+    filename: "src/main/kotlin/reviews/DigestService.kt",
+    code: `suspend fun buildDigest(userId: UserId): Digest = coroutineScope {
+    // Child jobs cancel when the digest request is cancelled.
+    val user = async { users.find(userId) }
+    val reviews = async { reviewStore.recentFor(userId) }
+
+    Digest(user.await(), reviews.await())
+}`,
+  },
+  badCode: {
+    language: "kotlin",
+    filename: "DigestService.kt",
+    code: `fun buildDigest(userId: UserId) {
+    // GlobalScope outlives the request that triggered the digest.
+    GlobalScope.launch {
+        val reviews = reviewStore.recentFor(userId)
+        mailer.sendDigest(userId, reviews)
+    }
+}`,
+  },
+};
+
+## What to review
+
+The good version uses `coroutineScope`, so async work belongs to the suspending request and cancellation reaches both child jobs.
+
+The bad version launches work in `GlobalScope`, so a cancelled request can leave mail work running without the caller seeing failure.
+
+## Review notes
+
+For Kotlin coroutine code, trace ownership of the scope before reading the body. A job should belong to a request, screen, service lifetime, or worker lifetime that appears in the code.

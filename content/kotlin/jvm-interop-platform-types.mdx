@@ -1,0 +1,35 @@
+export const metadata = {
+  title: "JVM interop platform types",
+  track: "kotlin",
+  order: 9,
+  summary: "Treat Java platform types as nullable until Kotlin code proves the contract.",
+  tags: ["jvm", "interop", "platform-types"],
+  takeaways: ["Kotlin review should add a boundary check when Java APIs return values without nullability metadata."],
+  goodCode: {
+    language: "kotlin",
+    filename: "src/main/kotlin/reviews/JavaReviewAdapter.kt",
+    code: `fun reviewerName(javaReview: JavaReview?): String? {
+    // Java values are checked before Kotlin treats the name as non-null.
+    val name = javaReview?.reviewerName ?: return null
+    return name.trim().takeIf { it.isNotEmpty() }
+}`,
+  },
+  badCode: {
+    language: "kotlin",
+    filename: "JavaReviewAdapter.kt",
+    code: `fun reviewerName(javaReview: JavaReview): String {
+    // Platform types can still carry null from Java callers.
+    return javaReview.reviewerName.trim()
+}`,
+  },
+};
+
+## What to review
+
+The good version checks the Java object and the Java-provided name before returning a Kotlin string.
+
+The bad version trusts a platform type. If Java returns null, Kotlin code fails away from the interop boundary.
+
+## Review notes
+
+At Java interop boundaries, read platform types as untrusted input. Convert them into Kotlin nullable or non-null contracts before they enter service logic.

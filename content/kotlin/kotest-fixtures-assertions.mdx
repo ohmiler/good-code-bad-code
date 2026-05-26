@@ -1,0 +1,40 @@
+export const metadata = {
+  title: "Kotest fixtures and assertions",
+  track: "kotlin",
+  order: 10,
+  summary: "Write Kotlin tests that name the behavior, input fixture, and exact output contract.",
+  tags: ["tests", "kotest", "assertions"],
+  takeaways: ["Kotlin tests should assert the result shape that callers depend on, not only that a function returned a value."],
+  goodCode: {
+    language: "kotlin",
+    filename: "src/test/kotlin/reviews/ReviewValidatorTest.kt",
+    code: `class ReviewValidatorTest : StringSpec({
+    "rejects a blank title" {
+        // The fixture names the invalid input and expected error code.
+        val result = validate(ReviewInput(title = " ", score = 5))
+
+        result shouldBe ValidationError("title_blank")
+    }
+})`,
+  },
+  badCode: {
+    language: "kotlin",
+    filename: "ReviewValidatorTest.kt",
+    code: `class ReviewValidatorTest : StringSpec({
+    "validates reviews" {
+        // Non-null assertion misses the validation contract callers use.
+        validate(ReviewInput(title = "", score = 5)) shouldNotBe null
+    }
+})`,
+  },
+};
+
+## What to review
+
+The good version gives the invalid input and expected error code, so a validation regression fails at the rule being protected.
+
+The bad version only checks for a non-null result. It can pass while the validator returns the wrong error.
+
+## Review notes
+
+Kotlin test review should connect fixture, action, and assertion. If the assertion does not name the returned state, error code, or persisted row, the test may miss the behavior callers rely on.

@@ -1,0 +1,44 @@
+export const metadata = {
+  title: "Data class immutability",
+  track: "kotlin",
+  order: 2,
+  summary: "Use immutable data classes and `copy` when a request creates a new state.",
+  tags: ["data-class", "immutability"],
+  takeaways: ["Kotlin data classes should protect value state from caller mutation after construction."],
+  goodCode: {
+    language: "kotlin",
+    filename: "src/main/kotlin/reviews/ReviewDraft.kt",
+    code: `data class ReviewDraft(
+    val title: String,
+    val tags: List<String>,
+)
+
+fun rename(draft: ReviewDraft, title: String): ReviewDraft {
+    // copy returns the next draft without mutating the caller's value.
+    return draft.copy(title = title.trim())
+}`,
+  },
+  badCode: {
+    language: "kotlin",
+    filename: "ReviewDraft.kt",
+    code: `class ReviewDraft(
+    var title: String,
+    val tags: MutableList<String>,
+)
+
+fun rename(draft: ReviewDraft, title: String) {
+    // Shared mutable state changes every reference to this draft.
+    draft.title = title.trim()
+}`,
+  },
+};
+
+## What to review
+
+The good version models a review draft as a value and returns the next state through `copy`.
+
+The bad version exposes `var` and `MutableList`, so later code can change the draft without passing through a named operation.
+
+## Review notes
+
+When a Kotlin type crosses service, controller, or UI boundaries, prefer `val` fields and read-only collection types. Mutation should appear as a named function that returns the next value or writes through a repository.

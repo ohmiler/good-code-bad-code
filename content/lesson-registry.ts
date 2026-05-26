@@ -455,6 +455,36 @@ import JavaRecordsAndDtoBoundaries, {
 import JavaPackageServiceBoundaries, {
   metadata as javaPackageServiceBoundariesMetadata,
 } from "./java/package-service-boundaries.mdx";
+import KotlinNullSafetyBoundaries, {
+  metadata as kotlinNullSafetyBoundariesMetadata,
+} from "./kotlin/null-safety-boundaries.mdx";
+import KotlinDataClassImmutability, {
+  metadata as kotlinDataClassImmutabilityMetadata,
+} from "./kotlin/data-class-immutability.mdx";
+import KotlinSealedResultStates, {
+  metadata as kotlinSealedResultStatesMetadata,
+} from "./kotlin/sealed-result-states.mdx";
+import KotlinScopeFunctionIntent, {
+  metadata as kotlinScopeFunctionIntentMetadata,
+} from "./kotlin/scope-function-intent.mdx";
+import KotlinCollectionTransformations, {
+  metadata as kotlinCollectionTransformationsMetadata,
+} from "./kotlin/collection-transformations.mdx";
+import KotlinCoroutineScopeLifecycle, {
+  metadata as kotlinCoroutineScopeLifecycleMetadata,
+} from "./kotlin/coroutine-scope-lifecycle.mdx";
+import KotlinFlowStateStreams, {
+  metadata as kotlinFlowStateStreamsMetadata,
+} from "./kotlin/flow-state-streams.mdx";
+import KotlinResourceUseBoundaries, {
+  metadata as kotlinResourceUseBoundariesMetadata,
+} from "./kotlin/resource-use-boundaries.mdx";
+import KotlinJvmInteropPlatformTypes, {
+  metadata as kotlinJvmInteropPlatformTypesMetadata,
+} from "./kotlin/jvm-interop-platform-types.mdx";
+import KotlinKotestFixturesAssertions, {
+  metadata as kotlinKotestFixturesAssertionsMetadata,
+} from "./kotlin/kotest-fixtures-assertions.mdx";
 import CPointerOwnership, {
   metadata as cPointerOwnershipMetadata,
 } from "./c/pointer-ownership.mdx";
@@ -1693,6 +1723,66 @@ const rawLessons: RawLesson[] = [
     source: "content/java/package-service-boundaries.mdx",
     metadata: javaPackageServiceBoundariesMetadata,
     Component: JavaPackageServiceBoundaries,
+  },
+  {
+    slug: "null-safety-boundaries",
+    source: "content/kotlin/null-safety-boundaries.mdx",
+    metadata: kotlinNullSafetyBoundariesMetadata,
+    Component: KotlinNullSafetyBoundaries,
+  },
+  {
+    slug: "data-class-immutability",
+    source: "content/kotlin/data-class-immutability.mdx",
+    metadata: kotlinDataClassImmutabilityMetadata,
+    Component: KotlinDataClassImmutability,
+  },
+  {
+    slug: "sealed-result-states",
+    source: "content/kotlin/sealed-result-states.mdx",
+    metadata: kotlinSealedResultStatesMetadata,
+    Component: KotlinSealedResultStates,
+  },
+  {
+    slug: "scope-function-intent",
+    source: "content/kotlin/scope-function-intent.mdx",
+    metadata: kotlinScopeFunctionIntentMetadata,
+    Component: KotlinScopeFunctionIntent,
+  },
+  {
+    slug: "collection-transformations",
+    source: "content/kotlin/collection-transformations.mdx",
+    metadata: kotlinCollectionTransformationsMetadata,
+    Component: KotlinCollectionTransformations,
+  },
+  {
+    slug: "coroutine-scope-lifecycle",
+    source: "content/kotlin/coroutine-scope-lifecycle.mdx",
+    metadata: kotlinCoroutineScopeLifecycleMetadata,
+    Component: KotlinCoroutineScopeLifecycle,
+  },
+  {
+    slug: "flow-state-streams",
+    source: "content/kotlin/flow-state-streams.mdx",
+    metadata: kotlinFlowStateStreamsMetadata,
+    Component: KotlinFlowStateStreams,
+  },
+  {
+    slug: "resource-use-boundaries",
+    source: "content/kotlin/resource-use-boundaries.mdx",
+    metadata: kotlinResourceUseBoundariesMetadata,
+    Component: KotlinResourceUseBoundaries,
+  },
+  {
+    slug: "jvm-interop-platform-types",
+    source: "content/kotlin/jvm-interop-platform-types.mdx",
+    metadata: kotlinJvmInteropPlatformTypesMetadata,
+    Component: KotlinJvmInteropPlatformTypes,
+  },
+  {
+    slug: "kotest-fixtures-assertions",
+    source: "content/kotlin/kotest-fixtures-assertions.mdx",
+    metadata: kotlinKotestFixturesAssertionsMetadata,
+    Component: KotlinKotestFixturesAssertions,
   },
   {
     slug: "pointer-ownership",

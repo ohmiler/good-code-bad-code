@@ -68,7 +68,7 @@ export const trackFamilies = [
     id: "backend-languages",
     label: { en: "Backend languages", th: "ภาษา Backend" },
     searchTerms: ["backend service api concurrency"],
-    tracks: ["java", "go"],
+    tracks: ["java", "kotlin", "go"],
   },
   {
     id: "data-ops",
@@ -87,6 +87,7 @@ export const trackSearchAliases: Partial<Record<TrackSlug, readonly string[]>> =
   c: ["systems", "native", "memory"],
   cpp: ["c++", "systems", "native", "memory"],
   csharp: ["c#", ".net", "dotnet", "asp.net", "microsoft"],
+  kotlin: ["jvm", "android", "coroutines", "null safety", "ktor", "spring"],
   rust: ["borrow checker", "borrowing", "ownership", "cargo", "memory safety"],
   lua: ["tables", "metatable", "coroutine", "embedded scripting", "sandbox", "config"],
   sql: ["database", "query"],

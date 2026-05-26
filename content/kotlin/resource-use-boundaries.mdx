@@ -1,0 +1,37 @@
+export const metadata = {
+  title: "Resource use boundaries",
+  track: "kotlin",
+  order: 8,
+  summary: "Close files and streams at the same boundary that opens them.",
+  tags: ["resources", "use", "cleanup"],
+  takeaways: ["Kotlin resource review should pair every opened stream with `use` or another explicit close path."],
+  goodCode: {
+    language: "kotlin",
+    filename: "src/main/kotlin/reviews/ReviewImport.kt",
+    code: `fun readReviewLines(path: Path): List<String> {
+    // use closes the reader when parsing succeeds or fails.
+    return path.toFile().bufferedReader().use { reader ->
+        reader.readLines()
+    }
+}`,
+  },
+  badCode: {
+    language: "kotlin",
+    filename: "ReviewImport.kt",
+    code: `fun readReviewLines(path: Path): List<String> {
+    // The reader can stay open when readLines throws.
+    val reader = path.toFile().bufferedReader()
+    return reader.readLines()
+}`,
+  },
+};
+
+## What to review
+
+The good version opens the reader and closes it through `use` in the same expression.
+
+The bad version returns before closing the reader. An exception while reading can leak the file descriptor.
+
+## Review notes
+
+When Kotlin code opens a file, socket, stream, or database cursor, review the failure path as well as the success path. `use` keeps cleanup next to the resource owner.

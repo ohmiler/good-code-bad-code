@@ -152,6 +152,14 @@ const iconShapes = {
       <path d="M5 21h14" />
     </>
   ),
+  diamond: (
+    <>
+      <path d="m12 3 8 8-8 10-8-10 8-8Z" />
+      <path d="M4 11h16" />
+      <path d="m8.5 3 3.5 8 3.5-8" />
+      <path d="M12 11v10" />
+    </>
+  ),
   chip: (
     <>
       <rect height="12" rx="2" width="12" x="6" y="6" />

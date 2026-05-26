@@ -90,6 +90,12 @@ export const tracks = [
       "Review null boundaries, immutability, value objects, exceptions, resources, generics, streams, concurrency, records, and service boundaries.",
   },
   {
+    slug: "kotlin",
+    title: "Kotlin",
+    description:
+      "Review null safety, data classes, sealed states, scope functions, collections, coroutines, Flow, JVM interop, and tests.",
+  },
+  {
     slug: "c",
     title: "C",
     description:

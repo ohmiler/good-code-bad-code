@@ -1,0 +1,41 @@
+export const metadata = {
+  title: "Sealed result states",
+  track: "kotlin",
+  order: 3,
+  summary: "Represent closed workflow outcomes with sealed types instead of status strings.",
+  tags: ["sealed", "state", "results"],
+  takeaways: ["A sealed result lets reviewers see every branch the caller must render or log."],
+  goodCode: {
+    language: "kotlin",
+    filename: "src/main/kotlin/reviews/PublishResult.kt",
+    code: `sealed interface PublishResult {
+    data object Published : PublishResult
+    data class Rejected(val reason: String) : PublishResult
+}
+
+fun publish(review: Review): PublishResult {
+    // The return type names every branch the caller must render.
+    if (review.title.isBlank()) return PublishResult.Rejected("title_blank")
+    return PublishResult.Published
+}`,
+  },
+  badCode: {
+    language: "kotlin",
+    filename: "PublishResult.kt",
+    code: `fun publish(review: Review): String {
+    // String status hides the allowed workflow states from callers.
+    if (review.title.isBlank()) return "bad"
+    return "ok"
+}`,
+  },
+};
+
+## What to review
+
+The good version keeps Published and Rejected in the type system, so a `when` expression can cover every branch.
+
+The bad version returns ad hoc strings. A typo or new status can reach the caller without a compiler signal.
+
+## Review notes
+
+Use sealed interfaces or sealed classes when a workflow has a closed set of states. Review string status only when the value is truly external data and gets parsed at the boundary.

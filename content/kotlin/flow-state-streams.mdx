@@ -1,0 +1,40 @@
+export const metadata = {
+  title: "Flow state streams",
+  track: "kotlin",
+  order: 7,
+  summary: "Keep Flow pipelines cancellable and let callers choose where collection starts.",
+  tags: ["flow", "streams", "cancellation"],
+  takeaways: ["Kotlin Flow review should separate stream transformation from the lifecycle that collects it."],
+  goodCode: {
+    language: "kotlin",
+    filename: "src/main/kotlin/reviews/ReviewEvents.kt",
+    code: `fun approvalMessages(events: Flow<ReviewEvent>): Flow<String> {
+    // The Flow pipeline leaves collection and cancellation with the caller.
+    return events
+        .filterIsInstance<ReviewApproved>()
+        .map { event -> event.title }
+}`,
+  },
+  badCode: {
+    language: "kotlin",
+    filename: "ReviewEvents.kt",
+    code: `val messages = mutableListOf<String>()
+
+fun start(events: Flow<ReviewEvent>) {
+    GlobalScope.launch {
+        // Background collection outlives the screen or request that started it.
+        events.collect { event -> messages += event.toString() }
+    }
+}`,
+  },
+};
+
+## What to review
+
+The good version returns a transformed Flow, leaving collection, cancellation, and error reporting to the caller's lifecycle.
+
+The bad version starts collection inside a helper and stores messages in shared mutable state, so shutdown and failure paths are hard to trace.
+
+## Review notes
+
+A Flow-returning function should usually describe stream shape. A screen, request, or worker should own the collection point and cancellation scope.
