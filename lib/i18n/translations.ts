@@ -265,7 +265,7 @@ export const lessonThaiTranslations = {
     summary: "เชื่อมคำแนะนำและข้อความผิดพลาด (error) เข้ากับช่องกรอก (field) เพื่อให้ผู้ใช้และ screen reader รู้ว่าข้อความนั้นอธิบายช่องไหน.",
     takeaways: ["ใช้ aria-describedby และ aria-invalid เพื่อผูกคำแนะนำและสถานะผิดพลาดเข้ากับ input ที่เกี่ยวข้องจริง ๆ."],
     whatToReview: [
-      "โค้ดที่ดีทำให้ input รู้ว่าคำแนะนำและ error ข้อไหนเป็นของมัน และบอกสถานะผิดพลาดด้วย aria-invalid.",
+      "โค้ดที่ดีทำให้ input รู้ว่าคำแนะนำและ error ข้อไหนอธิบายช่องนี้ และบอกสถานะผิดพลาดด้วย aria-invalid.",
       "โค้ดที่ควรปรับวางข้อความไว้ใกล้ input แค่ทางสายตา แต่ screen reader อาจไม่รู้ว่าข้อความนั้นเป็นของช่องกรอกไหน.",
     ],
     reviewNotes: [
@@ -317,7 +317,7 @@ export const lessonThaiTranslations = {
       "โค้ดที่ควรปรับใส่ role หรือ state ที่ไม่ตรงกับพฤติกรรมจริง ทำให้ screen reader และเครื่องมือช่วยอ่านรับข้อมูลผิด.",
     ],
     reviewNotes: [
-      "ARIA ช่วยได้มากเมื่อใช้ถูก แต่ถ้าใช้ผิดจะทำให้ผู้ใช้เครื่องมือช่วยอ่านได้ข้อมูลผิด เวลารีวิวให้ถามก่อนว่า native element ทำสิ่งนี้ให้เราอยู่แล้วหรือยัง.",
+      "ARIA ช่วยได้มากเมื่อใช้ถูก แต่ถ้าใช้ผิดจะทำให้ผู้ใช้เครื่องมือช่วยอ่านได้ข้อมูลผิด เวลารีวิวให้ถามก่อนว่า native element มี role, state หรือ keyboard behavior นี้ให้เราอยู่แล้วหรือยัง.",
     ],
   },
   "css/flex-layout-boundaries": {
@@ -925,7 +925,7 @@ export const lessonThaiTranslations = {
       "โค้ดที่ควรปรับใส่ state ทั้งแอปใน context เดียว ทำให้ component รู้เยอะและอาจวาดใหม่ (rerender) เมื่อข้อมูลที่ไม่เกี่ยวเปลี่ยน.",
     ],
     reviewNotes: [
-      "ตอนรีวิว component ที่ใช้ context ให้เทียบว่ามันรับข้อมูลมากแค่ไหนกับสิ่งที่ render จริง. context กว้างเกินไปทำให้ใช้ซ้ำยาก และทำให้จำนวนครั้งที่ component วาดใหม่คาดเดายาก.",
+      "ตอนรีวิว component ที่ใช้ context ให้เทียบว่า component รับข้อมูลมากแค่ไหนกับสิ่งที่ render จริง. context กว้างเกินไปทำให้ใช้ซ้ำยาก และทำให้จำนวนครั้งที่ component วาดใหม่คาดเดายาก.",
     ],
   },
   "react/memoization-when-it-helps": {
@@ -941,7 +941,7 @@ export const lessonThaiTranslations = {
       "โค้ดที่ควรปรับใส่ `[]` จนข้อมูลที่แสดงเก่า และ memoize ข้อความง่าย ๆ ที่คำนวณใหม่ได้ถูกกว่า.",
     ],
     reviewNotes: [
-      "ตอนรีวิว `useMemo` หรือ `useCallback` ให้ถามว่ามันช่วยลดงานแพงตรงไหน และใส่ dependencies ครบไหม. memo ที่ผิดอาจทำให้โค้ดดูเหมือนเร็วขึ้น แต่จริง ๆ แล้วค้างอยู่กับข้อมูลเก่า.",
+      "ตอนรีวิว `useMemo` หรือ `useCallback` ให้ถามว่า memo นี้ช่วยลดงานแพงตรงไหน และใส่ dependencies ครบไหม. memo ที่ผิดอาจทำให้โค้ดดูเหมือนเร็วขึ้น แต่จริง ๆ แล้วค้างอยู่กับข้อมูลเก่า.",
     ],
   },
   "react/composition-over-prop-flags": {
@@ -1463,7 +1463,7 @@ export const lessonThaiTranslations = {
     },
     title: "ระบุ column ใน SELECT ตาม contract",
     summary: "เลือกเฉพาะ column ที่โค้ดฝั่งเรียกใช้ต้องใช้ แทนการ `SELECT *` แล้วเอาทุกอย่างจาก table ออกมา.",
-    takeaways: ["ผลลัพธ์ของ query คือสัญญากับโค้ดที่เอาไปใช้ (API contract) รูปร่างของมันจึงควรถูกเลือกอย่างตั้งใจ."],
+    takeaways: ["ผลลัพธ์ของ query คือสัญญากับโค้ดที่เอาไปใช้ (API contract) รูปร่างของ result set จึงควรถูกเลือกอย่างตั้งใจ."],
     whatToReview: [
       "โค้ดที่ดีระบุ column และ alias ที่ต้องส่งกลับ ทำให้โค้ดที่อ่านผลลัพธ์รู้แน่ว่าจะได้ field อะไร.",
       "โค้ดที่ควรปรับใช้ `SELECT *` จน column จากหลาย table หลุดออกมา เสี่ยงชื่อ column ชนกัน และพังง่ายเมื่อ schema เปลี่ยน.",
@@ -2058,7 +2058,7 @@ export const lessonThaiTranslations = {
   "java/records-and-dto-boundaries": {
     title: "ใช้ record/DTO แทน Map ของ request",
     summary: "request body ควรมี record หรือ DTO ที่บอกชื่อ field ชัดและ validate ตั้งแต่ต้น แทน Map<String, Object> ที่ต้อง cast แล้วค่อยพังทีหลัง.",
-    takeaways: ["record/DTO ไม่ใช่พิธีรีตอง ถ้ามันทำให้ field ที่ต้องมีและ validation อยู่ในที่เดียว."],
+    takeaways: ["record/DTO ไม่ใช่พิธีรีตอง ถ้า type นี้ทำให้ field ที่ต้องมีและ validation อยู่ในที่เดียว."],
     whatToReview: [
       "โค้ดที่ดีตั้งชื่อ CreateUserRequest และ validate email กับ displayName ก่อนส่งเข้า service.",
       "โค้ดที่ควรปรับใช้ Map<String, Object> แล้ว cast เอง ถ้า key หาย, key ชื่อไม่ตรง หรือค่าเป็น null จะพังลึกกว่าและอ่านยากกว่า.",
@@ -2323,7 +2323,7 @@ export const lessonThaiTranslations = {
     },
     title: "ประกาศ auth ด้วย security dependency",
     summary: "ใช้ security dependency เช่น `OAuth2PasswordBearer` เพื่อให้การอ่าน token, ตรวจ user และเอกสาร OpenAPI อยู่ในทางเดียวกัน.",
-    takeaways: ["auth ควรอยู่ในจุดกลางที่ route ต่าง ๆ เรียกใช้ ไม่ใช่ให้แต่ละ route parse header เอง."],
+    takeaways: ["auth ควรอยู่ในจุดกลางที่ทุก route เรียกใช้ ไม่ใช่ให้แต่ละ route parse header เอง."],
     whatToReview: [
       "โค้ดที่ดีรวมการอ่าน Bearer token และการตอบ token ไม่ถูกต้องไว้ใน `current_user` จุดเดียว.",
       "โค้ดที่ควรปรับ parse header เองใน route และเดาว่าต้องมี user เสมอ ทำให้แต่ละ endpoint มีพฤติกรรม auth ไม่เหมือนกัน.",
@@ -2407,7 +2407,7 @@ export const lessonThaiTranslations = {
   },
   "fastapi/app-structure-routers": {
     codeComments: {
-      goodCode: ["main.py มีหน้าที่ประกอบ router จาก feature ต่าง ๆ"],
+      goodCode: ["main.py มีหน้าที่ประกอบ router จากแต่ละ feature"],
       badCode: ["route และ logic เริ่มไหลมากองใน main.py"],
     },
     title: "ให้ main.py ประกอบ app ไม่ใช่รวมทุก logic",
@@ -2463,7 +2463,7 @@ export const lessonThaiTranslations = {
     },
     title: "รู้ว่า QuerySet ยิง SQL ตอนไหน",
     summary: "QuerySet ยังไม่ query database ทันที ให้ประกอบ filter, order, limit และโหลด relation ให้ครบก่อนวน loop หรือสร้างข้อมูลแสดงผล.",
-    takeaways: ["เวลารีวิว ORM ให้ดูทั้งจุดที่สร้าง QuerySet และจุดที่มันถูก evaluate จริง โดยเฉพาะใน loop ที่เสี่ยง N+1 query."],
+    takeaways: ["เวลารีวิว ORM ให้ดูทั้งจุดที่สร้าง QuerySet และจุดที่ QuerySet ถูก evaluate จริง โดยเฉพาะใน loop ที่เสี่ยง N+1 query."],
     whatToReview: [
       "โค้ดที่ดีประกอบ query ให้ครบ ใช้ `select_related` กับ author และ `prefetch_related` กับ comments ก่อนนำผลลัพธ์ไปสร้าง card.",
       "โค้ดที่ควรปรับดูสั้น แต่การเรียก `review.author` และ `review.comments.count()` ใน loop อาจยิง query เพิ่มสำหรับแต่ละ review.",
@@ -2868,7 +2868,7 @@ export const lessonThaiTranslations = {
         "ADD อาจดาวน์โหลดหรือแตกไฟล์ให้เอง ทำให้พฤติกรรมซ่อนอยู่ในบรรทัดเดียว",
       ],
     },
-    summary: "ใช้ `WORKDIR` เพื่อกำหนด path ทำงานให้ชัด ใช้ `COPY` สำหรับไฟล์ในโปรเจกต์ และใช้ `ADD` เฉพาะเมื่ออยากได้ความสามารถพิเศษของมันจริง ๆ.",
+    summary: "ใช้ `WORKDIR` เพื่อกำหนด path ทำงานให้ชัด ใช้ `COPY` สำหรับไฟล์ในโปรเจกต์ และใช้ `ADD` เฉพาะเมื่อต้องการ download หรือ auto-extract behavior จริง ๆ.",
     takeaways: ["ทำให้ path, ไฟล์ที่ copy และขั้นตอนดาวน์โหลด/แตกไฟล์อยู่คนละขั้นตอน อย่าซ่อนพฤติกรรมสำคัญไว้ใน Dockerfile บรรทัดเดียว."],
     whatToReview: [
       "โค้ดที่ดีใช้ `WORKDIR` แบบ absolute และ copy ไฟล์ที่ตั้งใจใช้จริง ทำให้รู้ว่า install อาศัย input อะไรบ้าง.",
@@ -3060,7 +3060,7 @@ export const lessonThaiTranslations = {
       "โค้ดที่ควรปรับฝังสี hex, shadow และ pixel value ไว้ใน component เดียว ทำให้มีโอกาสถูก copy ไปใช้ต่อแบบไม่ตรงกัน.",
     ],
     reviewNotes: [
-      "custom value ของ Tailwind มีประโยชน์ แต่ถ้าค่าเดิมซ้ำหลายที่ มันอาจเป็น theme token ที่ยังไม่มีชื่อ เวลารีวิวให้ถามว่าค่านี้ควรเป็นค่าของ component นี้เท่านั้น หรือควรเป็นค่ากลางของระบบ.",
+      "custom value ของ Tailwind มีประโยชน์ แต่ถ้าค่าเดิมซ้ำหลายที่ ค่านั้นอาจเป็น theme token ที่ยังไม่มีชื่อ เวลารีวิวให้ถามว่าค่านี้ควรเป็นค่าของ component นี้เท่านั้น หรือควรเป็นค่ากลางของระบบ.",
     ],
   },
   "tailwindcss/dark-mode-variants": {
@@ -3089,7 +3089,7 @@ export const lessonThaiTranslations = {
     },
     title: "แยก class ที่ซ้ำเป็น component หรือ map",
     summary: "ถ้า class ชุดเดิมแทน UI แบบเดียวกัน ให้ย้ายไปอยู่ใน component หรือ map จุดเดียว แทนการ copy `className` ยาว ๆ หลายที่.",
-    takeaways: ["Tailwind string ที่ซ้ำกันก็คือ duplication ให้ดึงออกเมื่อมันแทน UI concept เดียวกันจริง ๆ เช่น badge, alert หรือ button variant."],
+    takeaways: ["Tailwind string ที่ซ้ำกันก็คือ duplication ให้ดึงออกเมื่อ class ชุดนั้นแทน UI concept เดียวกันจริง ๆ เช่น badge, alert หรือ button variant."],
     whatToReview: [
       "โค้ดที่ดีให้ badge component เป็นเจ้าของโครงสร้างของ badge และเก็บ class ของแต่ละสถานะไว้ใน map จุดเดียว.",
       "โค้ดที่ควรปรับ copy class โครงสร้าง badge ซ้ำในหลาย branch ทำให้เปลี่ยนหน้าตาเล็กน้อยครั้งเดียวต้องแก้หลายจุดและเสี่ยงหลุด.",
