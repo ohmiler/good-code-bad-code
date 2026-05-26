@@ -177,6 +177,14 @@ const iconShapes = {
       <path d="M16 13v6" />
     </>
   ),
+  hash: (
+    <>
+      <path d="M8 4 6 20" />
+      <path d="M18 4l-2 16" />
+      <path d="M4 9h17" />
+      <path d="M3 15h17" />
+    </>
+  ),
   "git-branch": (
     <>
       <circle cx="6" cy="6" r="2" />

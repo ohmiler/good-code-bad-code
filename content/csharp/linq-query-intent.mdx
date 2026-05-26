@@ -1,0 +1,46 @@
+export const metadata = {
+  title: "LINQ query intent",
+  track: "csharp",
+  order: 7,
+  summary: "Use LINQ when the chain reads as a clear query, and avoid mixing filtering with side effects.",
+  tags: ["linq", "queries", "collections"],
+  takeaways: ["LINQ works best when each step names a collection transformation, not when the query hides mutation or logging."],
+  goodCode: {
+    language: "csharp",
+    filename: "src/ReviewQueries.cs",
+    code: `public static IReadOnlyList<ReviewSummary> PassingReviews(
+    IEnumerable<Review> reviews)
+{
+    // LINQ reads as filter, sort, then project.
+    return reviews
+        .Where(review => review.Score >= 70)
+        .OrderByDescending(review => review.Score)
+        .Select(review => ReviewSummary.From(review))
+        .ToList();
+}`,
+  },
+  badCode: {
+    language: "csharp",
+    filename: "ReviewQueries.cs",
+    code: `public static IReadOnlyList<ReviewSummary> PassingReviews(IEnumerable<Review> reviews)
+{
+    var audit = new List<string>();
+
+    // Side effects inside LINQ make the query hard to reason about.
+    return reviews
+        .Where(review => { audit.Add(review.Id.ToString()); return review.Score >= 70; })
+        .Select(review => ReviewSummary.From(review))
+        .ToList();
+}`,
+  },
+};
+
+## What to review
+
+The good version reads as a query: filter, sort, project, materialize. Each LINQ method has one visible purpose.
+
+The bad version hides audit mutation inside `Where`. The expression looks like a query but also writes to an external collection.
+
+## Review notes
+
+Use LINQ when it clarifies the data pipeline. If a step needs side effects, branching, or multiple named intermediate values, a loop can be easier to review.

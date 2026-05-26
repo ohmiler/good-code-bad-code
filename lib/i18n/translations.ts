@@ -166,6 +166,11 @@ export const trackThaiTranslations = {
     description:
       "ฝึกรีวิว C++ ว่า RAII, smart pointer, move, const reference, rule of zero, exception boundary, template, algorithm, lock และ test บอก lifetime กับ ownership ครบหรือไม่.",
   },
+  csharp: {
+    title: "C#",
+    description:
+      "ฝึกรีวิว C# ว่า nullable type, record, async cancellation, dependency injection, disposal, exception boundary, LINQ, pattern matching, options และ test สื่อ contract ครบหรือไม่.",
+  },
   git: {
     title: "Git",
     description:
@@ -2924,6 +2929,166 @@ export const lessonThaiTranslations = {
     codeComments: {
       goodCode: ["ชื่อ test และ assertion จับ boundary case ไว้ตรง ๆ."],
       badCode: ["การ print status ทำให้ CI ผ่านแม้ค่าผิด."],
+    },
+  },
+  "csharp/nullable-reference-boundaries": {
+    title: "nullable reference ที่ boundary",
+    summary: "ใช้ nullable reference type เพื่อบอกกรณี lookup ไม่เจอ แทนการคืน type non-null ที่อาจซ่อน null.",
+    takeaways: ["method C# ควรทำให้การไม่มีข้อมูลเห็นใน return type เพื่อให้ caller ตัดสินใจที่ boundary."],
+    whatToReview: [
+      "โค้ดที่ดีคืน ReviewDto? ทำให้ path ไม่พบข้อมูลอยู่ใน contract ของ method.",
+      "โค้ดที่ควรปรับสัญญาว่าคืน DTO non-null ทั้งที่ repository อาจคืน null ทำให้พังทีหลังเป็น NullReferenceException.",
+    ],
+    reviewNotes: [
+      "nullable annotation คือเอกสาร boundary ของ C# ถ้าค่าหายได้ type ควรบอกตั้งแต่จุดที่ค่านั้นข้าม layer.",
+    ],
+    codeComments: {
+      goodCode: ["nullable return type บอก caller ว่า review อาจไม่มี."],
+      badCode: ["non-null return type ซ่อน path กรณีไม่พบ review."],
+    },
+  },
+  "csharp/records-immutability": {
+    title: "record และ DTO ที่ไม่ถูกแก้หลัง map",
+    summary: "ใช้ record หรือ init-only property กับ response shape ที่ไม่ควรเปลี่ยนหลัง mapping.",
+    takeaways: ["DTO จะรีวิวง่ายเมื่อสร้างค่าให้ครบครั้งเดียว แล้วส่งต่อเป็นค่าที่นิ่ง."],
+    whatToReview: [
+      "โค้ดที่ดีใช้ record ทำให้ response shape ถูกสร้างด้วยค่าที่จำเป็นครบและไม่ถูกแก้ต่อ.",
+      "โค้ดที่ควรปรับเปิด public setter ทุก field ทำให้ code ช่วงหลัง rewrite response ได้หลัง validate หรือ map แล้ว.",
+    ],
+    reviewNotes: [
+      "สำหรับ C# DTO ให้ถามว่า object นี้เป็น value ที่ส่งต่อ หรือเป็น mutable workflow object. Response DTO มักเหมาะกับ record หรือ init-only property.",
+    ],
+    codeComments: {
+      goodCode: ["record data นิ่งหลัง mapping เป็น response."],
+      badCode: ["public setter เปิดทางให้ code ช่วงหลัง rewrite response shape."],
+    },
+  },
+  "csharp/async-await-cancellation": {
+    title: "async await พร้อม cancellation",
+    summary: "ส่ง CancellationToken ต่อผ่าน async call เพื่อให้ request ที่ถูกยกเลิกหยุด database, HTTP หรือ queue work ได้.",
+    takeaways: ["async C# ควรพา CancellationToken ผ่าน operation ที่รอ I/O ได้ทุกจุด."],
+    whatToReview: [
+      "โค้ดที่ดีรับ CancellationToken จาก request แล้วส่งต่อเข้า service.",
+      "โค้ดที่ควรปรับ block ด้วย .Result ทำให้เสีย cancellation และผูก request thread ไว้โดยไม่จำเป็น.",
+    ],
+    reviewNotes: [
+      "รีวิว async code เป็น chain: await ควร async ต่อเนื่องลงไป และ cancellation ควรไหลผ่าน database, HTTP, queue หรือ file call ที่รองรับ.",
+    ],
+    codeComments: {
+      goodCode: ["cancellation ไหลจาก request เข้า service."],
+      badCode: ["การ block async work อาจผูก request thread ค้างไว้."],
+    },
+  },
+  "csharp/dependency-injection-boundaries": {
+    title: "dependency injection ที่บอก boundary",
+    summary: "รับ collaborator ผ่าน constructor เพื่อให้ service ประกาศ dependency และ test แทน infrastructure ได้.",
+    takeaways: ["service C# ควรเผย collaborator ที่ต้องใช้ แทนการสร้าง database, clock หรือ HTTP client ใน method."],
+    whatToReview: [
+      "โค้ดที่ดีรับ repository และ bus ผ่าน constructor ทำให้ workflow บอก infrastructure ที่ต้องใช้.",
+      "โค้ดที่ควรปรับสร้าง production infrastructure ใน method ทำให้ test แทน collaborator ไม่ได้โดยไม่แก้ implementation.",
+    ],
+    reviewNotes: [
+      "dependency injection ไม่ใช่แค่เรื่อง framework แต่เป็นสัญญาณรีวิวที่แยก business flow ออกจาก infrastructure.",
+    ],
+    codeComments: {
+      goodCode: ["constructor dependencies ทำให้ infrastructure เห็นได้."],
+      badCode: ["new infrastructure ใน method ซ่อน dependency."],
+    },
+  },
+  "csharp/using-disposal": {
+    title: "using declaration และ disposal",
+    summary: "ใช้ using หรือ await using เพื่อผูก disposable resource กับ scope แทนการพึ่ง manual cleanup.",
+    takeaways: ["disposable resource ควรมี lifetime ที่ scope เป็นเจ้าของ เพื่อให้ exception และ early return release ได้."],
+    whatToReview: [
+      "โค้ดที่ดีใช้ await using กับ file stream และ writer ทำให้ dispose ยังทำงานเมื่อ write throw.",
+      "โค้ดที่ควรปรับเรียก Dispose เองหลัง loop ถ้ามี exception ก่อนถึงจุดนั้น resource จะเปิดค้าง.",
+    ],
+    reviewNotes: [
+      "รีวิว lifetime ของ disposable เหมือน transaction. code ที่เปิด resource ควรทำให้ release path เห็นใน scope เดียวกัน.",
+    ],
+    codeComments: {
+      goodCode: ["await using dispose writer และ stream ได้ทุก exit path."],
+      badCode: ["exception จะข้าม Dispose ทั้งสอง call ด้านล่าง."],
+    },
+  },
+  "csharp/exceptions-result-boundaries": {
+    title: "exception และ result boundary",
+    summary: "แปลง domain exception ที่ application boundary แทนการ catch ทุกอย่างแล้วคืนผลลัพธ์กว้างเกินไป.",
+    takeaways: ["exception handling ใน C# ควรเก็บเหตุผลของ failure จนถึง boundary ที่ map เป็น HTTP, UI หรือ log ได้."],
+    whatToReview: [
+      "โค้ดที่ดี map ReviewNotFoundException เป็น 404 และปล่อย exception อื่นให้ยังมีความหมาย.",
+      "โค้ดที่ควรปรับ catch Exception แล้วคืน 404 ทำให้ database outage หรือ programming error ดูเหมือน review หาย.",
+    ],
+    reviewNotes: [
+      "catch exception ในจุดที่แปลความหมายได้จริง ถ้า code ระบุ exception type ไม่ได้ ก็มักเลือก result สำหรับผู้ใช้ไม่ได้ตรง.",
+    ],
+    codeComments: {
+      goodCode: ["domain exception ถูก map ที่ HTTP boundary."],
+      badCode: ["catch ทุก exception ทำให้หลาย failure กลายเป็น 404."],
+    },
+  },
+  "csharp/linq-query-intent": {
+    title: "LINQ query ที่อ่าน intent ออก",
+    summary: "ใช้ LINQ เมื่อ chain อ่านเป็น query ที่ตรงไปตรงมา และหลีกเลี่ยงการซ่อน side effect ไว้ใน filter หรือ projection.",
+    takeaways: ["LINQ ใช้ได้ดีเมื่อแต่ละ step คือ collection transformation ไม่ใช่ที่ซ่อน mutation หรือ logging."],
+    whatToReview: [
+      "โค้ดที่ดีอ่านเป็น query ชัด: filter, sort, project และ materialize.",
+      "โค้ดที่ควรปรับซ่อน audit mutation ใน Where ทำให้ expression ดูเป็น query แต่เขียนค่าออกข้างนอกด้วย.",
+    ],
+    reviewNotes: [
+      "ใช้ LINQ เมื่อช่วยให้ data pipeline อ่านง่าย ถ้า step ต้องมี side effect, branch หรือค่ากลางที่ตั้งชื่อได้ loop อาจรีวิวง่ายกว่า.",
+    ],
+    codeComments: {
+      goodCode: ["LINQ อ่านเป็น filter, sort แล้ว project."],
+      badCode: ["side effect ใน LINQ ทำให้ query ตามเหตุผลยาก."],
+    },
+  },
+  "csharp/pattern-matching-switches": {
+    title: "pattern matching switch ที่ครอบคลุม state",
+    summary: "ใช้ pattern matching เพื่อให้ branch ของ state เห็นชัด และไม่ใช้ default กลบ state ที่ยังไม่ได้รองรับ.",
+    takeaways: ["switch expression ใน C# ควรแสดง state ที่รู้จักแต่ละค่า และทำให้ unknown state เห็นแทนการ fall through เงียบ ๆ."],
+    whatToReview: [
+      "โค้ดที่ดีตั้ง label ให้ status ปัจจุบันครบ และ throw เมื่อเจอค่า unknown.",
+      "โค้ดที่ควรปรับส่งทุก status ที่ไม่ใช่ Published ไปเป็น Draft ทำให้ future state ใช้ label ผิดได้.",
+    ],
+    reviewNotes: [
+      "pattern matching ดีเมื่อทำให้ coverage ของ state เห็นชัด ให้ระวัง default branch ที่สะดวกแต่ซ่อน enum value ในอนาคต.",
+    ],
+    codeComments: {
+      goodCode: ["unknown enum value fail ดังพอให้ review และ test เห็น."],
+      badCode: ["default ซ่อน Draft, Archived และ state ในอนาคต."],
+    },
+  },
+  "csharp/options-configuration": {
+    title: "options configuration ที่ validate ตอน startup",
+    summary: "bind configuration เป็น options object ที่ validate แล้ว แทนการอ่าน string key กระจายใน business code.",
+    takeaways: ["configuration ควรข้ามเข้า service เป็น typed value ที่ validate ตั้งแต่ startup."],
+    whatToReview: [
+      "โค้ดที่ดี bind section เป็น ReviewOptions และ validate ตอน startup ทำให้ service รับ typed value.",
+      "โค้ดที่ควรปรับอ่าน string key ใน service constructor ทำให้ missing config หรือ typo โผล่ตอน runtime call.",
+    ],
+    reviewNotes: [
+      "รีวิว configuration ให้เริ่มที่ startup: setting สำคัญควรมี type, section name, validation และถูก inject เข้า class ที่ต้องใช้.",
+    ],
+    codeComments: {
+      goodCode: ["validated options กัน string key ออกจาก service code."],
+      badCode: ["string key ใน service ทำให้ config error โผล่ช้า."],
+    },
+  },
+  "csharp/unit-tests-arrange-act-assert": {
+    title: "unit test แบบ arrange act assert",
+    summary: "วาง test ให้ setup, behavior และ assertion แยกพอที่ reviewer เห็น contract ที่กำลังทดสอบ.",
+    takeaways: ["test C# ควรตั้งชื่อ behavior, สร้าง data เท่าที่จำเป็น, execute action เดียว และ assert result ที่สังเกตได้."],
+    whatToReview: [
+      "โค้ดที่ดีตั้งชื่อ behavior กรณี review หาย, act หนึ่งครั้ง และ assert null result.",
+      "โค้ดที่ควรปรับชื่อ test กว้าง, เรียก method สองครั้ง และไม่มี assertion จึงผ่านได้แม้ return ผิด.",
+    ],
+    reviewNotes: [
+      "สำหรับ C# test ให้ชอบหนึ่ง behavior ต่อ test ถ้าชื่อ test ต้องมีคำว่า and ให้แยก test และถ้าไม่มี assertion แปลว่า contract ยังไม่ถูก pin.",
+    ],
+    codeComments: {
+      goodCode: ["act step เดียวทำให้ behavior ที่ทดสอบเห็นง่าย."],
+      badCode: ["ไม่มี assertion แปลว่า test พิสูจน์แค่ว่า call ไม่ throw."],
     },
   },
   "git/status-before-work": {

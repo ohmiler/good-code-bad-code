@@ -172,6 +172,28 @@ test("validateLessonMetadata accepts C++ code samples", () => {
   );
 });
 
+test("validateLessonMetadata accepts C# code samples", () => {
+  const csharpMetadata = {
+    ...validMetadata,
+    track: "csharp",
+    goodCode: {
+      language: "csharp",
+      filename: "src/ReviewService.cs",
+      code: "public Task<ReviewDto?> FindAsync(Guid id, CancellationToken cancellationToken) => reviews.FindAsync(id, cancellationToken);",
+    },
+    badCode: {
+      language: "csharp",
+      filename: "ReviewService.cs",
+      code: "public ReviewDto Find(string id) => reviews.Find(id);",
+    },
+  };
+
+  assert.deepEqual(
+    validateLessonMetadata(csharpMetadata, "content/csharp/nullable-reference-boundaries.mdx"),
+    csharpMetadata,
+  );
+});
+
 test("validateLessonMetadata accepts Vue single-file component samples", () => {
   const vueMetadata = {
     ...validMetadata,

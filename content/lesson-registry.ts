@@ -515,6 +515,36 @@ import CppScopedLocksSharedState, {
 import CppUnitTestsEdgeCases, {
   metadata as cppUnitTestsEdgeCasesMetadata,
 } from "./cpp/unit-tests-edge-cases.mdx";
+import CsharpNullableReferenceBoundaries, {
+  metadata as csharpNullableReferenceBoundariesMetadata,
+} from "./csharp/nullable-reference-boundaries.mdx";
+import CsharpRecordsImmutability, {
+  metadata as csharpRecordsImmutabilityMetadata,
+} from "./csharp/records-immutability.mdx";
+import CsharpAsyncAwaitCancellation, {
+  metadata as csharpAsyncAwaitCancellationMetadata,
+} from "./csharp/async-await-cancellation.mdx";
+import CsharpDependencyInjectionBoundaries, {
+  metadata as csharpDependencyInjectionBoundariesMetadata,
+} from "./csharp/dependency-injection-boundaries.mdx";
+import CsharpUsingDisposal, {
+  metadata as csharpUsingDisposalMetadata,
+} from "./csharp/using-disposal.mdx";
+import CsharpExceptionsResultBoundaries, {
+  metadata as csharpExceptionsResultBoundariesMetadata,
+} from "./csharp/exceptions-result-boundaries.mdx";
+import CsharpLinqQueryIntent, {
+  metadata as csharpLinqQueryIntentMetadata,
+} from "./csharp/linq-query-intent.mdx";
+import CsharpPatternMatchingSwitches, {
+  metadata as csharpPatternMatchingSwitchesMetadata,
+} from "./csharp/pattern-matching-switches.mdx";
+import CsharpOptionsConfiguration, {
+  metadata as csharpOptionsConfigurationMetadata,
+} from "./csharp/options-configuration.mdx";
+import CsharpUnitTestsArrangeActAssert, {
+  metadata as csharpUnitTestsArrangeActAssertMetadata,
+} from "./csharp/unit-tests-arrange-act-assert.mdx";
 import GitStatusBeforeWork, {
   metadata as gitStatusBeforeWorkMetadata,
 } from "./git/status-before-work.mdx";
@@ -1723,6 +1753,66 @@ const rawLessons: RawLesson[] = [
     source: "content/cpp/unit-tests-edge-cases.mdx",
     metadata: cppUnitTestsEdgeCasesMetadata,
     Component: CppUnitTestsEdgeCases,
+  },
+  {
+    slug: "nullable-reference-boundaries",
+    source: "content/csharp/nullable-reference-boundaries.mdx",
+    metadata: csharpNullableReferenceBoundariesMetadata,
+    Component: CsharpNullableReferenceBoundaries,
+  },
+  {
+    slug: "records-immutability",
+    source: "content/csharp/records-immutability.mdx",
+    metadata: csharpRecordsImmutabilityMetadata,
+    Component: CsharpRecordsImmutability,
+  },
+  {
+    slug: "async-await-cancellation",
+    source: "content/csharp/async-await-cancellation.mdx",
+    metadata: csharpAsyncAwaitCancellationMetadata,
+    Component: CsharpAsyncAwaitCancellation,
+  },
+  {
+    slug: "dependency-injection-boundaries",
+    source: "content/csharp/dependency-injection-boundaries.mdx",
+    metadata: csharpDependencyInjectionBoundariesMetadata,
+    Component: CsharpDependencyInjectionBoundaries,
+  },
+  {
+    slug: "using-disposal",
+    source: "content/csharp/using-disposal.mdx",
+    metadata: csharpUsingDisposalMetadata,
+    Component: CsharpUsingDisposal,
+  },
+  {
+    slug: "exceptions-result-boundaries",
+    source: "content/csharp/exceptions-result-boundaries.mdx",
+    metadata: csharpExceptionsResultBoundariesMetadata,
+    Component: CsharpExceptionsResultBoundaries,
+  },
+  {
+    slug: "linq-query-intent",
+    source: "content/csharp/linq-query-intent.mdx",
+    metadata: csharpLinqQueryIntentMetadata,
+    Component: CsharpLinqQueryIntent,
+  },
+  {
+    slug: "pattern-matching-switches",
+    source: "content/csharp/pattern-matching-switches.mdx",
+    metadata: csharpPatternMatchingSwitchesMetadata,
+    Component: CsharpPatternMatchingSwitches,
+  },
+  {
+    slug: "options-configuration",
+    source: "content/csharp/options-configuration.mdx",
+    metadata: csharpOptionsConfigurationMetadata,
+    Component: CsharpOptionsConfiguration,
+  },
+  {
+    slug: "unit-tests-arrange-act-assert",
+    source: "content/csharp/unit-tests-arrange-act-assert.mdx",
+    metadata: csharpUnitTestsArrangeActAssertMetadata,
+    Component: CsharpUnitTestsArrangeActAssert,
   },
   {
     slug: "status-before-work",

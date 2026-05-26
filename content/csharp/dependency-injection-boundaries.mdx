@@ -1,0 +1,55 @@
+export const metadata = {
+  title: "Dependency injection boundaries",
+  track: "csharp",
+  order: 4,
+  summary: "Receive collaborators through constructors so services declare their dependencies and tests can replace infrastructure.",
+  tags: ["dependency-injection", "services", "testing"],
+  takeaways: ["A C# service should reveal the collaborators it needs instead of constructing database, clock, or HTTP clients inside methods."],
+  goodCode: {
+    language: "csharp",
+    filename: "src/ReviewPublisher.cs",
+    code: `public sealed class ReviewPublisher
+{
+    private readonly ReviewRepository reviews;
+    private readonly MessageBus bus;
+
+    public ReviewPublisher(ReviewRepository reviews, MessageBus bus)
+    {
+        this.reviews = reviews;
+        this.bus = bus;
+    }
+
+    public async Task PublishAsync(Guid id, CancellationToken cancellationToken)
+    {
+        // Constructor dependencies make infrastructure visible.
+        Review review = await reviews.GetAsync(id, cancellationToken);
+        await bus.PublishAsync(new ReviewPublished(id, review.Title), cancellationToken);
+    }
+}`,
+  },
+  badCode: {
+    language: "csharp",
+    filename: "ReviewPublisher.cs",
+    code: `public sealed class ReviewPublisher
+{
+    public async Task PublishAsync(Guid id)
+    {
+        // New infrastructure inside the method hides dependencies.
+        var reviews = new ReviewRepository("prod");
+        var bus = new MessageBus("prod");
+        Review review = await reviews.GetAsync(id);
+        await bus.PublishAsync(new ReviewPublished(id, review.Title));
+    }
+}`,
+  },
+};
+
+## What to review
+
+The good version receives repository and bus dependencies through the constructor. The service boundary says what infrastructure the workflow needs.
+
+The bad version creates production infrastructure inside the method. Tests cannot replace those collaborators without touching the implementation.
+
+## Review notes
+
+Dependency injection is not only a framework feature. It is a review signal that tells readers which parts are business flow and which parts are infrastructure.

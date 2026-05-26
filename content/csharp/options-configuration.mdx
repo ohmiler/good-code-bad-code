@@ -1,0 +1,49 @@
+export const metadata = {
+  title: "Options configuration",
+  track: "csharp",
+  order: 9,
+  summary: "Bind configuration into validated options objects instead of reading string keys across business code.",
+  tags: ["options", "configuration", "validation"],
+  takeaways: ["Configuration should cross into services as typed values that were validated during startup."],
+  goodCode: {
+    language: "csharp",
+    filename: "src/ReviewOptions.cs",
+    code: `public sealed class ReviewOptions
+{
+    public const string SectionName = "Reviews";
+    public required Uri ApiBaseUrl { get; init; }
+    public int PageSize { get; init; } = 50;
+}
+
+builder.Services
+    .AddOptions<ReviewOptions>()
+    .BindConfiguration(ReviewOptions.SectionName)
+    .Validate(options => options.PageSize is >= 1 and <= 100)
+    .ValidateOnStart();
+
+// Validated options keep string keys out of service code.`,
+  },
+  badCode: {
+    language: "csharp",
+    filename: "ReviewService.cs",
+    code: `public sealed class ReviewService
+{
+    public ReviewService(IConfiguration configuration)
+    {
+        // String keys in services delay config errors until runtime calls.
+        apiBaseUrl = new Uri(configuration["Reviews:ApiUrl"]!);
+        pageSize = int.Parse(configuration["Reviews:PageSize"]!);
+    }
+}`,
+  },
+};
+
+## What to review
+
+The good version binds a named section to `ReviewOptions` and validates it at startup. Services can receive typed values instead of raw configuration.
+
+The bad version reads string keys inside a service constructor. Missing or malformed config fails only when that service is built, and typos are hard to spot.
+
+## Review notes
+
+Configuration review should start at application startup. Ask whether required settings are typed, named, validated, and injected into the classes that need them.

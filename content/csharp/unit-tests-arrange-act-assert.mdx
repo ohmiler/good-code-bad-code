@@ -1,0 +1,46 @@
+export const metadata = {
+  title: "Unit tests with arrange act assert",
+  track: "csharp",
+  order: 10,
+  summary: "Structure tests so setup, behavior, and assertions are separate enough for reviewers to see the contract under test.",
+  tags: ["tests", "assertions", "aaa"],
+  takeaways: ["A C# test should name the behavior, create only the data it needs, execute one action, and assert the observable result."],
+  goodCode: {
+    language: "csharp",
+    filename: "tests/ReviewServiceTests.cs",
+    code: `[Fact]
+public async Task FindAsyncReturnsNullWhenReviewIsMissing()
+{
+    var repository = new FakeReviewRepository();
+    var service = new ReviewService(repository);
+
+    // One act step makes the behavior under test easy to see.
+    ReviewDto? result = await service.FindAsync(Guid.NewGuid(), CancellationToken.None);
+
+    Assert.Null(result);
+}`,
+  },
+  badCode: {
+    language: "csharp",
+    filename: "tests/ReviewServiceTests.cs",
+    code: `[Fact]
+public async Task TestReviewService()
+{
+    var service = new ReviewService(new FakeReviewRepository());
+    await service.FindAsync(Guid.NewGuid(), CancellationToken.None);
+    await service.FindAsync(Guid.NewGuid(), CancellationToken.None);
+
+    // No assertion means the test only proves the calls did not throw.
+}`,
+  },
+};
+
+## What to review
+
+The good version names the missing-review behavior, performs one action, and asserts the null result.
+
+The bad version has a vague test name, calls the method twice, and contains no assertion. It can pass while the method returns the wrong value.
+
+## Review notes
+
+For C# tests, prefer one behavior per test. If the test name needs “and”, split it; if there is no assertion, the contract is not pinned.

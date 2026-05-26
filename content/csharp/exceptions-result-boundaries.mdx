@@ -1,0 +1,51 @@
+export const metadata = {
+  title: "Exceptions and result boundaries",
+  track: "csharp",
+  order: 6,
+  summary: "Translate domain exceptions at application boundaries instead of catching everything and returning vague results.",
+  tags: ["exceptions", "results", "boundaries"],
+  takeaways: ["C# exception handling should preserve the failure reason until a boundary can map it to HTTP, UI, or logging."],
+  goodCode: {
+    language: "csharp",
+    filename: "src/ReviewEndpoint.cs",
+    code: `public async Task<IResult> GetAsync(Guid id, CancellationToken cancellationToken)
+{
+    try
+    {
+        ReviewDto review = await reviews.GetRequiredAsync(id, cancellationToken);
+        return Results.Ok(review);
+    }
+    catch (ReviewNotFoundException)
+    {
+        // Domain exception maps to the HTTP boundary.
+        return Results.NotFound();
+    }
+}`,
+  },
+  badCode: {
+    language: "csharp",
+    filename: "ReviewEndpoint.cs",
+    code: `public async Task<IResult> GetAsync(Guid id)
+{
+    try
+    {
+        return Results.Ok(await reviews.GetRequiredAsync(id));
+    }
+    catch (Exception)
+    {
+        // Catching every exception turns many failures into 404.
+        return Results.NotFound();
+    }
+}`,
+  },
+};
+
+## What to review
+
+The good version maps a named domain exception to a 404. Other exceptions keep their meaning and can travel to logging or middleware.
+
+The bad version catches every exception and returns 404. A database outage, serialization bug, or programming error becomes indistinguishable from a missing review.
+
+## Review notes
+
+Catch exceptions where you can translate them honestly. If the code cannot name the exception type, it probably cannot choose the right user-facing result.

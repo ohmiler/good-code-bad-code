@@ -32,6 +32,7 @@ const expectedLessonCounts = {
   java: 10,
   c: 10,
   cpp: 10,
+  csharp: 10,
   git: 10,
 } as const;
 
@@ -337,7 +338,8 @@ function countReviewCommentLines(code: string, track: string): number {
       track === "php" ||
       track === "java" ||
       track === "c" ||
-      track === "cpp"
+      track === "cpp" ||
+      track === "csharp"
     ) {
       return trimmedLine.startsWith("// ");
     }
@@ -364,7 +366,7 @@ test("seeded lessons match expected track counts", async () => {
   const lessonsByTrack = await getTrackLessonFiles();
   const allLessonFiles = [...lessonsByTrack.values()].flat();
 
-  assert.equal(allLessonFiles.length, 230);
+  assert.equal(allLessonFiles.length, 240);
   for (const track of tracks) {
     assert.equal(
       lessonsByTrack.get(track.slug)?.length,
@@ -1137,6 +1139,49 @@ test("C++ comments have matching Thai translations", async () => {
       for (const [index, comment] of translatedComments.entries()) {
         assert.match(comment, /[\u0e00-\u0e7f]/, `cpp/${slug}.${sampleName}[${index}]`);
         assert.ok(comment.trim().length >= 8, `cpp/${slug}.${sampleName}[${index}]`);
+      }
+    }
+  }
+});
+
+test("C# samples include concise review comments", async () => {
+  const lessonsByTrack = await getTrackLessonFiles();
+  const csharpLessons = lessonsByTrack.get("csharp") ?? [];
+
+  assert.equal(csharpLessons.length, expectedLessonCounts.csharp);
+
+  for (const contentPath of csharpLessons) {
+    for (const sampleName of ["goodCode", "badCode"] as const) {
+      const code = await readMdxMetadataCodeSample(contentPath, sampleName);
+      const commentCount = countReviewCommentLines(code, "csharp");
+
+      assert.ok(commentCount >= 1, `${contentPath} ${sampleName}`);
+      assert.ok(commentCount <= 3, `${contentPath} ${sampleName}`);
+    }
+  }
+});
+
+test("C# comments have matching Thai translations", async () => {
+  const lessonsByTrack = await getTrackLessonFiles();
+  const csharpLessons = lessonsByTrack.get("csharp") ?? [];
+
+  assert.equal(csharpLessons.length, expectedLessonCounts.csharp);
+
+  for (const contentPath of csharpLessons) {
+    const slug = slugFromContentPath(contentPath);
+    const translation = lessonThaiTranslations[`csharp/${slug}`];
+
+    assert.ok(translation.codeComments, `csharp/${slug} missing codeComments`);
+
+    for (const sampleName of ["goodCode", "badCode"] as const) {
+      const code = await readMdxMetadataCodeSample(contentPath, sampleName);
+      const commentCount = countReviewCommentLines(code, "csharp");
+      const translatedComments = translation.codeComments[sampleName] ?? [];
+
+      assert.equal(translatedComments.length, commentCount, `csharp/${slug}`);
+      for (const [index, comment] of translatedComments.entries()) {
+        assert.match(comment, /[\u0e00-\u0e7f]/, `csharp/${slug}.${sampleName}[${index}]`);
+        assert.ok(comment.trim().length >= 8, `csharp/${slug}.${sampleName}[${index}]`);
       }
     }
   }

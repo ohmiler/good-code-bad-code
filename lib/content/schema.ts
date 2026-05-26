@@ -14,6 +14,7 @@ export type CodeLanguage =
   | "java"
   | "c"
   | "cpp"
+  | "csharp"
   | "bash"
   | "go"
   | "dockerfile"
@@ -60,6 +61,7 @@ const codeLanguages = new Set<CodeLanguage>([
   "java",
   "c",
   "cpp",
+  "csharp",
   "bash",
   "go",
   "dockerfile",

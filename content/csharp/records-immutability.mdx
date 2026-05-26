@@ -1,0 +1,44 @@
+export const metadata = {
+  title: "Records and immutable DTOs",
+  track: "csharp",
+  order: 2,
+  summary: "Use records or init-only properties for response shapes that should not change after mapping.",
+  tags: ["records", "immutability", "dto"],
+  takeaways: ["DTOs are easier to review when construction and mutation are separate: map once, then pass a stable value."],
+  goodCode: {
+    language: "csharp",
+    filename: "src/ReviewSummary.cs",
+    code: `public sealed record ReviewSummary(
+    Guid Id,
+    string Title,
+    int Score
+)
+{
+    // Record data stays stable after response mapping.
+    public bool IsPassing => Score >= 70;
+}`,
+  },
+  badCode: {
+    language: "csharp",
+    filename: "ReviewSummary.cs",
+    code: `public sealed class ReviewSummary
+{
+    public Guid Id { get; set; }
+    public string Title { get; set; } = "";
+    public int Score { get; set; }
+
+    // Public setters let later code rewrite the response shape.
+    public bool IsPassing => Score >= 70;
+}`,
+  },
+};
+
+## What to review
+
+The good version uses a record so the response shape is constructed with all required values and then stays stable.
+
+The bad version exposes public setters for every field. Any later code can rewrite a response after validation, mapping, or logging.
+
+## Review notes
+
+For C# DTOs, ask whether the object is a value to pass around or a mutable workflow object. Response DTOs usually benefit from records or init-only properties.

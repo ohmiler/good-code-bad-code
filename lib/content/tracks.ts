@@ -102,6 +102,12 @@ export const tracks = [
       "Review RAII, smart pointers, move semantics, const references, rule of zero, exception boundaries, templates, algorithms, locks, and tests.",
   },
   {
+    slug: "csharp",
+    title: "C#",
+    description:
+      "Review nullable references, records, async cancellation, dependency injection, disposal, exceptions, LINQ, pattern matching, options, and tests.",
+  },
+  {
     slug: "git",
     title: "Git",
     description:

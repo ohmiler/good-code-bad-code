@@ -1,0 +1,46 @@
+export const metadata = {
+  title: "Async await and cancellation",
+  track: "csharp",
+  order: 3,
+  summary: "Thread cancellation tokens through async calls so abandoned requests can stop database, HTTP, or queue work.",
+  tags: ["async", "cancellation", "await"],
+  takeaways: ["Async C# code should carry `CancellationToken` through every operation that can wait on I/O."],
+  goodCode: {
+    language: "csharp",
+    filename: "src/ReviewController.cs",
+    code: `public sealed class ReviewController
+{
+    public async Task<IResult> GetAsync(
+        Guid id,
+        CancellationToken cancellationToken)
+    {
+        // Cancellation flows from the request into the service.
+        ReviewDto? review = await reviews.FindAsync(id, cancellationToken);
+        return review is null ? Results.NotFound() : Results.Ok(review);
+    }
+}`,
+  },
+  badCode: {
+    language: "csharp",
+    filename: "ReviewController.cs",
+    code: `public sealed class ReviewController
+{
+    public IResult Get(Guid id)
+    {
+        // Blocking on async work can tie up request threads.
+        ReviewDto? review = reviews.FindAsync(id).Result;
+        return review is null ? Results.NotFound() : Results.Ok(review);
+    }
+}`,
+  },
+};
+
+## What to review
+
+The good version accepts a `CancellationToken` from the request and passes it into the service call. If the client disconnects, downstream work can stop.
+
+The bad version blocks on `.Result`, loses cancellation, and can exhaust request threads under load.
+
+## Review notes
+
+Review async code as a chain. `await` should stay async all the way down, and cancellation should move through database, HTTP, queue, and file calls that support it.

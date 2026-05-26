@@ -1,0 +1,54 @@
+export const metadata = {
+  title: "Using declarations and disposal",
+  track: "csharp",
+  order: 5,
+  summary: "Use `using` or `await using` to bind disposable resources to scope instead of relying on manual cleanup.",
+  tags: ["using", "disposal", "resources"],
+  takeaways: ["Disposable resources should have a scope-owned lifetime so exceptions and early returns still release them."],
+  goodCode: {
+    language: "csharp",
+    filename: "src/ReviewExport.cs",
+    code: `public async Task ExportAsync(
+    string path,
+    IReadOnlyCollection<ReviewDto> reviews,
+    CancellationToken cancellationToken)
+{
+    await using FileStream file = File.Create(path);
+    await using var writer = new StreamWriter(file);
+
+    // await using disposes the writer and stream on every exit path.
+    foreach (ReviewDto review in reviews)
+    {
+        await writer.WriteLineAsync(review.Title.AsMemory(), cancellationToken);
+    }
+}`,
+  },
+  badCode: {
+    language: "csharp",
+    filename: "ReviewExport.cs",
+    code: `public async Task ExportAsync(string path, IReadOnlyCollection<ReviewDto> reviews)
+{
+    var file = File.Create(path);
+    var writer = new StreamWriter(file);
+
+    foreach (ReviewDto review in reviews)
+    {
+        // An exception skips both Dispose calls below.
+        await writer.WriteLineAsync(review.Title);
+    }
+
+    writer.Dispose();
+    file.Dispose();
+}`,
+  },
+};
+
+## What to review
+
+The good version ties the file stream and writer to scope with `await using`. Disposal still runs if a write throws.
+
+The bad version calls `Dispose` manually after the loop. Any exception before those calls leaves resources open until finalization.
+
+## Review notes
+
+Review disposable lifetimes like transaction lifetimes. The code that acquires a resource should make the release path visible in the same scope.

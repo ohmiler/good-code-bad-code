@@ -1,0 +1,48 @@
+export const metadata = {
+  title: "Pattern matching switches",
+  track: "csharp",
+  order: 8,
+  summary: "Use pattern matching to make state-specific branches explicit and keep default cases from hiding unhandled states.",
+  tags: ["pattern-matching", "switch", "states"],
+  takeaways: ["A C# switch expression should show each known state and make unknown states visible instead of silently falling through."],
+  goodCode: {
+    language: "csharp",
+    filename: "src/ReviewStatusText.cs",
+    code: `public static string LabelFor(ReviewStatus status)
+{
+    return status switch
+    {
+        ReviewStatus.Draft => "Draft",
+        ReviewStatus.Published => "Published",
+        ReviewStatus.Archived => "Archived",
+        // Unknown enum values fail loudly during review and tests.
+        _ => throw new ArgumentOutOfRangeException(nameof(status), status, null)
+    };
+}`,
+  },
+  badCode: {
+    language: "csharp",
+    filename: "ReviewStatusText.cs",
+    code: `public static string LabelFor(ReviewStatus status)
+{
+    switch (status)
+    {
+        case ReviewStatus.Published:
+            return "Published";
+        default:
+            // Default hides Draft, Archived, and future states.
+            return "Draft";
+    }
+}`,
+  },
+};
+
+## What to review
+
+The good version names every current status and throws for unknown values. New enum values become review-visible because tests or runtime fail fast.
+
+The bad version sends every non-published status to `Draft`. Future statuses can ship with the wrong label and no compiler or test signal.
+
+## Review notes
+
+Pattern matching is strongest when it makes state coverage obvious. Be careful with `default` branches that look convenient but hide future enum values.

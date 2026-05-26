@@ -1,0 +1,55 @@
+export const metadata = {
+  title: "Nullable reference boundaries",
+  track: "csharp",
+  order: 1,
+  summary: "Use nullable reference types to show when a lookup can miss, instead of returning a non-null type that may hide null.",
+  tags: ["nullable", "references", "boundaries"],
+  takeaways: ["A C# method should make absence visible in its return type so callers choose the missing-data response at the boundary."],
+  goodCode: {
+    language: "csharp",
+    filename: "src/ReviewService.cs",
+    code: `public sealed class ReviewService
+{
+    private readonly ReviewRepository reviews;
+
+    public ReviewService(ReviewRepository reviews)
+    {
+        this.reviews = reviews;
+    }
+
+    public async Task<ReviewDto?> FindAsync(
+        Guid id,
+        CancellationToken cancellationToken)
+    {
+        // Nullable return type tells callers the review may be missing.
+        Review? review = await reviews.FindAsync(id, cancellationToken);
+        return review is null ? null : ReviewDto.From(review);
+    }
+}`,
+  },
+  badCode: {
+    language: "csharp",
+    filename: "ReviewService.cs",
+    code: `public sealed class ReviewService
+{
+    private readonly ReviewRepository reviews;
+
+    public ReviewDto Find(string id)
+    {
+        // Non-null return type hides the missing-review path.
+        var review = reviews.Find(id);
+        return new ReviewDto(review.Title, review.Score);
+    }
+}`,
+  },
+};
+
+## What to review
+
+The good version returns `ReviewDto?`, making the miss path part of the contract. The caller must decide whether to return 404, show empty state, or continue.
+
+The bad version promises a non-null DTO but depends on a repository result that may be null. The failure appears later as a `NullReferenceException`.
+
+## Review notes
+
+In C# reviews, nullable annotations are boundary documentation. If a value can be absent, the type should say so where the value crosses layers.

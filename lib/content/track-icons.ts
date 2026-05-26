@@ -18,6 +18,7 @@ export const trackIconKeys = {
   java: "coffee",
   c: "chip",
   cpp: "plus-plus",
+  csharp: "hash",
   git: "git-branch",
   fastapi: "zap",
   django: "layers",
