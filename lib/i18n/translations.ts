@@ -125,7 +125,7 @@ export const trackThaiTranslations = {
   java: {
     title: "Java",
     description:
-      "ฝึกรีวิว Java ว่าจัดการ null ชัดไหม object ถูกแก้จากข้างนอกไม่ได้ไหม resource ถูกปิดแน่ไหม และแยก controller/service/repository อ่านง่ายหรือเปล่า.",
+      "ฝึกรีวิว Java ว่า null มี Optional/exception boundary ไหม object ถูกแก้จากข้างนอกไม่ได้ไหม resource ถูกปิดแน่ไหม และแยก controller/service/repository อ่านง่ายหรือเปล่า.",
   },
   git: {
     title: "Git",
@@ -1063,10 +1063,10 @@ export const lessonThaiTranslations = {
     },
     title: "เตรียมหน้าระหว่างโหลดและหน้า error",
     summary: "ใช้ `loading.tsx` แสดงสถานะระหว่างรอข้อมูล และใช้ `error.tsx` แสดงหน้าสำรองพร้อมปุ่ม retry เมื่อ route เกิด error.",
-    takeaways: ["route ที่ดีควรมี UI ระหว่างโหลดและจุดจัดการ error ในตำแหน่งที่ผู้ใช้เจอจริง."],
+    takeaways: ["route ที่ดีควรมี UI ระหว่างโหลดและ error boundary ในตำแหน่งที่ผู้ใช้เจอจริง."],
     whatToReview: [
       "โค้ดที่ดีใช้ `error.tsx` เป็น Client Component สำหรับแสดงหน้าหรือข้อความสำรอง และมีปุ่ม retry เมื่อ route ล้มเหลว.",
-      "โค้ดที่ควรปรับ catch error ทุกอย่างใน page แล้ว return ข้อความเอง ทำให้ Next.js จัดการ error ต่อไม่ได้และผู้ใช้ไม่มีปุ่ม retry.",
+      "โค้ดที่ควรปรับ catch error ทุกอย่างใน page แล้ว return ข้อความเอง ทำให้ Next.js ส่งต่อ error ไป boundary ไม่ได้และผู้ใช้ไม่มีปุ่ม retry.",
     ],
     reviewNotes: [
       "ตอนรีวิว route ที่ fetch ข้อมูลหรือมีโอกาสล้มเหลว ให้มองหา loading state และ `error.tsx`. การ catch กว้าง ๆ ใน page มักซ่อน bug ทำให้ log แย่ลง และทำให้ประสบการณ์ตอน error ไม่ชัด.",
@@ -1820,7 +1820,7 @@ export const lessonThaiTranslations = {
     summary: "ให้ SQL เป็นโครงคำสั่งเดิม และ bind ค่าจากผู้ใช้เป็น data ผ่าน placeholder ไม่เอา string จาก request ไปต่อใน SQL โดยตรง.",
     takeaways: ["prepared statement แยก SQL text ออกจากข้อมูลที่ผู้ใช้ส่งมา."],
     whatToReview: [
-      "โค้ดที่ดี prepare SQL, bind email เป็น data, เลือก column ชัด และจัดการกรณีไม่เจอ row.",
+      "โค้ดที่ดี prepare SQL, bind email เป็น data, เลือก column ชัด และคืน not-found path เมื่อไม่เจอ row.",
       "โค้ดที่ควรปรับเอา email จาก $_GET ไปต่อใน SQL string และ SELECT * ทำให้ไม่มั่นใจทั้งความปลอดภัยและรูปข้อมูลที่ส่งกลับ.",
     ],
     reviewNotes: [
@@ -2073,7 +2073,7 @@ export const lessonThaiTranslations = {
   },
   "java/package-service-boundaries": {
     title: "แยก controller, service และ repository",
-    summary: "controller ไม่ควรทั้งอ่าน request, ต่อ SQL, เปิด database connection, ส่ง email และตอบ HTTP ใน class เดียว ให้ service ถือกฎงาน ส่วน repository จัดการ database.",
+    summary: "controller ไม่ควรทั้งอ่าน request, ต่อ SQL, เปิด database connection, ส่ง email และตอบ HTTP ใน class เดียว ให้ service ถือกฎงาน ส่วน repository รับผิดชอบ database.",
     takeaways: ["class จะรีวิวง่ายขึ้นเมื่อ HTTP, กฎงาน และ database แยกกันชัด."],
     whatToReview: [
       "โค้ดที่ดีให้ UserService เป็นที่อยู่ของกฎสมัครสมาชิก ส่วน UserRepository และ WelcomeEmail ถูกส่งเข้ามาเป็น dependency ที่เห็นได้.",
@@ -2213,7 +2213,7 @@ export const lessonThaiTranslations = {
     takeaways: ["คำถามแรกคือ commit นี้ push หรือแชร์แล้วหรือยัง ถ้าแชร์แล้วให้เริ่มจาก revert."],
     whatToReview: [
       "โค้ดที่ดี fetch, switch main, pull แบบ fast-forward, revert commit ที่มีปัญหา แล้ว push commit ใหม่ออกไป.",
-      "โค้ดที่ควรปรับ reset --hard บน main แล้ว force push ทำให้ทุกคนต้องจัดการ history ที่ถูกเปลี่ยน.",
+      "โค้ดที่ควรปรับ reset --hard บน main แล้ว force push ทำให้ทุกคนต้องแก้ history local ที่ถูกเปลี่ยน.",
     ],
     reviewNotes: [
       "reset + force push เปลี่ยน history ที่คนอื่นอาจมีอยู่แล้ว ใช้เฉพาะเมื่อทีมตกลงกันชัด ไม่ใช่ใช้เป็นปุ่ม undo ปกติ.",
@@ -2232,7 +2232,7 @@ export const lessonThaiTranslations = {
       "โค้ดที่ควรปรับ add ทุกไฟล์ ทำให้ credential, build output, editor file หรือ local env หลุดได้.",
     ],
     reviewNotes: [
-      "index คือพื้นที่ที่ Git track หรือ stage แล้ว ถ้าไฟล์ลับเคยเข้าไปแล้ว .gitignore อย่างเดียวไม่พอ ต้องเอาออกจาก index และจัดการ secret ที่หลุดไปแล้ว.",
+      "index คือพื้นที่ที่ Git track หรือ stage แล้ว ถ้าไฟล์ลับเคยเข้าไปแล้ว .gitignore อย่างเดียวไม่พอ ต้องเอาออกจาก index และ rotate secret ที่หลุดไปแล้ว.",
     ],
   },
   "git/tags-and-release-points": {
@@ -2325,7 +2325,7 @@ export const lessonThaiTranslations = {
     summary: "ใช้ security dependency เช่น `OAuth2PasswordBearer` เพื่อให้การอ่าน token, ตรวจ user และเอกสาร OpenAPI อยู่ในทางเดียวกัน.",
     takeaways: ["auth ควรอยู่ในจุดกลางที่ route ต่าง ๆ เรียกใช้ ไม่ใช่ให้แต่ละ route parse header เอง."],
     whatToReview: [
-      "โค้ดที่ดีรวมการอ่าน Bearer token และการจัดการ token ไม่ถูกต้องไว้ใน `current_user` จุดเดียว.",
+      "โค้ดที่ดีรวมการอ่าน Bearer token และการตอบ token ไม่ถูกต้องไว้ใน `current_user` จุดเดียว.",
       "โค้ดที่ควรปรับ parse header เองใน route และเดาว่าต้องมี user เสมอ ทำให้แต่ละ endpoint มีพฤติกรรม auth ไม่เหมือนกัน.",
     ],
     reviewNotes: [
@@ -2641,13 +2641,13 @@ export const lessonThaiTranslations = {
     },
     title: "คืน error ที่บอกเหตุผลและยังเช็กต่อได้",
     summary: "error ควรบอกว่างานไหนพัง และถ้าโค้ดที่เรียกใช้ต้องแยกเคส เช่น not found ให้ wrap ด้วย `%w` เพื่อใช้ `errors.Is` หรือ `errors.As` ได้.",
-    takeaways: ["อย่าคืนแค่ `failed` เพราะคนอ่านและโค้ดที่เรียกใช้จะไม่รู้ว่าเป็น not found, timeout หรือปัญหาอื่นที่ควรจัดการต่างกัน."],
+    takeaways: ["อย่าคืนแค่ `failed` เพราะคนอ่านและโค้ดที่เรียกใช้จะไม่รู้ว่าเป็น not found, timeout หรือปัญหาอื่นที่ควร branch ต่างกัน."],
     whatToReview: [
       "โค้ดที่ดีแปลง not found จาก store เป็น `ErrReviewNotFound` ที่ฝั่งเรียกใช้เช็กได้ และใส่ `find review <id>` เพื่อช่วย debug.",
       "โค้ดที่ควรปรับ log error เดิมแล้วคืน `errors.New(\"failed\")` ทำให้ฝั่งเรียกใช้ไม่รู้ว่าเป็น not found, timeout หรือ error อื่น.",
     ],
     reviewNotes: [
-      "ไม่จำเป็นต้อง wrap ทุก error เสมอ ให้ wrap เมื่อฝั่งที่เรียกใช้ควรรู้ชนิด error เดิมเพื่อจัดการต่อ และไม่ทำให้รายละเอียดภายในรั่วเกินไป.",
+      "ไม่จำเป็นต้อง wrap ทุก error เสมอ ให้ wrap เมื่อฝั่งที่เรียกใช้ควรรู้ชนิด error เดิมเพื่อ branch ต่อ และไม่ทำให้รายละเอียดภายในรั่วเกินไป.",
     ],
   },
   "go/context-cancellation": {
@@ -2730,7 +2730,7 @@ export const lessonThaiTranslations = {
     takeaways: ["cleanup ควรอยู่ใกล้จุดเปิดไฟล์/connection เพื่อให้ reviewer เห็นทันทีว่าแม้ return กลางทางก็ไม่รั่ว."],
     whatToReview: [
       "โค้ดที่ดี `defer file.Close()` ทันทีหลัง `os.Open` สำเร็จ ทำให้ error กลาง loop ก็ยังปิดไฟล์.",
-      "โค้ดที่ควรปรับเรียก `file.Close()` แค่ท้าย function ถ้า `importLine` fail แล้ว return ก่อน file handle จะรั่วจน process จัดการเอง.",
+      "โค้ดที่ควรปรับเรียก `file.Close()` แค่ท้าย function ถ้า `importLine` fail แล้ว return ก่อน file handle จะรั่วจน process cleanup เอง.",
     ],
     reviewNotes: [
       "`defer` แข็งแรงที่สุดเมื่อวางหลังเปิด resource สำเร็จทันที ตอนรีวิวให้ไล่ early return แล้วดูว่า cleanup ไม่ได้พึ่งการวิ่งถึงท้าย function.",
