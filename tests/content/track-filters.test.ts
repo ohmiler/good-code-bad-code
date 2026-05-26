@@ -87,7 +87,7 @@ test("filterTracks can search and filter by track family", () => {
       language: "en",
       query: "",
     }).map((track) => track.slug),
-    ["c", "cpp", "csharp"],
+    ["c", "cpp", "csharp", "rust"],
   );
 
   assert.deepEqual(
@@ -97,7 +97,7 @@ test("filterTracks can search and filter by track family", () => {
       language: "en",
       query: "c family",
     }).map((track) => track.slug),
-    ["c", "cpp", "csharp"],
+    ["c", "cpp", "csharp", "rust"],
   );
 
   assert.deepEqual(

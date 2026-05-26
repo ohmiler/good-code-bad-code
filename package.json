@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "qa:content": "node --import tsx scripts/content-qa.ts",
-    "test:content": "node --import tsx --test tests/content/schema.test.ts tests/content/lesson-registry.test.ts tests/content/navigation.test.ts tests/content/code-comments.test.ts tests/content/inline-markdown.test.tsx tests/content/review-notes.test.ts tests/content/brand-wordmark.test.ts tests/content/favicon.test.ts tests/content/footer.test.ts tests/content/i18n.test.ts tests/content/font.test.ts tests/content/track-icons.test.ts tests/content/seo.test.ts tests/content/back-to-top.test.ts tests/content/content-quality.test.ts tests/content/track-families.test.ts tests/content/track-filters.test.ts tests/content/track-grid.test.tsx tests/content/related-tracks.test.tsx"
+    "test:content": "node --import tsx --test tests/content/schema.test.ts tests/content/lesson-registry.test.ts tests/content/navigation.test.ts tests/content/code-comments.test.ts tests/content/inline-markdown.test.tsx tests/content/review-notes.test.ts tests/content/brand-wordmark.test.ts tests/content/favicon.test.ts tests/content/footer.test.ts tests/content/i18n.test.ts tests/content/font.test.ts tests/content/track-icons.test.ts tests/content/seo.test.ts tests/content/back-to-top.test.ts tests/content/content-quality.test.ts tests/content/track-families.test.ts tests/content/rust-track.test.ts tests/content/track-filters.test.ts tests/content/track-grid.test.tsx tests/content/related-tracks.test.tsx"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",

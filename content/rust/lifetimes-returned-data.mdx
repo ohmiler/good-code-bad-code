@@ -1,0 +1,40 @@
+export const metadata = {
+  title: "Lifetimes for returned data",
+  track: "rust",
+  order: 2,
+  summary: "Return borrowed data only when the lifetime is tied to an input, instead of returning references to local values.",
+  tags: ["lifetimes", "borrowing", "returns"],
+  takeaways: ["A returned reference should point to data owned outside the function, with a lifetime that makes that relationship visible."],
+  goodCode: {
+    language: "rust",
+    filename: "src/review_lookup.rs",
+    code: `pub fn first_approved<'a>(reviews: &'a [Review]) -> Option<&'a Review> {
+    // The returned reference can only live as long as the input slice.
+    reviews.iter().find(|review| review.approved)
+}`,
+  },
+  badCode: {
+    language: "rust",
+    filename: "review_lookup.rs",
+    code: `pub fn first_approved_title(reviews: &[Review]) -> &str {
+    let title = reviews
+        .iter()
+        .find(|review| review.approved)
+        .map(|review| review.title.clone())
+        .unwrap_or_default();
+
+    // Returning a reference to local storage cannot outlive this function.
+    title.as_str()
+}`,
+  },
+};
+
+## What to review
+
+The good version returns a reference to an element already owned by the input slice. The lifetime in the signature documents that relationship.
+
+The bad version builds a local `String` and tries to return a borrowed `&str` from it. That reference would point to storage dropped at the end of the function.
+
+## Review notes
+
+When a Rust function returns a reference, ask which input owns the referenced data. If the answer is "a local variable", the function should return an owned value instead.

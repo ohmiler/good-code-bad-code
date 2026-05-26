@@ -1,0 +1,45 @@
+export const metadata = {
+  title: "Cargo feature dependencies",
+  track: "rust",
+  order: 9,
+  summary: "Keep optional dependencies behind named features so builds include only the integrations they need.",
+  tags: ["cargo", "features", "dependencies"],
+  takeaways: ["A Rust crate should make optional integrations explicit through Cargo features and guarded code paths."],
+  goodCode: {
+    language: "rust",
+    filename: "src/lib.rs",
+    code: `#[cfg(feature = "postgres")]
+pub mod postgres_store;
+
+pub fn storage_name() -> &'static str {
+    // Feature-gated code keeps the default build small and intentional.
+    #[cfg(feature = "postgres")]
+    {
+        return "postgres";
+    }
+
+    "memory"
+}`,
+  },
+  badCode: {
+    language: "rust",
+    filename: "lib.rs",
+    code: `pub mod postgres_store;
+pub mod redis_store;
+
+pub fn storage_name() -> &'static str {
+    // Every integration is compiled even when the app uses only memory storage.
+    "postgres"
+}`,
+  },
+};
+
+## What to review
+
+The good version gates the optional store behind a named feature. A default build avoids pulling in database code unless the package enables that integration.
+
+The bad version always compiles every store module. Optional infrastructure becomes a hidden dependency for simple builds, tests, and local tools.
+
+## Review notes
+
+For Rust libraries, review `Cargo.toml` and `#[cfg]` together. The feature name should match the integration and the guarded code path should be easy to find.

@@ -1,0 +1,45 @@
+export const metadata = {
+  title: "Tests, fixtures, and assertions",
+  track: "rust",
+  order: 10,
+  summary: "Build small fixtures and assert domain outcomes instead of only checking that code does not panic.",
+  tags: ["tests", "fixtures", "assertions"],
+  takeaways: ["A Rust test should name the input fixture and assert the observable result that protects the review rule."],
+  goodCode: {
+    language: "rust",
+    filename: "tests/review_rules.rs",
+    code: `#[test]
+fn rejects_empty_review_title() {
+    // The fixture names the invalid input the rule must reject.
+    let review = ReviewDraft {
+        title: String::from("   "),
+        body: String::from("Useful notes"),
+    };
+
+    let error = validate_review(&review).unwrap_err();
+
+    assert_eq!(error.field(), "title");
+}`,
+  },
+  badCode: {
+    language: "rust",
+    filename: "tests/review_rules.rs",
+    code: `#[test]
+fn validates_review() {
+    let review = ReviewDraft::default();
+
+    // This assertion only proves the function returned some success value.
+    assert!(validate_review(&review).is_ok());
+}`,
+  },
+};
+
+## What to review
+
+The good version builds the invalid input directly and asserts the field reported by the validator. A future regression in title validation will fail the test.
+
+The bad version uses a default fixture and checks only a success path. The test name and assertion do not protect a specific rule.
+
+## Review notes
+
+Rust tests are strongest when the fixture is small and the assertion names the domain behavior. Avoid tests that only prove a function returned without panic.

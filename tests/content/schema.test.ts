@@ -194,6 +194,28 @@ test("validateLessonMetadata accepts C# code samples", () => {
   );
 });
 
+test("validateLessonMetadata accepts Rust code samples", () => {
+  const rustMetadata = {
+    ...validMetadata,
+    track: "rust",
+    goodCode: {
+      language: "rust",
+      filename: "src/review_title.rs",
+      code: "fn normalize_title(title: &str) -> String { title.trim().to_owned() }",
+    },
+    badCode: {
+      language: "rust",
+      filename: "review_title.rs",
+      code: "fn normalize_title(title: String) -> String { title.trim().to_string() }",
+    },
+  };
+
+  assert.deepEqual(
+    validateLessonMetadata(rustMetadata, "content/rust/ownership-borrowing.mdx"),
+    rustMetadata,
+  );
+});
+
 test("validateLessonMetadata accepts Vue single-file component samples", () => {
   const vueMetadata = {
     ...validMetadata,

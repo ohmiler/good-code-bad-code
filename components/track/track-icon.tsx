@@ -185,6 +185,13 @@ const iconShapes = {
       <path d="M3 15h17" />
     </>
   ),
+  shield: (
+    <>
+      <path d="M12 3 20 6v6c0 4.5-3.1 7.5-8 9-4.9-1.5-8-4.5-8-9V6l8-3Z" />
+      <path d="M9 12h6" />
+      <path d="M12 9v6" />
+    </>
+  ),
   "git-branch": (
     <>
       <circle cx="6" cy="6" r="2" />

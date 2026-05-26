@@ -545,6 +545,36 @@ import CsharpOptionsConfiguration, {
 import CsharpUnitTestsArrangeActAssert, {
   metadata as csharpUnitTestsArrangeActAssertMetadata,
 } from "./csharp/unit-tests-arrange-act-assert.mdx";
+import RustOwnershipBorrowing, {
+  metadata as rustOwnershipBorrowingMetadata,
+} from "./rust/ownership-borrowing.mdx";
+import RustLifetimesReturnedData, {
+  metadata as rustLifetimesReturnedDataMetadata,
+} from "./rust/lifetimes-returned-data.mdx";
+import RustResultErrorBoundaries, {
+  metadata as rustResultErrorBoundariesMetadata,
+} from "./rust/result-error-boundaries.mdx";
+import RustOptionUnwrapBoundaries, {
+  metadata as rustOptionUnwrapBoundariesMetadata,
+} from "./rust/option-unwrap-boundaries.mdx";
+import RustPatternMatchingExhaustiveness, {
+  metadata as rustPatternMatchingExhaustivenessMetadata,
+} from "./rust/pattern-matching-exhaustiveness.mdx";
+import RustTraitsAndGenerics, {
+  metadata as rustTraitsAndGenericsMetadata,
+} from "./rust/traits-and-generics.mdx";
+import RustIteratorOwnership, {
+  metadata as rustIteratorOwnershipMetadata,
+} from "./rust/iterator-ownership.mdx";
+import RustAsyncSendSyncBoundaries, {
+  metadata as rustAsyncSendSyncBoundariesMetadata,
+} from "./rust/async-send-sync-boundaries.mdx";
+import RustCargoFeatureDependencies, {
+  metadata as rustCargoFeatureDependenciesMetadata,
+} from "./rust/cargo-feature-dependencies.mdx";
+import RustTestsFixturesAssertions, {
+  metadata as rustTestsFixturesAssertionsMetadata,
+} from "./rust/tests-fixtures-assertions.mdx";
 import GitStatusBeforeWork, {
   metadata as gitStatusBeforeWorkMetadata,
 } from "./git/status-before-work.mdx";
@@ -1813,6 +1843,66 @@ const rawLessons: RawLesson[] = [
     source: "content/csharp/unit-tests-arrange-act-assert.mdx",
     metadata: csharpUnitTestsArrangeActAssertMetadata,
     Component: CsharpUnitTestsArrangeActAssert,
+  },
+  {
+    slug: "ownership-borrowing",
+    source: "content/rust/ownership-borrowing.mdx",
+    metadata: rustOwnershipBorrowingMetadata,
+    Component: RustOwnershipBorrowing,
+  },
+  {
+    slug: "lifetimes-returned-data",
+    source: "content/rust/lifetimes-returned-data.mdx",
+    metadata: rustLifetimesReturnedDataMetadata,
+    Component: RustLifetimesReturnedData,
+  },
+  {
+    slug: "result-error-boundaries",
+    source: "content/rust/result-error-boundaries.mdx",
+    metadata: rustResultErrorBoundariesMetadata,
+    Component: RustResultErrorBoundaries,
+  },
+  {
+    slug: "option-unwrap-boundaries",
+    source: "content/rust/option-unwrap-boundaries.mdx",
+    metadata: rustOptionUnwrapBoundariesMetadata,
+    Component: RustOptionUnwrapBoundaries,
+  },
+  {
+    slug: "pattern-matching-exhaustiveness",
+    source: "content/rust/pattern-matching-exhaustiveness.mdx",
+    metadata: rustPatternMatchingExhaustivenessMetadata,
+    Component: RustPatternMatchingExhaustiveness,
+  },
+  {
+    slug: "traits-and-generics",
+    source: "content/rust/traits-and-generics.mdx",
+    metadata: rustTraitsAndGenericsMetadata,
+    Component: RustTraitsAndGenerics,
+  },
+  {
+    slug: "iterator-ownership",
+    source: "content/rust/iterator-ownership.mdx",
+    metadata: rustIteratorOwnershipMetadata,
+    Component: RustIteratorOwnership,
+  },
+  {
+    slug: "async-send-sync-boundaries",
+    source: "content/rust/async-send-sync-boundaries.mdx",
+    metadata: rustAsyncSendSyncBoundariesMetadata,
+    Component: RustAsyncSendSyncBoundaries,
+  },
+  {
+    slug: "cargo-feature-dependencies",
+    source: "content/rust/cargo-feature-dependencies.mdx",
+    metadata: rustCargoFeatureDependenciesMetadata,
+    Component: RustCargoFeatureDependencies,
+  },
+  {
+    slug: "tests-fixtures-assertions",
+    source: "content/rust/tests-fixtures-assertions.mdx",
+    metadata: rustTestsFixturesAssertionsMetadata,
+    Component: RustTestsFixturesAssertions,
   },
   {
     slug: "status-before-work",

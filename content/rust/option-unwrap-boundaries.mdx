@@ -1,0 +1,41 @@
+export const metadata = {
+  title: "Option instead of unwrap",
+  track: "rust",
+  order: 4,
+  summary: "Keep missing data in Option until the boundary decides the fallback or rejection path.",
+  tags: ["option", "unwrap", "missing-data"],
+  takeaways: ["A Rust lookup that can miss should keep the miss path visible instead of unwrapping inside helper code."],
+  goodCode: {
+    language: "rust",
+    filename: "src/review_score.rs",
+    code: `pub fn reviewer_score(reviews: &[Review], reviewer_id: u64) -> Option<u8> {
+    // The caller decides what a missing reviewer means for the request.
+    reviews
+        .iter()
+        .find(|review| review.reviewer_id == reviewer_id)
+        .map(|review| review.score)
+}`,
+  },
+  badCode: {
+    language: "rust",
+    filename: "review_score.rs",
+    code: `pub fn reviewer_score(reviews: &[Review], reviewer_id: u64) -> u8 {
+    // unwrap hides the missing-review branch inside a helper.
+    reviews
+        .iter()
+        .find(|review| review.reviewer_id == reviewer_id)
+        .unwrap()
+        .score
+}`,
+  },
+};
+
+## What to review
+
+The good version returns `Option<u8>`, so the caller can return a default, produce a validation error, or keep the field absent.
+
+The bad version assumes the reviewer exists. A normal miss path becomes a panic far away from the HTTP, CLI, or job boundary that should choose the response.
+
+## Review notes
+
+For Rust lookup helpers, make absence part of the return type. Reviewers should be able to see where `None` becomes a domain decision.

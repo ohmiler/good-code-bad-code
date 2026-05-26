@@ -1,0 +1,40 @@
+export const metadata = {
+  title: "Result error boundaries",
+  track: "rust",
+  order: 3,
+  summary: "Return Result from fallible boundaries so callers can choose retry, rejection, or user-facing error copy.",
+  tags: ["result", "errors", "boundaries"],
+  takeaways: ["Rust boundary code should return typed errors instead of panicking on expected failure paths."],
+  goodCode: {
+    language: "rust",
+    filename: "src/review_loader.rs",
+    code: `use std::fs;
+use std::path::Path;
+
+pub fn load_review(path: &Path) -> Result<String, std::io::Error> {
+    // File errors stay in the return type for the caller to classify.
+    fs::read_to_string(path)
+}`,
+  },
+  badCode: {
+    language: "rust",
+    filename: "review_loader.rs",
+    code: `use std::fs;
+use std::path::Path;
+
+pub fn load_review(path: &Path) -> String {
+    // unwrap turns a normal missing-file path into a process panic.
+    fs::read_to_string(path).unwrap()
+}`,
+  },
+};
+
+## What to review
+
+The good version returns `Result`, leaving the caller in control of logging, retrying, returning 404, or surfacing validation copy.
+
+The bad version uses `unwrap` at an I/O boundary. A missing file, permission error, or invalid path becomes a panic instead of a recoverable branch.
+
+## Review notes
+
+In Rust reviews, treat `unwrap` and `expect` as sharp tools. They can be fine in tests or impossible states, but fallible production boundaries should return `Result`.

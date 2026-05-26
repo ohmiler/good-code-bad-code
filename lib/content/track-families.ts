@@ -55,7 +55,7 @@ export const trackFamilies = [
     id: "c-family",
     label: { en: "C family", th: "ตระกูล C" },
     searchTerms: ["c family systems native memory"],
-    tracks: ["c", "cpp", "csharp"],
+    tracks: ["c", "cpp", "csharp", "rust"],
   },
   {
     id: "backend-languages",
@@ -80,6 +80,7 @@ export const trackSearchAliases: Partial<Record<TrackSlug, readonly string[]>> =
   c: ["systems", "native", "memory"],
   cpp: ["c++", "systems", "native", "memory"],
   csharp: ["c#", ".net", "dotnet", "asp.net", "microsoft"],
+  rust: ["borrow checker", "borrowing", "ownership", "cargo", "memory safety"],
   sql: ["database", "query"],
   docker: ["container", "containers"],
 } as const satisfies Partial<Record<TrackSlug, readonly string[]>>;

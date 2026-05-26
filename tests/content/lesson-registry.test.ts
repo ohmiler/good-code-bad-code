@@ -33,6 +33,7 @@ const expectedLessonCounts = {
   c: 10,
   cpp: 10,
   csharp: 10,
+  rust: 10,
   git: 10,
 } as const;
 
@@ -339,7 +340,8 @@ function countReviewCommentLines(code: string, track: string): number {
       track === "java" ||
       track === "c" ||
       track === "cpp" ||
-      track === "csharp"
+      track === "csharp" ||
+      track === "rust"
     ) {
       return trimmedLine.startsWith("// ");
     }
@@ -366,7 +368,7 @@ test("seeded lessons match expected track counts", async () => {
   const lessonsByTrack = await getTrackLessonFiles();
   const allLessonFiles = [...lessonsByTrack.values()].flat();
 
-  assert.equal(allLessonFiles.length, 240);
+  assert.equal(allLessonFiles.length, 250);
   for (const track of tracks) {
     assert.equal(
       lessonsByTrack.get(track.slug)?.length,
@@ -1182,6 +1184,49 @@ test("C# comments have matching Thai translations", async () => {
       for (const [index, comment] of translatedComments.entries()) {
         assert.match(comment, /[\u0e00-\u0e7f]/, `csharp/${slug}.${sampleName}[${index}]`);
         assert.ok(comment.trim().length >= 8, `csharp/${slug}.${sampleName}[${index}]`);
+      }
+    }
+  }
+});
+
+test("Rust samples include concise review comments", async () => {
+  const lessonsByTrack = await getTrackLessonFiles();
+  const rustLessons = lessonsByTrack.get("rust") ?? [];
+
+  assert.equal(rustLessons.length, expectedLessonCounts.rust);
+
+  for (const contentPath of rustLessons) {
+    for (const sampleName of ["goodCode", "badCode"] as const) {
+      const code = await readMdxMetadataCodeSample(contentPath, sampleName);
+      const commentCount = countReviewCommentLines(code, "rust");
+
+      assert.ok(commentCount >= 1, `${contentPath} ${sampleName}`);
+      assert.ok(commentCount <= 3, `${contentPath} ${sampleName}`);
+    }
+  }
+});
+
+test("Rust comments have matching Thai translations", async () => {
+  const lessonsByTrack = await getTrackLessonFiles();
+  const rustLessons = lessonsByTrack.get("rust") ?? [];
+
+  assert.equal(rustLessons.length, expectedLessonCounts.rust);
+
+  for (const contentPath of rustLessons) {
+    const slug = slugFromContentPath(contentPath);
+    const translation = lessonThaiTranslations[`rust/${slug}`];
+
+    assert.ok(translation.codeComments, `rust/${slug} missing codeComments`);
+
+    for (const sampleName of ["goodCode", "badCode"] as const) {
+      const code = await readMdxMetadataCodeSample(contentPath, sampleName);
+      const commentCount = countReviewCommentLines(code, "rust");
+      const translatedComments = translation.codeComments[sampleName] ?? [];
+
+      assert.equal(translatedComments.length, commentCount, `rust/${slug}`);
+      for (const [index, comment] of translatedComments.entries()) {
+        assert.match(comment, /[\u0e00-\u0e7f]/, `rust/${slug}.${sampleName}[${index}]`);
+        assert.ok(comment.trim().length >= 8, `rust/${slug}.${sampleName}[${index}]`);
       }
     }
   }

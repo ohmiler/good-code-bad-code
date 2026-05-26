@@ -1,0 +1,34 @@
+export const metadata = {
+  title: "Iterator ownership",
+  track: "rust",
+  order: 7,
+  summary: "Choose iter, iter_mut, or into_iter based on whether the code reads, mutates, or consumes collection items.",
+  tags: ["iterators", "ownership", "collections"],
+  takeaways: ["A Rust loop should make collection ownership visible through the iterator method it chooses."],
+  goodCode: {
+    language: "rust",
+    filename: "src/review_counts.rs",
+    code: `pub fn approved_count(reviews: &[Review]) -> usize {
+    // iter reads each review without moving the collection.
+    reviews.iter().filter(|review| review.approved).count()
+}`,
+  },
+  badCode: {
+    language: "rust",
+    filename: "review_counts.rs",
+    code: `pub fn approved_count(reviews: Vec<Review>) -> usize {
+    // into_iter consumes the vector even though the function only counts.
+    reviews.into_iter().filter(|review| review.approved).count()
+}`,
+  },
+};
+
+## What to review
+
+The good version borrows a slice and uses `iter`, so callers keep the collection after the count.
+
+The bad version takes `Vec<Review>` and consumes it with `into_iter`. A read-only operation now forces ownership transfer and may cause clones at the call site.
+
+## Review notes
+
+For collection code, connect the signature to the iterator method. `iter` reads, `iter_mut` mutates, and `into_iter` consumes.

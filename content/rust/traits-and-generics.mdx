@@ -1,0 +1,36 @@
+export const metadata = {
+  title: "Traits and generic contracts",
+  track: "rust",
+  order: 6,
+  summary: "Use trait bounds to name the behavior a generic function needs instead of tying code to one concrete type.",
+  tags: ["traits", "generics", "contracts"],
+  takeaways: ["A Rust generic should declare the smallest trait contract needed by the function body."],
+  goodCode: {
+    language: "rust",
+    filename: "src/review_export.rs",
+    code: `use std::fmt::Write;
+
+pub fn append_review_line<W: Write>(writer: &mut W, review: &Review) -> std::fmt::Result {
+    // The function asks only for the ability to receive formatted text.
+    writeln!(writer, "{}:{}", review.id, review.title)
+}`,
+  },
+  badCode: {
+    language: "rust",
+    filename: "review_export.rs",
+    code: `pub fn append_review_line(buffer: &mut String, review: &Review) {
+    // Concrete String forces callers to allocate even when another writer fits.
+    buffer.push_str(&format!("{}:{}\\n", review.id, review.title));
+}`,
+  },
+};
+
+## What to review
+
+The good version depends on `Write`, so tests can pass a `String`, production code can pass another formatter, and errors stay visible.
+
+The bad version hard-codes `String` and uses `format!` before appending. Callers with an existing writer cannot reuse the function without extra allocation.
+
+## Review notes
+
+Rust trait bounds are API documentation. Ask whether the bound names the behavior the function uses, or whether a concrete type has leaked into a reusable boundary.

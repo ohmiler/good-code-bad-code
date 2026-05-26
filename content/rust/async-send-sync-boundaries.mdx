@@ -1,0 +1,42 @@
+export const metadata = {
+  title: "Async Send and Sync boundaries",
+  track: "rust",
+  order: 8,
+  summary: "Use thread-safe shared state around async tasks instead of holding non-Send values across await points.",
+  tags: ["async", "send", "sync"],
+  takeaways: ["Rust async review should check which values cross await points and task boundaries."],
+  goodCode: {
+    language: "rust",
+    filename: "src/review_cache.rs",
+    code: `use std::sync::Arc;
+use tokio::sync::RwLock;
+
+pub async fn remember_review(cache: Arc<RwLock<Vec<Review>>>, review: Review) {
+    // Async-aware locking keeps shared state safe across spawned tasks.
+    let mut reviews = cache.write().await;
+    reviews.push(review);
+}`,
+  },
+  badCode: {
+    language: "rust",
+    filename: "review_cache.rs",
+    code: `use std::cell::RefCell;
+use std::rc::Rc;
+
+pub async fn remember_review(cache: Rc<RefCell<Vec<Review>>>, review: Review) {
+    // Rc and RefCell are not safe to share across multi-threaded async tasks.
+    cache.borrow_mut().push(review);
+    send_audit_event().await;
+}`,
+  },
+};
+
+## What to review
+
+The good version uses `Arc` and an async-aware lock, making the shared cache suitable for task boundaries that may move between worker threads.
+
+The bad version uses `Rc<RefCell<_>>`, then awaits after mutating shared state. That design breaks down when the future must be `Send` or when borrowing spans grow.
+
+## Review notes
+
+In Rust async code, review both the data type and the await points. Shared state needs types that match the executor and the task movement model.

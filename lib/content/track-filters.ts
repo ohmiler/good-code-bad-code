@@ -40,6 +40,7 @@ const backend = [
   "c",
   "cpp",
   "csharp",
+  "rust",
   "fastapi",
   "django",
   "go",

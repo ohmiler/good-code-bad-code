@@ -179,6 +179,11 @@ export const trackThaiTranslations = {
     description:
       "ฝึกรีวิว C# ว่า nullable type, record, async cancellation, dependency injection, disposal, exception boundary, LINQ, pattern matching, options และ test สื่อ contract ครบหรือไม่.",
   },
+  rust: {
+    title: "Rust",
+    description:
+      "ฝึกรีวิว Rust ว่า ownership, borrowing, lifetime, Result, Option, trait, async boundary, Cargo feature และ test ทำให้การถือครองข้อมูลกับ failure path มองเห็นในโค้ดหรือไม่.",
+  },
   git: {
     title: "Git",
     description:
@@ -4156,6 +4161,166 @@ export const lessonThaiTranslations = {
     ],
     reviewNotes: [
       "เวลารีวิว conditional Tailwind ให้หาคู่ที่ไม่ควรอยู่พร้อมกัน เช่น background สองค่า, opacity สองค่า หรือ disabled แล้วแต่ยังมี hover style เหมือนกดได้.",
+    ],
+  },
+  "rust/ownership-borrowing": {
+    codeComments: {
+      goodCode: ["ยืม title เพื่ออ่านโดยไม่ย้ายเจ้าของออกจาก caller"],
+      badCode: ["รับ String ทั้งก้อนทั้งที่ฟังก์ชันอ่านค่าอย่างเดียว"],
+    },
+    title: "ownership และ borrowing ที่ขอบเขตฟังก์ชัน",
+    summary: "ถ้าฟังก์ชัน Rust แค่อ่านข้อมูล ให้รับ borrowed value เพื่อให้ caller ยังถือ ownership ของค่าต้นทางต่อได้.",
+    takeaways: ["signature ของ Rust ควรบอกว่าโค้ดอ่าน ย้าย ownership หรือสร้างค่าใหม่ตรงจุดไหน."],
+    whatToReview: [
+      "โค้ดที่ดีรับ `&str` เพราะฟังก์ชันอ่าน title แล้วสร้าง `String` ใหม่เฉพาะค่าที่ return.",
+      "โค้ดที่ควรปรับรับ `String` ทั้งที่ไม่ได้เก็บหรือ consume ค่า ทำให้ caller อาจต้อง clone เพื่อใช้ title ต่อ.",
+    ],
+    reviewNotes: [
+      "เวลารีวิว Rust ให้เริ่มจาก parameter ก่อน ถ้า body อ่านอย่างเดียว ให้ถามว่ารับ borrowed type ได้ไหม แล้วค่อยดูว่า ownership ใหม่เริ่มที่ return value หรือไม่.",
+    ],
+  },
+  "rust/lifetimes-returned-data": {
+    codeComments: {
+      goodCode: ["reference ที่ return ผูก lifetime กับ slice ที่ส่งเข้ามา"],
+      badCode: ["reference นี้ชี้ไปที่ String local ที่จะถูก drop เมื่อจบฟังก์ชัน"],
+    },
+    title: "lifetime ของข้อมูลที่ return",
+    summary: "return reference เฉพาะเมื่อข้อมูลถูกถือครองอยู่นอกฟังก์ชัน และ lifetime ใน signature บอกความสัมพันธ์นั้น.",
+    takeaways: ["reference ที่ return ควรชี้ไปยัง input หรือ owner ภายนอก ไม่ใช่ค่าที่สร้างใน stack frame ของฟังก์ชัน."],
+    whatToReview: [
+      "โค้ดที่ดี return `Option<&Review>` จาก slice ที่ caller เป็นเจ้าของ จึงอ่าน lifetime ได้จาก signature.",
+      "โค้ดที่ควรปรับสร้าง `String` local แล้วพยายาม return `&str` ซึ่งจะชี้ไปยัง storage ที่หมดอายุเมื่อฟังก์ชัน return.",
+    ],
+    reviewNotes: [
+      "ถ้า Rust function return reference ให้ถามว่า owner คือ input ตัวไหน ถ้าตอบว่าเป็นตัวแปร local ฟังก์ชันควร return owned value เช่น `String` หรือ struct ที่เป็นเจ้าของข้อมูล.",
+    ],
+  },
+  "rust/result-error-boundaries": {
+    codeComments: {
+      goodCode: ["error จากไฟล์ยังอยู่ใน return type ให้ caller เลือก response"],
+      badCode: ["unwrap เปลี่ยน missing file ให้กลายเป็น panic ของ process"],
+    },
+    title: "Result ที่ขอบเขต error",
+    summary: "งานที่พลาดได้ควร return `Result` เพื่อให้ caller เลือก retry, reject, log หรือ user-facing error.",
+    takeaways: ["boundary ที่พลาดได้ใน Rust ควรส่ง typed error กลับไป แทนการ panic บน failure path ที่คาดได้."],
+    whatToReview: [
+      "โค้ดที่ดีส่ง `std::io::Error` กลับผ่าน `Result` ทำให้ชั้นเรียกใช้แยก missing file, permission และ path error ได้.",
+      "โค้ดที่ควรปรับใช้ `unwrap` กับ file I/O ทำให้ error ปกติของระบบไฟล์กลายเป็น panic.",
+    ],
+    reviewNotes: [
+      "`unwrap` และ `expect` ใช้ได้ใน test หรือ state ที่พิสูจน์แล้วว่าเป็นไปไม่ได้ แต่ production boundary ที่เจอ input หรือ I/O จริงควรคืน `Result`.",
+    ],
+  },
+  "rust/option-unwrap-boundaries": {
+    codeComments: {
+      goodCode: ["caller เป็นคนตัดสินว่า reviewer ที่ไม่พบควรตอบอย่างไร"],
+      badCode: ["unwrap ซ่อน branch ที่หา review ไม่เจอไว้ใน helper"],
+    },
+    title: "Option แทน unwrap ที่ lookup",
+    summary: "lookup ที่อาจไม่พบควรคืน `Option` จนกว่าจะถึง boundary ที่เลือก fallback หรือ rejection path.",
+    takeaways: ["helper ใน Rust ไม่ควร unwrap ค่า missing เองเมื่อ caller เป็นชั้นที่รู้ว่าต้องตอบ request อย่างไร."],
+    whatToReview: [
+      "โค้ดที่ดีคืน `Option<u8>` เพื่อให้ caller เลือก default, validation error หรือ field ที่เว้นไว้.",
+      "โค้ดที่ควรปรับ assume ว่า reviewer มีอยู่เสมอ แล้ว panic เมื่อข้อมูลจริงไม่ตรงกับสมมติฐาน.",
+    ],
+    reviewNotes: [
+      "สำหรับ lookup helper ให้รีวิวว่าจุดไหนเปลี่ยน `None` เป็น domain decision ถ้าเปลี่ยนเร็วเกินไป caller จะเสียบริบทของ request หรือ job.",
+    ],
+  },
+  "rust/pattern-matching-exhaustiveness": {
+    codeComments: {
+      goodCode: ["match ทุก variant ทำให้ status ใหม่บังคับให้แก้ branch"],
+      badCode: ["string state กับ default branch ซ่อนค่าที่สะกดผิดหรือเพิ่มใหม่"],
+    },
+    title: "pattern matching ให้ครบทุก state",
+    summary: "ใช้ enum กับ exhaustive match เมื่อ state มีชุดค่าปิด เพื่อให้ variant ใหม่บังคับให้รีวิว branch ที่เกี่ยวข้อง.",
+    takeaways: ["state ที่เป็นชุดค่าปิดใน Rust ควรใช้ enum เพื่อให้ compiler ช่วยบอก branch ที่ยังไม่ได้ตัดสินใจ."],
+    whatToReview: [
+      "โค้ดที่ดีใช้ enum และ match ทุก variant จึงเห็น Draft, Approved และ Rejected ในจุดเดียว.",
+      "โค้ดที่ควรปรับใช้ string state กับ `_` ทำให้ status ใหม่ไหลไปเป็น `unknown` โดยไม่มีจุดรีวิว.",
+    ],
+    reviewNotes: [
+      "เวลาเจอ `_` ใน match ให้ถามว่า branch นั้นตั้งใจรับค่าในอนาคตหรือแค่หลบ compiler ถ้าทุก state ควรมี response เฉพาะ ให้เขียน variant แยก.",
+    ],
+  },
+  "rust/traits-and-generics": {
+    codeComments: {
+      goodCode: ["ฟังก์ชันขอแค่ contract ว่าเขียน formatted text ได้"],
+      badCode: ["ผูกกับ String ทำให้ caller ที่มี writer อื่นต้องแปลงข้อมูลก่อน"],
+    },
+    title: "trait และ generic contract",
+    summary: "ใช้ trait bound เพื่อบอก behavior ที่ฟังก์ชันต้องใช้ แทนการผูก reusable code กับ concrete type ตัวเดียว.",
+    takeaways: ["generic ของ Rust ควรประกาศ trait contract ที่เล็กพอสำหรับ body ของฟังก์ชัน."],
+    whatToReview: [
+      "โค้ดที่ดีรับ `W: Write` ทำให้ production และ test ส่ง writer ที่ต่างกันได้ โดยยังเห็น error จาก `writeln!`.",
+      "โค้ดที่ควรปรับรับ `String` เท่านั้น และสร้างข้อความด้วย `format!` ก่อน append ทำให้ reusable boundary แคบเกินงานจริง.",
+    ],
+    reviewNotes: [
+      "trait bound คือเอกสารของ API ถ้า body ต้องการแค่เขียนข้อความ ให้ใช้ bound ที่บอก behavior นั้น ไม่ใช่ concrete type ที่มาจาก implementation แรก.",
+    ],
+  },
+  "rust/iterator-ownership": {
+    codeComments: {
+      goodCode: ["iter อ่าน review โดยไม่ย้าย collection ออกจาก caller"],
+      badCode: ["into_iter consume vector ทั้งที่ฟังก์ชันแค่นับข้อมูล"],
+    },
+    title: "ownership ใน iterator",
+    summary: "เลือก `iter`, `iter_mut` หรือ `into_iter` จาก intent ว่าอ่าน แก้ หรือ consume item ใน collection.",
+    takeaways: ["iterator method ใน Rust ควรสะท้อน ownership ของ collection ที่ signature ประกาศไว้."],
+    whatToReview: [
+      "โค้ดที่ดีรับ slice และใช้ `iter` เพราะงานนับจำนวนไม่ต้องย้าย ownership ของ `Vec`.",
+      "โค้ดที่ควรปรับรับ `Vec<Review>` แล้วใช้ `into_iter` ทำให้ read-only operation consume collection ของ caller.",
+    ],
+    reviewNotes: [
+      "รีวิว collection code โดยจับคู่ signature กับ iterator method: `iter` อ่าน, `iter_mut` แก้ item, `into_iter` consume owner.",
+    ],
+  },
+  "rust/async-send-sync-boundaries": {
+    codeComments: {
+      goodCode: ["lock แบบ async และ Arc เหมาะกับ state ที่ข้าม task"],
+      badCode: ["Rc กับ RefCell ไม่ควรถูกแชร์ข้าม task บน executor หลาย thread"],
+    },
+    title: "async boundary กับ Send/Sync",
+    summary: "shared state ใน async task ควรใช้ type ที่ปลอดภัยกับ executor แทน `Rc<RefCell<_>>` ที่ไม่ข้าม thread.",
+    takeaways: ["Rust async review ควรดูทั้ง type ของ shared state และจุด `await` ที่ future อาจถูกย้ายระหว่าง worker."],
+    whatToReview: [
+      "โค้ดที่ดีใช้ `Arc<RwLock<_>>` จาก async runtime จึงเข้ากับ spawned task และ await point.",
+      "โค้ดที่ควรปรับใช้ `Rc<RefCell<_>>` ซึ่งไม่ใช่ shared state สำหรับ future ที่ต้องเป็น `Send`.",
+    ],
+    reviewNotes: [
+      "เวลารีวิว async Rust ให้ไล่ค่าที่ข้าม `await` และค่าที่ส่งเข้า task ถ้า executor ต้องการ `Send` type ของ state ต้องสอดคล้องกับเงื่อนไขนั้น.",
+    ],
+  },
+  "rust/cargo-feature-dependencies": {
+    codeComments: {
+      goodCode: ["feature gate ทำให้ default build รวมเฉพาะ storage ที่ตั้งใจใช้"],
+      badCode: ["ทุก integration ถูก compile แม้ app ใช้แค่ memory storage"],
+    },
+    title: "Cargo feature สำหรับ optional dependency",
+    summary: "แยก optional integration ด้วย Cargo feature เพื่อให้ build รวมเฉพาะ dependency และ module ที่ต้องใช้.",
+    takeaways: ["crate ที่มี integration เสริมควรมี feature name และ `cfg` guard ที่หาเจอใน code review."],
+    whatToReview: [
+      "โค้ดที่ดีใช้ `#[cfg(feature = \"postgres\")]` ทำให้ default build ไม่ดึง database module โดยไม่จำเป็น.",
+      "โค้ดที่ควรปรับประกาศทุก store module เสมอ ทำให้ test และ local tool แบก dependency ที่ไม่ได้ใช้.",
+    ],
+    reviewNotes: [
+      "รีวิว Cargo feature คู่กับ `#[cfg]` เสมอ ชื่อ feature ควรตรงกับ integration และ guarded code path ควรอยู่ใกล้จุดที่เปิดพฤติกรรมนั้น.",
+    ],
+  },
+  "rust/tests-fixtures-assertions": {
+    codeComments: {
+      goodCode: ["fixture ระบุ input ที่ผิดกฎและต้องถูก reject"],
+      badCode: ["assertion นี้พิสูจน์แค่ว่าฟังก์ชันคืน success บางแบบ"],
+    },
+    title: "test fixture และ assertion",
+    summary: "สร้าง fixture เล็กและ assert ผลลัพธ์ระดับ domain แทนการเช็กเพียงว่าโค้ดไม่ panic.",
+    takeaways: ["Rust test ควรบอก input ที่ป้องกัน regression และ assert output ที่ผู้ใช้หรือ boundary เห็นได้."],
+    whatToReview: [
+      "โค้ดที่ดีสร้าง review title ว่าง แล้ว assert field ที่ validator รายงานกลับมา.",
+      "โค้ดที่ควรปรับใช้ default fixture และเช็กแค่ `is_ok()` จึงไม่ป้องกันกฎ validation ที่เฉพาะเจาะจง.",
+    ],
+    reviewNotes: [
+      "test ที่อ่านแล้วรู้ rule จะช่วยรีวิวมากกว่า test ที่แค่เรียกฟังก์ชันแล้วผ่าน ให้ดูว่า fixture เล็กพอและ assertion ผูกกับ behavior ที่ต้องรักษาหรือไม่.",
     ],
   },
 } as const satisfies Record<string, LessonThaiTranslation>;

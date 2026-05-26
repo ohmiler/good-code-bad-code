@@ -108,6 +108,12 @@ export const tracks = [
       "Review nullable references, records, async cancellation, dependency injection, disposal, exceptions, LINQ, pattern matching, options, and tests.",
   },
   {
+    slug: "rust",
+    title: "Rust",
+    description:
+      "Review ownership, borrowing, lifetimes, Result and Option boundaries, traits, async safety, Cargo features, and tests.",
+  },
+  {
     slug: "git",
     title: "Git",
     description:

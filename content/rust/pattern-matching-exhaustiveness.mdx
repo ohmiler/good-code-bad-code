@@ -1,0 +1,48 @@
+export const metadata = {
+  title: "Pattern matching exhaustiveness",
+  track: "rust",
+  order: 5,
+  summary: "Match enum states directly so new variants force a review of every state-dependent branch.",
+  tags: ["match", "enums", "states"],
+  takeaways: ["Rust enum reviews should prefer exhaustive matching over string flags or default branches that hide new states."],
+  goodCode: {
+    language: "rust",
+    filename: "src/review_status.rs",
+    code: `pub enum ReviewStatus {
+    Draft,
+    Approved,
+    Rejected { reason: String },
+}
+
+pub fn status_label(status: &ReviewStatus) -> &'static str {
+    // Exhaustive match makes every status visible during review.
+    match status {
+        ReviewStatus::Draft => "draft",
+        ReviewStatus::Approved => "approved",
+        ReviewStatus::Rejected { .. } => "rejected",
+    }
+}`,
+  },
+  badCode: {
+    language: "rust",
+    filename: "review_status.rs",
+    code: `pub fn status_label(status: &str) -> &'static str {
+    // String states let unknown values slip into the default branch.
+    match status {
+        "draft" => "draft",
+        "approved" => "approved",
+        _ => "unknown",
+    }
+}`,
+  },
+};
+
+## What to review
+
+The good version models status as an enum and matches every variant. Adding a new status creates a compiler-guided review point.
+
+The bad version uses string states and a broad default branch. A misspelled or newly added status becomes `"unknown"` without forcing a design decision.
+
+## Review notes
+
+Prefer enums for closed state sets. In review, broad `_` branches deserve extra scrutiny when each state should have a deliberate response.

@@ -1,0 +1,34 @@
+export const metadata = {
+  title: "Ownership and borrowing",
+  track: "rust",
+  order: 1,
+  summary: "Use borrowed inputs when a function only reads data, so callers keep ownership of their values.",
+  tags: ["ownership", "borrowing", "boundaries"],
+  takeaways: ["A Rust function should take ownership only when it stores, transforms, or consumes the value."],
+  goodCode: {
+    language: "rust",
+    filename: "src/review_title.rs",
+    code: `pub fn normalize_title(title: &str) -> String {
+    // Borrowing says this function reads the title without consuming it.
+    title.trim().replace(char::is_whitespace, " ")
+}`,
+  },
+  badCode: {
+    language: "rust",
+    filename: "review_title.rs",
+    code: `pub fn normalize_title(title: String) -> String {
+    // Taking String forces callers to give up ownership for a read-only task.
+    title.trim().replace(char::is_whitespace, " ")
+}`,
+  },
+};
+
+## What to review
+
+The good version accepts `&str`, which works with `String`, string slices, and literals without moving the caller's value. The function creates a new normalized value only for the returned title.
+
+The bad version takes `String` even though it only reads the input. Callers lose ownership and may clone strings just to keep using the title after the call.
+
+## Review notes
+
+In Rust reviews, start at the function signature. If the body only reads a value, prefer a borrowed parameter and let the return type show where new ownership begins.
