@@ -1,0 +1,53 @@
+export const metadata = {
+  title: "API resources and response shape",
+  track: "laravel",
+  order: 7,
+  summary: "Use API Resources to make public response fields explicit and keep model internals out of JSON responses.",
+  tags: ["api-resources", "responses", "serialization"],
+  takeaways: ["Responses should expose a deliberate shape instead of leaking every model field and relationship."],
+  goodCode: {
+    language: "php",
+    filename: "app/Http/Resources/ReviewResource.php",
+    code: `<?php
+
+namespace App\\Http\\Resources;
+
+use Illuminate\\Http\\Request;
+use Illuminate\\Http\\Resources\\Json\\JsonResource;
+
+final class ReviewResource extends JsonResource
+{
+    public function toArray(Request $request): array
+    {
+        // The resource owns the public JSON contract for a review.
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'rating' => $this->rating,
+            'author' => $this->author->only(['id', 'name']),
+        ];
+    }
+}`,
+  },
+  badCode: {
+    language: "php",
+    filename: "app/Http/Controllers/ReviewController.php",
+    code: `<?php
+
+public function index()
+{
+    // Returning models directly exposes fields whenever the model changes.
+    return Review::with('author')->latest()->get();
+}`,
+  },
+};
+
+## What to review
+
+The good version names the response fields in a Resource class. The controller can return a stable API contract while the model stays free to change internally.
+
+The bad version returns Eloquent models directly. New columns, hidden fields, or relationships can change the API without a focused review.
+
+## Review notes
+
+Review API endpoints from the client's contract backward. If a response is public or shared across teams, prefer an API Resource so field names and nested shapes are deliberate.

@@ -20,6 +20,7 @@ const expectedLessonCounts = {
   nodejs: 10,
   express: 10,
   nestjs: 10,
+  laravel: 10,
   sql: 10,
   python: 10,
   fastapi: 10,
@@ -330,6 +331,7 @@ function countReviewCommentLines(code: string, track: string): number {
       track === "nodejs" ||
       track === "express" ||
       track === "nestjs" ||
+      track === "laravel" ||
       track === "php" ||
       track === "java"
     ) {
@@ -358,7 +360,7 @@ test("seeded lessons match expected track counts", async () => {
   const lessonsByTrack = await getTrackLessonFiles();
   const allLessonFiles = [...lessonsByTrack.values()].flat();
 
-  assert.equal(allLessonFiles.length, 200);
+  assert.equal(allLessonFiles.length, 210);
   for (const track of tracks) {
     assert.equal(
       lessonsByTrack.get(track.slug)?.length,
@@ -873,6 +875,49 @@ test("NestJS comments have matching Thai translations", async () => {
       for (const [index, comment] of translatedComments.entries()) {
         assert.match(comment, /[\u0e00-\u0e7f]/, `nestjs/${slug}.${sampleName}[${index}]`);
         assert.ok(comment.trim().length >= 8, `nestjs/${slug}.${sampleName}[${index}]`);
+      }
+    }
+  }
+});
+
+test("Laravel samples include concise review comments", async () => {
+  const lessonsByTrack = await getTrackLessonFiles();
+  const laravelLessons = lessonsByTrack.get("laravel") ?? [];
+
+  assert.equal(laravelLessons.length, expectedLessonCounts.laravel);
+
+  for (const contentPath of laravelLessons) {
+    for (const sampleName of ["goodCode", "badCode"] as const) {
+      const code = await readMdxMetadataCodeSample(contentPath, sampleName);
+      const commentCount = countReviewCommentLines(code, "laravel");
+
+      assert.ok(commentCount >= 1, `${contentPath} ${sampleName}`);
+      assert.ok(commentCount <= 3, `${contentPath} ${sampleName}`);
+    }
+  }
+});
+
+test("Laravel comments have matching Thai translations", async () => {
+  const lessonsByTrack = await getTrackLessonFiles();
+  const laravelLessons = lessonsByTrack.get("laravel") ?? [];
+
+  assert.equal(laravelLessons.length, expectedLessonCounts.laravel);
+
+  for (const contentPath of laravelLessons) {
+    const slug = slugFromContentPath(contentPath);
+    const translation = lessonThaiTranslations[`laravel/${slug}`];
+
+    assert.ok(translation.codeComments, `laravel/${slug} missing codeComments`);
+
+    for (const sampleName of ["goodCode", "badCode"] as const) {
+      const code = await readMdxMetadataCodeSample(contentPath, sampleName);
+      const commentCount = countReviewCommentLines(code, "laravel");
+      const translatedComments = translation.codeComments[sampleName] ?? [];
+
+      assert.equal(translatedComments.length, commentCount, `laravel/${slug}`);
+      for (const [index, comment] of translatedComments.entries()) {
+        assert.match(comment, /[\u0e00-\u0e7f]/, `laravel/${slug}.${sampleName}[${index}]`);
+        assert.ok(comment.trim().length >= 8, `laravel/${slug}.${sampleName}[${index}]`);
       }
     }
   }

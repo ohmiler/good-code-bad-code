@@ -1,0 +1,55 @@
+export const metadata = {
+  title: "Form request validation",
+  track: "laravel",
+  order: 2,
+  summary: "Move request validation into Form Request classes so controllers receive named, reviewed input shapes.",
+  tags: ["requests", "validation", "input"],
+  takeaways: ["A controller action should work with validated input instead of reading unchecked request payloads directly."],
+  goodCode: {
+    language: "php",
+    filename: "app/Http/Requests/StoreReviewRequest.php",
+    code: `<?php
+
+namespace App\\Http\\Requests;
+
+use Illuminate\\Foundation\\Http\\FormRequest;
+
+final class StoreReviewRequest extends FormRequest
+{
+    public function rules(): array
+    {
+        // Validation rules name the accepted request shape before controller code runs.
+        return [
+            'title' => ['required', 'string', 'max:120'],
+            'body' => ['required', 'string', 'min:20'],
+            'rating' => ['required', 'integer', 'between:1,5'],
+        ];
+    }
+}`,
+  },
+  badCode: {
+    language: "php",
+    filename: "app/Http/Controllers/ReviewController.php",
+    code: `<?php
+
+public function store(Request $request)
+{
+    // Raw request data reaches persistence before one reviewed validation boundary.
+    if (! $request->title || strlen($request->body ?? '') < 20) {
+        abort(422);
+    }
+
+    return Review::create($request->all());
+}`,
+  },
+};
+
+## What to review
+
+The good version gives reviewers one class where the accepted fields and rules are visible before controller code runs.
+
+The bad version mixes manual checks with `$request->all()`. That makes mass assignment, missing fields, and inconsistent error responses harder to catch.
+
+## Review notes
+
+Form Requests are useful when the same endpoint needs clear validation, authorization, or named input. During review, look for controller actions that read raw request values repeatedly and ask whether the accepted shape should be declared once.

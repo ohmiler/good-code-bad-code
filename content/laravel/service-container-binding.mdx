@@ -1,0 +1,57 @@
+export const metadata = {
+  title: "Service container bindings",
+  track: "laravel",
+  order: 4,
+  summary: "Use Laravel's service container to declare infrastructure choices once and inject contracts into application services.",
+  tags: ["container", "providers", "dependency-injection"],
+  takeaways: ["Application code should depend on contracts or services that can be replaced in tests and configured at provider boundaries."],
+  goodCode: {
+    language: "php",
+    filename: "app/Providers/AppServiceProvider.php",
+    code: `<?php
+
+namespace App\\Providers;
+
+use App\\Billing\\PaymentGateway;
+use App\\Billing\\StripePaymentGateway;
+use Illuminate\\Support\\ServiceProvider;
+
+final class AppServiceProvider extends ServiceProvider
+{
+    public function register(): void
+    {
+        // The container owns the infrastructure choice for the payment contract.
+        $this->app->bind(PaymentGateway::class, StripePaymentGateway::class);
+    }
+}`,
+  },
+  badCode: {
+    language: "php",
+    filename: "app/Services/CheckoutService.php",
+    code: `<?php
+
+final class CheckoutService
+{
+    public function charge(Order $order): Receipt
+    {
+        // Creating infrastructure here couples the use case to env and SDK setup.
+        $client = new Stripe\\StripeClient(config('services.stripe.secret'));
+
+        return $client->charges->create([
+            'amount' => $order->total_cents,
+            'currency' => 'usd',
+        ]);
+    }
+}`,
+  },
+};
+
+## What to review
+
+The good version declares the concrete payment gateway at a provider boundary. Services can request the contract without knowing which SDK or credential setup is used.
+
+The bad version creates the SDK client inside the use case. That makes tests depend on configuration and pushes infrastructure choices into business code.
+
+## Review notes
+
+The Laravel service container is the review point for dependency ownership. When a class calls `new` for infrastructure, ask whether that collaborator should be injected and bound in a provider.

@@ -395,6 +395,36 @@ import PhpConfigurationAndSecrets, {
 import PhpSeparatingLogicFromTemplates, {
   metadata as phpSeparatingLogicFromTemplatesMetadata,
 } from "./php/separating-logic-from-templates.mdx";
+import LaravelRoutingControllerBoundaries, {
+  metadata as laravelRoutingControllerBoundariesMetadata,
+} from "./laravel/routing-controller-boundaries.mdx";
+import LaravelFormRequestValidation, {
+  metadata as laravelFormRequestValidationMetadata,
+} from "./laravel/form-request-validation.mdx";
+import LaravelMiddlewareAuthBoundaries, {
+  metadata as laravelMiddlewareAuthBoundariesMetadata,
+} from "./laravel/middleware-auth-boundaries.mdx";
+import LaravelServiceContainerBinding, {
+  metadata as laravelServiceContainerBindingMetadata,
+} from "./laravel/service-container-binding.mdx";
+import LaravelEloquentQueryScopes, {
+  metadata as laravelEloquentQueryScopesMetadata,
+} from "./laravel/eloquent-query-scopes.mdx";
+import LaravelMigrationsSchemaConstraints, {
+  metadata as laravelMigrationsSchemaConstraintsMetadata,
+} from "./laravel/migrations-schema-constraints.mdx";
+import LaravelApiResourcesResponseShape, {
+  metadata as laravelApiResourcesResponseShapeMetadata,
+} from "./laravel/api-resources-response-shape.mdx";
+import LaravelPoliciesAuthorization, {
+  metadata as laravelPoliciesAuthorizationMetadata,
+} from "./laravel/policies-authorization.mdx";
+import LaravelQueuesAfterCommit, {
+  metadata as laravelQueuesAfterCommitMetadata,
+} from "./laravel/queues-after-commit.mdx";
+import LaravelFeatureTestsDatabase, {
+  metadata as laravelFeatureTestsDatabaseMetadata,
+} from "./laravel/feature-tests-database.mdx";
 import JavaNullHandlingAndOptionalBoundaries, {
   metadata as javaNullHandlingAndOptionalBoundariesMetadata,
 } from "./java/null-handling-and-optional-boundaries.mdx";
@@ -1393,6 +1423,66 @@ const rawLessons: RawLesson[] = [
     source: "content/php/separating-logic-from-templates.mdx",
     metadata: phpSeparatingLogicFromTemplatesMetadata,
     Component: PhpSeparatingLogicFromTemplates,
+  },
+  {
+    slug: "routing-controller-boundaries",
+    source: "content/laravel/routing-controller-boundaries.mdx",
+    metadata: laravelRoutingControllerBoundariesMetadata,
+    Component: LaravelRoutingControllerBoundaries,
+  },
+  {
+    slug: "form-request-validation",
+    source: "content/laravel/form-request-validation.mdx",
+    metadata: laravelFormRequestValidationMetadata,
+    Component: LaravelFormRequestValidation,
+  },
+  {
+    slug: "middleware-auth-boundaries",
+    source: "content/laravel/middleware-auth-boundaries.mdx",
+    metadata: laravelMiddlewareAuthBoundariesMetadata,
+    Component: LaravelMiddlewareAuthBoundaries,
+  },
+  {
+    slug: "service-container-binding",
+    source: "content/laravel/service-container-binding.mdx",
+    metadata: laravelServiceContainerBindingMetadata,
+    Component: LaravelServiceContainerBinding,
+  },
+  {
+    slug: "eloquent-query-scopes",
+    source: "content/laravel/eloquent-query-scopes.mdx",
+    metadata: laravelEloquentQueryScopesMetadata,
+    Component: LaravelEloquentQueryScopes,
+  },
+  {
+    slug: "migrations-schema-constraints",
+    source: "content/laravel/migrations-schema-constraints.mdx",
+    metadata: laravelMigrationsSchemaConstraintsMetadata,
+    Component: LaravelMigrationsSchemaConstraints,
+  },
+  {
+    slug: "api-resources-response-shape",
+    source: "content/laravel/api-resources-response-shape.mdx",
+    metadata: laravelApiResourcesResponseShapeMetadata,
+    Component: LaravelApiResourcesResponseShape,
+  },
+  {
+    slug: "policies-authorization",
+    source: "content/laravel/policies-authorization.mdx",
+    metadata: laravelPoliciesAuthorizationMetadata,
+    Component: LaravelPoliciesAuthorization,
+  },
+  {
+    slug: "queues-after-commit",
+    source: "content/laravel/queues-after-commit.mdx",
+    metadata: laravelQueuesAfterCommitMetadata,
+    Component: LaravelQueuesAfterCommit,
+  },
+  {
+    slug: "feature-tests-database",
+    source: "content/laravel/feature-tests-database.mdx",
+    metadata: laravelFeatureTestsDatabaseMetadata,
+    Component: LaravelFeatureTestsDatabase,
   },
   {
     slug: "null-handling-and-optional-boundaries",

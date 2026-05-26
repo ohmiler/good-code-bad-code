@@ -78,6 +78,12 @@ export const tracks = [
       "Review strict types, request validation, output escaping, PDO queries, passwords, sessions, configuration, and template boundaries.",
   },
   {
+    slug: "laravel",
+    title: "Laravel",
+    description:
+      "Review routes, controllers, Form Requests, middleware, container bindings, Eloquent, migrations, resources, policies, queues, and feature tests.",
+  },
+  {
     slug: "java",
     title: "Java",
     description:

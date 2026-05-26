@@ -1,0 +1,60 @@
+export const metadata = {
+  title: "Feature tests with database assertions",
+  track: "laravel",
+  order: 10,
+  summary: "Write Laravel feature tests that hit the HTTP boundary and assert the database state that matters.",
+  tags: ["testing", "feature-tests", "database"],
+  takeaways: ["A useful feature test proves both the HTTP result and the persistent behavior users depend on."],
+  goodCode: {
+    language: "php",
+    filename: "tests/Feature/CreateReviewTest.php",
+    code: `<?php
+
+namespace Tests\\Feature;
+
+use App\\Models\\User;
+use Illuminate\\Foundation\\Testing\\RefreshDatabase;
+use Tests\\TestCase;
+
+final class CreateReviewTest extends TestCase
+{
+    use RefreshDatabase;
+
+    public function test_user_can_create_review(): void
+    {
+        // The test proves the HTTP endpoint writes the expected review row.
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->postJson('/reviews', ['title' => 'Practical Laravel', 'body' => 'Clear examples help reviewers.', 'rating' => 5])
+            ->assertCreated();
+
+        $this->assertDatabaseHas('reviews', ['user_id' => $user->id, 'title' => 'Practical Laravel']);
+    }
+}`,
+  },
+  badCode: {
+    language: "php",
+    filename: "tests/Feature/CreateReviewTest.php",
+    code: `<?php
+
+public function test_create_review(): void
+{
+    // A status-only test misses whether the review was saved correctly.
+    $this->post('/reviews', [
+        'title' => 'Practical Laravel',
+        'body' => 'Clear examples help reviewers.',
+    ])->assertOk();
+}`,
+  },
+};
+
+## What to review
+
+The good version exercises the HTTP endpoint, authenticates a user, and asserts the database row that should exist after the request.
+
+The bad version only checks a status code. It could pass while the endpoint silently drops fields or writes the wrong owner.
+
+## Review notes
+
+Feature tests should match the promise of the route. If the endpoint creates or updates data, include a database assertion for the fields that would break real users if they were wrong.

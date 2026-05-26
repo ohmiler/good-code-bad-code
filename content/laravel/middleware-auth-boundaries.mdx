@@ -1,0 +1,51 @@
+export const metadata = {
+  title: "Middleware and auth boundaries",
+  track: "laravel",
+  order: 3,
+  summary: "Attach authentication, rate limits, and request guards at the route boundary instead of hiding them inside actions.",
+  tags: ["middleware", "auth", "routes"],
+  takeaways: ["Access and request-wide rules should be visible where the route is declared so protected endpoints are easy to audit."],
+  goodCode: {
+    language: "php",
+    filename: "routes/api.php",
+    code: `<?php
+
+use App\\Http\\Controllers\\ReviewController;
+use Illuminate\\Support\\Facades\\Route;
+
+Route::middleware(['auth:sanctum', 'throttle:reviews'])
+    ->prefix('reviews')
+    ->group(function () {
+        // Middleware makes authentication and rate limits visible at the route boundary.
+        Route::post('/', [ReviewController::class, 'store']);
+        Route::delete('/{review}', [ReviewController::class, 'destroy']);
+    });`,
+  },
+  badCode: {
+    language: "php",
+    filename: "app/Http/Controllers/ReviewController.php",
+    code: `<?php
+
+public function destroy(Request $request, Review $review)
+{
+    // Auth parsing inside the action hides which routes are protected.
+    if ($request->bearerToken() !== config('services.admin_token')) {
+        abort(401);
+    }
+
+    $review->delete();
+
+    return response()->noContent();
+}`,
+  },
+};
+
+## What to review
+
+The good version makes the security story visible before reading controller code. Reviewers can see which routes require an authenticated user and which rate limiter applies.
+
+The bad version hides authentication details in the action body. That makes route audits and behavior reuse fragile.
+
+## Review notes
+
+Use middleware for request-wide concerns such as auth, session, throttling, localization, and tenant context. If every action repeats a guard clause, move that rule to a route or middleware boundary.

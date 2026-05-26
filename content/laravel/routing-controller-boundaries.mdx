@@ -1,0 +1,63 @@
+export const metadata = {
+  title: "Routing and controller boundaries",
+  track: "laravel",
+  order: 1,
+  summary: "Keep Laravel route files focused on URL wiring and let controllers hand request work to application services.",
+  tags: ["routing", "controllers", "boundaries"],
+  takeaways: ["Routes should describe how HTTP enters the app while controllers and services own the work behind that route."],
+  goodCode: {
+    language: "php",
+    filename: "app/Http/Controllers/ReviewController.php",
+    code: `<?php
+
+namespace App\\Http\\Controllers;
+
+use App\\Http\\Requests\\StoreReviewRequest;
+use App\\Services\\ReviewService;
+use Illuminate\\Http\\JsonResponse;
+
+final class ReviewController
+{
+    public function __construct(private ReviewService $reviews) {}
+
+    public function store(StoreReviewRequest $request): JsonResponse
+    {
+        // Controller maps HTTP input to an application service call.
+        $review = $this->reviews->create($request->user(), $request->validated());
+
+        return response()->json($review, 201);
+    }
+}`,
+  },
+  badCode: {
+    language: "php",
+    filename: "routes/web.php",
+    code: `<?php
+
+use Illuminate\\Http\\Request;
+use Illuminate\\Support\\Facades\\DB;
+use Illuminate\\Support\\Facades\\Route;
+
+Route::post('/reviews', function (Request $request) {
+    // The route closure owns validation, persistence, and response shape.
+    $data = $request->validate(['title' => 'required', 'body' => 'required']);
+
+    $id = DB::table('reviews')->insertGetId([
+        ...$data,
+        'user_id' => $request->user()->id,
+    ]);
+
+    return ['id' => $id, ...$data];
+});`,
+  },
+};
+
+## What to review
+
+The good version makes the route and controller boundary easy to scan: HTTP data is validated elsewhere, the user and input are passed to a service, and the response status is explicit.
+
+The bad version puts too much behavior in the route file. A reviewer has to audit validation, database writes, ownership, and response shape in the same closure.
+
+## Review notes
+
+In Laravel reviews, start in `routes/*` and ask whether each route only wires a URL to a controller action. When the route file starts describing the business workflow, the application boundary is too blurry.

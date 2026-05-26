@@ -132,6 +132,11 @@ export const trackThaiTranslations = {
     description:
       "ฝึกรีวิว PHP ที่รับ request จริง: ตรวจ $_GET/$_POST, escape ตอนแสดงผล, query ด้วย PDO, เก็บ password/session ให้ปลอดภัย และไม่ยัด logic ไว้ใน template.",
   },
+  laravel: {
+    title: "Laravel",
+    description:
+      "ฝึกรีวิว Laravel ว่า route, controller, Form Request, middleware, container, Eloquent, migration, resource, policy, queue และ feature test แบ่งหน้าที่ตามงานจริงหรือไม่.",
+  },
   java: {
     title: "Java",
     description:
@@ -2256,6 +2261,166 @@ export const lessonThaiTranslations = {
       goodCode: ["controller เตรียมข้อมูลก่อนให้ template แสดงผล."],
       badCode: ["request input, SQL และ output ถูกผสมอยู่ใน template เดียว."],
     },
+  },
+  "laravel/routing-controller-boundaries": {
+    codeComments: {
+      goodCode: ["controller แปลง input จาก HTTP เป็นการเรียก service ของแอป"],
+      badCode: ["route closure รวม validation, database write และ response shape ไว้ในจุดเดียว"],
+    },
+    title: "ขอบเขตของ route และ controller",
+    summary: "ให้ route ของ Laravel โฟกัสการผูก URL และให้ controller ส่งงาน request ต่อไปยัง service ของแอป.",
+    takeaways: ["route ควรบอกทางเข้า HTTP ส่วน controller และ service ควรรับงานที่เกิดหลัง route นั้น."],
+    whatToReview: [
+      "โค้ดที่ดีทำให้ controller รับ input ที่ validate แล้ว ส่ง user กับ data ไป service และกำหนด status ของ response ไว้ตรง action.",
+      "โค้ดที่ควรปรับใส่ validation, database write, ownership และ response shape ไว้ใน route closure เดียว ทำให้รีวิว flow ยาก.",
+    ],
+    reviewNotes: [
+      "เวลารีวิว Laravel ให้เริ่มจาก `routes/*` ถ้าไฟล์ route เริ่มเล่า workflow หลักของแอป ให้ย้ายงานนั้นไป controller หรือ service ที่ตั้งชื่อจาก use case.",
+    ],
+  },
+  "laravel/form-request-validation": {
+    codeComments: {
+      goodCode: ["validation rules บอก request shape ก่อน controller ทำงาน"],
+      badCode: ["raw request data ไปถึง persistence ก่อนมี boundary validation เดียว"],
+    },
+    title: "ตรวจ input ด้วย Form Request",
+    summary: "ย้าย validation เข้า Form Request เพื่อให้ controller รับ input shape ที่มีชื่อและตรวจแล้ว.",
+    takeaways: ["controller action ควรทำงานกับ input ที่ผ่าน validation ไม่ใช่อ่าน payload ดิบจาก request หลายจุด."],
+    whatToReview: [
+      "โค้ดที่ดีรวม field และ rule ที่ endpoint รับไว้ใน Form Request ทำให้ reviewer เห็น input contract ก่อนอ่าน controller.",
+      "โค้ดที่ควรปรับผสม manual check กับ `$request->all()` ทำให้ mass assignment และ error response หลุดรีวิวได้ง่าย.",
+    ],
+    reviewNotes: [
+      "ใช้ Form Request เมื่อ endpoint มี field หลายตัว มี authorization ระดับ request หรือมี rule ที่ต้องอ่านซ้ำ ถ้า controller อ่าน raw request หลายครั้ง ให้ตั้งชื่อ input boundary แทน.",
+    ],
+  },
+  "laravel/middleware-auth-boundaries": {
+    codeComments: {
+      goodCode: ["middleware ทำให้ auth และ rate limit เห็นได้ที่ route boundary"],
+      badCode: ["การอ่าน token ใน action ซ่อนว่า route ใดถูกป้องกัน"],
+    },
+    title: "ขอบเขต middleware และ auth",
+    summary: "วาง authentication, rate limit และ request guard ที่ route boundary แทนการซ่อนไว้ใน action.",
+    takeaways: ["กฎ access และกฎระดับ request ควรเห็นได้ตรง route declaration เพื่อ audit endpoint ได้เร็ว."],
+    whatToReview: [
+      "โค้ดที่ดีประกาศ `auth:sanctum` และ rate limiter รอบกลุ่ม route ทำให้ security story อ่านได้ก่อน controller.",
+      "โค้ดที่ควรปรับอ่าน bearer token ใน action ทำให้การ audit route ที่ป้องกันอยู่ต้องเปิดหลายไฟล์.",
+    ],
+    reviewNotes: [
+      "middleware เหมาะกับ auth, session, throttle, locale และ tenant context ถ้า action หลายตัวมี guard clause ซ้ำ ให้ย้ายกฎนั้นมา route หรือ middleware boundary.",
+    ],
+  },
+  "laravel/service-container-binding": {
+    codeComments: {
+      goodCode: ["container เป็นเจ้าของการเลือก infrastructure สำหรับ payment contract"],
+      badCode: ["การสร้าง infrastructure ใน use case ผูก code กับ env และ SDK setup"],
+    },
+    title: "binding ใน service container",
+    summary: "ใช้ service container ของ Laravel เพื่อประกาศ infrastructure choice ครั้งเดียว และ inject contract เข้า service ของแอป.",
+    takeaways: ["application code ควรพึ่ง contract หรือ service ที่ test แทนได้ และตั้งค่าได้ที่ provider boundary."],
+    whatToReview: [
+      "โค้ดที่ดี bind payment contract กับ implementation ใน provider ทำให้ service ไม่ต้องรู้จัก SDK หรือ credential setup.",
+      "โค้ดที่ควรปรับสร้าง SDK client ใน use case ทำให้ test ต้องพึ่ง config และผูก business code กับ infrastructure.",
+    ],
+    reviewNotes: [
+      "service container คือจุดรีวิว dependency ownership ใน Laravel ถ้า class เรียก `new` สำหรับ infrastructure ให้ถามว่า collaborator นั้นควรถูก inject จาก provider หรือไม่.",
+    ],
+  },
+  "laravel/eloquent-query-scopes": {
+    codeComments: {
+      goodCode: ["database เป็นเจ้าของ filter published review ที่ใช้ซ้ำ"],
+      badCode: ["การดึงทุก row ก่อนทำให้ filter และ lazy loading เกิดใน PHP"],
+    },
+    title: "query scope ของ Eloquent",
+    summary: "ย้าย Eloquent filter ที่ใช้ซ้ำเข้า query scope และเลี่ยง collection filtering ใน request path.",
+    takeaways: ["ให้ database filter และ eager load ข้อมูลก่อน request handler ได้ rows เท่าที่ต้องใช้."],
+    whatToReview: [
+      "โค้ดที่ดีวาง filter published ไว้ใกล้ model และยัง compose ต่อกับ eager loading, ordering หรือ pagination ได้.",
+      "โค้ดที่ควรปรับใช้ `all()->filter()` ใน request path ทำให้ดึง rows เกินจำเป็นและเสี่ยง N+1 จาก relation.",
+    ],
+    reviewNotes: [
+      "เวลารีวิว Laravel ให้หา `all()->filter()` ใน path ที่รับ request ถ้า database filter, sort หรือ limit ได้ ให้ query พูดเงื่อนไขนั้นก่อนข้อมูลกลายเป็น collection.",
+    ],
+  },
+  "laravel/migrations-schema-constraints": {
+    codeComments: {
+      goodCode: ["constraint ป้องกันข้อมูล review หลักแม้ write มาจาก job หรือ import"],
+      badCode: ["nullable strings ย้ายกฎข้อมูลหลักออกจาก database"],
+    },
+    title: "migration และ constraint ของ schema",
+    summary: "ใช้ migration บันทึกกฎของ database เช่น foreign key, required field, uniqueness และ timestamps.",
+    takeaways: ["กฎข้อมูลที่แอปพึ่งพาควรถูก database enforce ไม่ใช่หวังให้ controller หรือ job จำเองทุกครั้ง."],
+    whatToReview: [
+      "โค้ดที่ดีให้ database ปฏิเสธ review ที่ไม่มี user, slug ซ้ำต่อ user และ field สำคัญที่หายไป.",
+      "โค้ดที่ควรปรับปล่อยทุก field เป็น nullable และไม่มี relationship ทำให้ importer หรือ admin script ใส่ row ผิดได้.",
+    ],
+    reviewNotes: [
+      "migration เป็นส่วนหนึ่งของ behavior ถ้าแอปถือว่า relationship หรือ field หนึ่งต้องมี ให้ตรวจว่า schema enforce rule นั้น ไม่ใช่ฝากไว้ที่ write path ทุกตัว.",
+    ],
+  },
+  "laravel/api-resources-response-shape": {
+    codeComments: {
+      goodCode: ["resource เป็นเจ้าของ JSON contract สาธารณะของ review"],
+      badCode: ["การคืน model ตรงทำให้ field เปลี่ยนตาม model"],
+    },
+    title: "API Resource และรูป response",
+    summary: "ใช้ API Resource เพื่อประกาศ field ที่ส่งออก และกัน model internals ออกจาก JSON response.",
+    takeaways: ["response ควรมีรูปที่ตั้งใจออกแบบ ไม่ใช่ปล่อยทุก field และ relation ของ model ออกไป."],
+    whatToReview: [
+      "โค้ดที่ดีตั้งชื่อ field ของ response ใน Resource ทำให้ controller คืน API contract ที่คงที่.",
+      "โค้ดที่ควรปรับคืน Eloquent model ตรง ทำให้ column ใหม่หรือ relation ใหม่เปลี่ยน API ได้โดยไม่มี review ที่โฟกัส response.",
+    ],
+    reviewNotes: [
+      "รีวิว API endpoint จาก contract ของ client ย้อนกลับมา ถ้า response ถูกใช้ภายนอกทีม ให้ใช้ API Resource เพื่อให้ field name และ nested shape ถูกประกาศไว้.",
+    ],
+  },
+  "laravel/policies-authorization": {
+    codeComments: {
+      goodCode: ["policy ที่มีชื่อเป็นผู้ตัดสินว่า user แก้ review นี้ได้หรือไม่"],
+      badCode: ["ownership check ใน action drift ได้เมื่อ action อื่นต้องใช้ rule เดียวกัน"],
+    },
+    title: "policy และ authorization",
+    summary: "ใช้ policy หรือ gate สำหรับ model-level authorization เพื่อให้ access rule มีชื่อ ใช้ซ้ำได้ และ test ได้.",
+    takeaways: ["authorization ควรอ่านเป็น rule ที่มีชื่อใกล้ controller boundary ไม่ใช่กระจายเป็น ownership check หลายจุด."],
+    whatToReview: [
+      "โค้ดที่ดีเรียก policy ก่อน mutation ทำให้ rule การแก้ review อยู่ในจุดที่ test และ reuse ได้.",
+      "โค้ดที่ควรปรับเทียบ `user_id` ใน action และใช้ `$request->all()` ทำให้ access rule กับ input write ปนกัน.",
+    ],
+    reviewNotes: [
+      "เวลารีวิว action ที่แตะ model ให้หา policy หรือ gate call ช่วงต้น action ถ้ามีการเทียบ `user_id` ซ้ำหลายที่ ให้ตั้งชื่อ rule นั้นใน policy.",
+    ],
+  },
+  "laravel/queues-after-commit": {
+    codeComments: {
+      goodCode: ["job รันหลัง update ของ review ถูก commit แล้ว"],
+      badCode: ["job อาจอ่าน review ก่อน transaction นี้ commit"],
+    },
+    title: "queue และ database commit",
+    summary: "dispatch งาน queue หลัง database commit เมื่อ job ต้องอ่าน row ที่ถูกสร้างหรือแก้ใน transaction เดียวกัน.",
+    takeaways: ["queued job ไม่ควรเห็นข้อมูลที่ transaction ปัจจุบันยังไม่ได้ commit."],
+    whatToReview: [
+      "โค้ดที่ดีใช้ `afterCommit()` เพื่อให้ worker อ่าน review ที่ publish แล้วจาก database.",
+      "โค้ดที่ควรปรับ dispatch job ใน transaction โดยไม่บอก commit boundary ทำให้ worker เร็วเกินไปและอ่านข้อมูลเก่าได้.",
+    ],
+    reviewNotes: [
+      "รีวิว queue ต้องตรวจ transaction boundary ถ้า job พึ่ง row ที่สร้างหรือแก้ใน transaction เดียวกัน ให้ประกาศ commit boundary ก่อน dispatch.",
+    ],
+  },
+  "laravel/feature-tests-database": {
+    codeComments: {
+      goodCode: ["test พิสูจน์ว่า HTTP endpoint เขียน review row ที่คาดไว้"],
+      badCode: ["test ที่ดูแค่ status พลาดว่า review ถูก save ถูก field หรือไม่"],
+    },
+    title: "feature test พร้อม database assertion",
+    summary: "เขียน feature test ของ Laravel ที่ยิงผ่าน HTTP boundary และ assert database state ที่ผู้ใช้พึ่งพา.",
+    takeaways: ["feature test ที่มีประโยชน์ควรพิสูจน์ทั้ง HTTP result และ persistent behavior ที่ route สัญญาไว้."],
+    whatToReview: [
+      "โค้ดที่ดี authenticate user, ยิง endpoint และ assert row ใน database พร้อม field สำคัญ.",
+      "โค้ดที่ควรปรับดูแค่ status code ทำให้ test ผ่านได้แม้ endpoint ทิ้ง field หรือเขียน owner ผิด.",
+    ],
+    reviewNotes: [
+      "feature test ควรตรงกับ promise ของ route ถ้า endpoint สร้างหรือแก้ข้อมูล ให้ assert database field ที่ผู้ใช้จะเสียงานหากค่าผิด.",
+    ],
   },
   "java/null-handling-and-optional-boundaries": {
     title: "บอกกรณีหาไม่เจอด้วย Optional หรือ exception",

@@ -1,0 +1,51 @@
+export const metadata = {
+  title: "Eloquent query scopes",
+  track: "laravel",
+  order: 5,
+  summary: "Put repeated Eloquent filters into query scopes and keep collection filtering out of request paths.",
+  tags: ["eloquent", "queries", "scopes"],
+  takeaways: ["Use database queries for filtering and eager loading so request handlers do not pull more rows than they need."],
+  goodCode: {
+    language: "php",
+    filename: "app/Models/Review.php",
+    code: `<?php
+
+namespace App\\Models;
+
+use Illuminate\\Database\\Eloquent\\Builder;
+use Illuminate\\Database\\Eloquent\\Model;
+
+final class Review extends Model
+{
+    public function scopePublished(Builder $query): Builder
+    {
+        // The database owns the repeated published-review filter.
+        return $query->where('status', 'published')
+            ->whereNotNull('published_at');
+    }
+}`,
+  },
+  badCode: {
+    language: "php",
+    filename: "app/Http/Controllers/ReviewFeedController.php",
+    code: `<?php
+
+public function __invoke()
+{
+    // Pulling every row first makes filtering and lazy loading happen in PHP.
+    return Review::all()
+        ->filter(fn (Review $review) => $review->status === 'published')
+        ->map(fn (Review $review) => [$review->title, $review->author->name]);
+}`,
+  },
+};
+
+## What to review
+
+The good version keeps a repeated filter close to the model and lets callers compose it with eager loading, ordering, or pagination.
+
+The bad version fetches all rows and filters in memory. It also risks hidden N+1 queries through lazy-loaded relations.
+
+## Review notes
+
+In Laravel reviews, look for `all()->filter()` in request paths. If the database can filter, sort, or limit the rows, the Eloquent query should say so before data becomes a collection.

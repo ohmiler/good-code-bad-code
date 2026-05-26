@@ -14,6 +14,7 @@ export const trackIconKeys = {
   sql: "database",
   python: "terminal",
   php: "file-code",
+  laravel: "leaf",
   java: "coffee",
   git: "git-branch",
   fastapi: "zap",

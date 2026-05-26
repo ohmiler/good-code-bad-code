@@ -1,0 +1,51 @@
+export const metadata = {
+  title: "Queues and database commits",
+  track: "laravel",
+  order: 9,
+  summary: "Dispatch queued work after database commits when jobs depend on rows created inside a transaction.",
+  tags: ["queues", "transactions", "jobs"],
+  takeaways: ["A queued job should not observe data that the current database transaction has not committed yet."],
+  goodCode: {
+    language: "php",
+    filename: "app/Services/ReviewPublishingService.php",
+    code: `<?php
+
+use App\\Jobs\\SendReviewPublishedMail;
+use Illuminate\\Support\\Facades\\DB;
+
+final class ReviewPublishingService
+{
+    public function publish(Review $review): void
+    {
+        DB::transaction(function () use ($review) {
+            // The job runs after the review update is committed.
+            $review->update(['status' => 'published']);
+
+            SendReviewPublishedMail::dispatch($review)->afterCommit();
+        });
+    }
+}`,
+  },
+  badCode: {
+    language: "php",
+    filename: "app/Services/ReviewPublishingService.php",
+    code: `<?php
+
+DB::transaction(function () use ($review) {
+    // The job may read the review before this transaction commits.
+    $review->update(['status' => 'published']);
+
+    SendReviewPublishedMail::dispatch($review);
+});`,
+  },
+};
+
+## What to review
+
+The good version uses `afterCommit()` so queued mail reads committed data.
+
+The bad version dispatches inside the transaction without saying when the worker may run. A fast worker can read stale data or fail to find the row.
+
+## Review notes
+
+Queue reviews need a transaction check. If a job depends on rows created or updated in the same transaction, make the commit boundary explicit before dispatching work.

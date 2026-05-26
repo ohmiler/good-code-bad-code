@@ -1,0 +1,58 @@
+export const metadata = {
+  title: "Policies and authorization",
+  track: "laravel",
+  order: 8,
+  summary: "Use policies or gates for model-level authorization so access rules are named, reusable, and testable.",
+  tags: ["authorization", "policies", "security"],
+  takeaways: ["Authorization should read as a named rule at the controller boundary instead of scattered ownership checks."],
+  goodCode: {
+    language: "php",
+    filename: "app/Http/Controllers/ReviewController.php",
+    code: `<?php
+
+namespace App\\Http\\Controllers;
+
+use App\\Models\\Review;
+use Illuminate\\Support\\Facades\\Gate;
+
+final class ReviewController
+{
+    public function update(UpdateReviewRequest $request, Review $review)
+    {
+        // A named policy decides whether this user may update the review.
+        Gate::authorize('update', $review);
+
+        $review->update($request->validated());
+
+        return $review->fresh();
+    }
+}`,
+  },
+  badCode: {
+    language: "php",
+    filename: "app/Http/Controllers/ReviewController.php",
+    code: `<?php
+
+public function update(Request $request, Review $review)
+{
+    // Inline ownership checks drift when other actions need the same rule.
+    if ($request->user()->id !== $review->user_id && ! $request->user()->is_admin) {
+        abort(403);
+    }
+
+    $review->update($request->all());
+
+    return $review;
+}`,
+  },
+};
+
+## What to review
+
+The good version makes authorization visible as a named policy decision before mutation. That rule can be reused by controllers, jobs, or tests.
+
+The bad version repeats an ownership check inline and mixes authorization with unchecked input writes.
+
+## Review notes
+
+When reviewing protected model actions, search for policy or gate calls near the top of the action. Repeated `user_id` comparisons are a sign that the access rule needs a name.
