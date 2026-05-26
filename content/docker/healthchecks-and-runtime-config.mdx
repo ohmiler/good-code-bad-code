@@ -45,7 +45,7 @@ CMD ["node", "server.js"]`,
 
 The good version declares runtime defaults, exposes the expected port, and provides a healthcheck tied to the app's health endpoint.
 
-The bad version can be running while the application is unable to serve requests. Operators get less signal when something is wrong.
+The bad version can be running while the application is unable to serve requests. Operators get less signal when the HTTP server or a required dependency fails.
 
 ## Review notes
 
