@@ -108,9 +108,13 @@ test("qa:content script is registered and produces a dashboard", async () => {
 
   assert.match(stdout, /Content QA/);
   assert.match(stdout, /Track\s+Lessons\s+Thai\s+Comments\s+Flags/);
-  assert.match(stdout, /Warning types/);
-  assert.match(stdout, /\[warning:[a-z-]+\]/);
+  assert.match(stdout, /Hard errors: \d+ \| Polish warnings: \d+/);
   assert.match(stdout, /html\s+10\/10/);
+
+  if (!/Polish warnings: 0/.test(stdout)) {
+    assert.match(stdout, /Warning types/);
+    assert.match(stdout, /\[warning:[a-z-]+\]/);
+  }
 });
 
 test("content guidelines define real-work language expectations", async () => {

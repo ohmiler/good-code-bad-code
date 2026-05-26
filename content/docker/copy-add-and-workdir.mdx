@@ -43,4 +43,4 @@ The bad version relies on `cd` inside individual layers, fetches remote content 
 
 ## Review notes
 
-`COPY` is usually the clearer default. Reach for `ADD` only when its special behavior is intentional and reviewed.
+`COPY` should be the default for local files because it only copies bytes from the build context. Reach for `ADD` only when remote fetch or archive extraction is intentional and reviewed.

@@ -38,4 +38,4 @@ The bad version spreads a simple collection transformation across nested conditi
 
 ## Review notes
 
-Comprehensions are best when the reader can say "filter these items and map this value." If there are multiple side effects or branches, a named loop may be clearer.
+Use a comprehension when the reader can say "filter these items and map this value." If the code needs side effects or multiple branches, use a named loop so the branching is visible.

@@ -36,4 +36,4 @@ The bad version uses offset pagination with a non-unique order. New rows can shi
 
 ## Review notes
 
-Offset pagination is sometimes acceptable for small admin screens, but review feed-like queries harder. Stable ordering and a cursor usually age better.
+Offset pagination can fit low-change admin screens, but review feed-like queries for page drift. Stable ordering and a cursor prevent duplicates or missing items as rows arrive.
