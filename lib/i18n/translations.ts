@@ -145,7 +145,7 @@ export const trackThaiTranslations = {
   go: {
     title: "Go",
     description:
-      "ฝึกรีวิว Go ว่า package ใช้งานจากข้างนอกอ่านดีไหม error ยังบอกสาเหตุเดิมไหม context ถูกส่งต่อ และ goroutine/resource มีทางหยุดหรือปิดชัดเจน.",
+      "ฝึกรีวิว Go ว่า package ใช้งานจากข้างนอกอ่านดีไหม error ยังบอกสาเหตุเดิมไหม context ถูกส่งต่อ และ goroutine/resource มีทางหยุดหรือปิดในโค้ด.",
   },
   docker: {
     title: "Docker",
@@ -214,14 +214,14 @@ export const lessonThaiTranslations = {
       badCode: ["click handler และข้อความกว้าง ๆ ทำให้ link ใช้งานยากขึ้น"],
     },
     title: "ลิงก์และการนำทาง",
-    summary: "ถ้าพาผู้ใช้ไปที่อื่น ให้ใช้ลิงก์จริงพร้อมข้อความที่บอกปลายทางชัดเจน.",
+    summary: "ถ้าพาผู้ใช้ไปที่อื่น ให้ใช้ลิงก์จริงพร้อมข้อความที่บอกปลายทางของ URL.",
     takeaways: ["ถ้าการกระทำนั้นพาไปที่อื่น ให้เริ่มจาก anchor ที่มี href และข้อความลิงก์ที่เข้าใจได้."],
     whatToReview: [
       "โค้ดที่ดีใช้ anchor สำหรับการนำทาง และตั้งชื่อปลายทางให้รู้ว่าคลิกแล้วไปไหน.",
       "โค้ดที่ควรปรับซ่อนการนำทางไว้หลัง JavaScript หรือใช้ข้อความกำกวม เช่น click here ทำให้ฟีเจอร์พื้นฐานของ browser ใช้ได้แย่ลง.",
     ],
     reviewNotes: [
-      "ตอนรีวิวให้ถามว่าลิงก์ยังเปิดแท็บใหม่ คัดลอก URL โฟกัสด้วย keyboard และอ่านชื่อแล้วเข้าใจปลายทางได้ไหม ถ้าไม่ได้ควรกลับไปใช้ anchor ที่ชัดเจน.",
+      "ตอนรีวิวให้ถามว่าลิงก์ยังเปิดแท็บใหม่ คัดลอก URL โฟกัสด้วย keyboard และอ่านชื่อแล้วเข้าใจปลายทางได้ไหม ถ้าไม่ได้ควรกลับไปใช้ anchor ที่บอก URL ปลายทางได้.",
     ],
   },
   "html/images-alt-text": {
@@ -246,7 +246,7 @@ export const lessonThaiTranslations = {
       badCode: ["placeholder ไม่ใช่ชื่อ field ที่คงอยู่ตลอดเวลา"],
     },
     title: "label ของฟอร์มที่ใช้งานได้จริง",
-    summary: "ผูก label กับ input ให้ชัดเจน แทนการพึ่ง placeholder เพียงอย่างเดียว.",
+    summary: "ผูก label กับ input ด้วย id ที่ตรงกัน แทนการพึ่ง placeholder เพียงอย่างเดียว.",
     takeaways: ["input สำคัญควรมี label จริง ไม่ใช่ hint ที่หายไปตอนพิมพ์."],
     whatToReview: [
       "โค้ดที่ดีบอกชื่อ field ผ่าน label ที่เชื่อมกับ input โดยตรง.",
@@ -279,13 +279,13 @@ export const lessonThaiTranslations = {
     },
     title: "ใช้ element ให้ตรงกับการกระทำ",
     summary: "ถ้าเป็นการกดหรือสั่งงาน ให้ใช้ button หรือ native element ที่มีพฤติกรรมมาให้ แทน div ที่ใส่ onClick เอง.",
-    takeaways: ["ถ้าเป็น action ให้เริ่มจาก button หรือ native element ที่เหมาะสมก่อน."],
+    takeaways: ["ถ้าเป็น action ให้เริ่มจาก button หรือ native element ที่มี keyboard/focus behavior จาก browser ก่อน."],
     whatToReview: [
       "โค้ดที่ดีใช้ button ทำให้ keyboard, focus และ role ทำงานตาม browser ให้ทันที.",
       "โค้ดที่ควรปรับทำ div ให้เหมือนปุ่ม ซึ่งมักต้องเขียนพฤติกรรมสำคัญเพิ่มเองและพลาดง่าย.",
     ],
     reviewNotes: [
-      "เวลาเห็น div ที่คลิกได้ ให้ถามว่าทำไมไม่ใช้ button. ถ้าไม่มีเหตุผลชัดเจน native element มักปลอดภัยกว่า เพราะ browser ให้ keyboard, focus และ role มาพร้อมแล้ว.",
+      "เวลาเห็น div ที่คลิกได้ ให้ถามว่าทำไมไม่ใช้ button. ถ้าไม่มีเหตุผลด้าน semantics หรือ browser behavior native element มักปลอดภัยกว่า เพราะ browser ให้ keyboard, focus และ role มาพร้อมแล้ว.",
     ],
   },
   "html/tables-tabular-data": {
@@ -329,7 +329,7 @@ export const lessonThaiTranslations = {
     summary: "ให้ตัวครอบเป็นคนจัด layout และระยะห่างด้วย gap แทนการกระจาย margin ไปไว้ตาม child หลายตัว.",
     takeaways: ["ให้ container คุมระยะห่างด้วย gap มากกว่าดันระยะจาก child ทีละตัว."],
     whatToReview: [
-      "โค้ดที่ดีให้ flex container เป็นเจ้าของ layout และใช้ gap เพื่อคุมระยะห่างอย่างชัดเจน.",
+      "โค้ดที่ดีให้ flex container เป็นเจ้าของ layout และใช้ gap เพื่อคุมระยะห่างระหว่าง item.",
       "โค้ดที่ควรปรับพึ่ง selector กว้าง ๆ กับ margin ของ child ทำให้เพิ่ม item หรือเปลี่ยนโครงสร้างแล้ว layout เพี้ยนง่าย.",
     ],
     reviewNotes: [
@@ -802,10 +802,10 @@ export const lessonThaiTranslations = {
   },
   "react/props-component-boundaries": {
     codeComments: {
-      goodCode: ["props ที่ชัดเจนบอกว่า component ต้องใช้ข้อมูลอะไรบ้าง"],
+      goodCode: ["props บอกว่า component ต้องใช้ข้อมูลอะไรบ้าง"],
       badCode: ["component ไปหยิบข้อมูลจาก store/context ทั้งก้อน ทำให้ผูกกับหลายเรื่องเกินไป"],
     },
-    title: "ส่งข้อมูลผ่าน props ให้ชัด",
+    title: "ส่งข้อมูลที่ component ใช้ผ่าน props",
     summary: "ให้ component รับข้อมูลที่ต้องใช้ผ่าน props ให้เห็นตรงหน้า แทนการไปหยิบข้อมูลจาก store หรือ context ทั้งก้อนเอง.",
     takeaways: ["component ที่ดีควรเห็นข้อมูลที่ต้องใช้จาก props โดยไม่ต้องเดาว่าข้างในไปหยิบข้อมูลจากที่อื่น."],
     whatToReview: [
@@ -813,7 +813,7 @@ export const lessonThaiTranslations = {
       "โค้ดที่ควรปรับให้ component ไปอ่าน state นอกขอบเขตของตัวเอง เช่น store/context ทั้งก้อน ทำให้นำไปใช้ซ้ำและไล่บั๊กยาก.",
     ],
     reviewNotes: [
-      "ตอนรีวิว React ให้ดูว่า component นี้รู้มากเกินหน้าที่หรือไม่. ถ้าข้อมูลที่ใช้ถูกส่งผ่าน props ชัดเจน component จะย้ายที่ ใช้ซ้ำ และทดสอบได้ง่ายขึ้น เพราะไม่ต้องพึ่งข้อมูลที่ซ่อนอยู่ใน store/context.",
+      "ตอนรีวิว React ให้ดูว่า component นี้รู้มากเกินหน้าที่หรือไม่. ถ้าข้อมูลที่ใช้ถูกส่งผ่าน props ที่บอก field ที่ component ใช้ component นี้จะย้ายที่ ใช้ซ้ำ และทดสอบได้ง่ายขึ้น เพราะไม่ต้องพึ่งข้อมูลที่ซ่อนอยู่ใน store/context.",
     ],
   },
   "react/stable-keys-lists": {
@@ -893,7 +893,7 @@ export const lessonThaiTranslations = {
       "โค้ดที่ควรปรับใส่ `[]` ทั้งที่ใช้ค่าจาก props ทำให้ข้อมูลที่แสดงอาจค้างอยู่กับค่าแรก.",
     ],
     reviewNotes: [
-      "ตอนรีวิว effect ให้ดูทั้ง dependency array และ cleanup. ถ้า effect ใช้ค่าใดจาก props, state หรือ function ใน component ค่านั้นควรอยู่ใน dependency หรือมีเหตุผลที่ชัดเจนว่าทำไมไม่อยู่.",
+      "ตอนรีวิว effect ให้ดูทั้ง dependency array และ cleanup. ถ้า effect ใช้ค่าใดจาก props, state หรือ function ใน component ค่านั้นควรอยู่ใน dependency หรือมีเหตุผลเรื่อง stable reference ว่าทำไมไม่อยู่.",
     ],
   },
   "react/async-effect-cleanup": {
@@ -921,7 +921,7 @@ export const lessonThaiTranslations = {
     summary: "ใช้ context กับข้อมูลที่หลายส่วนต้องรู้จริง ๆ เช่น viewer/theme อย่าใช้แทน props ทุกอย่างจน component ผูกกับ state ทั้งแอป.",
     takeaways: ["context ที่แคบช่วยให้ component ไม่ต้องรับรู้หรือวาดใหม่เพราะ state ที่ไม่เกี่ยวกับหน้าที่ของตัวเอง."],
     whatToReview: [
-      "โค้ดที่ดีใช้ context เฉพาะ viewer และส่งข้อมูล review ผ่าน props ที่ชัดเจน.",
+      "โค้ดที่ดีใช้ context เฉพาะ viewer และส่งข้อมูล review ผ่าน props ที่บอก field ที่ใช้.",
       "โค้ดที่ควรปรับใส่ state ทั้งแอปใน context เดียว ทำให้ component รู้เยอะและอาจวาดใหม่ (rerender) เมื่อข้อมูลที่ไม่เกี่ยวเปลี่ยน.",
     ],
     reviewNotes: [
@@ -935,9 +935,9 @@ export const lessonThaiTranslations = {
     },
     title: "ใช้ memoization เมื่อช่วยลดงานจริง",
     summary: "ใช้ `useMemo` หรือ `useCallback` เมื่อมีงานคำนวณหนัก หรือต้องส่ง reference เดิมให้ child/memoized component จริง ๆ และต้องใส่ dependencies ให้ครบ.",
-    takeaways: ["memoization ควรมีเหตุผลชัดว่าเลี่ยงงานแพงอะไร และต้องบอกค่าที่พึ่งพา (dependencies) ให้ครบ."],
+    takeaways: ["memoization ควรบอกว่างานแพงคืออะไร และต้องบอกค่าที่พึ่งพา (dependencies) ให้ครบ."],
     whatToReview: [
-      "โค้ดที่ดีใช้ `useMemo` กับการ filter list ที่ขึ้นกับ reviews และ search อย่างชัดเจน.",
+      "โค้ดที่ดีใช้ `useMemo` กับการ filter list ที่ขึ้นกับ reviews และ search ทั้งสอง input.",
       "โค้ดที่ควรปรับใส่ `[]` จนข้อมูลที่แสดงเก่า และ memoize ข้อความง่าย ๆ ที่คำนวณใหม่ได้ถูกกว่า.",
     ],
     reviewNotes: [
@@ -1066,7 +1066,7 @@ export const lessonThaiTranslations = {
     takeaways: ["route ที่ดีควรมี UI ระหว่างโหลดและจุดจัดการ error ในตำแหน่งที่ผู้ใช้เจอจริง."],
     whatToReview: [
       "โค้ดที่ดีใช้ `error.tsx` เป็น Client Component สำหรับแสดงหน้าหรือข้อความสำรอง และมีปุ่ม retry เมื่อ route ล้มเหลว.",
-      "โค้ดที่ควรปรับ catch error ทุกอย่างใน page แล้ว return ข้อความเอง ทำให้ Next.js จัดการ error ต่อไม่ได้และผู้ใช้ไม่มีทาง retry ที่ชัดเจน.",
+      "โค้ดที่ควรปรับ catch error ทุกอย่างใน page แล้ว return ข้อความเอง ทำให้ Next.js จัดการ error ต่อไม่ได้และผู้ใช้ไม่มีปุ่ม retry.",
     ],
     reviewNotes: [
       "ตอนรีวิว route ที่ fetch ข้อมูลหรือมีโอกาสล้มเหลว ให้มองหา loading state และ `error.tsx`. การ catch กว้าง ๆ ใน page มักซ่อน bug ทำให้ log แย่ลง และทำให้ประสบการณ์ตอน error ไม่ชัด.",
@@ -1111,7 +1111,7 @@ export const lessonThaiTranslations = {
     },
     title: "แยก route.ts สำหรับ API ออกจาก page.tsx สำหรับหน้าเว็บ",
     summary: "ใช้ `route.ts` เป็นไฟล์ API ของ Next.js แยกจาก `page.tsx` ที่ใช้แสดงหน้า และคืน response/status ให้ชัดว่าเกิดอะไรขึ้น.",
-    takeaways: ["Route Handler ควร validate request และคืน `Response` ที่สื่อ status/error ชัดเจน."],
+    takeaways: ["Route Handler ควร validate request และคืน `Response` ที่ client ใช้แยก status/error ได้."],
     whatToReview: [
       "โค้ดที่ดีวาง API ไว้ใน `app/api/reviews/[id]/route.ts` และตอบ `404` เมื่อไม่พบ review.",
       "โค้ดที่ควรปรับพยายามผสม GET handler กับ page ในโฟลเดอร์ route เดียวกัน ทำให้ขอบเขตของหน้าเว็บกับ API สับสน.",
@@ -1298,11 +1298,11 @@ export const lessonThaiTranslations = {
   },
   "express/router-boundaries": {
     codeComments: {
-      goodCode: ["router นี้ดูแล endpoint ของ reviews ชุดเดียว และรับ service ที่ต้องใช้ชัดเจน"],
+      goodCode: ["router นี้ดูแล endpoint ของ reviews ชุดเดียว และรับ service ที่ต้องใช้"],
       badCode: ["reviews, users และ billing ถูกกองไว้ใน app.ts พร้อม global service ร่วมกัน"],
     },
     title: "แยก route ตามกลุ่มงานของระบบ",
-    summary: "รวม route ที่ดูแลงานกลุ่มเดียวกัน เช่น reviews, users หรือ billing ไว้ใน router ของตัวเอง และส่ง service ที่ต้องใช้เข้ามาอย่างชัดเจน.",
+    summary: "รวม route ที่ดูแลงานกลุ่มเดียวกัน เช่น reviews, users หรือ billing ไว้ใน router ของตัวเอง และส่ง service ที่ต้องใช้ผ่าน factory.",
     takeaways: ["router ควรดูแลกลุ่มงานเดียว เช่น reviews และไม่ควรไปหยิบ global service เอง."],
     whatToReview: [
       "โค้ดที่ดีแยก route ของ reviews ไว้ใน router เฉพาะ และรับ service ของ reviews ผ่าน factory.",
@@ -1405,7 +1405,7 @@ export const lessonThaiTranslations = {
       "โค้ดที่ควรปรับอ่าน authorization header ใน route แล้วทำการตรวจตัวตน เช็กสิทธิ์ และงานหลักใน handler เดียว.",
     ],
     reviewNotes: [
-      "การตรวจตัวตนควรมีที่อยู่ชัดเจนและตอบกรณีล้มเหลวแบบคงที่ ถ้าแต่ละ route เขียน auth เอง พฤติกรรม auth จะเพี้ยนจากกันง่ายและเพิ่มความเสี่ยงด้าน security.",
+      "การตรวจตัวตนควรอยู่ใน middleware กลางและตอบกรณีล้มเหลวแบบคงที่ ถ้าแต่ละ route เขียน auth เอง พฤติกรรม auth จะเพี้ยนจากกันง่ายและเพิ่มความเสี่ยงด้าน security.",
     ],
   },
   "express/rate-limiting-trust-proxy": {
@@ -1417,7 +1417,7 @@ export const lessonThaiTranslations = {
     summary: "ถ้าจำกัดจำนวน request ด้วย IP ต้องบอก Express ว่าควรเชื่อ proxy กี่ชั้น (`trust proxy`) ตามระบบที่ deploy จริง ไม่อย่างนั้น IP ที่เห็นอาจไม่น่าเชื่อถือ.",
     takeaways: ["rate limiting ควรอิง IP/client ที่เชื่อถือได้ โดยเฉพาะแอปที่อยู่หลัง proxy."],
     whatToReview: [
-      "โค้ดที่ดีตั้ง `trust proxy` เป็นจำนวนชั้น proxy ที่ชัดเจน และกำหนด rate limit ที่มีผลจริง.",
+      "โค้ดที่ดีตั้ง `trust proxy` เป็นจำนวนชั้น proxy ตาม deployment และกำหนด rate limit ที่มีผลจริง.",
       "โค้ดที่ควรปรับ trust proxy ทุกชั้น และตั้ง limit สูงมากจน rate limit นี้แทบไม่ช่วยป้องกันอะไร.",
     ],
     reviewNotes: [
@@ -1449,7 +1449,7 @@ export const lessonThaiTranslations = {
     summary: "ใช้ key และ constraint ให้ database ช่วยกันข้อมูลซ้ำ ข้อมูลกำพร้า และสถานะที่ผิด เช่น primary key, foreign key, UNIQUE, NOT NULL และ CHECK.",
     takeaways: ["กฎข้อมูลที่แอปพึ่งพาควรมี constraint ใน database ช่วยคุม ไม่ใช่หวังให้โค้ดทุกจุดจำได้."],
     whatToReview: [
-      "โค้ดที่ดีบอก id ของแถว, email ที่ห้ามซ้ำ, ความสัมพันธ์ระหว่าง user กับ review, field ที่ต้องมี และ status ที่อนุญาตไว้ใน database ชัดเจน.",
+      "โค้ดที่ดีบอก id ของแถว, email ที่ห้ามซ้ำ, ความสัมพันธ์ระหว่าง user กับ review, field ที่ต้องมี และ status ที่อนุญาตไว้ใน database schema.",
       "โค้ดที่ควรปรับปล่อยให้ข้อมูลสำคัญหลุดได้ง่าย เช่น user ซ้ำ, review ไม่มีเจ้าของ, status แปลก ๆ หรือวันที่เก็บคนละ format.",
     ],
     reviewNotes: [
@@ -1461,7 +1461,7 @@ export const lessonThaiTranslations = {
       goodCode: ["คืนเฉพาะ field ที่หน้าจอหรือ API นี้ต้องใช้"],
       badCode: ["SELECT * ทำให้รูปร่าง table และชื่อ column ที่ชนกันหลุดออกมา"],
     },
-    title: "ระบุ column ใน SELECT ให้ชัด",
+    title: "ระบุ column ใน SELECT ตาม contract",
     summary: "เลือกเฉพาะ column ที่โค้ดฝั่งเรียกใช้ต้องใช้ แทนการ `SELECT *` แล้วเอาทุกอย่างจาก table ออกมา.",
     takeaways: ["ผลลัพธ์ของ query คือสัญญากับโค้ดที่เอาไปใช้ (API contract) รูปร่างของมันจึงควรถูกเลือกอย่างตั้งใจ."],
     whatToReview: [
@@ -1474,7 +1474,7 @@ export const lessonThaiTranslations = {
   },
   "sql/filtering-null-handling": {
     codeComments: {
-      goodCode: ["IS NULL และวงเล็บทำให้ filter ของข้อมูล nullable ชัดเจน"],
+      goodCode: ["IS NULL และวงเล็บทำให้ filter ของข้อมูล nullable ตรงเงื่อนไข"],
       badCode: ["= NULL และ OR ที่ไม่ครอบวงเล็บไม่ตรงกับข้อมูล nullable"],
     },
     title: "เช็ก NULL ใน WHERE ให้ถูก",
@@ -1517,7 +1517,7 @@ export const lessonThaiTranslations = {
       "โค้ดที่ควรปรับผสม timestamp ดิบกับ count ที่ group แค่ status ซึ่งบาง database จะ error และบางกรณีอาจให้ค่าที่ทำให้เข้าใจผิด.",
     ],
     reviewNotes: [
-      "aggregation ควรตอบคำถามที่ชัดเจน ตอนรีวิวให้เขียนคำถามนั้นเป็นภาษาคนก่อน แล้วเช็กว่า GROUP BY ตรงกับคำถามจริงไหม ถ้าคำถามคือรายวันแยก status ทั้งสองอย่างต้องอยู่ใน group.",
+      "aggregation ควรตอบคำถามของรายงาน ตอนรีวิวให้เขียนคำถามนั้นเป็นภาษาคนก่อน แล้วเช็กว่า GROUP BY ตรงกับคำถามจริงไหม ถ้าคำถามคือรายวันแยก status ทั้งสองอย่างต้องอยู่ใน group.",
     ],
   },
   "sql/index-friendly-predicates": {
@@ -1527,7 +1527,7 @@ export const lessonThaiTranslations = {
     },
     title: "เขียน WHERE ให้ database ใช้ index ได้",
     summary: "หลีกเลี่ยงการเอา function ไปครอบ column ที่มี index ถ้าไม่จำเป็น เพราะ database อาจต้องไล่อ่านทุก row.",
-    takeaways: ["query ที่ให้ผลถูกต้องยังควรถูกรีวิว ถ้ามันทำให้ database ใช้ index สำคัญไม่ได้."],
+    takeaways: ["query ที่ให้ผลถูกต้องยังควรถูกรีวิว ถ้าเงื่อนไขใน WHERE ทำให้ database ใช้ index สำคัญไม่ได้."],
     whatToReview: [
       "โค้ดที่ดีเขียนช่วงเวลาแบบ `>= start` และ `< nextStart` (half-open range) ทำให้ index บน submitted_at ยังช่วยค้นหาได้.",
       "โค้ดที่ควรปรับ format column ทุก row ก่อนเทียบค่า ถึงจะอ่านง่ายแต่โดยมากทำให้ database ใช้ index ปกติไม่ได้.",
@@ -1690,7 +1690,7 @@ export const lessonThaiTranslations = {
   "python/context-managers-files": {
     title: "เปิดไฟล์ด้วย with เพื่อให้ปิดไฟล์เสมอ",
     summary: "ใช้ context manager อย่าง with open(...) เพื่อให้ไฟล์หรือ resource ถูกปิด แม้งานข้างในจะเกิด error.",
-    takeaways: ["โค้ดที่เปิดไฟล์ควรทำให้เห็นชัดว่าไฟล์จะถูกปิดทุก path."],
+    takeaways: ["โค้ดที่เปิดไฟล์ควรทำให้เห็น cleanup path ของไฟล์ทุกกรณี."],
     whatToReview: [
       "โค้ดที่ดีใช้ with เพื่อกำหนดขอบเขตของไฟล์ ใส่ encoding และปิดไฟล์แม้การเขียน row ใด row หนึ่งจะล้ม.",
       "โค้ดที่ควรปรับพึ่ง close() เอง ถ้าเกิด exception ใน loop ไฟล์อาจค้างเปิด และ encoding จะขึ้นกับเครื่องที่รัน.",
@@ -1705,17 +1705,17 @@ export const lessonThaiTranslations = {
   },
   "python/dataclasses-data-shapes": {
     title: "ใช้ dataclass แทน dict ที่ key กำกวม",
-    summary: "เมื่อข้อมูลภายในแอปมี field คงที่ ให้ใช้ dataclass เพื่อเห็นชื่อ field, default และการเปรียบเทียบชัดกว่า dict หลวม ๆ.",
+    summary: "เมื่อข้อมูลภายในแอปมี field คงที่ ให้ใช้ dataclass เพื่อให้ชื่อ field, default และการเปรียบเทียบอยู่ใน type เดียว.",
     takeaways: ["รูปข้อมูลที่มีชื่อช่วยให้คนรีวิวรู้ว่า object นี้ควรมี field อะไร."],
     whatToReview: [
-      "โค้ดที่ดีตั้งชื่อ ReviewSummary และประกาศทุก field ชัดเจนว่า review_id, title และ approved คืออะไร.",
+      "โค้ดที่ดีตั้งชื่อ ReviewSummary และประกาศทุก field ว่า review_id, title และ approved คืออะไร.",
       "โค้ดที่ควรปรับคืน dict ที่ key กำกวม ทำให้ caller ต้องจำเองว่า name และ ok หมายถึงอะไร และพิมพ์ key ผิดจะเจอช้า.",
     ],
     reviewNotes: [
       "dict เหมาะกับจุดรับส่ง JSON แต่ข้อมูลภายในแอปที่ใช้ซ้ำหลายจุดมักอ่านง่ายกว่าเมื่อเป็น dataclass เพราะชื่อ field และ default อยู่ตรงหน้า.",
     ],
     codeComments: {
-      goodCode: ["รูปข้อมูลที่มีชื่อทำให้เห็น field ที่คืนออกมาชัดเจน."],
+      goodCode: ["รูปข้อมูลที่มีชื่อทำให้เห็น field ที่คืนออกมา."],
       badCode: ["key ของ dict ที่กำกวมทำให้ caller เข้าใจรูปข้อมูลผิดได้ง่าย."],
     },
   },
@@ -1738,7 +1738,7 @@ export const lessonThaiTranslations = {
   "python/dependency-injection-testability": {
     title: "ส่ง dependency เข้ามาเพื่อให้ test ใส่ fake ได้",
     summary: "ส่ง mailer หรือ API client เข้ามาเป็น argument แทนการ import global ตรง ๆ เพื่อให้ test ใส่ fake แล้วตรวจ behavior ได้.",
-    takeaways: ["dependency ที่ส่งเข้ามาชัดเจนทำให้ side effect เห็นได้ และ test ไม่ต้อง patch global module."],
+    takeaways: ["dependency ที่ส่งเข้ามาผ่าน parameter ทำให้ side effect เห็นได้ และ test ไม่ต้อง patch global module."],
     whatToReview: [
       "โค้ดที่ดีรับ mailer เป็น dependency test จึงส่ง fake mailer แล้วตรวจได้ว่ามีการส่งอีเมลถูกคน ถูกหัวข้อ และถูกข้อความ.",
       "โค้ดที่ควรปรับ import function ที่ส่งอีเมลตรง ๆ ทำให้ test ต้อง patch path ให้ถูก และการพึ่งพาใน production ถูกซ่อนอยู่.",
@@ -1760,7 +1760,7 @@ export const lessonThaiTranslations = {
       "โค้ดที่ควรปรับคืน coroutine object แทน profile data ทำให้ caller ได้ค่าที่งง และ I/O ที่ตั้งใจไว้อาจไม่เสร็จเลย.",
     ],
     reviewNotes: [
-      "เวลารีวิว async Python ให้ไล่ทุก coroutine ว่าถูก await, ถูก return อย่างตั้งใจให้ caller await ต่อ หรือถูก schedule โดยมี owner ชัดเจน.",
+      "เวลารีวิว async Python ให้ไล่ทุก coroutine ว่าถูก await, ถูก return อย่างตั้งใจให้ caller await ต่อ หรือถูก schedule โดยมี owner ในโค้ด.",
     ],
     codeComments: {
       goodCode: ["รวม async call ที่ไม่พึ่งกัน เพื่อให้ผลลัพธ์เป็นข้อมูลจริง."],
@@ -1768,11 +1768,11 @@ export const lessonThaiTranslations = {
     },
   },
   "php/strict-types-and-return-types": {
-    title: "ระบุ type ของฟังก์ชันให้ชัด",
-    summary: "ใช้ declare(strict_types=1), parameter type และ return type เพื่อให้ฟังก์ชันบอกชัดว่ารับจำนวนเงินเป็น int และคืน int ไม่ปล่อยให้ string จาก form ถูกบวกแบบเดา.",
+    title: "ระบุ type ของฟังก์ชันที่ boundary",
+    summary: "ใช้ declare(strict_types=1), parameter type และ return type เพื่อให้ฟังก์ชันบอกว่ารับจำนวนเงินเป็น int และคืน int ไม่ปล่อยให้ string จาก form ถูกบวกแบบเดา.",
     takeaways: ["strict_types ช่วยจับการแปลง type ที่ไม่ตั้งใจ แต่ยังต้อง validate ค่าธุรกิจ เช่น ห้ามจำนวนเงินติดลบ."],
     whatToReview: [
-      "โค้ดที่ดีประกาศ strict typing ตั้งชื่อหน่วยเงินเป็น cents คืน int ชัดเจน และ reject ค่าติดลบก่อนคำนวณ.",
+      "โค้ดที่ดีประกาศ strict typing ตั้งชื่อหน่วยเงินเป็น cents คืน int และ reject ค่าติดลบก่อนคำนวณ.",
       "โค้ดที่ควรปรับปล่อยค่า $_POST ที่ยังเป็น string เข้า function ที่ไม่มี type ทำให้ต้องเดาว่า string, float, ค่าติดลบ หรือ field ที่หายไป valid ไหม.",
     ],
     reviewNotes: [
@@ -1788,11 +1788,11 @@ export const lessonThaiTranslations = {
     summary: "ค่าจาก request เช่น $_GET และ $_POST เป็นค่าดิบจากผู้ใช้ ต้อง validate และแปลงเป็นชนิดที่ใช้ได้ก่อนส่งเข้า query/service/template.",
     takeaways: ["หลังผ่านจุดรับข้อมูลแล้ว โค้ดด้านในควรได้ค่าที่ตรวจแล้ว ไม่ต้องกลับไปอ่าน $_GET/$_POST ซ้ำ."],
     whatToReview: [
-      "โค้ดที่ดีอ่านค่า order_id จาก request แล้วตรวจว่าเป็น positive integer ถ้าไม่ผ่านก็หยุดด้วย HTTP 400 ที่ชัดเจน.",
-      "โค้ดที่ควรปรับดึงจาก $_GET โดยตรง แยก missing กับ invalid ไม่ชัด และส่งค่าดิบลึกเข้าไปใน application.",
+      "โค้ดที่ดีอ่านค่า order_id จาก request แล้วตรวจว่าเป็น positive integer ถ้าไม่ผ่านก็หยุดด้วย HTTP 400 พร้อมชื่อ field.",
+      "โค้ดที่ควรปรับดึงจาก $_GET โดยตรง ปน missing กับ invalid และส่งค่าดิบลึกเข้าไปใน application.",
     ],
     reviewNotes: [
-      "ให้ถามว่าค่านี้มาจาก user หรือไม่ ถ้าใช่ควรเห็น check ใกล้จุดรับ request ว่า missing, invalid และ valid แยกกันชัด.",
+      "ให้ถามว่าค่านี้มาจาก user หรือไม่ ถ้าใช่ควรเห็น check ใกล้จุดรับ request ที่แยก missing, invalid และ valid.",
     ],
     codeComments: {
       goodCode: ["ตรวจและแปลงค่าที่ขอบระบบก่อนนำไปใช้ต่อ."],
@@ -1818,7 +1818,7 @@ export const lessonThaiTranslations = {
   "php/pdo-prepared-statements": {
     title: "ใช้ PDO prepared statement แทนต่อ SQL เอง",
     summary: "ให้ SQL เป็นโครงคำสั่งเดิม และ bind ค่าจากผู้ใช้เป็น data ผ่าน placeholder ไม่เอา string จาก request ไปต่อใน SQL โดยตรง.",
-    takeaways: ["prepared statement ทำให้เห็นชัดว่าอะไรคือ SQL และอะไรคือข้อมูลที่ผู้ใช้ส่งมา."],
+    takeaways: ["prepared statement แยก SQL text ออกจากข้อมูลที่ผู้ใช้ส่งมา."],
     whatToReview: [
       "โค้ดที่ดี prepare SQL, bind email เป็น data, เลือก column ชัด และจัดการกรณีไม่เจอ row.",
       "โค้ดที่ควรปรับเอา email จาก $_GET ไปต่อใน SQL string และ SELECT * ทำให้ไม่มั่นใจทั้งความปลอดภัยและรูปข้อมูลที่ส่งกลับ.",
@@ -1898,7 +1898,7 @@ export const lessonThaiTranslations = {
   "php/configuration-and-secrets": {
     title: "เก็บ secret ไว้ใน environment",
     summary: "รหัสผ่าน DB, token และค่า secret ควรมาจาก environment ตอนรัน ไม่ควร commit ลงไฟล์ config และไม่ควรถูกเปลี่ยนด้วยค่าจาก request.",
-    takeaways: ["config ที่เป็น secret ต้องตอบได้ว่ามาจากไหน และหายไปแล้วแอป fail แบบชัดเจนไหม."],
+    takeaways: ["config ที่เป็น secret ต้องตอบได้ว่ามาจากไหน และหายไปแล้วแอป fail พร้อมชื่อค่าที่ขาดไหม."],
     whatToReview: [
       "โค้ดที่ดีอ่าน DATABASE_URL จาก environment และ fail ตอน startup ถ้าไม่มีค่า.",
       "โค้ดที่ควรปรับ commit credential ลงไฟล์ และเปิดให้ $_GET เปลี่ยนค่า config ระดับระบบ.",
@@ -1929,14 +1929,14 @@ export const lessonThaiTranslations = {
   },
   "java/null-handling-and-optional-boundaries": {
     title: "บอกกรณีหาไม่เจอด้วย Optional หรือ exception",
-    summary: "ถ้า method อาจหา user ไม่เจอ ให้บอกด้วย Optional หรือ exception ที่ชัดเจน อย่าคืน null แล้วปล่อยให้โค้ดถัดไปพังเป็น NullPointerException.",
+    summary: "ถ้า method อาจหา user ไม่เจอ ให้บอกด้วย Optional หรือ exception ที่ตั้งชื่อตามกรณี อย่าคืน null แล้วปล่อยให้โค้ดถัดไปพังเป็น NullPointerException.",
     takeaways: ["อย่าปล่อย null ไหลต่อ ถ้าหาไม่เจอเป็นกรณีที่เกิดได้จริง ให้ทำให้ caller เห็นตั้งแต่จุดเรียก method."],
     whatToReview: [
       "โค้ดที่ดีให้ repository คืน Optional, เช็ก id ที่รับเข้ามา และโยน UserNotFoundException เมื่อไม่พบ user.",
       "โค้ดที่ควรปรับปล่อย null ไหลต่อไป ทำให้คนรีวิวต้องเดาว่า findById อาจไม่เจอข้อมูลไหม และมักพังทีหลังด้วย NullPointerException ที่บอกสาเหตุน้อย.",
     ],
     reviewNotes: [
-      "เวลารีวิว Java ให้ถามเสมอว่า “ไม่พบข้อมูล” เป็นกรณีปกติหรือเป็น error ถ้าเป็นกรณีปกติควรเห็น Optional ถ้าเป็น error ควรเห็น exception ที่ตั้งชื่อชัด.",
+      "เวลารีวิว Java ให้ถามเสมอว่า “ไม่พบข้อมูล” เป็นกรณีปกติหรือเป็น error ถ้าเป็นกรณีปกติควรเห็น Optional ถ้าเป็น error ควรเห็น exception ที่ตั้งชื่อตามกรณี.",
     ],
     codeComments: {
       goodCode: ["Optional ทำให้ path กรณีไม่พบ user เห็นชัด."],
@@ -2009,17 +2009,17 @@ export const lessonThaiTranslations = {
   },
   "java/generics-and-collection-types": {
     title: "ระบุชนิดใน List/Map ให้ compiler ช่วย",
-    summary: "ใช้ generics ให้ชัด เช่น Map<UserId, List<OrderSummary>> เพื่อให้รู้ว่า key/value คืออะไร ไม่ต้อง cast เองแล้วไปพังตอนรัน.",
+    summary: "ใช้ generics เช่น Map<UserId, List<OrderSummary>> เพื่อให้รู้ว่า key/value คืออะไร ไม่ต้อง cast เองแล้วไปพังตอนรัน.",
     takeaways: ["raw List หรือ raw Map ทำให้ compiler ช่วยจับ type ผิดไม่ได้ คนรีวิวต้องเดาเองว่าข้างในคืออะไร."],
     whatToReview: [
-      "โค้ดที่ดีระบุทั้ง key และ value type ชัดเจน ทำให้ caller ไม่ต้อง cast และ compiler ช่วยจับผิดได้.",
+      "โค้ดที่ดีระบุทั้ง key และ value type ทำให้ caller ไม่ต้อง cast และ compiler ช่วยจับผิดได้.",
       "โค้ดที่ควรปรับใช้ raw List หรือ raw Map, cast Object เอง และเก็บ order แค่ตัวเดียวต่อผู้ใช้เจ้าของ ทั้งที่ควรเป็น list.",
     ],
     reviewNotes: [
       "ถ้าเห็น raw collection ใน Java สมัยใหม่ ให้ถือเป็นกลิ่นที่ควรถาม เพราะเหมือนปิดตา compiler แล้วให้คนไล่ type ด้วยตาแทน.",
     ],
     codeComments: {
-      goodCode: ["type บอกชัดว่า owner หนึ่งคนมี summary ได้หลายรายการ."],
+      goodCode: ["type บอกว่า owner หนึ่งคนมี summary ได้หลายรายการ."],
       badCode: ["raw collection ผลัก type error ไปเจอตอน cast ระหว่างรัน."],
     },
   },
@@ -2149,7 +2149,7 @@ export const lessonThaiTranslations = {
     takeaways: ["upstream คือ remote branch ค่าเริ่มต้นของ branch นี้ ทำให้ push/pull ครั้งต่อไปไปถูกที่."],
     whatToReview: [
       "โค้ดที่ดีสร้าง branch ชื่อ feature/git-track-lessons, push -u ไป remote และเช็ก branch state อีกครั้ง.",
-      "โค้ดที่ควรปรับ commit บน main และ push HEAD แบบไม่ชัดเจน ทำให้ accidental push จับยาก.",
+      "โค้ดที่ควรปรับ commit บน main และ push HEAD แบบไม่เห็น remote branch เป้าหมาย ทำให้ accidental push จับยาก.",
     ],
     reviewNotes: [
       "ชื่อ branch คือเอกสารแบบเบา ๆ ควรช่วยบอกว่าเป็น feature, fix, chore, spike หรือ release change.",
@@ -2293,7 +2293,7 @@ export const lessonThaiTranslations = {
     summary: "ใช้ `response_model` เพื่อบอกว่า API จะส่ง field อะไรกลับ และกัน field ภายในหรือข้อมูลลับหลุดออกไป.",
     takeaways: ["`response_model` เป็นทั้งเอกสารให้ client และตัวกรองข้อมูลก่อนออกจาก API."],
     whatToReview: [
-      "โค้ดที่ดีประกาศ `ReviewResponse` ชัดเจน client จึงรู้ว่าจะได้ `id`, `title`, `status` เท่านั้น.",
+      "โค้ดที่ดีประกาศ `ReviewResponse` ให้ client รู้ว่าจะได้ `id`, `title`, `status` เท่านั้น.",
       "โค้ดที่ควรปรับคืน `review.__dict__` ทำให้ field ภายใน, state ของ database หรือ attribute ที่ไม่ได้ตั้งใจอาจหลุดออกไป.",
     ],
     reviewNotes: [
@@ -2348,7 +2348,7 @@ export const lessonThaiTranslations = {
       "โค้ดที่ควรปรับใช้ `requests.get` ใน async route ซึ่งเป็น blocking call และยังลืม `await` งาน audit.",
     ],
     reviewNotes: [
-      "FastAPI ใช้ได้ทั้ง `def` และ `async def` ตอนรีวิวให้ดูให้ตรงกัน: ถ้า handler เป็น async งานที่เรียกต่อควรไม่ block หรือมีเหตุผลชัดเจน.",
+      "FastAPI ใช้ได้ทั้ง `def` และ `async def` ตอนรีวิวให้ดูให้ตรงกัน: ถ้า handler เป็น async งานที่เรียกต่อควรไม่ block หรือมีเหตุผลเรื่อง library ที่ยังไม่มี async API.",
     ],
   },
   "fastapi/http-exception-handling": {
@@ -2360,7 +2360,7 @@ export const lessonThaiTranslations = {
     summary: "กรณีอย่างหา resource ไม่เจอหรือไม่มีสิทธิ์ ควร `raise HTTPException` พร้อม status code ที่ถูก แทนการคืน 200 แล้วใส่ error ใน body.",
     takeaways: ["client, log และ monitoring ควรเชื่อ HTTP status ได้ว่า request สำเร็จหรือล้มเหลว."],
     whatToReview: [
-      "โค้ดที่ดีใช้ 404 จริงพร้อม `detail` ชัดเจนเมื่อ review ที่ขอไม่มีอยู่.",
+      "โค้ดที่ดีใช้ 404 จริงพร้อม `detail` ที่บอกว่า review ที่ขอไม่มีอยู่.",
       "โค้ดที่ควรปรับคืน `{ ok: false }` แต่ HTTP status ยังสำเร็จ ทำให้ client, log และ monitoring อ่านสถานะผิด.",
     ],
     reviewNotes: [
@@ -2533,7 +2533,7 @@ export const lessonThaiTranslations = {
     },
     title: "อย่าปิด CSRF กับ request ที่เปลี่ยนข้อมูล",
     summary: "action ที่เปลี่ยนข้อมูล เช่น publish review ควรใช้ POST, login และ CSRF protection ของ Django ไม่ใช่ปิด CSRF เพื่อให้ form ผ่านง่าย.",
-    takeaways: ["request ที่เปลี่ยนข้อมูลควรมี CSRF protection เว้นแต่เป็น API/webhook ที่มีระบบ auth หรือ signature ชัดเจนแทน."],
+    takeaways: ["request ที่เปลี่ยนข้อมูลควรมี CSRF protection เว้นแต่เป็น API/webhook ที่มีระบบ auth หรือ signature ตรวจ request แทน."],
     whatToReview: [
       "โค้ดที่ดีบังคับ POST, บังคับ login และค้นหา review เฉพาะของ user คนนั้น โดยปล่อยให้ CSRF middleware ทำงาน.",
       "โค้ดที่ควรปรับใช้ `csrf_exempt` และไม่ตรวจ ownership ทำให้ action สำคัญถูกเรียกจากที่ที่ระบบไม่ได้ตั้งใจได้ง่าย.",
@@ -2571,7 +2571,7 @@ export const lessonThaiTranslations = {
     },
     title: "เขียน DB ให้สำเร็จก่อนค่อยส่ง side effect",
     summary: "ใส่ database write ที่ต้องไปด้วยกันใน `transaction.atomic()` และใช้ `on_commit` กับ email/queue เพื่อไม่แจ้งภายนอกก่อน commit สำเร็จ.",
-    takeaways: ["ถ้า database, email, queue หรือ cache ต้องเล่าเรื่องเดียวกัน ลำดับ write และ side effect ต้องชัดเจน."],
+    takeaways: ["ถ้า database, email, queue หรือ cache ต้องเล่าเรื่องเดียวกัน ลำดับ write และ side effect ต้องอยู่ใน transaction/workflow ที่รีวิวเห็นได้."],
     whatToReview: [
       "โค้ดที่ดีล็อก row, บันทึก review กับ audit log ใน transaction เดียว และส่ง email หลัง commit สำเร็จด้วย `on_commit`.",
       "โค้ดที่ควรปรับส่ง email ก่อนเขียน audit log ถ้า write สุดท้าย fail ภายนอกจะถูกบอกว่า approve สำเร็จไปแล้วทั้งที่ข้อมูลไม่ครบ.",
@@ -2608,7 +2608,7 @@ export const lessonThaiTranslations = {
     summary: "วาง package ตามหน้าที่ของระบบ เช่น `reviews` หรือ `users` แทนการรวมทุกอย่างไว้ใน `utils` เพื่อให้คนอ่านรู้ว่าโค้ดชุดนี้ดูแลเรื่องอะไร.",
     takeaways: ["ใน Go ชื่อ package จะโผล่ตรงจุดที่เรียกใช้เสมอ จึงควรทำให้คนอ่านเดาได้ทันทีว่า dependency นี้รับผิดชอบงานส่วนไหน."],
     whatToReview: [
-      "โค้ดที่ดีใช้ package `reviews`, ส่ง `Repository` เข้ามาชัดเจน และ export แค่ `Service` กับ method ที่ฝั่งเรียกใช้ต้องใช้จริง.",
+      "โค้ดที่ดีใช้ package `reviews`, ส่ง `Repository` ผ่าน constructor และ export แค่ `Service` กับ method ที่ฝั่งเรียกใช้ต้องใช้จริง.",
       "โค้ดที่ควรปรับซ่อนงาน publish review ไว้ใน `utils` และใช้ database global ทำให้คนอ่านไม่รู้ว่า function นี้แตะ database หรือ dependency อะไรบ้าง.",
     ],
     reviewNotes: [
@@ -2869,7 +2869,7 @@ export const lessonThaiTranslations = {
       ],
     },
     summary: "ใช้ `WORKDIR` เพื่อกำหนด path ทำงานให้ชัด ใช้ `COPY` สำหรับไฟล์ในโปรเจกต์ และใช้ `ADD` เฉพาะเมื่ออยากได้ความสามารถพิเศษของมันจริง ๆ.",
-    takeaways: ["ทำให้ path, ไฟล์ที่ copy และขั้นตอนดาวน์โหลด/แตกไฟล์ชัดเจน อย่าซ่อนพฤติกรรมสำคัญไว้ใน Dockerfile บรรทัดเดียว."],
+    takeaways: ["ทำให้ path, ไฟล์ที่ copy และขั้นตอนดาวน์โหลด/แตกไฟล์อยู่คนละขั้นตอน อย่าซ่อนพฤติกรรมสำคัญไว้ใน Dockerfile บรรทัดเดียว."],
     whatToReview: [
       "โค้ดที่ดีใช้ `WORKDIR` แบบ absolute และ copy ไฟล์ที่ตั้งใจใช้จริง ทำให้รู้ว่า install อาศัย input อะไรบ้าง.",
       "โค้ดที่ควรปรับพึ่ง `cd` ใน `RUN` แต่ละบรรทัด ดึงไฟล์จากอินเทอร์เน็ตผ่าน `ADD` และ copy ทั้ง repository ไปไว้ที่ root ของ image.",
@@ -2889,7 +2889,7 @@ export const lessonThaiTranslations = {
     },
     title: "รัน container ด้วย user ที่ไม่ใช่ root",
     summary: "สร้าง user สำหรับแอป กำหนด owner ของไฟล์ให้ถูกต้อง และสลับไปใช้ user นั้นก่อนเริ่ม process เพื่อลดสิทธิ์ใน container.",
-    takeaways: ["container ไม่ควรรันแอปด้วย root ถ้าแอปไม่มีเหตุผลชัดเจนว่าจำเป็นต้องใช้สิทธิ์สูงขนาดนั้น."],
+    takeaways: ["container ไม่ควรรันแอปด้วย root ถ้าแอปไม่มี operation ที่ต้องใช้สิทธิ์สูงขนาดนั้น."],
     whatToReview: [
       "โค้ดที่ดีสร้าง user เฉพาะของแอป กำหนด owner ตอน copy ไฟล์ และสลับไปใช้ user นั้นก่อนเริ่ม process.",
       "โค้ดที่ควรปรับปล่อยให้แอปรันด้วย root ตามค่า default ถ้า process ถูกเจาะ สิทธิ์ที่ได้ใน container จะมากเกินจำเป็น.",
@@ -2973,7 +2973,7 @@ export const lessonThaiTranslations = {
     takeaways: ["Compose file ที่ดีทำให้ความสัมพันธ์ของ service, การเก็บข้อมูล และการเปิด port เป็นเรื่องที่ตั้งใจ ไม่ใช่เปิดทุกอย่างไว้ก่อนแล้วค่อยแก้ทีหลัง."],
     whatToReview: [
       "โค้ดที่ดีตั้งชื่อ volume สำหรับข้อมูลถาวร ให้ service คุยกันผ่าน network ภายใน และเปิดออก host เฉพาะ port ของแอปที่ต้องใช้.",
-      "โค้ดที่ควรปรับใช้ host networking, mount filesystem ของเครื่อง host และเปิด database port ออกมาทั้งที่ไม่มีเหตุผลชัดเจน.",
+      "โค้ดที่ควรปรับใช้ host networking, mount filesystem ของเครื่อง host และเปิด database port ออกมาทั้งที่ไม่มีเหตุผลด้าน runtime หรือ debugging.",
     ],
     reviewNotes: [
       "เวลารีวิว Compose ให้ถาม 3 อย่าง: host เข้าถึง service ไหนได้บ้าง, ข้อมูลไหนยังอยู่หลัง restart, และ mount ไหนอาจไปแก้ไฟล์บนเครื่อง dev หรือ production ได้.",
@@ -3022,7 +3022,7 @@ export const lessonThaiTranslations = {
     },
     title: "สถานะของปุ่ม: hover, focus และ disabled",
     summary: "รีวิวปุ่มและ link ให้ครบทั้งตอน hover, ตอนใช้ keyboard focus และตอน disabled ไม่ใช่ดูแค่ตอนเอาเมาส์ชี้แล้วสวย.",
-    takeaways: ["ปุ่มและ link ควรบอกสถานะชัดเจนทั้งตอนปกติ, hover, keyboard focus และ disabled เพราะผู้ใช้ไม่ได้ใช้งานด้วยเมาส์เสมอไป."],
+    takeaways: ["ปุ่มและ link ควรมี style แยกกันทั้งตอนปกติ, hover, keyboard focus และ disabled เพราะผู้ใช้ไม่ได้ใช้งานด้วยเมาส์เสมอไป."],
     whatToReview: [
       "โค้ดที่ดีมี focus ring ที่เห็นชัดสำหรับผู้ใช้ keyboard และมี disabled style ที่บอกว่าปุ่มกดไม่ได้จริง.",
       "โค้ดที่ควรปรับมีแค่ hover และลบ outline โดยไม่มี focus style ใหม่ ทำให้ผู้ใช้ keyboard ไม่รู้ว่าตอนนี้ focus อยู่ตรงไหน.",
@@ -3139,7 +3139,7 @@ export const lessonThaiTranslations = {
     summary: "เขียน conditional class ให้สถานะที่ไม่ควรเกิดพร้อมกัน เช่น selected/unselected หรือ enabled/disabled ไม่ปล่อย class ที่ขัดกันออกมาพร้อมกัน.",
     takeaways: ["class ตามเงื่อนไขควรทำให้รู้ชัดว่าสถานะไหนชนะ ถ้ามี utility ที่ชนกัน คนรีวิวจะต้องเดาผลลัพธ์จากลำดับ class."],
     whatToReview: [
-      "โค้ดที่ดีแยก selected กับ unselected ออกจากกันชัดเจน แล้วค่อยเพิ่ม disabled state ทับอย่างตั้งใจ.",
+      "โค้ดที่ดีแยก selected กับ unselected ด้วย class คนละชุด แล้วค่อยเพิ่ม disabled state ทับอย่างตั้งใจ.",
       "โค้ดที่ควรปรับอาจปล่อย class สีพื้น สีตัวอักษร และ opacity ที่ขัดกันอยู่ใน className เดียว ทำให้ผลลัพธ์ขึ้นกับลำดับมากกว่าเงื่อนไขที่อ่านเข้าใจ.",
     ],
     reviewNotes: [
