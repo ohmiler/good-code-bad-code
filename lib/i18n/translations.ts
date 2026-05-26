@@ -605,7 +605,7 @@ export const lessonThaiTranslations = {
       badCode: ["sort และเติม field ลง input เดิม ทำให้ reference อื่นเปลี่ยนตาม"],
     },
     title: "แปลง array โดยไม่แก้ข้อมูลเดิม",
-    summary: "เวลาจะใช้ filter, map หรือ sort ควรระวังไม่ให้เปลี่ยน array ต้นฉบับโดยไม่ตั้งใจ. โดยเฉพาะ sort ควร copy array ก่อนเสมอ เพื่อให้เห็นว่า input เดิมยังเหมือนเดิม และ output ใหม่ถูกสร้างแยกออกมา.",
+    summary: "เวลาจะใช้ filter, map หรือ sort ควรระวังไม่ให้เปลี่ยน array ต้นฉบับโดยไม่ตั้งใจ. ถ้าจะ sort ให้ sort บน array ที่สร้างใหม่จาก pipeline หรือ copy array ก่อน เพื่อให้ input เดิมยังเหมือนเดิมและ output แยกออกมา.",
     takeaways: ["ใช้ pipeline เมื่อต้องการบอกลำดับการกรอง แปลง และเรียง โดยไม่ซ่อน mutation ของ input เดิม."],
     whatToReview: [
       "โค้ดที่ดีอ่านเป็น pipeline: filter ไฟล์ที่ไม่ต้องการ, map รูปร่างข้อมูล, แล้ว sort ผลลัพธ์ชุดใหม่.",
@@ -701,14 +701,14 @@ export const lessonThaiTranslations = {
       badCode: ["parse response ทันทีเหมือน request สำเร็จเสมอ"],
     },
     title: "ตรวจ error ก่อนใช้ข้อมูลจาก async response",
-    summary: "ก่อนจะ parse หรือใช้ข้อมูลจาก response ควรตรวจว่า request สำเร็จจริงไหม เช่น ตรวจ status, ตรวจ payload หรือคืน error ในรูปแบบที่อ่านได้ก่อน. วิธีนี้ช่วยให้โค้ดฝั่ง success และ error ทำงานเป็นระบบและคาดเดาได้ง่ายกว่า.",
+    summary: "ก่อนจะ parse หรือใช้ข้อมูลจาก response ควรตรวจว่า request สำเร็จจริงไหม เช่น ตรวจ status ด้วย response.ok และคืน error ในรูปแบบที่อ่านได้ก่อน. วิธีนี้ช่วยให้โค้ดฝั่ง success และ error ทำงานเป็นระบบและคาดเดาได้ง่ายกว่า.",
     takeaways: ["async code ควรคืน success และ failure ในรูปแบบเดียวกัน ไม่ปล่อย error ให้หลุดนอก contract."],
     whatToReview: [
       "โค้ดที่ดีตรวจ response.ok และแยก error path ก่อนใช้ข้อมูลจาก response.",
       "โค้ดที่ควรปรับสมมติว่า request สำเร็จเสมอ ทำให้ bug โผล่เฉพาะตอน network หรือ server มีปัญหา.",
     ],
     reviewNotes: [
-      "ตอนรีวิว async function ให้ถามว่าเกิดอะไรขึ้นเมื่อ request ล้ม, response ไม่ ok หรือ payload ไม่ตรง shape error path ควรถูกอ่านได้จากโค้ด ไม่ใช่ค่อยค้นจาก production log.",
+      "ตอนรีวิว async function ให้ถามว่าเกิดอะไรขึ้นเมื่อ request ล้ม, response ไม่ ok หรือ response body ไม่ใช่ JSON error path ควรถูกอ่านได้จากโค้ด ไม่ใช่ค่อยค้นจาก production log.",
     ],
   },
   "javascript/naming-side-effects": {
