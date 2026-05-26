@@ -41,7 +41,7 @@ $user = $pdo->query($sql)->fetch();`,
 
 ## What to review
 
-The good version prepares SQL once, binds the email as data, selects explicit columns, and handles the no-row case.
+The good version prepares SQL once, binds the email as data, selects explicit columns, and returns `null` when no row matches.
 
 The bad version interpolates a request value into SQL and selects every column. A reviewer cannot trust the query boundary or the response shape.
 

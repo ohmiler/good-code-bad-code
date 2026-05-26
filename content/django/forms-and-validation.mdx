@@ -68,4 +68,4 @@ The bad version trusts `request.POST` directly. Required fields, trimming, error
 
 ## Review notes
 
-In Django, forms are part of the request boundary. Review whether the view handles invalid input as a first-class path, not as an exception that happens later.
+In Django, forms are part of the request boundary. Review whether the view returns invalid input through the form error path, not as an exception that happens later.
