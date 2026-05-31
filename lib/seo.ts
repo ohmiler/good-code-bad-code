@@ -103,6 +103,11 @@ export function buildSitemapEntries({
       changeFrequency: "weekly",
       priority: 1,
     },
+    {
+      url: resolveUrl("/guide", siteUrl),
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
     ...tracks.map((track) => ({
       url: resolveUrl(`/tracks/${track.slug}`, siteUrl),
       changeFrequency: "weekly" as const,

@@ -6,6 +6,7 @@ import ts from "typescript";
 import {
   lessonThaiTranslations,
   trackThaiTranslations,
+  uiCopy,
 } from "../../lib/i18n/translations";
 import { tracks } from "../../lib/content/tracks";
 
@@ -133,6 +134,41 @@ test("Thai lesson translations cover every lesson", async () => {
       assertReadableThai(paragraph, `${lesson.slug}.reviewNotes[${index}]`);
     }
   }
+});
+
+test("guide UI copy covers English and Thai", () => {
+  const requiredGuideKeys = [
+    "guideNavLabel",
+    "guideEyebrow",
+    "guideTitle",
+    "guideSummary",
+    "guideQuickStartTitle",
+    "guideStepTrackTitle",
+    "guideStepTrackSummary",
+    "guideStepCompareTitle",
+    "guideStepCompareSummary",
+    "guideStepTakeawayTitle",
+    "guideStepTakeawaySummary",
+    "guideLessonAnatomyTitle",
+    "guideGoodCodeSummary",
+    "guideBadCodeSummary",
+    "guideReviewNotesSummary",
+    "guideTakeawaysSummary",
+    "guideReadingTipsTitle",
+    "guideReadingTipsSummary",
+    "guidePrimaryCta",
+  ] as const;
+
+  for (const language of ["en", "th"] as const) {
+    const copy = uiCopy[language] as Record<string, string>;
+
+    for (const key of requiredGuideKeys) {
+      assert.ok(copy[key]?.trim(), `${language}.${key} must be present`);
+    }
+  }
+
+  assert.match(uiCopy.th.guideTitle, /[\u0e00-\u0e7f]/);
+  assert.match(uiCopy.th.guidePrimaryCta, /[\u0e00-\u0e7f]/);
 });
 
 test("language preference bootstraps without breaking static export", async () => {

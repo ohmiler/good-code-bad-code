@@ -52,6 +52,34 @@ export const uiCopy = {
     reviewNotesSection: "Review notes",
     relatedTracks: "Related tracks",
     relatedTracksSummary: "Keep learning inside the same language family.",
+    guideNavLabel: "Guide",
+    guideEyebrow: "Reader Guide",
+    guideTitle: "How to use Good Code Bad Code",
+    guideSummary:
+      "Use the Example Library to practice reading code like a reviewer: choose a Track, compare the examples, then keep the Takeaway for your next review.",
+    guideQuickStartTitle: "Start in three steps",
+    guideStepTrackTitle: "Pick a Track",
+    guideStepTrackSummary:
+      "Choose the language, framework, runtime, tool, or styling system you want to review.",
+    guideStepCompareTitle: "Compare the examples",
+    guideStepCompareSummary:
+      "Read Good Code and Bad Code side by side before opening the explanation in your head.",
+    guideStepTakeawayTitle: "Carry the Takeaway",
+    guideStepTakeawaySummary:
+      "Use the Review Notes and Takeaways as a short checklist for future code reviews.",
+    guideLessonAnatomyTitle: "What each Review Lesson shows",
+    guideGoodCodeSummary:
+      "The preferred version that makes the review habit visible in code.",
+    guideBadCodeSummary:
+      "A version with a review issue or trade-off that may still run but is harder to maintain.",
+    guideReviewNotesSummary:
+      "A short explanation connecting the code difference to the review signal.",
+    guideTakeawaysSummary:
+      "A compact habit to remember after you leave the lesson.",
+    guideReadingTipsTitle: "Read like a reviewer",
+    guideReadingTipsSummary:
+      "Pause before reading the notes. Ask what changed, what risk it reduces, and whether the same pattern appears in your own codebase.",
+    guidePrimaryCta: "Choose a Track",
   },
   th: {
     trackSearchLabel: "ค้นหา track",
@@ -85,6 +113,34 @@ export const uiCopy = {
     reviewNotesSection: "ข้อควรสังเกตตอนรีวิว",
     relatedTracks: "Track ที่เกี่ยวข้อง",
     relatedTracksSummary: "เรียนต่อในตระกูลภาษาเดียวกัน.",
+    guideNavLabel: "คู่มือ",
+    guideEyebrow: "คู่มือผู้อ่าน",
+    guideTitle: "วิธีใช้ Good Code Bad Code",
+    guideSummary:
+      "ใช้ Example Library เพื่อฝึกอ่านโค้ดแบบ reviewer: เลือก Track, เทียบตัวอย่าง, แล้วเก็บ Takeaway ไปใช้ตอนรีวิวครั้งถัดไป.",
+    guideQuickStartTitle: "เริ่มใช้งานใน 3 ขั้น",
+    guideStepTrackTitle: "เลือก Track",
+    guideStepTrackSummary:
+      "เลือกภาษา, framework, runtime, tool, หรือ styling system ที่อยากฝึกรีวิว.",
+    guideStepCompareTitle: "เทียบตัวอย่าง",
+    guideStepCompareSummary:
+      "อ่าน Good Code และ Bad Code เทียบกันก่อน แล้วลองจับสัญญาณรีวิวด้วยตัวเอง.",
+    guideStepTakeawayTitle: "เก็บ Takeaway",
+    guideStepTakeawaySummary:
+      "ใช้ Review Notes และ Takeaways เป็น checklist สั้นๆ สำหรับรีวิวโค้ดครั้งต่อไป.",
+    guideLessonAnatomyTitle: "ในแต่ละ Review Lesson มีอะไร",
+    guideGoodCodeSummary:
+      "เวอร์ชันที่แสดงนิสัยการรีวิวที่ควรทำให้เห็นในโค้ดจริง.",
+    guideBadCodeSummary:
+      "เวอร์ชันที่มีประเด็นรีวิวหรือ trade-off ให้สังเกต แม้โค้ดอาจยังรันได้.",
+    guideReviewNotesSummary:
+      "คำอธิบายสั้นๆ ที่เชื่อมความต่างของโค้ดกับสัญญาณที่ควรรีวิว.",
+    guideTakeawaysSummary:
+      "นิสัยหรือหลักจำสั้นๆ ที่ควรพกออกจากบทเรียนนั้น.",
+    guideReadingTipsTitle: "อ่านแบบ reviewer",
+    guideReadingTipsSummary:
+      "ลองหยุดคิดก่อนอ่าน notes: อะไรเปลี่ยนไป, ลดความเสี่ยงอะไร, และ pattern เดียวกันนี้มีใน codebase ของเราหรือไม่.",
+    guidePrimaryCta: "เลือก Track",
   },
 } as const satisfies Record<Language, Record<string, string>>;
 
