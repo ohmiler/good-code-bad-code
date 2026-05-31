@@ -47,7 +47,7 @@ test("createPageMetadata builds canonical, Open Graph, and Twitter metadata", ()
   ]);
 });
 
-test("buildSitemapEntries includes the home page, tracks, and lessons", () => {
+test("buildSitemapEntries includes the home page, guide page, tracks, and lessons", () => {
   const entries = buildSitemapEntries({
     siteUrl: "https://goodcodebadcode.dev",
     tracks: [
@@ -64,6 +64,7 @@ test("buildSitemapEntries includes the home page, tracks, and lessons", () => {
     entries.map((entry) => entry.url),
     [
       "https://goodcodebadcode.dev/",
+      "https://goodcodebadcode.dev/guide",
       "https://goodcodebadcode.dev/tracks/html",
       "https://goodcodebadcode.dev/tracks/css",
       "https://goodcodebadcode.dev/tracks/html/semantic-document-structure",
@@ -71,4 +72,5 @@ test("buildSitemapEntries includes the home page, tracks, and lessons", () => {
     ],
   );
   assert.equal(entries[0].priority, 1);
+  assert.equal(entries[1].priority, 0.6);
 });
