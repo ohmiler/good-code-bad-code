@@ -5,11 +5,11 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { LanguageProvider } from "../../components/language/language-provider";
 import { SiteFooter } from "../../components/site-footer";
 
-function renderFooter(language: "en" | "th" = "en") {
+function renderFooter() {
   return renderToStaticMarkup(
     React.createElement(
       LanguageProvider,
-      { initialLanguage: language },
+      { initialLanguage: "en" },
       React.createElement(SiteFooter),
     ),
   );
@@ -25,16 +25,10 @@ test("SiteFooter links to the Buy Me a Coffee support page", () => {
   assert.match(markup, /rel="noreferrer"/);
 });
 
-test("SiteFooter links to the reader guide in English", () => {
-  const markup = renderFooter("en");
+test("SiteFooter keeps reader navigation out of the footer", () => {
+  const markup = renderFooter();
 
-  assert.match(markup, /href="\/guide"/);
-  assert.match(markup, />Guide</);
-});
-
-test("SiteFooter links to the reader guide in Thai", () => {
-  const markup = renderFooter("th");
-
-  assert.match(markup, /href="\/guide"/);
-  assert.match(markup, />คู่มือ</);
+  assert.doesNotMatch(markup, /href="\/guide"/);
+  assert.doesNotMatch(markup, />Guide</);
+  assert.doesNotMatch(markup, />คู่มือ</);
 });

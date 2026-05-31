@@ -33,7 +33,7 @@ The page must avoid language that frames the site as an exercise platform, quiz,
 
 - The guide supports the existing English and Thai language toggle.
 - The guide targets general readers only.
-- The guide is linked from both the header and footer.
+- The guide is linked from the header only; the footer stays focused on brand/support.
 - The selected structure is a Quick Start Guide: short, scannable, and focused on first-use orientation.
 
 ## Page Structure
@@ -77,10 +77,10 @@ The page should feel like part of the existing Example Library, not a new landin
 
 ## Navigation
 
-Add a guide link to both shared navigation surfaces:
+Add a guide link to the shared header navigation:
 
 - Header: `Guide` in English and `คู่มือ` in Thai.
-- Footer: `Guide` in English and `คู่มือ` in Thai.
+- Footer: no guide link.
 
 The header must remain usable on small screens. If the desktop row becomes tight, the link should use compact text styling and allow the header content to wrap or compress without clipping the brand or language toggle.
 
@@ -113,7 +113,7 @@ Expected implementation units:
 
 - `app/guide/page.tsx` for the route and metadata.
 - A small guide page component if needed to keep the route file readable.
-- Header/footer updates for the `/guide` link.
+- Header update for the `/guide` link.
 - Shared SEO sitemap helper update so `/guide` is included with the home, Track, and Review Lesson URLs.
 - Localized copy entries for guide labels and page text.
 
@@ -131,7 +131,7 @@ Use TDD during implementation.
 Write failing tests before production code for:
 
 - Header includes a localized link to `/guide`.
-- Footer includes a localized link to `/guide`.
+- Footer does not include reader navigation or a `/guide` link.
 - Sitemap includes `/guide`.
 - Guide UI copy exists for English and Thai.
 - Guide page renders the expected main heading or core copy.
@@ -146,7 +146,7 @@ After implementation, verify:
 
 - `/guide` renders successfully.
 - The page supports English and Thai through the existing language toggle.
-- Header and footer both link to `/guide`.
+- Header links to `/guide`; footer does not include the guide link.
 - `/guide` has canonical metadata.
 - `/guide` appears in the sitemap.
 - The page explains the reader workflow without adding author/admin documentation.

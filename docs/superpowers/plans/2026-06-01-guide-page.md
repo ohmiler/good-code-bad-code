@@ -2,11 +2,17 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Build a reader-facing `/guide` page that explains how to use Good Code Bad Code, supports English/Thai copy, and is reachable from shared navigation.
+**Goal:** Build a reader-facing `/guide` page that explains how to use Good Code Bad Code, supports English/Thai copy, and is reachable from header navigation.
 
 **Architecture:** Add one static App Router route backed by a small localized client component. Keep reader-facing strings in the existing `uiCopy` system, reuse the current `LanguageProvider`, and extend the shared SEO sitemap helper so `/guide` is included consistently.
 
 **Tech Stack:** Next.js 16 App Router, React 19, TypeScript, Tailwind CSS 4, Node test runner with `tsx`.
+
+---
+
+## Approved Change After Execution
+
+User feedback removed the footer guide link requirement. The final implementation keeps `/guide` in the header only and asserts the footer does not contain reader navigation.
 
 ---
 
@@ -18,10 +24,10 @@
 - Modify `lib/i18n/translations.ts`: add guide and navigation copy to `uiCopy.en` and `uiCopy.th`.
 - Modify `components/language/localized-ui.tsx`: add reusable localized guide link component.
 - Modify `components/site-header.tsx`: show guide link in the header.
-- Modify `components/site-footer.tsx`: show guide link in the footer while preserving support link behavior.
+- Modify `components/site-footer.tsx`: keep the footer focused on the support link without reader navigation.
 - Modify `tests/content/i18n.test.ts`: assert guide copy exists for English and Thai.
 - Create `tests/content/site-header.test.tsx`: assert header guide link renders in both languages.
-- Modify `tests/content/footer.test.ts`: wrap footer in `LanguageProvider` and assert footer guide link renders in both languages.
+- Modify `tests/content/footer.test.ts`: wrap footer in `LanguageProvider` and assert the guide link is absent.
 - Modify `lib/seo.ts`: add `/guide` to sitemap entries.
 - Modify `tests/content/seo.test.ts`: assert sitemap contains `/guide`.
 - Modify `package.json`: include `tests/content/guide-page.test.tsx` and `tests/content/site-header.test.tsx` in `test:content`.
@@ -430,7 +436,7 @@ git add tests/content/guide-page.test.tsx components/guide/guide-content.tsx app
 git commit -m "feat: add reader guide page"
 ```
 
-## Task 3: Add Header And Footer Guide Links
+## Task 3: Add Header Guide Link And Keep Footer Clean
 
 **Files:**
 - Create: `tests/content/site-header.test.tsx`
@@ -475,7 +481,7 @@ test("SiteHeader links to the reader guide in Thai", () => {
 });
 ```
 
-- [ ] **Step 2: Update the footer test to fail on missing guide links**
+- [ ] **Step 2: Update the footer test to fail if guide links are present**
 
 Replace `tests/content/footer.test.ts` with:
 
@@ -487,11 +493,13 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { LanguageProvider } from "../../components/language/language-provider";
 import { SiteFooter } from "../../components/site-footer";
 
-function renderFooter(language: "en" | "th" = "en") {
+function renderFooter() {
   return renderToStaticMarkup(
-    <LanguageProvider initialLanguage={language}>
-      <SiteFooter />
-    </LanguageProvider>,
+    React.createElement(
+      LanguageProvider,
+      { initialLanguage: "en" },
+      React.createElement(SiteFooter),
+    ),
   );
 }
 
@@ -505,18 +513,12 @@ test("SiteFooter links to the Buy Me a Coffee support page", () => {
   assert.match(markup, /rel="noreferrer"/);
 });
 
-test("SiteFooter links to the reader guide in English", () => {
-  const markup = renderFooter("en");
+test("SiteFooter keeps reader navigation out of the footer", () => {
+  const markup = renderFooter();
 
-  assert.match(markup, /href="\/guide"/);
-  assert.match(markup, />Guide</);
-});
-
-test("SiteFooter links to the reader guide in Thai", () => {
-  const markup = renderFooter("th");
-
-  assert.match(markup, /href="\/guide"/);
-  assert.match(markup, />คู่มือ</);
+  assert.doesNotMatch(markup, /href="\/guide"/);
+  assert.doesNotMatch(markup, />Guide</);
+  assert.doesNotMatch(markup, />คู่มือ</);
 });
 ```
 
@@ -538,7 +540,7 @@ Run:
 node --import tsx --test tests/content/site-header.test.tsx tests/content/footer.test.ts
 ```
 
-Expected: the command fails because neither shared navigation surface renders a `/guide` link.
+Expected: the command fails because the header does not render a `/guide` link yet.
 
 - [ ] **Step 5: Add the localized guide link component**
 
@@ -601,7 +603,7 @@ export function SiteHeader() {
 }
 ```
 
-- [ ] **Step 7: Render the guide link in the footer**
+- [ ] **Step 7: Keep the footer free of reader navigation**
 
 Modify `components/site-footer.tsx` to:
 
@@ -609,7 +611,6 @@ Modify `components/site-footer.tsx` to:
 import Image from "next/image";
 import React from "react";
 import { BrandWordmark } from "./brand-wordmark";
-import { GuideNavLink } from "./language/localized-ui";
 
 const supportUrl = "https://buymeacoffee.com/milerdev";
 
@@ -626,28 +627,25 @@ export function SiteFooter() {
             review instincts.
           </p>
         </div>
-        <div className="flex flex-col gap-3 sm:items-end">
-          <GuideNavLink className="w-fit rounded-md px-2 py-1 text-sm font-medium text-zinc-400 transition hover:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-emerald-300" />
-          <a
-            href={supportUrl}
-            target="_blank"
-            rel="noreferrer"
-            aria-label="Support Miler on Buy Me a Coffee"
-            className="group inline-flex w-fit items-center gap-3 rounded-md border border-white/10 bg-white/[0.03] px-4 py-3 text-sm font-medium text-zinc-200 transition hover:border-emerald-300/50 hover:bg-emerald-300/10 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300"
-          >
-            <span className="text-zinc-400 transition group-hover:text-emerald-100">
-              Support
-            </span>
-            <Image
-              src="/bmc.png"
-              alt="Buy Me a Coffee"
-              width={1090}
-              height={306}
-              unoptimized
-              className="h-8 w-auto"
-            />
-          </a>
-        </div>
+        <a
+          href={supportUrl}
+          target="_blank"
+          rel="noreferrer"
+          aria-label="Support Miler on Buy Me a Coffee"
+          className="group inline-flex w-fit items-center gap-3 rounded-md border border-white/10 bg-white/[0.03] px-4 py-3 text-sm font-medium text-zinc-200 transition hover:border-emerald-300/50 hover:bg-emerald-300/10 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300"
+        >
+          <span className="text-zinc-400 transition group-hover:text-emerald-100">
+            Support
+          </span>
+          <Image
+            src="/bmc.png"
+            alt="Buy Me a Coffee"
+            width={1090}
+            height={306}
+            unoptimized
+            className="h-8 w-auto"
+          />
+        </a>
       </div>
     </footer>
   );
@@ -662,13 +660,13 @@ Run:
 node --import tsx --test tests/content/site-header.test.tsx tests/content/footer.test.ts
 ```
 
-Expected: both header and footer tests pass.
+Expected: the header guide link tests pass, and the footer test confirms `/guide` is absent.
 
 - [ ] **Step 9: Commit Task 3**
 
 ```bash
 git add tests/content/site-header.test.tsx tests/content/footer.test.ts components/language/localized-ui.tsx components/site-header.tsx components/site-footer.tsx package.json
-git commit -m "feat: link guide from shared navigation"
+git commit -m "feat: link guide from header navigation"
 ```
 
 ## Task 4: Add Guide To Sitemap
@@ -837,7 +835,7 @@ If any command fails, stop at the first failure, copy the failing command and er
 
 - Reader-only guide: Task 2 guide copy and layout.
 - English/Thai support: Task 1 copy contract and Task 2 render tests.
-- Header/footer links: Task 3.
+- Header guide link and footer absence: Task 3.
 - Quick Start Guide structure: Task 2.
 - Product vocabulary from `CONTEXT.md`: Task 1 and Task 2 copy.
 - Static metadata and canonical `/guide`: Task 2 metadata test.
